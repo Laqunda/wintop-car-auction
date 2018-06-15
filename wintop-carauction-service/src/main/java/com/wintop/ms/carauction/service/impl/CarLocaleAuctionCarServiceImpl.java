@@ -26,6 +26,8 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
     @Autowired
     private CarLocaleAuctionModel carLocaleAuctionModel;
     @Autowired
+    private CarLocaleAuctionCarModel carLocaleAuctionCarModel;
+    @Autowired
     private CarAuctionBidRecordModel carAuctionBidRecordModel;
     @Autowired
     private CarAutoAuctionModel carAutoAuctionModel;
@@ -149,8 +151,11 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
 
     @Override
     @Transactional
-    public ServiceResult<Map<String,Object>> updateAuctionCode(Long auctionId) {
-        List<CarLocaleAuctionCar> carLocaleAuctionCars = model.getAuctionCarList(auctionId);
+    public ServiceResult<Map<String,Object>> updateAuctionCode(Long auctionCarId) {
+
+        CarLocaleAuctionCar auctionCar = carLocaleAuctionCarModel.selectById(auctionCarId);
+
+        List<CarLocaleAuctionCar> carLocaleAuctionCars = model.getAuctionCarList(auctionCar.getAuctionId());
         List<CarLocaleAuctionCar> updateList=new ArrayList<>();
         int auctionCode =1;
         for(int i=0;i<carLocaleAuctionCars.size();i++){
