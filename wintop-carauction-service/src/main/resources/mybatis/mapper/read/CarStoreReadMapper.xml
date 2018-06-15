@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarStoreReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarStore" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="simple_name" property="simpleName" jdbcType="VARCHAR" />
+    <result column="store_photo" property="storePhoto" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="service_tel" property="serviceTel" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_person" property="updatePerson" jdbcType="BIGINT" />
+    <result column="del_time" property="delTime" jdbcType="TIMESTAMP" />
+    <result column="del_person" property="delPerson" jdbcType="BIGINT" />
+    <result column="region_id" property="regionId" jdbcType="BIGINT" />
+  </resultMap>
+  <resultMap id="StoreResultMap" type="com.wintop.ms.carauction.entity.CommonNameVo">
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="checked" property="checked" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="IdResultMap" type="java.lang.Long">
+    <result column="id" property="id" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    t1.id, t1.code, t1.`name`, t1.simple_name, t1.store_photo, t1.address, t1.service_tel, t1.latitude,
+    t1.longitude, t1.status,t1.create_time,t1.create_person, t1.update_time, t1.update_person,t1.del_time, t1.del_person,
+    t1.remark,t1.region_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_store t1
+    where 1=1
+    <if test="status != null">
+      and t1.status=#{status}
+    </if>
+    <if test="status == null">
+      and t1.status <![CDATA[ <> ]]> '3'
+    </if>
+    <if test="storeName!=null">
+      and t1.`name` LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+    </if>
+    order by t1.`name`
+    <if test="startRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_store t1
+    where t1.id = #{id}
+  </select>
+  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    select count(t1.id) from car_store t1
+    where 1=1
+    <if test="storeName!=null">
+      and t1.`name` LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+    </if>
+  </select>
+  <select id="selectAllStore" resultMap="StoreResultMap">
+    select
+    t1.id,  t1.`name`
+    from car_store t1
+    where t1.status='1'
+    order by t1.simple_name
+  </select>
+  <select id="selectByCenter" resultMap="StoreResultMap" parameterType="java.lang.Long">
+    select
+    t1.id,  t1.`name`
+    from car_store t1
+	LEFT JOIN car_center_store t2
+    ON t2.store_id = t1.id
+    where t1.status='1' AND t2.center_id=#{centerId}
+    order by t1.simple_name
+  </select>
+  <select id="selectAllStoreIds" resultMap="IdResultMap">
+    SELECT id FROM car_store;
+  </select>
+</mapper>

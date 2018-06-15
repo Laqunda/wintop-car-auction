@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarCustomerDepositWriteDao" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_customer_deposit
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarCustomerDeposit" >
+    insert into car_customer_deposit (id, user_id, deposit_amount, pay_time, auth_time, auth_manager, 
+      status, auth_msg, freeze_time, freeze_flag, deposit_no)
+    values (#{id}, #{userId}, #{depositAmount}, #{payTime}, #{authTime}, #{authManager}, 
+      #{status}, #{authMsg}, #{freezeTime}, #{freezeFlag}, #{depositNo})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerDeposit" >
+    insert into car_customer_deposit
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="depositAmount != null" >
+        deposit_amount,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="authTime != null" >
+        auth_time,
+      </if>
+      <if test="authManager != null" >
+        auth_manager,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="authMsg != null" >
+        auth_msg,
+      </if>
+      <if test="freezeTime != null" >
+        freeze_time,
+      </if>
+      <if test="freezeFlag != null" >
+        freeze_flag,
+      </if>
+      <if test="depositNo != null" >
+        deposit_no,
+      </if>
+      <if test="useStatus != null" >
+        use_status
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="userId != null" >
+        #{userId},
+      </if>
+      <if test="depositAmount != null" >
+        #{depositAmount},
+      </if>
+      <if test="payTime != null" >
+        #{payTime},
+      </if>
+      <if test="authTime != null" >
+        #{authTime},
+      </if>
+      <if test="authManager != null" >
+        #{authManager},
+      </if>
+      <if test="status != null" >
+        #{status},
+      </if>
+      <if test="authMsg != null" >
+        #{authMsg},
+      </if>
+      <if test="freezeTime != null" >
+        #{freezeTime},
+      </if>
+      <if test="freezeFlag != null" >
+        #{freezeFlag},
+      </if>
+      <if test="depositNo != null" >
+        #{depositNo},
+      </if>
+      <if test="useStatus != null" >
+         #{useStatus},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerDeposit" >
+    update car_customer_deposit
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId},
+      </if>
+      <if test="depositAmount != null" >
+        deposit_amount = #{depositAmount},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime},
+      </if>
+      <if test="authTime != null" >
+        auth_time = #{authTime},
+      </if>
+      <if test="authManager != null" >
+        auth_manager = #{authManager},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="authMsg != null" >
+        auth_msg = #{authMsg},
+      </if>
+      <if test="freezeTime != null" >
+        freeze_time = #{freezeTime},
+      </if>
+      <if test="freezeFlag != null" >
+        freeze_flag = #{freezeFlag},
+      </if>
+      <if test="depositNo != null" >
+        deposit_no = #{depositNo},
+      </if>
+      <if test="useStatus != null" >
+        use_status = #{useStatus},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarCustomerDeposit" >
+    update car_customer_deposit
+    set user_id = #{userId},
+      deposit_amount = #{depositAmount},
+      pay_time = #{payTime},
+      auth_time = #{authTime},
+      auth_manager = #{authManager},
+      status = #{status},
+      auth_msg = #{authMsg},
+      freeze_time = #{freezeTime},
+      freeze_flag = #{freezeFlag},
+      deposit_no = #{depositNo}
+    where id = #{id}
+  </update>
+
+  <update id="updateDepositByUserId" parameterType="com.wintop.ms.carauction.entity.CarCustomerDeposit" >
+    update car_customer_deposit
+    set
+    deposit_amount = #{depositAmount},
+    `status` = #{status}
+    where user_id = #{userId}
+  </update>
+</mapper>

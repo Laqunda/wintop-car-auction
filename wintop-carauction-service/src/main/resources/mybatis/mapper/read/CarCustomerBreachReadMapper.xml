@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarCustomerBreachReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarCustomerBreach" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="initiator" property="initiator" jdbcType="BIGINT" />
+    <result column="breach_obj_type" property="breachObjType" jdbcType="VARCHAR" />
+    <result column="initiat_cn" property="initiatCn" jdbcType="VARCHAR" />
+    <result column="initiat_mobile" property="initiatMobile" jdbcType="VARCHAR" />
+    <result column="initiat_time" property="initiatTime" jdbcType="TIMESTAMP" />
+    <result column="initiat_msg" property="initiatMsg" jdbcType="VARCHAR" />
+    <result column="initiat_auth_manager" property="initiatAuthManager" jdbcType="BIGINT" />
+    <result column="initiat_auth_time" property="initiatAuthTime" jdbcType="TIMESTAMP" />
+    <result column="initiat_auth_msg" property="initiatAuthMsg" jdbcType="VARCHAR" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="pay_auth_manager" property="payAuthManager" jdbcType="BIGINT" />
+    <result column="pay_auth_time" property="payAuthTime" jdbcType="TIMESTAMP" />
+    <result column="pay_auth_msg" property="payAuthMsg" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="breach_source" property="breachSource" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="auto_id" property="autoId" jdbcType="BIGINT" />
+    <result column="initiat_auth_name" property="initiatAuthName" jdbcType="VARCHAR" />
+    <result column="breach_order_status" property="breachOrderStatus" jdbcType="VARCHAR" />
+    <result column="breach_auto_status" property="breachAutoStatus" jdbcType="VARCHAR" />
+    <result column="pay_auth_file" property="payAuthFile" jdbcType="VARCHAR" />
+    <result column="initial_auth_file" property="initialAuthFile" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, initiator, breach_obj_type, initiat_cn,initiat_mobile, initiat_time, initiat_msg, initiat_auth_manager,
+    initiat_auth_time, initiat_auth_msg, money, pay_time, pay_auth_manager, pay_auth_time, 
+    pay_auth_msg, status, breach_source,order_id,auto_id,pay_auth_file,initial_auth_file,
+    breach_order_status,breach_auto_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_customer_breach
+    where id = #{id}
+  </select>
+
+  <select id="queryNewBreachInfo"  resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT t1.id,t1.breach_obj_type,t1.initiat_msg,t1.breach_source,t1.initiat_cn,t1.initiat_time
+    FROM car_customer_breach t1
+    WHERE t1.order_id=#{orderId}
+    <if test="carId!=null">
+      AND t1.auto_id=#{carId}
+    </if>
+    AND t1.status='1'
+    ORDER BY t1.initiat_time DESC limit 0,1
+  </select>
+
+  <select id="selectBreachList"  resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT t1.id,t1.breach_obj_type,t1.initiat_cn,t1.initiat_mobile,t1.initiat_time,t1.initiat_msg,t1.breach_source,t1.status,
+    t1.initiat_auth_manager,t2.user_name AS initiat_auth_name,t1.initiat_auth_time,t1.initiat_auth_msg
+    FROM car_customer_breach t1
+    LEFT JOIN car_manager_user t2 ON t1.initiat_auth_manager=t2.id
+    WHERE t1.order_id=#{orderId}
+    <if test="carId!=null">
+      AND t1.auto_id=#{carId}
+    </if>
+    ORDER BY t1.initiat_time DESC
+  </select>
+</mapper>

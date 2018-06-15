@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICustomerQuitLogReadDao" >
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CustomerQuitLog" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+        <result column="userNum" property="userNum" jdbcType="VARCHAR" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="customerStoreName" property="customerStoreName" jdbcType="VARCHAR" />
+        <result column="payFee" property="payFee" jdbcType="DECIMAL" />
+        <result column="msg" property="msg" jdbcType="VARCHAR" />
+        <result column="quitTime" property="quitTime" jdbcType="TIMESTAMP" />
+        <result column="editerName" property="editerName" jdbcType="VARCHAR" />
+    </resultMap>
+    <!--根据条件查询会员退会记录列表-->
+    <select id="queryCustomerQuitLogList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        t2.id,
+        t2.user_code,
+        t2.user_num  as userNum,
+        t2.name as username,
+        t2.mobile ,
+        t5.simple_name as customerStoreName,
+        t3.pay_fee as payFee,
+        t1.msg,
+        t1.edit_time as quitTime,
+        t4.name as editerName
+        from car_customer_log t1
+        left join wt_app_user t2 on t1.user_id=t2.id
+        left join car_finance_pay_log t3 on t3.user_id=t1.user_id
+        left join wt_app_user t4 on  t1.edit_user_id=t4.id
+        left join car_store t5 on t2.store_id=t5.id
+        where
+          t3.type=1
+        and
+          t1.status=12
+        <if test="searchName!=null">
+            AND (t2.user_num LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+            OR t2.name LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+            OR t2.mobile LIKE CONCAT(CONCAT('%',#{searchName}),'%')
+            OR t2.user_code LIKE CONCAT(CONCAT('%',#{searchName}),'%'))
+        </if>
+        <if test="customerStoreId!=null">
+            AND t5.id=#{customerStoreId}
+        </if>
+        <if test="beginTime!=null">
+            AND t1.edit_time <![CDATA[ >= ]]>#{beginTime}
+        </if>
+        <if test="endTime!=null">
+            AND t1.edit_time <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="storeIds != null and storeIds.size!=0">
+            and t4.store_id in
+            <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                #{storeId}
+            </foreach>
+        </if>
+        ORDER BY t1.edit_time DESC
+        <if test="startRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+    <!--查询会员退会记录的数量-->
+    <select id="selectCustomerQuitLogCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        COUNT(t1.id)
+        from car_customer_log t1
+        left join wt_app_user t2 on t1.user_id=t2.id
+        left join car_finance_pay_log t3 on t3.user_id=t1.user_id
+        left join wt_app_user t4 on  t1.edit_user_id=t4.id
+        left join car_store t5 on t2.store_id=t5.id
+        where
+          t3.type=1
+        and
+          t1.status=12
+        <if test="searchName!=null">
+            AND (t2.user_num LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+            OR t2.name LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+            OR t2.mobile LIKE CONCAT(CONCAT('%',#{searchName}),'%')
+            OR t2.user_code LIKE CONCAT(CONCAT('%',#{searchName}),'%'))
+        </if>
+        <if test="customerStoreId!=null">
+            AND t5.id=#{customerStoreId}
+        </if>
+        <if test="beginTime!=null">
+            AND t1.edit_time <![CDATA[ >= ]]>#{beginTime}
+        </if>
+        <if test="endTime!=null">
+            AND t1.edit_time <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="storeIds != null and storeIds.size!=0">
+            and t4.store_id in
+            <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                #{storeId}
+            </foreach>
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarLocaleAuctionCarWriteDao" >
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from car_locale_auction_car
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuctionCar" >
+    insert into car_locale_auction_car (
+    id,
+    auction_id,
+    auto_auction_id,
+    car_id,
+    auction_code,
+    auction_status,
+    sort,
+    create_person,
+    create_time
+    )
+    values (
+    #{id},
+    #{auctionId},
+    #{autoAuctionId},
+    #{carId},
+    #{auctionCode},
+    #{auctionStatus},
+    #{sort},
+    #{createPerson},
+    #{createTime}
+    )
+  </insert>
+  <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuctionCar" >
+    update car_locale_auction_car
+    <set >
+      <if test="auctionId != null" >
+        auction_id = #{auctionId},
+      </if>
+      <if test="autoAuctionId != null" >
+        auto_auction_id = #{autoAuctionId},
+      </if>
+      <if test="carId != null" >
+        car_id = #{carId},
+      </if>
+      <if test="auctionCode != null" >
+        auction_code = #{auctionCode},
+      </if>
+      <if test="auctionStatus != null" >
+        auction_status = #{auctionStatus},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort},
+      </if>
+      <if test="createPerson != null" >
+        create_person = #{createPerson},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateById" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuctionCar" >
+    update car_locale_auction_car
+    set auction_id = #{auctionId},
+      auto_auction_id = #{autoAuctionId},
+      car_id = #{carId},
+      auction_code = #{auctionCode},
+      auction_status = #{auctionStatus},
+      sort = #{sort},
+      create_person = #{createPerson},
+      create_time = #{createTime}
+    where id = #{id}
+  </update>
+</mapper>

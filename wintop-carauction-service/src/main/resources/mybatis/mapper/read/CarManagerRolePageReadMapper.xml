@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarManagerRolePageReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarManagerRolePage" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="role_id" property="roleId" jdbcType="BIGINT" />
+    <result column="page_id" property="pageId" jdbcType="BIGINT" />
+  </resultMap>
+  <resultMap id="StringResultMap" type="java.lang.String" >
+    <result column="url" property="url" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    id, role_id, page_id
+    from car_manager_role_page
+    where role_id=#{roleId}
+  </select>
+  <select id="selectAllPages" resultMap="StringResultMap" parameterType="java.lang.Long" >
+    select t1.url
+    from car_manager_page t1
+    inner join car_manager_role_page t2 on t1.id=t2.page_id
+    where t2.role_id=#{roleId} and t1.level='3' and t1.url is not null and t1.url != ''
+  </select>
+</mapper>

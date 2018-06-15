@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarBidRecordReadDao" >
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarBidRecord" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+        <result column="user_num" property="userNum" jdbcType="VARCHAR" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="user_store_name" property="userStoreName" jdbcType="VARCHAR" />
+        <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
+        <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
+        <result column="car_store_name" property="carStoreName" jdbcType="VARCHAR" />
+        <result column="auction_type" property="auctionType" jdbcType="VARCHAR" />
+        <result column="starting_price" property="startingPrice" jdbcType="DECIMAL" />
+        <result column="bid_time" property="bidTime" jdbcType="TIMESTAMP" />
+        <result column="bid_fee" property="bidFee" jdbcType="DECIMAL" />
+    </resultMap>
+    <!--根据条件查询车辆出价记录列表-->
+    <select id="queryCarBidRecordList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        t2.id,
+        t2.user_code,
+        t2.user_num,
+        t2.name AS username,
+        t2.mobile,
+        t5.name AS user_store_name,
+        t3.car_auto_no,
+        t3.auto_info_name,
+        t6.name AS car_store_name,
+        t4.auction_type,
+        t4.starting_price,
+        t1.bid_time,
+        t1.bid_fee
+        from car_auction_bid_record t1
+        LEFT JOIN wt_app_user t2 ON t1.customer_id = t2.id
+        LEFT JOIN car_auto t3 ON t1.car_id = t3.id
+        LEFT JOIN car_auto_auction t4 ON t3.auto_auction_id = t4.id
+        LEFT JOIN car_store t5 ON t5.id=t2.store_id
+        LEFT JOIN car_store t6 ON t6.id=t3.store_id
+        WHERE  1=1
+        <if test="searchName!=null and searchName!=''">
+            AND (t2.user_num LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+            OR t2.name LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+            OR t2.mobile LIKE CONCAT(CONCAT('%',#{searchName}),'%')
+            OR t2.user_code LIKE CONCAT(CONCAT('%',#{searchName}),'%'))
+        </if>
+        <if test="carSearchName!=null and carSearchName!=''">
+            AND (t3.car_auto_no LIKE CONCAT(CONCAT('%', #{carSearchName}),'%')
+            OR t3.auto_info_name LIKE CONCAT(CONCAT('%', #{carSearchName}),'%'))
+        </if>
+        <if test="customerStoreId!=null and customerStoreId!=''">
+            AND t2.store_id=#{customerStoreId}
+        </if>
+        <if test="carStoreId!=null and carStoreId!=''">
+            AND t3.store_id=#{carStoreId}
+        </if>
+        <if test="auctionType!=null and auctionType!=''">
+            AND t4.auction_type=#{auctionType}
+        </if>
+        <if test="beginTime!=null and beginTime!=''">
+            AND t1.bid_time <![CDATA[ >= ]]>#{beginTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND t1.bid_time <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="carId!=null and carId!=''">
+            AND t1.car_id=#{carId}
+        </if>
+        <if test="storeIds != null and storeIds.size!=0">
+            and t3.store_id in
+            <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                #{storeId}
+            </foreach>
+        </if>
+        ORDER BY t1.bid_time DESC
+        <if test="startRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+    <!--查询出价记录的数量-->
+    <select id="selectCarBidRecordCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        COUNT(t1.car_id)
+        from car_auction_bid_record t1
+        LEFT JOIN wt_app_user t2 ON t1.customer_id = t2.id
+        LEFT JOIN car_auto t3 ON t1.car_id = t3.id
+        LEFT JOIN car_auto_auction t4 ON t3.auto_auction_id = t4.id
+        WHERE  1=1
+        <if test="searchName!=null">
+            AND (t2.user_num LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+            OR t2.name LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+            OR t2.mobile LIKE CONCAT(CONCAT('%',#{searchName}),'%')
+            OR t2.user_code LIKE CONCAT(CONCAT('%',#{searchName}),'%'))
+        </if>
+        <if test="carSearchName!=null">
+            AND (t3.car_auto_no LIKE CONCAT(CONCAT('%', #{carSearchName}),'%')
+            OR t3.auto_info_name LIKE CONCAT(CONCAT('%', #{carSearchName}),'%'))
+        </if>
+        <if test="customerStoreId!=null">
+            AND t2.store_id=#{customerStoreId}
+        </if>
+        <if test="carStoreId!=null">
+            AND t3.store_id=#{carStoreId}
+        </if>
+        <if test="carId!=null and carId!=''">
+            AND t1.car_id=#{carId}
+        </if>
+        <if test="auctionType!=null">
+            AND t4.auction_type LIKE  CONCAT(CONCAT('%',#{auctionType}),'%')
+        </if>
+        <if test="beginTime!=null">
+            AND t1.bid_time <![CDATA[ >= ]]>#{beginTime}
+        </if>
+        <if test="endTime!=null">
+            AND t1.bid_time <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="storeIds != null and storeIds.size!=0">
+            and t3.store_id in
+            <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                #{storeId}
+            </foreach>
+        </if>
+    </select>
+</mapper>

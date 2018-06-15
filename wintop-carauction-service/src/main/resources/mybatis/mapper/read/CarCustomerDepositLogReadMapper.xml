@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.CarCustomerDepositLogReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarCustomerDepositLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="deposit_id" property="depositId" jdbcType="BIGINT" />
+    <result column="deposit_amount" property="depositAmount" jdbcType="DECIMAL" />
+    <result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="user_type" property="userType" jdbcType="VARCHAR" />
+    <result column="log_type" property="logType" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="DepositFreeze" type="com.wintop.ms.carauction.entity.DepositFreeze" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+      <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+      <result column="userNum" property="userNum" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="customerStoreName" property="customerStoreName" jdbcType="VARCHAR" />
+    <result column="freezeTime" property="freezeTime" jdbcType="TIMESTAMP" />
+    <result column="depositAmount" property="depositAmount" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, deposit_id, deposit_amount, file_url, create_time, create_person, remark, user_type, 
+    log_type,user_id
+  </sql>
+<!--根据主键查询记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_customer_deposit_log
+    where id = #{id}
+  </select>
+<!--查询保证金冻结记录列表-->
+  <select id="queryDepositFreezeList" resultMap="DepositFreeze" parameterType="java.util.Map" >
+select
+    t3.id,
+      t3.user_code,
+    t3.user_num as userNum,
+    t3.name as username,
+    t3.mobile as mobile,
+    t4.simple_name as customerStoreName,
+    t1.create_time as freezeTime,
+    t1.remark,
+    t1.deposit_amount as depositAmount
+from car_customer_deposit_log t1
+left join car_customer_deposit t2 on t2.user_id=t1.user_id and t1.deposit_id=t2.id
+left join wt_app_user t3 on t1.user_id=t3.id
+left join car_store t4 on t3.store_id=t4.id
+where t1.log_type=1
+    <if test="searchName!=null">
+      AND (t3.user_num LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+      OR t3.name LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+      OR t3.mobile LIKE CONCAT(CONCAT('%',#{searchName}),'%')
+        OR t3.user_code LIKE CONCAT(CONCAT('%',#{searchName}),'%'))
+    </if>
+    <if test="customerStoreId!=null">
+      AND t4.id=#{customerStoreId}
+    </if>
+    <if test="beginTime!=null">
+      AND t1.create_time <![CDATA[ >= ]]>#{beginTime}
+    </if>
+    <if test="endTime!=null">
+      AND t1.create_time <![CDATA[ <= ]]> #{endTime}
+    </if>
+      <if test="storeIds != null and storeIds.size!=0">
+          and t3.store_id in
+          <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+              #{storeId}
+          </foreach>
+      </if>
+      ORDER BY t1.create_time DESC
+    <if test="startRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+<!--查询保证金冻结记录总数-->
+  <select id="selectDepositFreezeCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select
+    count(t1.id)
+    from car_customer_deposit_log t1
+    left join car_customer_deposit t2 on t2.user_id=t1.user_id and t1.deposit_id=t2.id
+    left join wt_app_user t3 on t1.user_id=t3.id
+    left join car_store t4 on t3.store_id=t4.id
+    where t1.log_type=1
+      <if test="searchName!=null">
+          AND (t3.user_num LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+          OR t3.name LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+          OR t3.mobile LIKE CONCAT(CONCAT('%',#{searchName}),'%')
+          OR t3.user_code LIKE CONCAT(CONCAT('%',#{searchName}),'%'))
+      </if>
+      <if test="customerStoreId!=null">
+          AND t4.id=#{customerStoreId}
+      </if>
+      <if test="beginTime!=null">
+          AND t1.create_time <![CDATA[ >= ]]>#{beginTime}
+      </if>
+      <if test="endTime!=null">
+          AND t1.create_time <![CDATA[ <= ]]> #{endTime}
+      </if>
+      <if test="storeIds != null and storeIds.size!=0">
+          and t3.store_id in
+          <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+              #{storeId}
+          </foreach>
+      </if>
+  </select>
+</mapper>

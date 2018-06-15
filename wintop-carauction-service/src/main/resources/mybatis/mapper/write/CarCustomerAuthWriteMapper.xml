@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarCustomerAuthWriteDao" >
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_customer_auth
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarCustomerAuth" >
+    insert into car_customer_auth (id, user_id, real_name, address, identity_number, identity_photo_front, 
+      identity_photo_back, identity_photo_hand, auth_status, auth_msg, auth_time, 
+      auth_manager, apply_time, sign_pact, province, region, county,city_name,is_available)
+    values (#{id}, #{userId}, #{realName}, #{address}, #{identityNumber}, #{identityPhotoFront}, 
+      #{identityPhotoBack}, #{identityPhotoHand}, #{authStatus}, #{authMsg}, #{authTime}, 
+      #{authManager}, #{applyTime}, #{signPact}, #{province}, #{region}, #{county},#{cityName},#{isAvailable})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerAuth" >
+    insert into car_customer_auth
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="realName != null" >
+        real_name,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="identityNumber != null" >
+        identity_number,
+      </if>
+      <if test="identityPhotoFront != null" >
+        identity_photo_front,
+      </if>
+      <if test="identityPhotoBack != null" >
+        identity_photo_back,
+      </if>
+      <if test="identityPhotoHand != null" >
+        identity_photo_hand,
+      </if>
+      <if test="authStatus != null" >
+        auth_status,
+      </if>
+      <if test="authMsg != null" >
+        auth_msg,
+      </if>
+      <if test="authTime != null" >
+        auth_time,
+      </if>
+      <if test="authManager != null" >
+        auth_manager,
+      </if>
+      <if test="applyTime != null" >
+        apply_time,
+      </if>
+      <if test="signPact != null" >
+        sign_pact,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="region != null" >
+        region,
+      </if>
+      <if test="county != null" >
+        county,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="userId != null" >
+        #{userId},
+      </if>
+      <if test="realName != null" >
+        #{realName},
+      </if>
+      <if test="address != null" >
+        #{address},
+      </if>
+      <if test="identityNumber != null" >
+        #{identityNumber},
+      </if>
+      <if test="identityPhotoFront != null" >
+        #{identityPhotoFront},
+      </if>
+      <if test="identityPhotoBack != null" >
+        #{identityPhotoBack},
+      </if>
+      <if test="identityPhotoHand != null" >
+        #{identityPhotoHand},
+      </if>
+      <if test="authStatus != null" >
+        #{authStatus},
+      </if>
+      <if test="authMsg != null" >
+        #{authMsg},
+      </if>
+      <if test="authTime != null" >
+        #{authTime},
+      </if>
+      <if test="authManager != null" >
+        #{authManager},
+      </if>
+      <if test="applyTime != null" >
+        #{applyTime},
+      </if>
+      <if test="signPact != null" >
+        #{signPact},
+      </if>
+      <if test="province != null" >
+        #{province},
+      </if>
+      <if test="region != null" >
+        #{region},
+      </if>
+      <if test="county != null" >
+        #{county},
+      </if>
+      <if test="cityName != null" >
+        #{cityName},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerAuth" >
+    update car_customer_auth
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId},
+      </if>
+      <if test="realName != null" >
+        real_name = #{realName},
+      </if>
+      <if test="address != null" >
+        address = #{address},
+      </if>
+      <if test="identityNumber != null" >
+        identity_number = #{identityNumber},
+      </if>
+      <if test="identityPhotoFront != null" >
+        identity_photo_front = #{identityPhotoFront},
+      </if>
+      <if test="identityPhotoBack != null" >
+        identity_photo_back = #{identityPhotoBack},
+      </if>
+      <if test="identityPhotoHand != null" >
+        identity_photo_hand = #{identityPhotoHand},
+      </if>
+      <if test="authStatus != null" >
+        auth_status = #{authStatus},
+      </if>
+      <if test="authMsg != null" >
+        auth_msg = #{authMsg},
+      </if>
+      <if test="authTime != null" >
+        auth_time = #{authTime},
+      </if>
+      <if test="authManager != null" >
+        auth_manager = #{authManager},
+      </if>
+      <if test="applyTime != null" >
+        apply_time = #{applyTime},
+      </if>
+      <if test="signPact != null" >
+        sign_pact = #{signPact},
+      </if>
+      <if test="province != null" >
+        province = #{province},
+      </if>
+      <if test="region != null" >
+        region = #{region},
+      </if>
+      <if test="county != null" >
+        county = #{county},
+      </if>
+      <if test="cityName != null" >
+        city_name = #{cityName},
+      </if>
+      <if test="isAvailable != null" >
+        is_available = #{isAvailable},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarCustomerAuth" >
+    update car_customer_auth
+    set user_id = #{userId},
+      real_name = #{realName},
+      address = #{address},
+      identity_number = #{identityNumber},
+      identity_photo_front = #{identityPhotoFront},
+      identity_photo_back = #{identityPhotoBack},
+      identity_photo_hand = #{identityPhotoHand},
+      auth_status = #{authStatus},
+      auth_msg = #{authMsg},
+      auth_time = #{authTime},
+      auth_manager = #{authManager},
+      apply_time = #{applyTime},
+      sign_pact = #{signPact},
+      province = #{province},
+      region = #{region},
+      county = #{county},
+      city_name = #{cityName},
+      is_available = #{isAvailable},
+    where id = #{id}
+  </update>
+<!--根据用户id更新会员认证信息 zhangzijuan-->
+  <update id="updateByUserId" parameterType="com.wintop.ms.carauction.entity.CarCustomerAuth" >
+    update car_customer_auth
+    <set >
+      <if test="realName != null" >
+        real_name = #{realName},
+      </if>
+      <if test="address != null" >
+        address = #{address},
+      </if>
+      <if test="identityNumber != null" >
+        identity_number = #{identityNumber},
+      </if>
+      <if test="identityPhotoFront != null" >
+        identity_photo_front = #{identityPhotoFront},
+      </if>
+      <if test="identityPhotoBack != null" >
+        identity_photo_back = #{identityPhotoBack},
+      </if>
+      <if test="identityPhotoHand != null" >
+        identity_photo_hand = #{identityPhotoHand},
+      </if>
+      <if test="authStatus != null" >
+        auth_status = #{authStatus},
+      </if>
+      <if test="authMsg != null" >
+        auth_msg = #{authMsg},
+      </if>
+      <if test="authTime != null" >
+        auth_time = #{authTime},
+      </if>
+      <if test="authManager != null" >
+        auth_manager = #{authManager},
+      </if>
+      <if test="applyTime != null" >
+        apply_time = #{applyTime},
+      </if>
+      <if test="signPact != null" >
+        sign_pact = #{signPact},
+      </if>
+      <if test="province != null" >
+        province = #{province},
+      </if>
+      <if test="region != null" >
+        region = #{region},
+      </if>
+      <if test="county != null" >
+        county = #{county},
+      </if>
+      <if test="cityName != null" >
+        city_name = #{cityName},
+      </if>
+      <if test="isAvailable != null" >
+        is_available = #{isAvailable},
+      </if>
+    </set>
+    where  user_id = #{userId}
+  </update>
+</mapper>

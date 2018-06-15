@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarOrderLogReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarOrderLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="status_cn" property="statusCn" jdbcType="VARCHAR" />
+    <result column="log_msg" property="logMsg" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_mobile" property="userMobile" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    t1.id, t1.order_id, t1.status, t2.status_name AS status_cn, t1.log_msg, t1.create_time,t1.create_person,t1.user_name,t1.user_mobile
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_order_log t1
+    inner join car_relate_status t2 on (t1.status=t2.status and t2.`type`=4)
+    where t1.order_id=#{orderId}
+    order by t1.create_time desc
+  </select>
+  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    select count(t1.id) from car_order_log t1
+  </select>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_order_log t1
+    inner join car_relate_status t2 on (t1.status=t2.status and t2.`type`=4)
+    where t1.id = #{id}
+  </select>
+</mapper>

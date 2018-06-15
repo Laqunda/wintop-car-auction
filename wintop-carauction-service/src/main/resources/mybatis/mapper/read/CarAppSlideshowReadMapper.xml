@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAppSlideshowReadDao" >
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAppSlideshow" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="open_type" property="openType" jdbcType="VARCHAR" />
+        <result column="img" property="img" jdbcType="VARCHAR" />
+        <result column="describe" property="describe" jdbcType="VARCHAR" />
+        <result column="open_obj" property="openObj" jdbcType="VARCHAR" />
+        <result column="sort" property="sort" jdbcType="INTEGER" />
+        <result column="if_show" property="ifShow" jdbcType="VARCHAR" />
+        <result column="editor" property="editor" jdbcType="BIGINT" />
+        <result column="edit_time" property="editTime" jdbcType="TIMESTAMP" />
+        <result column="type" property="type" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, title, open_type, img, `describe`, open_obj, sort, if_show, editor, edit_time,
+        type
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List" />
+        from car_app_slideshow
+        where 1=1
+        <if test="ifShow != null" >
+            and if_show=#{ifShow}
+        </if>
+        <if test="type != null" >
+            and `type`=#{type}
+        </if>
+        order by sort desc,edit_time desc
+        <if test="startRowNum != null and endRowNum != null ">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from car_app_slideshow
+        where id = #{id}
+    </select>
+    <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+        select count(id) from car_app_slideshow
+        where 1=1
+        <if test="ifShow != null" >
+            and if_show=#{ifShow}
+        </if>
+        <if test="type != null" >
+            and `type`=#{type}
+        </if>
+    </select>
+</mapper>

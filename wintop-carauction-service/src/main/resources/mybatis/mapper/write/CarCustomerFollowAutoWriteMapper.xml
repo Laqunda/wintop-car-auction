@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarCustomerFollowAutoWriteDao" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_customer_follow_auto
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarCustomerFollowAuto" >
+    insert into car_customer_follow_auto (id, auto_id, user_id, create_time, status)
+    values (#{id}, #{autoId}, #{userId}, #{createTime}, #{status})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerFollowAuto" >
+    insert into car_customer_follow_auto
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="autoId != null" >
+        auto_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="autoId != null" >
+        #{autoId},
+      </if>
+      <if test="userId != null" >
+        #{userId},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="status != null" >
+        #{status},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerFollowAuto" >
+    update car_customer_follow_auto
+    <set >
+      <if test="autoId != null" >
+        auto_id = #{autoId},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarCustomerFollowAuto" >
+    update car_customer_follow_auto
+    set  auto_id = #{autoId},
+    user_id = #{userId},
+    create_time = #{createTime},
+    status = #{status}
+    where id = #{id}
+  </update>
+
+  <!--收藏接口-->
+  <insert id="insertCustomerCollection" parameterType="com.wintop.ms.carauction.entity.CarCustomerFollowAuto" >
+    insert into car_customer_follow_auto (id, auto_id, user_id, create_time, status)
+    values (#{id}, #{autoId}, #{userId}, #{createTime}, #{status})
+  </insert>
+  <!--取消收藏接口-->
+  <update id="deleteCustomerCollection" parameterType="java.util.Map" >
+    DELETE FROM car_customer_follow_auto
+    where auto_id = #{autoId} and user_id = #{userId}
+  </update>
+</mapper>

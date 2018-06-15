@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarCustomerGroupReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarCustomerGroup" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_manager" property="createManager" jdbcType="VARCHAR" />
+    <result column="userNum" property="userNum" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, group_name, code, status, create_time, create_manager
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_customer_group
+    where id = #{id}
+  </select>
+  <!--查询用户分组及对应的数量 zhangzijuan-->
+  <select id="selectGroupAndNum" resultMap="BaseResultMap" parameterType="java.util.Map">
+       SELECT
+        cg.id,cg.group_name,count(a.id) userNum
+       FROM
+        car_customer_group cg
+      LEFT JOIN car_customer_group_detail cgd on cgd.group_id=cg.id
+      LEFT JOIN  wt_app_user a ON a.id=cgd.customer_id
+      <if test="searchName != null and searchName !=''">
+          and(a.name like CONCAT(CONCAT('%', #{searchName}),'%')
+          OR a.mobile like CONCAT(CONCAT('%', #{searchName}),'%')
+          OR a.auction_plate_num like CONCAT(CONCAT('%', #{searchName}),'%')
+          )
+      </if>
+      <if test="userName!=null and userName!=''">
+          AND a.user_name = #{userName}
+      </if>
+      <if test="mobile!=null and mobile!=''">
+          AND a.mobile = #{mobile}
+      </if>
+      <if test="status!=null and status!=''">
+          AND a.status = #{status}
+      </if>
+      WHERE 1=1
+      <if test="storeId!=null and storeId!=''">
+        AND a.store_id = #{storeId}
+      </if>
+      GROUP BY cg.id
+      ORDER BY cg.create_time desc
+  </select>
+<!--查询所有可以选择的用户分组-->
+    <select id="selectGroupForSelect" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List" />
+        from car_customer_group
+        where status='1'
+    </select>
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAutoTransferWriteDao">
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from car_auto_transfer
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAutoTransfer" >
+    insert into car_auto_transfer (id, order_id, auto_id, handle_user_id, handle_user_name, handle_user_mobile,
+      commission_photo, create_time, create_user, status, move_to_where, move_address,
+      transfer_doc, auth_manager, auth_time, auth_msg)
+    values (#{id}, #{orderId}, #{autoId}, #{handleUserId}, #{handleUserName}, #{handleUserMobile},
+      #{commissionPhoto}, #{createTime}, #{createUser}, #{status}, #{moveToWhere}, #{moveAddress},
+      #{transferDoc}, #{authManager}, #{authTime}, #{authMsg})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarAutoTransfer" >
+    update car_auto_transfer
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId},
+      </if>
+      <if test="autoId != null" >
+        auto_id = #{autoId},
+      </if>
+      <if test="handleUserId != null" >
+        handle_user_id = #{handleUserId},
+      </if>
+      <if test="handleUserName != null" >
+        handle_user_name = #{handleUserName},
+      </if>
+      <if test="handleUserMobile != null" >
+        handle_user_mobile = #{handleUserMobile},
+      </if>
+      <if test="commissionPhoto != null" >
+        commission_photo = #{commissionPhoto},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="moveToWhere != null" >
+        move_to_where = #{moveToWhere},
+      </if>
+      <if test="moveAddress != null" >
+        move_address = #{moveAddress},
+      </if>
+      <if test="transferDoc != null" >
+        transfer_doc = #{transferDoc},
+      </if>
+      <if test="authManager != null" >
+        auth_manager = #{authManager},
+      </if>
+      <if test="authTime != null" >
+        auth_time = #{authTime},
+      </if>
+      <if test="authMsg != null" >
+        auth_msg = #{authMsg},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarAutoTransfer" >
+    update car_auto_transfer
+    set order_id = #{orderId},
+      auto_id = #{autoId},
+      handle_user_id = #{handleUserId},
+      handle_user_name = #{handleUserName},
+      handle_user_mobile = #{handleUserMobile},
+      commission_photo = #{commissionPhoto},
+      create_time = #{createTime},
+      create_user = #{createUser},
+      status = #{status},
+      move_to_where = #{moveToWhere},
+      move_address = #{moveAddress},
+      transfer_doc = #{transferDoc},
+      auth_manager = #{authManager},
+      auth_time = #{authTime},
+      auth_msg = #{authMsg}
+    where id = #{id}
+  </update>
+  <update id="updateByOrderId" parameterType="com.wintop.ms.carauction.entity.CarAutoTransfer" >
+    update car_auto_transfer
+    set
+    status = #{status},
+    auth_manager = #{authManager},
+    auth_time = #{authTime},
+    auth_msg = #{authMsg}
+    where order_id = #{orderId}
+  </update>
+</mapper>

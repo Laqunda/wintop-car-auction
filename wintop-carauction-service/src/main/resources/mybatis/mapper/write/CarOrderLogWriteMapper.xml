@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarOrderLogWriteDao" >
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarOrderLog" >
+    insert into car_order_log (id, order_id, status, status_cn, log_msg, create_time,create_person,user_name,user_mobile)
+    values (#{id}, #{orderId}, #{status}, #{statusCn}, #{logMsg}, #{createTime},#{createPerson},#{userName},#{userMobile})
+  </insert>
+</mapper>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarCustomerFollowAutoReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarCustomerFollowAuto" >
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="auto_id" property="autoId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="main_photo" property="mainPhoto" jdbcType="VARCHAR" />
+    <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
+    <result column="vehicle_attribution_city" property="vehicleAttributionCity" jdbcType="VARCHAR" />
+    <result column="report_colligation_ranks" property="reportColligationRanks" jdbcType="VARCHAR" />
+    <result column="report_score" property="reportScore" jdbcType="VARCHAR" />
+    <result column="mileage" property="mileage" jdbcType="DECIMAL" />
+    <result column="starting_price" property="startingPrice" jdbcType="DECIMAL" />
+    <result column="auction_start_time" property="auctionStartTime" jdbcType="TIMESTAMP" />
+    <result column="auction_end_time" property="auctionEndTime" jdbcType="TIMESTAMP" />
+    <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
+    <result column="isEntrust" property="isEntrust" jdbcType="VARCHAR" />
+    <result column="carStatus" property="carStatus" jdbcType="VARCHAR" />
+    <result column="carId" property="carId" jdbcType="BIGINT" />
+    <result column="auto_auction_id" property="autoAuctionId" jdbcType="BIGINT" />
+    <result column="environment" property="environment" jdbcType="VARCHAR" />
+    <result column="begin_register_date" property="beginRegisterDate" jdbcType="VARCHAR"/>
+    <result column="carStoreName" property="carStoreName" jdbcType="VARCHAR"/>
+    <result column="auction_type" property="auctionType" jdbcType="VARCHAR"/>
+    <result column="auction_code" property="auctionCode" jdbcType="VARCHAR"/>
+    <result column="vehicle_attribution_city_cn" property="vehicleAttributionCityCn" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, auto_id, user_id, create_time, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from car_customer_follow_auto
+    where id = #{id}
+  </select>
+
+  <select id="queryUserFollowList" resultMap="BaseResultMap">
+    SELECT
+    t2.main_photo,
+    t2.auto_info_name,
+    t3.vehicle_attribution_city,
+    t3.vehicle_attribution_city_cn,
+    t2.report_colligation_ranks,
+    t2.report_servicing_ranks,
+    t3.mileage,
+    t4.starting_price,
+    t4.auction_start_time,
+    t4.auction_end_time,
+    t4.auction_type,
+    t2.car_auto_no,
+    t2.id AS carId,
+    t1.create_time,
+    t2.status AS carStatus,t3.environment,t3.begin_register_date,
+    cs.simple_name as carStoreName,t6.auction_code,
+    (CASE WHEN t5.entrust_fee IS NOT NULL THEN '1' ELSE '2' END ) AS isEntrust,
+    t2.auto_auction_id
+    FROM car_customer_follow_auto t1
+    INNER join car_auto t2 on t1.auto_id = t2.id
+    INNER join car_auto_info_detail t3 on t3.auto_id = t2.id
+    INNER join car_auto_auction t4 on t4.id = t2.auto_auction_id
+    LEFT JOIN car_store cs on cs.id=t2.store_id
+    LEFT JOIN car_customer_entrust_car t5 ON (t1.auto_id=t5.car_id AND t5.customer_id=#{customerId})
+    LEFT JOIN car_locale_auction_car t6 ON t6.car_id=t1.auto_id
+    WHERE t1.status = '1' AND t1.user_id = #{customerId} AND (t2.status = '6' OR t2.status = '7')
+    <if test="clientType=='app'">
+      <!--手机端查看过滤掉结束时间已过的车-->
+      AND ((t4.auction_type='1' AND t4.auction_end_time <![CDATA[ > ]]> NOW()) OR (t4.auction_type='2' AND t6.auction_status in('0','1')))
+    </if>
+    <if test="auctionType">
+      AND t4.auction_type=#{auctionType}
+    </if>
+    <if test="cityName!=null">
+      AND t3.vehicle_attribution_city =#{cityName}
+    </if>
+    <if test="carName!=null">
+      AND t2.auto_info_name LIKE CONCAT(CONCAT('%', #{carName}),'%')
+    </if>
+    <if test="carStatus!=null">
+      AND t2.status=#{carStatus}
+    </if>
+    <if test="brandId!=null">
+      AND t3.auto_brand=#{brandId}
+    </if>
+    <if test="grade!=null">
+      AND concat(t2.report_colligation_ranks,t2.report_servicing_ranks)=#{grade}
+    </if>
+    <if test="carAge1!=null">
+      AND YEAR(now())-YEAR(t3.begin_register_date) ${carAge1}
+    </if>
+    <if test="carAge2!=null">
+      AND YEAR(now())-YEAR(t3.begin_register_date) ${carAge2}
+    </if>
+    <if test="carSort!=null">
+      <if test="carSort=='1'.toString()">
+        ORDER BY t1.create_time DESC
+      </if>
+      <if test="carSort=='2'.toString()">
+        ORDER BY t4.starting_price ASC
+      </if>
+      <if test="carSort=='3'.toString()">
+        ORDER BY t4.starting_price DESC
+      </if>
+      <if test="carSort=='4'.toString()">
+        ORDER BY t3.begin_register_date DESC
+      </if>
+      <if test="carSort=='5'.toString()">
+        ORDER BY t3.begin_register_date ASC
+      </if>
+    </if>
+    <if test="startRowNum!=null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="queryUserFollowCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+    SELECT count(t1.id)
+    FROM car_customer_follow_auto t1
+    INNER join car_auto t2 on t1.auto_id = t2.id
+    INNER join car_auto_info_detail t3 on t3.auto_id = t2.id
+    INNER join car_auto_auction t4 on t4.id = t2.auto_auction_id
+    LEFT JOIN car_customer_entrust_car t5 ON (t1.auto_id=t5.car_id AND t5.customer_id=#{customerId})
+    LEFT JOIN car_locale_auction_car t6 ON t6.car_id=t1.auto_id
+    WHERE t1.status = '1' and t1.user_id = #{customerId} AND (t2.status = '6' OR t2.status = '7')
+    <if test="clientType=='app'">
+      <!--手机端查看过滤掉结束时间已过的车-->
+      AND ((t4.auction_type='1' AND t4.auction_end_time <![CDATA[ > ]]> NOW()) OR (t4.auction_type='2' AND t6.auction_status in('0','1')))
+    </if>
+    <if test="auctionType">
+      AND t4.auction_type=#{auctionType}
+    </if>
+    <if test="cityName!=null">
+      AND t3.vehicle_attribution_city =#{cityName}
+    </if>
+    <if test="carName!=null">
+      AND t2.auto_info_name LIKE CONCAT(CONCAT('%', #{carName}),'%')
+    </if>
+    <if test="carStatus!=null">
+      AND t2.status=#{carStatus}
+    </if>
+    <if test="brandId!=null">
+      AND t3.auto_brand=#{brandId}
+    </if>
+    <if test="grade!=null">
+      AND concat(t2.report_colligation_ranks,t2.report_servicing_ranks)=#{grade}
+    </if>
+    <if test="carAge1!=null">
+      AND YEAR(now())-YEAR(t3.begin_register_date) ${carAge1}
+    </if>
+    <if test="carAge2!=null">
+      AND YEAR(now())-YEAR(t3.begin_register_date) ${carAge2}
+    </if>
+    <if test="carSort!=null">
+      <if test="carSort=='1'.toString()">
+        ORDER BY t1.create_time DESC
+      </if>
+      <if test="carSort=='2'.toString()">
+        ORDER BY t4.starting_price ASC
+      </if>
+      <if test="carSort=='3'.toString()">
+        ORDER BY t4.starting_price DESC
+      </if>
+      <if test="carSort=='4'.toString()">
+        ORDER BY t3.begin_register_date DESC
+      </if>
+      <if test="carSort=='5'.toString()">
+        ORDER BY t3.begin_register_date ASC
+      </if>
+    </if>
+  </select>
+
+  <!--根据条件查询关注的车辆数量-->
+  <select id="selectFollowCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    SELECT count(1) FROM car_customer_follow_auto WHERE  user_id = #{userId}
+  </select>
+  <!--根据auto_id和user_id查询数据-->
+  <select id="selectCustomerFollow" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_customer_follow_auto
+    where auto_id = #{autoId} and user_id = #{userId}
+  </select>
+</mapper>

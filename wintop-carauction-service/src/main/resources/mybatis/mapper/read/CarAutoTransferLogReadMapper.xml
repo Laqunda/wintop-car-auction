@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAutoTransferLogReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAutoTransferLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="transfer_id" property="transferId" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="handle_time" property="handleTime" jdbcType="TIMESTAMP" />
+    <result column="fileUrl" property="file_url" jdbcType="VARCHAR" />
+    <result column="file_type" property="fileType" jdbcType="VARCHAR" />
+    <result column="photo" property="photo" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    t1.id, transfer_id, `type`, `time`, handle_time, file_url,file_type,remark
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_auto_transfer_log t1
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from car_auto_transfer_log t1
+    where t1.id = #{id}
+  </select>
+  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    select count(t1.id) from car_auto_transfer_log t1
+  </select>
+
+  <select id="queryTransferFlowList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+            t3.id,
+            t3.handle_time,
+            t3.`type`,
+            t3.file_url AS photo
+        FROM
+           car_auto_transfer_log t3
+        INNER JOIN (
+            SELECT
+                MAX(t1.id) AS id
+            FROM
+                car_auto_transfer_log t1
+            INNER JOIN car_auto_transfer t2 ON t1.transfer_id = t2.id
+            WHERE
+                t2.order_id = #{orderId}
+            GROUP BY
+                t1.`type`
+        ) t ON t.id = t3.id
+        ORDER BY t3.type
+  </select>
+<!-- 查询过户轨迹 zhangzijuan -->
+  <select id="queryTransferList" resultMap="BaseResultMap" parameterType="java.util.Map">
+   SELECT
+        t1.handle_time,
+        t1.time,
+        t1.`type`,
+        t1.file_url,
+        t1.file_type,
+        t1.remark,
+        t3.user_name,
+        t3.user_phone,
+        t4.status_name
+    FROM
+        car_auto_transfer_log t1
+    INNER JOIN car_auto_transfer t2 ON t1.transfer_id = t2.id
+    INNER JOIN car_manager_user t3 ON t3.id = t1.handle_person
+    LEFT JOIN car_relate_status t4 ON t4.`status` = t1.type and t4.`type`='3'
+    WHERE
+        t1.transfer_id = #{transferId}
+    ORDER BY t1.handle_time ASC
+  </select>
+
+    <!-- 查询订单手续信息 -->
+    <select id="selectTransferLogByOrderId"  resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM car_auto_transfer_log t1
+        INNER JOIN car_auto_transfer t2 ON t1.transfer_id=t2.id
+        WHERE t2.order_id=#{orderId} AND t1.`type`='6'
+    </select>
+</mapper>

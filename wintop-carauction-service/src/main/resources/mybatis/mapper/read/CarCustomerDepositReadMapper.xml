@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarCustomerDepositReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarCustomerDeposit" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="deposit_amount" property="depositAmount" jdbcType="DECIMAL" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="auth_time" property="authTime" jdbcType="TIMESTAMP" />
+    <result column="auth_manager" property="authManager" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="auth_msg" property="authMsg" jdbcType="VARCHAR" />
+    <result column="freeze_time" property="freezeTime" jdbcType="TIMESTAMP" />
+    <result column="freeze_flag" property="freezeFlag" jdbcType="VARCHAR" />
+    <result column="deposit_no" property="depositNo" jdbcType="VARCHAR" />
+    <result column="userStoreName" property="userStoreName" jdbcType="VARCHAR" />
+    <result column="user_num" property="userNum" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="pay_way" property="payWay" jdbcType="VARCHAR" />
+    <result column="use_status" property="useStatus" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, user_id, deposit_amount, pay_time, auth_time, auth_manager, status, auth_msg, 
+    freeze_time, freeze_flag, deposit_no
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_customer_deposit
+    where id = #{id}
+  </select>
+
+  <!--根据用户id获取该用户的保证金余额，条件用户id、状态为审批通过。-->
+  <select id="getDepositAmountByUserId" parameterType="java.lang.Long" resultType="java.math.BigDecimal" >
+    SELECT sum(deposit_amount) FROM car_customer_deposit where user_id=#{userId} and status='2' and freeze_flag='0'  and use_status='0';
+  </select>
+
+  <select id="selectDepositByUserId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_customer_deposit
+    where user_id=#{userId} and use_status='0'
+    <if test="status!=null">
+      AND status=#{status}
+    </if>
+    ORDER BY pay_time DESC
+    LIMIT 1
+  </select>
+  <!--查询保证金列表 zhangzijuan-->
+  <select id="selectDepositList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+      SELECT
+        a.user_num,
+        a.id as user_id,
+        a.`name`,
+        a.mobile,
+        ca.simple_name AS userStoreName,
+        d.pay_time,
+        d.deposit_no,
+        d.deposit_amount,
+        pl.pay_way,
+        d.status,
+        d.freeze_flag,pl.pay_way
+      FROM
+        car_customer_deposit d
+      INNER JOIN wt_app_user a ON a.id = d.user_id
+      LEFT JOIN car_store ca ON ca.id = a.store_id
+      INNER JOIN car_finance_pay_log pl ON pl.order_id = d.id
+    where 1=1
+    <if test="userId!=null">
+      AND d.user_id=#{userId}
+    </if>
+    <if test="status!=null">
+      AND d.status=#{status}
+    </if>
+    ORDER BY d.pay_time DESC
+    <if test="startRowNum!=null and endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <!--查询保证金列表 zhangzijuan-->
+  <select id="selectDepositCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    SELECT
+    COUNT(1)
+    FROM
+    car_customer_deposit d
+    INNER JOIN wt_app_user a ON a.id = d.user_id
+    LEFT JOIN car_store ca ON ca.id = a.store_id
+    INNER JOIN car_finance_pay_log pl ON pl.order_id = d.id
+    where 1=1
+    <if test="userId!=null">
+      AND d.user_id=#{userId}
+    </if>
+  </select>
+</mapper>

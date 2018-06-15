@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarLocaleAuctionWriteDao" >
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from car_locale_auction
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuction" >
+    insert into car_locale_auction (
+    id,
+    code,
+    title,
+    region_id,
+    city_id,
+    poster,
+    address,
+    gps_longitude,
+    gps_latitude,
+    start_time,
+    corporate_agent,
+    status,
+    see_car_man,
+    see_car_time,
+    see_car_phone,
+    create_person,
+    create_time,
+    modify_person,
+    modify_time,
+    del_person,
+    del_time,
+    del_flag
+    )
+    values (
+    #{id},
+    #{code},
+    #{title},
+    #{regionId},
+    #{cityId},
+    #{poster},
+    #{address},
+    #{gpsLongitude},
+    #{gpsLatitude},
+    #{startTime},
+    #{corporateAgent},
+    #{status},
+    #{seeCarMan},
+    #{seeCarTime},
+    #{seeCarPhone},
+    #{createPerson},
+    #{createTime},
+    #{modifyPerson},
+    #{modifyTime},
+    #{delPerson},
+    #{delTime},
+    #{delFlag}
+    )
+  </insert>
+  <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuction" >
+    update car_locale_auction
+    <set >
+      <if test="code != null" >
+        code = #{code},
+      </if>
+
+      <if test="title != null" >
+        title = #{title},
+      </if>
+      <if test="regionId != null" >
+        region_id = #{regionId},
+      </if>
+      <if test="cityId != null" >
+        city_id = #{cityId},
+      </if>
+      <if test="poster != null" >
+        poster = #{poster},
+      </if>
+      <if test="address != null" >
+        address = #{address},
+      </if>
+      <if test="gpsLongitude != null" >
+        gps_longitude = #{gpsLongitude},
+      </if>
+      <if test="gpsLatitude != null" >
+        gps_latitude = #{gpsLatitude},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime},
+      </if>
+      <if test="corporateAgent != null" >
+        corporate_agent = #{corporateAgent},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="seeCarMan != null" >
+        see_car_man = #{seeCarMan},
+      </if>
+      <if test="seeCarPhone != null" >
+        see_car_phone = #{seeCarPhone},
+      </if>
+      <if test="seeCarTime != null" >
+        see_car_time = #{seeCarTime},
+      </if>
+      <if test="createPerson != null" >
+        create_person = #{createPerson},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="modifyPerson != null" >
+        modify_person = #{modifyPerson},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="delPerson != null" >
+        del_person = #{delPerson},
+      </if>
+      <if test="delTime != null" >
+        del_time = #{delTime},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateById" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuction" >
+    update car_locale_auction
+    set
+      code = #{code},
+      title = #{title},
+      region_id = #{regionId},
+      city_id = #{cityId},
+      poster = #{poster},
+      address = #{address},
+      gps_longitude = #{gpsLongitude},
+      gps_latitude = #{gpsLatitude},
+      start_time = #{startTime},
+      corporate_agent = #{corporateAgent},
+      status = #{status},
+      see_car_man = #{seeCarMan},
+      see_car_time = #{seeCarTime},
+      create_person = #{createPerson},
+      create_time = #{createTime},
+      modify_person = #{modifyPerson},
+      modify_time = #{modifyTime},
+      del_person = #{delPerson},
+      del_time = #{delTime},
+      del_flag = #{delFlag}
+    where id = #{id}
+  </update>
+</mapper>

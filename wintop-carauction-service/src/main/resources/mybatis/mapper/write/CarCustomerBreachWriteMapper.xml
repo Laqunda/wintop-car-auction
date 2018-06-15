@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarCustomerBreachWriteDao" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_customer_breach
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarCustomerBreach" >
+   insert into car_customer_breach (id, initiator, breach_obj_type, initiat_cn, initiat_mobile, initiat_time,
+      initiat_msg, initiat_auth_manager, initiat_auth_time, initiat_auth_msg, initial_auth_file,
+      money, pay_time, pay_auth_manager, pay_auth_time, pay_auth_msg, pay_auth_file,
+      status, breach_source, order_id, auto_id, breach_order_status, breach_auto_status,breach_transfer_status
+      )
+    values (#{id}, #{initiator}, #{breachObjType}, #{initiatCn}, #{initiatMobile}, #{initiatTime},
+      #{initiatMsg}, #{initiatAuthManager}, #{initiatAuthTime}, #{initiatAuthMsg}, #{initialAuthFile},
+      #{money}, #{payTime}, #{payAuthManager}, #{payAuthTime}, #{payAuthMsg}, #{payAuthFile},
+      #{status}, #{breachSource}, #{orderId}, #{autoId}, #{breachOrderStatus}, #{breachAutoStatus},#{breachTransferStatus}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerBreach" >
+    update car_customer_breach
+    <set >
+      <if test="initiatAuthManager != null" >
+        initiat_auth_manager = #{initiatAuthManager},
+      </if>
+      <if test="initiatAuthTime != null" >
+        initiat_auth_time = #{initiatAuthTime},
+      </if>
+      <if test="initiatAuthMsg != null" >
+        initiat_auth_msg = #{initiatAuthMsg},
+      </if>
+      <if test="initialAuthFile != null" >
+        initial_auth_file = #{initialAuthFile},
+      </if>
+      <if test="money != null" >
+        money = #{money},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime},
+      </if>
+      <if test="payAuthManager != null" >
+        pay_auth_manager = #{payAuthManager},
+      </if>
+      <if test="payAuthTime != null" >
+        pay_auth_time = #{payAuthTime},
+      </if>
+      <if test="payAuthMsg != null" >
+        pay_auth_msg = #{payAuthMsg},
+      </if>
+      <if test="payAuthFile != null" >
+        pay_auth_file = #{payAuthFile},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="breachSource != null" >
+        breach_source = #{breachSource},
+      </if>
+      <if test="breachOrderStatus != null" >
+        breach_order_status = #{breachOrderStatus},
+      </if>
+      <if test="breachAutoStatus != null" >
+        breach_auto_status = #{breachAutoStatus},
+      </if>
+      <if test="breachTransferStatus != null" >
+        breach_transfer_status = #{breachTransferStatus},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarCustomerBreach" >
+    update car_customer_breach
+    set initiator = #{initiator},
+      breach_obj_type = #{breachObjType},
+      initiat_cn = #{initiatCn},
+      initiat_mobile = #{initiatMobile},
+      initiat_time = #{initiatTime},
+      initiat_msg = #{initiatMsg},
+      initiat_auth_manager = #{initiatAuthManager},
+      initiat_auth_time = #{initiatAuthTime},
+      initiat_auth_msg = #{initiatAuthMsg},
+      initial_auth_file = #{initialAuthFile},
+      money = #{money},
+      pay_time = #{payTime},
+      pay_auth_manager = #{payAuthManager},
+      pay_auth_time = #{payAuthTime},
+      pay_auth_msg = #{payAuthMsg},
+      pay_auth_file = #{payAuthFile},
+      status = #{status},
+      breach_source = #{breachSource},
+      order_id = #{orderId},
+      auto_id = #{autoId},
+      breach_order_status = #{breachOrderStatus},
+      breach_auto_status = #{breachAutoStatus}
+    where id = #{id}
+  </update>
+</mapper>

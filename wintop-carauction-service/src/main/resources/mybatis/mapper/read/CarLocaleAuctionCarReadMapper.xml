@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarLocaleAuctionCarReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarLocaleAuctionCar" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="auction_id" property="auctionId" jdbcType="BIGINT" />
+    <result column="auto_auction_id" property="autoAuctionId" jdbcType="BIGINT" />
+    <result column="car_id" property="carId" jdbcType="BIGINT" />
+    <result column="auction_code" property="auctionCode" jdbcType="VARCHAR" />
+    <result column="auction_status" property="auctionStatus" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
+    <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
+    <result column="license_number" property="licenseNumber" jdbcType="VARCHAR" />
+    <result column="starting_price" property="startingPrice" jdbcType="DECIMAL" />
+    <result column="reserve_price" property="reservePrice" jdbcType="DECIMAL" />
+    <result column="begin_register_date" property="beginRegisterDate" jdbcType="DATE" />
+    <result column="source_type" property="sourceType" jdbcType="CHAR" />
+    <result column="auction_num" property="auctionNum" jdbcType="INTEGER" />
+    <result column="publish_user_name" property="publishUserName" jdbcType="VARCHAR" />
+    <result column="mileage" property="mileage" jdbcType="DECIMAL" />
+    <result column="use_nature" property="useNature" jdbcType="VARCHAR" />
+    <result column="if_agent" property="ifAgent" jdbcType="VARCHAR" />
+    <result column="agent_price" property="agentPrice" jdbcType="DECIMAL" />
+    <result column="service_price" property="servicePrice" jdbcType="DECIMAL" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="main_photo" property="carAutoPhoto" jdbcType="VARCHAR" />
+    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="DATE" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="top_bid_price" property="topBidPrice" jdbcType="DECIMAL" />
+    <result column="publish_user_mobile" property="publishUserMobile" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    t1.id, t1.auction_id,t1.auto_auction_id, t1.car_id,t1.auction_code, t1.auction_status,t1.sort,t1.create_person,t1.create_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_locale_auction_car t1
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    select count(1) from car_locale_auction_car t1
+  </select>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from car_locale_auction_car t1
+    where t1.id = #{id}
+  </select>
+  <select id="selectByCarId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from car_locale_auction_car t1
+    where t1.car_id = #{carId}
+  </select>
+  <select id="selectCarNumByAuction" parameterType="java.util.Map" resultType="java.lang.Integer">
+      select count(*) from (
+      SELECT count(t1.id) AS carNum
+      FROM car_locale_auction_car t1
+      WHERE t1.auction_id = #{auctionId}
+      <if test="auctionStatus!=null">
+          AND t1.auction_status = #{auctionStatus}
+      </if>
+      <if test="auctionStatusArr!=null">
+          AND t1.auction_status IN (${auctionStatusArr})
+      </if>
+      group by t1.car_id) t2
+  </select>
+
+  <select id="getAuctionCarList" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+   select
+    t1.id,
+    t1.auction_id,
+    t1.auto_auction_id,
+    t1.car_id,
+    t1.auction_code,
+    t1.auction_status,
+    t1.sort,
+    t1.create_person,
+    t1.create_time,
+    t2.car_auto_no,
+    t2.auto_info_name,
+    t4.license_number,
+    t3.starting_price,
+    t3.reserve_price,
+    t4.begin_register_date,
+    t2.source_type,
+    t2.auction_num,
+    t2.publish_user_name,
+    t2.store_name
+    from car_locale_auction_car t1
+    left join car_auto t2 on t1.car_id=t2.id
+    left join car_auto_auction t3 on t3.id=t1.auto_auction_id
+    left join car_auto_info_detail t4 on t4.auto_id=t2.id
+    where t1.auction_id = #{auctionId}
+    order by t1.sort
+  </select>
+
+    <!--查询某个场次车辆下面最大的排序号-->
+    <select id="getMaxSortForActionCar" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        select
+        max(t1.sort)
+        from car_locale_auction_car t1
+        where t1.auction_id = #{auction_id}
+    </select>
+
+    <select id="getCarLocaleAuctionCar" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        t1.id,
+        t1.auction_id,
+        t1.auto_auction_id,
+        t1.car_id,
+        t1.auction_code,
+        t1.auction_status,
+        t1.sort,
+        t1.create_person,
+        t1.create_time,
+        t2.car_auto_no,
+        t2.auto_info_name,
+        t4.license_number,
+        t3.starting_price,
+        t3.reserve_price,
+        t4.begin_register_date,
+        t2.source_type,
+        t2.auction_num,
+        t2.publish_user_name
+        from car_locale_auction_car t1
+        left join car_auto t2 on t1.car_id=t2.id
+        left join car_auto_auction t3 on t3.id=t1.auto_auction_id
+        left join car_auto_info_detail t4 on t4.auto_id=t2.id
+        where  t1.id = #{id}
+    </select>
+
+    <select id="largeScreenShowCar" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        t1.id,
+        t1.car_id,
+        t1.auto_auction_id,
+        t1.auction_code,
+        t1.auction_status,
+        t1.auction_id,
+        t2.title ,
+        t3.auto_info_name,
+        t3.main_photo,
+        t3.car_auto_no,
+        t1.sort ,
+        t5.begin_register_date,
+        t5.license_number,
+        t5.mileage,
+        t5.use_nature_cn as use_nature,
+        t4.if_agent,
+        t4.starting_price,
+        t4.agent_price,
+        t4.service_price
+        from car_locale_auction_car t1
+        left join car_locale_auction t2 on t1.auction_id=t2.id
+        left join car_auto t3 on t3.id=t1.car_id
+        left join car_auto_auction t4 on t4.id=t1.auto_auction_id
+        left join car_auto_info_detail t5 on t5.auto_id=t1.car_id
+        where  t1.auction_id=#{auctionId}
+        ORDER BY t1.sort
+    </select>
+
+    <select id="largeScreenSort" resultType="java.lang.Integer" parameterType="java.util.Map" >
+        select
+        count(t1.id)
+        from car_locale_auction_car t1
+        where  t1.sort <![CDATA[ <= ]]> #{sort} and t1.auction_id=#{auctionId}
+    </select>
+
+    <select id="hasAuctionCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        t1.id,
+        t1.car_id,
+        t2.id as 'auction_id',
+        t3.car_auto_no,
+        t3.auto_info_name,
+        t4.license_number,
+        t3.store_name,
+        t3.source_type,
+        t2.start_time,
+        t2.address,
+        t2.title,
+        t5.starting_price,
+        t5.reserve_price,
+        t5.top_bid_price,
+        t1.auction_status,
+        t3.publish_user_name,
+        t3.publish_user_mobile
+        FROM `car_locale_auction_car` t1
+        left join car_locale_auction t2 on t1.auction_id=t2.id
+        left join car_auto t3 on t1.car_id=t3.id
+        left join car_auto_info_detail t4 on t4.auto_id=t3.id
+        left join car_auto_auction t5 on t1.auto_auction_id=t5.id
+        WHERE 1=1
+        <if test="cityId != null">
+            AND t2.region_id=#{cityId}
+        </if>
+        <if test="title != null">
+            AND t2.title like CONCAT(CONCAT('%', #{title}),'%')
+        </if>
+        <if test="beginTime != null">
+            AND t2.start_time <![CDATA[ >= ]]> #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND t2.start_time <![CDATA[ <= ]]> #{endTime}
+        </if>
+        ORDER BY t2.start_time DESC
+        <if test="startRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="hasAuctionCarCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(*)
+        FROM `car_locale_auction_car` t1
+        left join car_locale_auction t2 on t1.auction_id=t2.id
+        WHERE 1=1
+        <if test="cityId != null">
+            AND t2.region_id=#{cityId}
+        </if>
+        <if test="title != null">
+            AND t2.title like CONCAT(CONCAT('%', #{title}),'%')
+        </if>
+        <if test="beginTime != null">
+            AND t2.start_time <![CDATA[ >= ]]> #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND t2.start_time <![CDATA[ <= ]]> #{endTime}
+        </if>
+    </select>
+</mapper>

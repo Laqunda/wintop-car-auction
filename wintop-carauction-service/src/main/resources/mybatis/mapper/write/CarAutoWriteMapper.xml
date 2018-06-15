@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAutoWriteDao" >
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_auto
+    where id = #{id}
+  </delete>
+
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAuto" >
+    insert into car_auto (id, publish_user_id, publish_user_name, publish_user_mobile, auto_info_name,
+      store_id,store_name, source_type, views, publish_time, report_score, report_colligation_ranks,report_servicing_ranks,
+      report_time, status, main_photo, if_new, create_user,
+      create_time, update_user, update_time, auction_num, region_id,auto_auction_id)
+    values (#{id}, #{publishUserId}, #{publishUserName}, #{publishUserMobile}, #{autoInfoName},
+      #{storeId},#{storeName}, #{sourceType}, #{views}, #{publishTime}, #{reportScore}, #{reportColligationRanks},#{reportServicingRanks},
+      #{reportTime}, #{status}, #{mainPhoto}, #{ifNew}, #{createUser},
+      #{createTime}, #{updateUser}, #{updateTime}, #{auctionNum}, #{regionId},#{autoAuctionId})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarAuto" >
+    insert into car_auto
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="pulishUserId != null" >
+        pulish_user_id,
+      </if>
+      <if test="pulishUserName != null" >
+        publish_user_name,
+      </if>
+      <if test="pulishUserMobile != null" >
+        publish_user_mobile,
+      </if>
+      <if test="autoInfoName != null" >
+        auto_info_name,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+      <if test="storeName != null" >
+        store_name,
+      </if>
+      <if test="sourceType != null" >
+        source_type,
+      </if>
+      <if test="views != null" >
+        views,
+      </if>
+      <if test="pulishTime != null" >
+        publish_time,
+      </if>
+      <if test="reportScore != null" >
+        report_score,
+      </if>
+      <if test="reportColligationRanks != null" >
+        report_colligation_ranks,
+      </if>
+      <if test="reportServicingRanks != null" >
+        report_servicing_ranks,
+      </if>
+      <if test="reportTime != null" >
+        report_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="mainPhoto != null" >
+        main_photo,
+      </if>
+      <if test="ifNew != null" >
+        if_new,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="publishUserId != null" >
+        #{publishUserId},
+      </if>
+      <if test="publishUserName != null" >
+        #{publishUserName},
+      </if>
+      <if test="publishUserMobile != null" >
+        #{publishUserMobile},
+      </if>
+      <if test="autoInfoName != null" >
+        #{autoInfoName},
+      </if>
+      <if test="storeId != null" >
+        #{storeId},
+      </if>
+      <if test="storeName != null" >
+        #{storeName},
+      </if>
+      <if test="sourceType != null" >
+        #{sourceType},
+      </if>
+      <if test="views != null" >
+        #{views},
+      </if>
+      <if test="publishTime != null" >
+        #{publishTime},
+      </if>
+      <if test="reportScore != null" >
+        #{reportScore},
+      </if>
+      <if test="reportColligationRanks != null" >
+        #{reportColligationRanks},
+      </if>
+      <if test="reportServicingRanks != null" >
+        #{reportServicingRanks},
+      </if>
+      <if test="reportTime != null" >
+        #{reportTime},
+      </if>
+      <if test="status != null" >
+        #{status},
+      </if>
+      <if test="mainPhoto != null" >
+        #{mainPhoto},
+      </if>
+      <if test="ifNew != null" >
+        #{ifNew},
+      </if>
+      <if test="createUser != null" >
+        #{createUser},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarAuto" >
+    update car_auto
+    <set >
+      <if test="publishUserId != null" >
+        publish_user_id = #{publishUserId},
+      </if>
+      <if test="publishUserName != null" >
+        publish_user_name = #{publishUserName},
+      </if>
+      <if test="publishUserMobile != null" >
+        publish_user_mobile = #{publishUserMobile},
+      </if>
+      <if test="autoInfoName != null" >
+        auto_info_name = #{autoInfoName},
+      </if>
+      <if test="storeId != null" >
+        store_id = #{storeId},
+      </if>
+      <if test="storeName != null" >
+         store_name = #{storeName},
+      </if>
+      <if test="sourceType != null" >
+        source_type = #{sourceType},
+      </if>
+      <if test="views != null" >
+        views = #{views},
+      </if>
+      <if test="publishTime != null" >
+        publish_time = #{publishTime},
+      </if>
+      <if test="reportScore != null" >
+        report_score = #{reportScore},
+      </if>
+      <if test="reportColligationRanks != null" >
+        report_colligation_ranks = #{reportColligationRanks},
+      </if>
+      <if test="reportServicingRanks != null" >
+        report_servicing_ranks = #{reportServicingRanks},
+      </if>
+      <if test="reportTime != null" >
+        report_time = #{reportTime},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="mainPhoto != null" >
+        main_photo = #{mainPhoto},
+      </if>
+      <if test="ifNew != null" >
+        if_new = #{ifNew},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="auctionNum != null">
+        auction_num = #{auctionNum},
+      </if>
+      <if test="regionId != null">
+        region_id = #{regionId},
+      </if>
+      <if test="autoAuctionId != null">
+        auto_auction_id = #{autoAuctionId},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarAuto" >
+    update car_auto
+    set publish_user_id = #{publishUserId},
+      publish_user_name = #{publishUserName},
+      publish_user_mobile = #{publishUserMobile},
+      auto_info_name = #{autoInfoName},
+      store_id = #{storeId},
+      store_name = #{storeName},
+      source_type = #{sourceType},
+      views = #{views},
+      publish_time = #{publishTime},
+      report_score = #{reportScore},
+      report_colligation_ranks = #{reportColligationRanks},
+      report_servicing_ranks = #{reportServicingRanks},
+      report_time = #{reportTime},
+      status = #{status},
+      main_photo = #{mainPhoto},
+      if_new = #{ifNew},
+      create_user = #{createUser},
+      create_time = #{createTime},
+      update_user = #{updateUser},
+      update_time = #{updateTime},
+      auction_num = #{auctionNum},
+      region_id = #{regionId},
+      auto_auction_id = #{autoAuctionId}
+    where id = #{id}
+  </update>
+</mapper>

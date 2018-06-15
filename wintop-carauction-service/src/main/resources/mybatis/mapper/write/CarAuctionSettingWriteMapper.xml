@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAuctionSettingWriteDao" >
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from car_auction_setting
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAuctionSetting" >
+    insert into car_auction_setting (id, keep_time, deposit, end_keep_time, delayed_time, server_fee,
+      agent_fee, region_id, `status`,create_time, create_person, update_time, update_person)
+    values (#{id}, #{keepTime}, #{deposit}, #{endKeepTime}, #{delayedTime}, #{serverFee},
+      #{agentFee}, #{regionId}, #{status},#{createTime}, #{createPerson}, #{updateTime}, #{updatePerson})
+  </insert>
+  <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarAuctionSetting" >
+    update car_auction_setting
+    <set >
+      <if test="keepTime != null" >
+        keep_time = #{keepTime},
+      </if>
+      <if test="deposit != null" >
+        deposit = #{deposit},
+      </if>
+      <if test="endKeepTime != null" >
+        end_keep_time = #{endKeepTime},
+      </if>
+      <if test="delayedTime != null" >
+        delayed_time = #{delayedTime},
+      </if>
+      <if test="serverFee != null" >
+        server_fee = #{serverFee},
+      </if>
+      <if test="agentFee != null" >
+        agent_fee = #{agentFee},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="updatePerson != null" >
+        update_person = #{updatePerson},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateById" parameterType="com.wintop.ms.carauction.entity.CarAuctionSetting" >
+    update car_auction_setting
+    set keep_time = #{keepTime},
+      deposit = #{deposit},
+      end_keep_time = #{endKeepTime}
+    where id = #{id}
+  </update>
+</mapper>

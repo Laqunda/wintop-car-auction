@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarOrderBargainWriteDao" >
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from car_order_bargain
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarOrderBargain" >
+     insert into car_order_bargain (id, order_id, car_id, customer_id, transaction_fee, bargain_fee,create_time,
+      status, auth_manager, auth_time, auth_msg)
+    values (#{id}, #{orderId}, #{carId}, #{customerId}, #{transactionFee}, #{bargainFee},#{createTime},
+      #{status}, #{authManager}, #{authTime}, #{authMsg})
+  </insert>
+  <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarOrderBargain" >
+    update car_order_bargain
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId},
+      </if>
+      <if test="carId != null" >
+        car_id = #{carId},
+      </if>
+      <if test="customerId != null" >
+        customer_id = #{customerId},
+      </if>
+      <if test="transactionFee != null" >
+        transaction_fee = #{transactionFee},
+      </if>
+      <if test="bargainFee != null" >
+        bargain_fee = #{bargainFee},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="authManager != null" >
+        auth_manager = #{authManager},
+      </if>
+      <if test="authTime != null" >
+        auth_time = #{authTime},
+      </if>
+      <if test="authMsg != null" >
+        auth_msg = #{authMsg},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateById" parameterType="com.wintop.ms.carauction.entity.CarOrderBargain" >
+    update car_order_bargain
+    set order_id = #{orderId},
+      car_id = #{carId},
+      customer_id = #{customerId},
+      transaction_fee = #{transactionFee},
+      bargain_fee = #{bargainFee},
+      status = #{status},
+      auth_manager = #{authManager},
+      auth_time = #{authTime},
+      auth_msg = #{authMsg}
+    where id = #{id}
+  </update>
+</mapper>

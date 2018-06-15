@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAutoFamilyReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAutoFamily" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="jyid" property="jyid" jdbcType="VARCHAR" />
+    <result column="brand_id" property="brandId" jdbcType="BIGINT" />
+    <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+    <result column="brand_make_id" property="brandMakeId" jdbcType="BIGINT" />
+    <result column="brand_make_name" property="brandMakeName" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="family_photo" property="familyPhoto" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="del_time" property="delTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+    <result column="is_loop_play" property="isLoopPlay" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.name != null" >
+         and name = #{condition.name}
+      </if>
+      <if test="condition.jyid != null" >
+         and jyid = #{condition.jyid}
+      </if>
+      <if test="condition.brandId != null" >
+         and brand_id = #{condition.brandId}
+      </if>
+      <if test="condition.brandName != null" >
+         and brand_name = #{condition.brandName}
+      </if>
+      <if test="condition.brandMakeId != null" >
+         and brand_make_id = #{condition.brandMakeId}
+      </if>
+      <if test="condition.brandMakeName != null" >
+         and brand_make_name = #{condition.brandMakeName}
+      </if>
+      <if test="condition.sort != null" >
+         and sort = #{condition.sort}
+      </if>
+      <if test="condition.familyPhoto != null" >
+         and family_photo = #{condition.familyPhoto}
+      </if>
+      <if test="condition.createTime != null" >
+         and create_time = #{condition.createTime}
+      </if>
+      <if test="condition.updateTime != null" >
+         and update_time = #{condition.updateTime}
+      </if>
+      <if test="condition.delTime != null" >
+         and del_time = #{condition.delTime}
+      </if>
+      <if test="condition.delFlag != null" >
+         and del_flag = #{condition.delFlag}
+      </if>
+      <if test="condition.isLoopPlay != null" >
+         and is_loop_play = #{condition.isLoopPlay}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, name, jyid, brand_id, brand_name, brand_make_id, brand_make_name, sort, family_photo, 
+    create_time, update_time, del_time, del_flag, is_loop_play
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from car_auto_family
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_auto_family
+    where id = #{id}
+  </select>
+
+  <select id="countByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" resultType="java.lang.Integer" >
+    select count(*) from car_auto_family
+  </select>
+
+</mapper>

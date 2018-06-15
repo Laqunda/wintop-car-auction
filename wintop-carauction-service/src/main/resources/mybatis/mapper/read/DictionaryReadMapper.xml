@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.IDictionaryReadDao" >
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.WtDictionary" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="p_id" property="pId" jdbcType="BIGINT" />
+        <result column="edit_user" property="editUser" jdbcType="VARCHAR" />
+        <result column="edit_time" property="editTime" jdbcType="TIMESTAMP" />
+        <result column="sort" property="sort" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="value" property="value" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, name, code, p_id, edit_user, edit_time,sort, status,`value`
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List" />
+        from wt_dictionary
+        order by edit_time desc
+        <if test="startRowNum != null and endRowNum != null ">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from wt_dictionary
+        where id = #{id}
+    </select>
+    <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+        select count(*) from wt_dictionary
+    </select>
+    <select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM wt_dictionary
+        <where>
+            <if test="code!=null and code!=''">
+                AND code = #{code}
+            </if>
+        </where>
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM wt_dictionary
+        <where>
+            <if test="status!=null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByPCode" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select t.id,t.`name`,t.`code`,t.p_id,t.edit_user,t.edit_time,t.sort,t.`status`,t.value
+        FROM wt_dictionary t
+        LEFT JOIN wt_dictionary t1
+        on t.p_id=t1.id
+        WHERE t1.`code`=#{code}
+        <if test="status!=null and status !=''">
+            AND t.status = #{status}
+        </if>
+        ORDER BY t.sort
+    </select>
+    <select id="selectByPCodeArr" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select t.id,t.`name`,t.`code`,t.p_id,t.edit_user,t.edit_time,t.sort,t.`status`,t.value
+        FROM wt_dictionary t
+        LEFT JOIN wt_dictionary t1
+        on t.p_id=t1.id
+        WHERE t1.`code` IN
+        <foreach collection="codeArr" index="index" item="code"
+                 open="(" separator="," close=")">
+            #{code}
+        </foreach>
+        <if test="status!=null and status !=''">
+            AND t.status = #{status}
+        </if>
+        ORDER BY t.sort
+    </select>
+    <select id="selectByCodeArr" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM wt_dictionary
+        <where>
+              code in
+            <foreach collection="codeArr" index="index" item="code"
+                     open="(" separator="," close=")">
+                #{code}
+            </foreach>
+            <if test="status!=null and status !=''">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+</mapper>

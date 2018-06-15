@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAgentCompanyReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAgentCompany" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="company_code" property="companyCode" jdbcType="INTEGER" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_person" property="updatePerson" jdbcType="BIGINT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="handler_id" property="handlerId" jdbcType="BIGINT" />
+    <result column="handler_name" property="handlerName" jdbcType="VARCHAR" />
+    <result column="handler_tel" property="handlerTel" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="del_person" property="delPerson" jdbcType="BIGINT" />
+    <result column="del_time" property="delTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="StoreResultMap" type="com.wintop.ms.carauction.entity.CommonNameVo">
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="checked" property="checked" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, company_code, company_name, create_person, create_time, update_person, update_time,
+    status, address,handler_id, handler_name, handler_tel, remark, del_person, del_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_agent_company
+    WHERE 1=1
+    <if test="companyName != null">
+      and company_name LIKE CONCAT(CONCAT('%', #{companyName}),'%')
+    </if>
+    <if test="status != null">
+      and status=#{status}
+    </if>
+    <if test="status == null">
+      and status <![CDATA[ <> ]]> '3'
+    </if>
+    order by create_time desc
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    select count(1) from car_agent_company
+    where 1=1
+    <if test="companyName != null">
+      and company_name LIKE CONCAT(CONCAT('%', #{companyName}),'%')
+    </if>
+    <if test="status != null">
+      and t1.status=#{status}
+    </if>
+    <if test="status == null">
+      and status <![CDATA[ <> ]]> '3'
+    </if>
+  </select>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_agent_company
+    where id = #{id}
+  </select>
+  <select id="selectAllAgentCompany" resultMap="StoreResultMap" parameterType="java.util.Map" >
+    select
+    id,company_name AS `name`
+    from car_agent_company
+    WHERE status = '1'
+    order by create_time desc
+  </select>
+  <!--根据条件查询可选的代办公司-->
+  <select id="selectCompanyByDepId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+      select
+        t1.id,
+        t1.company_name
+      from car_agent_company t1
+      left join car_agent_company_store t2 on t1.id=t2.company_id
+      where t2.store_id= #{departmentId}
+  </select>
+</mapper>

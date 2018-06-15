@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAutoConfDetailWriteDao" >
+
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.autoId != null" >
+         and auto_id = #{condition.autoId}
+      </if>
+      <if test="condition.confTitleId != null" >
+         and conf_title_id = #{condition.confTitleId}
+      </if>
+      <if test="condition.confTitleName != null" >
+         and conf_title_name = #{condition.confTitleName}
+      </if>
+      <if test="condition.confOption != null" >
+         and conf_option = #{condition.confOption}
+      </if>
+      <if test="condition.confOptionCn != null" >
+         and conf_option_cn = #{condition.confOptionCn}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, auto_id, conf_title_id, conf_title_name, conf_option, conf_option_cn
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_auto_conf_detail
+    where id = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    delete from car_auto_conf_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAutoConfDetail" >
+    insert into car_auto_conf_detail (id, auto_id, conf_title_id, conf_title_name, conf_option, conf_option_cn)
+   values (#{id}, #{autoId}, #{confTitleId}, #{confTitleName}, #{confOption}, #{confOptionCn}
+    )
+  </insert>
+
+
+<!--批量插入-->
+  <insert id="insertArr" parameterType="java.util.List" >
+    insert into car_auto_conf_detail (id, auto_id, conf_title_id, conf_title_name, conf_option, conf_option_cn)
+    values
+    <foreach collection="optionList" item="option" index="index" separator=",">
+      (#{option.id}, #{option.autoId}, #{option.confTitleId}, #{option.confTitleName}, #{option.confOption}, #{option.confOptionCn})
+    </foreach>
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarAutoConfDetail" >
+    insert into car_auto_conf_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="autoId != null" >
+        auto_id,
+      </if>
+      <if test="confTitleId != null" >
+        conf_title_id,
+      </if>
+      <if test="confTitleName != null" >
+        conf_title_name,
+      </if>
+      <if test="confOption != null" >
+        conf_option,
+      </if>
+      <if test="confOptionCn != null" >
+        conf_option_cn,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="autoId != null" >
+        #{autoId},
+      </if>
+      <if test="confTitleId != null" >
+        #{confTitleId},
+      </if>
+      <if test="confTitleName != null" >
+        #{confTitleName},
+      </if>
+      <if test="confOption != null" >
+        #{confOption},
+      </if>
+      <if test="confOptionCn != null" >
+        #{confOptionCn},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByExampleSelective" parameterType="map" >
+    update car_auto_conf_detail
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id},
+      </if>
+      <if test="record.autoId != null" >
+        auto_id = #{record.autoId},
+      </if>
+      <if test="record.confTitleId != null" >
+        conf_title_id = #{record.confTitleId},
+      </if>
+      <if test="record.confTitleName != null" >
+        conf_title_name = #{record.confTitleName},
+      </if>
+      <if test="record.confOption != null" >
+        conf_option = #{record.confOption},
+      </if>
+      <if test="record.confOptionCn != null" >
+        conf_option_cn = #{record.confOptionCn},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update car_auto_conf_detail
+    set id = #{record.id},
+      auto_id = #{record.autoId},
+      conf_title_id = #{record.confTitleId},
+      conf_title_name = #{record.confTitleName},
+      conf_option = #{record.confOption},
+      conf_option_cn = #{record.confOptionCn}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarAutoConfDetail" >
+    update car_auto_conf_detail
+    <set >
+      <if test="autoId != null" >
+        auto_id = #{autoId},
+      </if>
+      <if test="confTitleId != null" >
+        conf_title_id = #{confTitleId},
+      </if>
+      <if test="confTitleName != null" >
+        conf_title_name = #{confTitleName},
+      </if>
+      <if test="confOption != null" >
+        conf_option = #{confOption},
+      </if>
+      <if test="confOptionCn != null" >
+        conf_option_cn = #{confOptionCn},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarAutoConfDetail" >
+    update car_auto_conf_detail
+    set auto_id = #{autoId},
+      conf_title_id = #{confTitleId},
+      conf_title_name = #{confTitleName},
+      conf_option = #{confOption},
+      conf_option_cn = #{confOptionCn}
+    where id = #{id}
+  </update>
+  <!--清理车辆的全部配置信息-->
+  <delete id="deleteByAutoId" parameterType="java.lang.Long">
+    DELETE FROM car_auto_conf_detail WHERE auto_id = #{autoId}
+  </delete>
+</mapper>

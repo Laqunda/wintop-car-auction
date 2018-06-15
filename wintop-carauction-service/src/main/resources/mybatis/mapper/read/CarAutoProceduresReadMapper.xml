@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAutoProceduresReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAutoProcedures" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="auto_id" property="autoId" jdbcType="BIGINT" />
+    <result column="purchase_tax" property="purchaseTax" jdbcType="DECIMAL" />
+    <result column="driving_license" property="drivingLicense" jdbcType="VARCHAR" />
+    <result column="registration_certificate" property="registrationCertificate" jdbcType="VARCHAR" />
+    <result column="instruction" property="instruction" jdbcType="VARCHAR" />
+    <result column="compulsory_insurance" property="compulsoryInsurance" jdbcType="DATE" />
+    <result column="business_insurance" property="businessInsurance" jdbcType="DATE" />
+    <result column="transfer_number" property="transferNumber" jdbcType="INTEGER" />
+    <result column="new_car_invoice" property="newCarInvoice" jdbcType="VARCHAR" />
+    <result column="quality_guarantee" property="qualityGuarantee" jdbcType="VARCHAR" />
+    <result column="car_keys" property="carKeys" jdbcType="INTEGER" />
+    <result column="maintenance_manual" property="maintenanceManual" jdbcType="VARCHAR" />
+    <result column="year_insurance" property="yearInsurance" jdbcType="DATE" />
+    <result column="ticket_of_transfer" property="ticketOfTransfer" jdbcType="VARCHAR" />
+    <result column="cost_price" property="costPrice" jdbcType="VARCHAR" />
+    <result column="un_illegal" property="unIllegal" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="BIGINT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="BIGINT" />
+    <result column="illegal_price" property="illegalPrice" jdbcType="VARCHAR" />
+    <result column="illegal_who" property="illegalWho" jdbcType="VARCHAR" />
+    <result column="illegal_score" property="illegalScore" jdbcType="VARCHAR" />
+    <result column="freight_who" property="freightWho" jdbcType="VARCHAR" />
+    <result column="mention_fee_who" property="mentionFeeWho" jdbcType="VARCHAR" />
+    <result column="transfer_fee" property="transferFee" jdbcType="VARCHAR" />
+
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.autoId != null" >
+         and auto_id = #{condition.autoId}
+      </if>
+      <if test="condition.purchaseTax != null" >
+         and purchase_tax = #{condition.purchaseTax}
+      </if>
+      <if test="condition.drivingLicense != null" >
+         and driving_license = #{condition.drivingLicense}
+      </if>
+      <if test="condition.registrationCertificate != null" >
+         and registration_certificate = #{condition.registrationCertificate}
+      </if>
+      <if test="condition.instruction != null" >
+         and instruction = #{condition.instruction}
+      </if>
+      <if test="condition.compulsoryInsurance != null" >
+         and compulsory_insurance = #{condition.compulsoryInsurance}
+      </if>
+      <if test="condition.businessInsurance != null" >
+         and business_insurance = #{condition.businessInsurance}
+      </if>
+      <if test="condition.transferNumber != null" >
+         and transfer_number = #{condition.transferNumber}
+      </if>
+      <if test="condition.newCarInvoice != null" >
+         and new_car_invoice = #{condition.newCarInvoice}
+      </if>
+      <if test="condition.qualityGuarantee != null" >
+         and quality_guarantee = #{condition.qualityGuarantee}
+      </if>
+      <if test="condition.carKeys != null" >
+         and car_keys = #{condition.carKeys}
+      </if>
+      <if test="condition.maintenanceManual != null" >
+         and maintenance_manual = #{condition.maintenanceManual}
+      </if>
+      <if test="condition.yearInsurance != null" >
+         and year_insurance = #{condition.yearInsurance}
+      </if>
+      <if test="condition.ticketOfTransfer != null" >
+         and ticket_of_transfer = #{condition.ticketOfTransfer}
+      </if>
+      <if test="condition.costPrice != null" >
+         and cost_price = #{condition.costPrice}
+      </if>
+      <if test="condition.unIllegal != null" >
+         and un_illegal = #{condition.unIllegal}
+      </if>
+      <if test="condition.createTime != null" >
+         and create_time = #{condition.createTime}
+      </if>
+      <if test="condition.createUser != null" >
+         and create_user = #{condition.createUser}
+      </if>
+      <if test="condition.updateTime != null" >
+         and update_time = #{condition.updateTime}
+      </if>
+      <if test="condition.updateUser != null" >
+         and update_user = #{condition.updateUser}
+      </if>
+      <if test="condition.freightWho != null" >
+        and freight_who = #{condition.freightWho}
+      </if>
+      <if test="condition.mentionFeeWho != null" >
+        and mention_fee_who = #{condition.mentionFeeWho}
+      </if>
+      <if test="condition.transferFee != null" >
+        and transfer_fee = #{condition.transferFee}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, auto_id, purchase_tax, driving_license, registration_certificate, instruction, 
+    compulsory_insurance, business_insurance, transfer_number, new_car_invoice, quality_guarantee, 
+    car_keys, maintenance_manual, year_insurance, ticket_of_transfer,
+    cost_price, un_illegal, create_time, create_user, update_time, update_user,
+    freight_who,mention_fee_who,transfer_fee,illegal_price,illegal_score,illegal_who
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from car_auto_procedures
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_auto_procedures
+    where id = #{id}
+  </select>
+
+  <select id="countByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" resultType="java.lang.Integer" >
+    select count(*) from car_auto_procedures
+  </select>
+
+  <select id="getAutoProceduresByCarId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from car_auto_procedures
+    where auto_id = #{carId}
+  </select>
+
+</mapper>

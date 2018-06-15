@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAutoStyleReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAutoStyle" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="jyid" property="jyid" jdbcType="VARCHAR" />
+    <result column="brand_id" property="brandId" jdbcType="BIGINT" />
+    <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+    <result column="brand_logo" property="brandLogo" jdbcType="VARCHAR" />
+    <result column="brand_make_id" property="brandMakeId" jdbcType="BIGINT" />
+    <result column="brand_make_name" property="brandMakeName" jdbcType="VARCHAR" />
+    <result column="auto_family_id" property="autoFamilyId" jdbcType="BIGINT" />
+    <result column="auto_family_name" property="autoFamilyName" jdbcType="VARCHAR" />
+    <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="vehicle_name" property="vehicleName" jdbcType="VARCHAR" />
+    <result column="engine_desc" property="engineDesc" jdbcType="VARCHAR" />
+    <result column="engine_model" property="engineModel" jdbcType="VARCHAR" />
+    <result column="gearbox_name" property="gearboxName" jdbcType="VARCHAR" />
+    <result column="year_pattern" property="yearPattern" jdbcType="VARCHAR" />
+    <result column="market_date" property="marketDate" jdbcType="VARCHAR" />
+    <result column="cfg_level" property="cfgLevel" jdbcType="VARCHAR" />
+    <result column="seat" property="seat" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="alias" property="alias" jdbcType="VARCHAR" />
+    <result column="year_pattern_id" property="yearPatternId" jdbcType="BIGINT" />
+    <result column="alias_id" property="aliasId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.jyid != null" >
+         and jyid = #{condition.jyid}
+      </if>
+      <if test="condition.brandId != null" >
+         and brand_id = #{condition.brandId}
+      </if>
+      <if test="condition.brandName != null" >
+         and brand_name = #{condition.brandName}
+      </if>
+      <if test="condition.brandLogo != null" >
+         and brand_logo = #{condition.brandLogo}
+      </if>
+      <if test="condition.brandMakeId != null" >
+         and brand_make_id = #{condition.brandMakeId}
+      </if>
+      <if test="condition.brandMakeName != null" >
+         and brand_make_name = #{condition.brandMakeName}
+      </if>
+      <if test="condition.autoFamilyId != null" >
+         and auto_family_id = #{condition.autoFamilyId}
+      </if>
+      <if test="condition.autoFamilyName != null" >
+         and auto_family_name = #{condition.autoFamilyName}
+      </if>
+      <if test="condition.groupId != null" >
+         and group_id = #{condition.groupId}
+      </if>
+      <if test="condition.groupName != null" >
+         and group_name = #{condition.groupName}
+      </if>
+      <if test="condition.vehicleName != null" >
+         and vehicle_name = #{condition.vehicleName}
+      </if>
+      <if test="condition.engineDesc != null" >
+         and engine_desc = #{condition.engineDesc}
+      </if>
+      <if test="condition.engineModel != null" >
+         and engine_model = #{condition.engineModel}
+      </if>
+      <if test="condition.gearboxName != null" >
+         and gearbox_name = #{condition.gearboxName}
+      </if>
+      <if test="condition.yearPattern != null" >
+         and year_pattern = #{condition.yearPattern}
+      </if>
+      <if test="condition.marketDate != null" >
+         and market_date = #{condition.marketDate}
+      </if>
+      <if test="condition.cfgLevel != null" >
+         and cfg_level = #{condition.cfgLevel}
+      </if>
+      <if test="condition.seat != null" >
+         and seat = #{condition.seat}
+      </if>
+      <if test="condition.createTime != null" >
+         and create_time = #{condition.createTime}
+      </if>
+      <if test="condition.alias != null" >
+         and alias = #{condition.alias}
+      </if>
+      <if test="condition.yearPatternId != null" >
+         and year_pattern_id = #{condition.yearPatternId}
+      </if>
+      <if test="condition.aliasId != null" >
+         and alias_id = #{condition.aliasId}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, jyid, brand_id, brand_name, brand_logo, brand_make_id, brand_make_name, auto_family_id, 
+    auto_family_name, group_id, group_name, vehicle_name, engine_desc, engine_model, 
+    gearbox_name, year_pattern, market_date, cfg_level, seat, create_time, alias, year_pattern_id, 
+    alias_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from car_auto_style
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_auto_style
+    where id = #{id}
+  </select>
+
+  <select id="countByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" resultType="java.lang.Integer" >
+    select count(*) from car_auto_style
+  </select>
+
+</mapper>

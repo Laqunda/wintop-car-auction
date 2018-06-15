@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAppInfoWriteDao" >
+
+    <delete id="deleteById" parameterType="java.lang.Long" >
+        delete from car_app_info
+        where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAppInfo" >
+        insert into car_app_info
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="appId != null" >
+                app_id,
+            </if>
+            <if test="appName != null" >
+                app_name,
+            </if>
+            <if test="version != null" >
+                version,
+            </if>
+            <if test="about != null" >
+                about,
+            </if>
+            <if test="logo != null" >
+                logo,
+            </if>
+            <if test="editor != null" >
+                editor,
+            </if>
+            <if test="editTime != null" >
+                edit_time,
+            </if>
+            <if test="type != null" >
+                `type`,
+            </if>
+            <if test="updateUrl != null" >
+                update_url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id},
+            </if>
+            <if test="appId != null" >
+                #{appId},
+            </if>
+            <if test="appName != null" >
+                #{appName},
+            </if>
+            <if test="version != null" >
+                #{version},
+            </if>
+            <if test="about != null" >
+                #{about},
+            </if>
+            <if test="logo != null" >
+                #{logo},
+            </if>
+            <if test="editor != null" >
+                #{editor},
+            </if>
+            <if test="editTime != null" >
+                #{editTime},
+            </if>
+            <if test="type != null" >
+                #{type},
+            </if>
+            <if test="updateUrl != null" >
+                #{updateUrl},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarAppInfo" >
+        update car_app_info
+        <set >
+            <if test="appId != null" >
+                app_id = #{appId},
+            </if>
+            <if test="appName != null" >
+                app_name = #{appName},
+            </if>
+            <if test="version != null" >
+                version = #{version},
+            </if>
+            <if test="about != null" >
+                about = #{about},
+            </if>
+            <if test="logo != null" >
+                logo = #{logo},
+            </if>
+            <if test="editor != null" >
+                editor = #{editor},
+            </if>
+            <if test="editTime != null" >
+                edit_time = #{editTime},
+            </if>
+            <if test="type != null" >
+                `type` = #{type},
+            </if>
+            <if test="updateUrl != null" >
+                update_url = #{updateUrl},
+            </if>
+            <if test="tel != null" >
+                tel = #{tel},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateById" parameterType="com.wintop.ms.carauction.entity.CarAppInfo" >
+        update car_app_info
+        set app_id = #{appId},
+        app_name = #{appName},
+        version = #{version},
+        about = #{about},
+        logo = #{logo},
+        editor = #{editor},
+        edit_time = #{editTime},
+        type = #{type},
+        update_url = #{updateUrl}
+        where id = #{id}
+    </update>
+</mapper>

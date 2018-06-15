@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarRegionSettingReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarRegionSetting" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="region_id" property="regionId" jdbcType="BIGINT" />
+    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+    <result column="frozen_capital" property="frozenCapital" jdbcType="DECIMAL" />
+    <result column="pay_breach_day" property="payBreachDay" jdbcType="INTEGER" />
+    <result column="pay_breach_time" property="payBreachTime" jdbcType="TIME" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="transfer_breach_day" property="transferBreachDay" jdbcType="INTEGER" />
+    <result column="transfer_breach_time" property="transferBreachTime" jdbcType="TIME" />
+    <result column="agent_fee" property="agentFee" jdbcType="DECIMAL" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_person" property="updatePerson" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    t1.id, t1.region_id,t2.`name` AS region_name, t1.frozen_capital, t1.pay_breach_day, t1.pay_breach_time, t1.create_time,
+    t1.create_person, t1.status, t1.transfer_breach_day, t1.transfer_breach_time, t1.agent_fee, t1.update_time,
+    t1.update_person
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM car_region_setting t1
+    INNER JOIN wt_region t2 on t1.region_id=t2.id
+    WHERE 1=1
+    <if test="regionId!=null">
+      AND t1.region_id=#{regionId}
+    </if>
+    <if test="startRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    SELECT count(t1.id)
+    FROM car_region_setting t1
+    INNER JOIN wt_region t2 on t1.region_id=t2.id
+    WHERE 1=1
+    <if test="regionId!=null">
+      AND t1.region_id=#{regionId}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM car_region_setting t1
+    INNER JOIN wt_region t2 on t1.region_id=t2.id
+    WHERE t1.id = #{id}
+  </select>
+  <select id="selectByRegionId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM car_region_setting t1
+    INNER JOIN wt_region t2 on t1.region_id=t2.id
+    WHERE t1.region_id = #{regionId}
+  </select>
+</mapper>

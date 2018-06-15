@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarCustomerAuthReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarCustomerAuth" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="identity_number" property="identityNumber" jdbcType="VARCHAR" />
+    <result column="identity_photo_front" property="identityPhotoFront" jdbcType="VARCHAR" />
+    <result column="identity_photo_back" property="identityPhotoBack" jdbcType="VARCHAR" />
+    <result column="identity_photo_hand" property="identityPhotoHand" jdbcType="VARCHAR" />
+    <result column="auth_status" property="authStatus" jdbcType="VARCHAR" />
+    <result column="auth_msg" property="authMsg" jdbcType="VARCHAR" />
+    <result column="auth_time" property="authTime" jdbcType="TIMESTAMP" />
+    <result column="auth_manager" property="authManager" jdbcType="BIGINT" />
+    <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+    <result column="sign_pact" property="signPact" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="BIGINT" />
+    <result column="region" property="region" jdbcType="BIGINT" />
+    <result column="county" property="county" jdbcType="BIGINT" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="userStoreName" property="userStoreName" jdbcType="VARCHAR" />
+    <result column="is_available" property="isAvailable" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    t1.id, t1.user_id, t1.real_name, t1.address, t1.identity_number, t1.identity_photo_front, t1.identity_photo_back,
+    t1.identity_photo_hand, t1.auth_status, t1.auth_msg, t1.auth_time, t1.auth_manager, t1.apply_time,
+    t1.sign_pact, t1.province, t1.region, t1.county,t1.city_name,t1.is_available
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_customer_auth t1
+    where t1.id = #{id}
+  </select>
+
+
+  <select id="getAuthInfoByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+      ,t2.status
+    from car_customer_auth t1
+    LEFT JOIN wt_app_user t2 ON t2.id = t1.user_id
+    where t1.user_id = #{userId}
+  </select>
+
+  <select id="selectUserAuthList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    ca.id, ca.real_name,a.mobile, ca.address, ca.identity_number, ca.identity_photo_front,ca.identity_photo_back,
+    ca.identity_photo_hand, ca.auth_status, ca.auth_msg, ca.auth_time, ca.auth_manager, ca.apply_time,cs.simple_name as userStoreName,
+    ca.sign_pact, ca.city_name,ca.user_id
+    from car_customer_auth ca
+    INNER JOIN  wt_app_user a ON a.id=ca.user_id
+    LEFT JOIN car_store cs on cs.id=a.store_id
+    where 1=1
+    <if test="authStatus!=null and authStatus!=''">
+      AND ca.auth_status = #{authStatus}
+    </if>
+    <if test="searchName != null and searchName !=''">
+      and(ca.real_name like CONCAT(CONCAT('%', #{searchName}),'%') OR a.mobile like CONCAT(CONCAT('%', #{searchName}),'%'))
+    </if>
+    <if test="startRowNum!=null and endRowNum!=null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+
+
+  <select id="selectUserAuthCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+      select
+      count(1)
+      from car_customer_auth ca
+      INNER JOIN  wt_app_user a ON a.id=ca.user_id
+      where 1=1
+      <if test="authStatus!=null and authStatus!=''">
+        AND ca.auth_status = #{authStatus}
+      </if>
+      <if test="searchName != null and searchName !=''">
+        and(ca.real_name like CONCAT(CONCAT('%', #{searchName}),'%') OR a.mobile like CONCAT(CONCAT('%', #{searchName}),'%'))
+      </if>
+  </select>
+</mapper>

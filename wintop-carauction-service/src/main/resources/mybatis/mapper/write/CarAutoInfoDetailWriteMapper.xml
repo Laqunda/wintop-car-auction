@@ -1,0 +1,1004 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAutoInfoDetailWriteDao" >
+
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.autoId != null" >
+         and auto_id = #{condition.autoId}
+      </if>
+      <if test="condition.vin != null" >
+         and vin = #{condition.vin}
+      </if>
+      <if test="condition.autoBrand != null" >
+         and auto_brand = #{condition.autoBrand}
+      </if>
+      <if test="condition.autoStyle != null" >
+         and auto_style = #{condition.autoStyle}
+      </if>
+      <if test="condition.autoSeries != null" >
+         and auto_series = #{condition.autoSeries}
+      </if>
+      <if test="condition.engineCapacity != null" >
+         and engine_capacity = #{condition.engineCapacity}
+      </if>
+      <if test="condition.engineCapacityUnit != null" >
+         and engine_capacity_unit = #{condition.engineCapacityUnit}
+      </if>
+
+      <if test="condition.environment != null" >
+         and environment = #{condition.environment}
+      </if>
+      <if test="condition.oilSupplySystem != null" >
+         and oil_supply_system = #{condition.oilSupplySystem}
+      </if>
+      <if test="condition.transmission != null" >
+         and transmission = #{condition.transmission}
+      </if>
+      <if test="condition.vehicleDriver != null" >
+         and vehicle_driver = #{condition.vehicleDriver}
+      </if>
+      <if test="condition.mileage != null" >
+         and mileage = #{condition.mileage}
+      </if>
+      <if test="condition.color != null" >
+         and color = #{condition.color}
+      </if>
+      <if test="condition.colorChanged != null" >
+         and color_changed = #{condition.colorChanged}
+      </if>
+      <if test="condition.manufactureDate != null" >
+         and manufacture_date = #{condition.manufactureDate}
+      </if>
+      <if test="condition.beginRegisterDate != null" >
+         and begin_register_date = #{condition.beginRegisterDate}
+      </if>
+      <if test="condition.vehicleAttributionProvince != null" >
+         and vehicle_attribution_province = #{condition.vehicleAttributionProvince}
+      </if>
+      <if test="condition.vehicleAttributionCity != null" >
+         and vehicle_attribution_city = #{condition.vehicleAttributionCity}
+      </if>
+      <if test="condition.licenseNumber != null" >
+         and license_number = #{condition.licenseNumber}
+      </if>
+      <if test="condition.carNature != null" >
+         and car_nature = #{condition.carNature}
+      </if>
+      <if test="condition.useNature != null" >
+         and use_nature = #{condition.useNature}
+      </if>
+      <if test="condition.isModification != null" >
+         and is_modification = #{condition.isModification}
+      </if>
+      <if test="condition.originalPrice != null" >
+         and original_price = #{condition.originalPrice}
+      </if>
+      <if test="condition.remark != null" >
+         and remark = #{condition.remark}
+      </if>
+      <if test="condition.intakeMethod != null" >
+         and intake_method = #{condition.intakeMethod}
+      </if>
+      <if test="condition.remarkPhoto != null" >
+         and remark_photo = #{condition.remarkPhoto}
+      </if>
+      <if test="condition.carShape != null" >
+         and car_shape = #{condition.carShape}
+      </if>
+      <if test="condition.carShapeCn != null" >
+         and car_shape_cn = #{condition.carShapeCn}
+      </if>
+      <if test="condition.createTime != null" >
+         and create_time = #{condition.createTime}
+      </if>
+      <if test="condition.createUser != null" >
+         and create_user = #{condition.createUser}
+      </if>
+      <if test="condition.updateTime != null" >
+         and update_time = #{condition.updateTime}
+      </if>
+      <if test="condition.updateUser != null" >
+         and update_user = #{condition.updateUser}
+      </if>
+      <if test="condition.autoBrandCn != null" >
+        and auto_brand_cn = #{condition.autoBrandCn}
+      </if>
+      <if test="condition.autoStyleCn != null" >
+        and auto_style_cn = #{condition.autoStyleCn}
+      </if>
+      <if test="condition.autoSeriesCn != null" >
+        and auto_series_cn = #{condition.autoSeriesCn}
+      </if>
+      <if test="condition.environmentCn != null" >
+        and environment_cn = #{condition.environmentCn}
+      </if>
+      <if test="condition.oilSupplySystemCn != null" >
+        and oil_supply_system_cn = #{condition.oilSupplySystemCn}
+      </if>
+      <if test="condition.transmissionCn != null" >
+        and transmission_cn = #{condition.transmissionCn}
+      </if>
+      <if test="condition.vehicleDriverCn != null" >
+        and vehicle_driver_cn = #{condition.vehicleDriverCn}
+      </if>
+      <if test="condition.colorCn != null" >
+        and color_cn = #{condition.colorCn}
+      </if>
+      <if test="condition.vehicleAttributionProvinceCn != null" >
+        and vehicle_attribution_province_cn = #{condition.vehicleAttributionProvinceCn}
+      </if>
+      <if test="condition.vehicleAttributionCityCn != null" >
+        and vehicle_attribution_city_cn = #{condition.vehicleAttributionCityCn}
+      </if>
+      <if test="condition.carNatureCn != null" >
+        and car_nature_cn = #{condition.carNatureCn}
+      </if>
+      <if test="condition.useNatureCn != null" >
+        and use_nature_cn = #{condition.useNatureCn}
+      </if>
+      <if test="condition.intakeMethodCn != null" >
+        and intake_method_cn = #{condition.intakeMethodCn}
+      </if>
+
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, auto_id, vin, auto_brand, auto_style, auto_series, engine_capacity, engine_capacity_unit,  environment, oil_supply_system, transmission,
+    vehicle_driver, mileage, color, color_changed, manufacture_date, begin_register_date, 
+    vehicle_attribution_province, vehicle_attribution_city, license_number, car_nature, 
+    use_nature, is_modification, original_price, remark, intake_method, remark_photo, 
+    car_shape, car_shape_cn, create_time, create_user, update_time, update_user,auto_brand_cn,auto_style_cn,auto_series_cn,environment_cn,
+    oil_supply_system_cn,transmission_cn,vehicle_driver_cn,color_cn,vehicle_attribution_province_cn,vehicle_attribution_city_cn,car_nature_cn,
+    use_nature_cn,intake_method_cn
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_auto_info_detail
+    where id = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    delete from car_auto_info_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAutoInfoDetail" >
+    insert into car_auto_info_detail (id, auto_id, vin, auto_brand, auto_style, auto_series, engine_capacity, 
+      engine_capacity_unit, environment,
+      oil_supply_system, transmission, vehicle_driver, mileage, color, color_changed, 
+      manufacture_date, begin_register_date, vehicle_attribution_province, vehicle_attribution_city, 
+      license_number, car_nature, use_nature, is_modification, original_price, 
+      remark, intake_method, remark_photo, car_shape, car_shape_cn, create_time, 
+      create_user, update_time, update_user,auto_brand_cn,auto_style_cn,auto_series_cn,environment_cn,
+    oil_supply_system_cn,transmission_cn,vehicle_driver_cn,color_cn,vehicle_attribution_province_cn,vehicle_attribution_city_cn,car_nature_cn,
+    use_nature_cn,intake_method_cn)
+    values (#{id}, #{autoId}, #{vin}, #{autoBrand}, #{autoStyle}, #{autoSeries}, #{engineCapacity}, 
+      #{engineCapacityUnit}, #{environment},
+      #{oilSupplySystem}, #{transmission}, #{vehicleDriver}, #{mileage}, #{color}, #{colorChanged}, 
+      #{manufactureDate}, #{beginRegisterDate}, #{vehicleAttributionProvince}, #{vehicleAttributionCity}, 
+      #{licenseNumber}, #{carNature}, #{useNature}, #{isModification}, #{originalPrice}, 
+      #{remark}, #{intakeMethod}, #{remarkPhoto}, #{carShape}, #{carShapeCn}, #{createTime}, 
+      #{createUser}, #{updateTime}, #{updateUser},#{autoBrandCn},#{autoStyleCn},#{autoSeriesCn},#{environmentCn},
+    #{oilSupplySystemCn},#{transmissionCn},#{vehicleDriverCn},#{colorCn},#{vehicleAttributionProvinceCn},#{vehicleAttributionCityCn},#{carNatureCn},
+    #{useNatureCn},#{intakeMethodCn})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarAutoInfoDetail" >
+    insert into car_auto_info_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="autoId != null" >
+        auto_id,
+      </if>
+      <if test="vin != null" >
+        vin,
+      </if>
+      <if test="autoBrand != null" >
+        auto_brand,
+      </if>
+      <if test="autoStyle != null" >
+        auto_style,
+      </if>
+      <if test="autoSeries != null" >
+        auto_series,
+      </if>
+      <if test="engineCapacity != null" >
+        engine_capacity,
+      </if>
+      <if test="engineCapacityUnit != null" >
+        engine_capacity_unit,
+      </if>
+
+      <if test="environment != null" >
+        environment,
+      </if>
+      <if test="oilSupplySystem != null" >
+        oil_supply_system,
+      </if>
+      <if test="transmission != null" >
+        transmission,
+      </if>
+      <if test="vehicleDriver != null" >
+        vehicle_driver,
+      </if>
+      <if test="mileage != null" >
+        mileage,
+      </if>
+      <if test="color != null" >
+        color,
+      </if>
+      <if test="colorChanged != null" >
+        color_changed,
+      </if>
+      <if test="manufactureDate != null" >
+        manufacture_date,
+      </if>
+      <if test="beginRegisterDate != null" >
+        begin_register_date,
+      </if>
+      <if test="vehicleAttributionProvince != null" >
+        vehicle_attribution_province,
+      </if>
+      <if test="vehicleAttributionCity != null" >
+        vehicle_attribution_city,
+      </if>
+      <if test="licenseNumber != null" >
+        license_number,
+      </if>
+      <if test="carNature != null" >
+        car_nature,
+      </if>
+      <if test="useNature != null" >
+        use_nature,
+      </if>
+      <if test="isModification != null" >
+        is_modification,
+      </if>
+      <if test="originalPrice != null" >
+        original_price,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="intakeMethod != null" >
+        intake_method,
+      </if>
+      <if test="remarkPhoto != null" >
+        remark_photo,
+      </if>
+      <if test="carShape != null" >
+        car_shape,
+      </if>
+      <if test="carShapeCn != null" >
+        car_shape_cn,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+
+      <if test="autoBrandCn != null" >
+        auto_brand_cn,
+      </if>
+      <if test="autoStyleCn != null" >
+        auto_style_cn,
+      </if>
+      <if test="autoSeriesCn != null" >
+        auto_series_cn,
+      </if>
+      <if test="environmentCn != null" >
+        environment_cn,
+      </if>
+      <if test="oilSupplySystemCn != null" >
+        oil_supply_system_cn,
+      </if>
+      <if test="transmissionCn != null" >
+        transmission_cn,
+      </if>
+      <if test="vehicleDriverCn != null" >
+        vehicle_driver_cn,
+      </if>
+      <if test="colorCn != null" >
+        color_cn,
+      </if>
+      <if test="vehicleAttributionProvinceCn != null" >
+        vehicle_attribution_province_cn,
+      </if>
+      <if test="vehicleAttributionCityCn != null" >
+        vehicle_attribution_city_cn,
+      </if>
+      <if test="carNatureCn != null" >
+        car_nature_cn,
+      </if>
+      <if test="useNatureCn != null" >
+        use_nature_cn,
+      </if>
+      <if test="intakeMethodCn != null" >
+        intake_method_cn,
+      </if>
+
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="autoId != null" >
+        #{autoId},
+      </if>
+      <if test="vin != null" >
+        #{vin},
+      </if>
+      <if test="autoBrand != null" >
+        #{autoBrand},
+      </if>
+      <if test="autoStyle != null" >
+        #{autoStyle},
+      </if>
+      <if test="autoSeries != null" >
+        #{autoSeries},
+      </if>
+      <if test="engineCapacity != null" >
+        #{engineCapacity},
+      </if>
+      <if test="engineCapacityUnit != null" >
+        #{engineCapacityUnit},
+      </if>
+
+      <if test="environment != null" >
+        #{environment},
+      </if>
+      <if test="oilSupplySystem != null" >
+        #{oilSupplySystem},
+      </if>
+      <if test="transmission != null" >
+        #{transmission},
+      </if>
+      <if test="vehicleDriver != null" >
+        #{vehicleDriver},
+      </if>
+      <if test="mileage != null" >
+        #{mileage},
+      </if>
+      <if test="color != null" >
+        #{color},
+      </if>
+      <if test="colorChanged != null" >
+        #{colorChanged},
+      </if>
+      <if test="manufactureDate != null" >
+        #{manufactureDate},
+      </if>
+      <if test="beginRegisterDate != null" >
+        #{beginRegisterDate},
+      </if>
+      <if test="vehicleAttributionProvince != null" >
+        #{vehicleAttributionProvince},
+      </if>
+      <if test="vehicleAttributionCity != null" >
+        #{vehicleAttributionCity},
+      </if>
+      <if test="licenseNumber != null" >
+        #{licenseNumber},
+      </if>
+      <if test="carNature != null" >
+        #{carNature},
+      </if>
+      <if test="useNature != null" >
+        #{useNature},
+      </if>
+      <if test="isModification != null" >
+        #{isModification},
+      </if>
+      <if test="originalPrice != null" >
+        #{originalPrice},
+      </if>
+      <if test="remark != null" >
+        #{remark},
+      </if>
+      <if test="intakeMethod != null" >
+        #{intakeMethod},
+      </if>
+      <if test="remarkPhoto != null" >
+        #{remarkPhoto},
+      </if>
+      <if test="carShape != null" >
+        #{carShape},
+      </if>
+      <if test="carShapeCn != null" >
+        #{carShapeCn},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="createUser != null" >
+        #{createUser},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser},
+      </if>
+      <if test="autoBrandCn != null" >
+        #{autoBrandCn},
+      </if>
+      <if test="autoStyleCn != null" >
+        #{autoStyleCn},
+      </if>
+      <if test="autoSeriesCn != null" >
+        #{autoSeriesCn},
+      </if>
+      <if test="environmentCn != null" >
+        #{environmentCn},
+      </if>
+      <if test="oilSupplySystemCn != null" >
+        #{oilSupplySystemCn},
+      </if>
+      <if test="transmissionCn != null" >
+        #{transmissionCn},
+      </if>
+      <if test="vehicleDriverCn != null" >
+        #{vehicleDriverCn},
+      </if>
+      <if test="colorCn != null" >
+        #{colorCn},
+      </if>
+      <if test="vehicleAttributionProvinceCn != null" >
+        #{vehicleAttributionProvinceCn},
+      </if>
+      <if test="vehicleAttributionCityCn != null" >
+        #{vehicleAttributionCityCn},
+      </if>
+      <if test="carNatureCn != null" >
+        #{carNatureCn},
+      </if>
+      <if test="useNatureCn != null" >
+        #{useNatureCn},
+      </if>
+      <if test="intakeMethodCn != null" >
+        #{intakeMethodCn},
+      </if>
+
+    </trim>
+  </insert>
+
+  <update id="updateByExampleSelective" parameterType="map" >
+    update car_auto_info_detail
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id},
+      </if>
+      <if test="record.autoId != null" >
+        auto_id = #{record.autoId},
+      </if>
+      <if test="record.vin != null" >
+        vin = #{record.vin},
+      </if>
+      <if test="record.autoBrand != null" >
+        auto_brand = #{record.autoBrand},
+      </if>
+      <if test="record.autoStyle != null" >
+        auto_style = #{record.autoStyle},
+      </if>
+      <if test="record.autoSeries != null" >
+        auto_series = #{record.autoSeries},
+      </if>
+      <if test="record.engineCapacity != null" >
+        engine_capacity = #{record.engineCapacity},
+      </if>
+      <if test="record.engineCapacityUnit != null" >
+        engine_capacity_unit = #{record.engineCapacityUnit},
+      </if>
+
+      <if test="record.environment != null" >
+        environment = #{record.environment},
+      </if>
+      <if test="record.oilSupplySystem != null" >
+        oil_supply_system = #{record.oilSupplySystem},
+      </if>
+      <if test="record.transmission != null" >
+        transmission = #{record.transmission},
+      </if>
+      <if test="record.vehicleDriver != null" >
+        vehicle_driver = #{record.vehicleDriver},
+      </if>
+      <if test="record.mileage != null" >
+        mileage = #{record.mileage},
+      </if>
+      <if test="record.color != null" >
+        color = #{record.color},
+      </if>
+      <if test="record.colorChanged != null" >
+        color_changed = #{record.colorChanged},
+      </if>
+      <if test="record.manufactureDate != null" >
+        manufacture_date = #{record.manufactureDate},
+      </if>
+      <if test="record.beginRegisterDate != null" >
+        begin_register_date = #{record.beginRegisterDate},
+      </if>
+      <if test="record.vehicleAttributionProvince != null" >
+        vehicle_attribution_province = #{record.vehicleAttributionProvince},
+      </if>
+      <if test="record.vehicleAttributionCity != null" >
+        vehicle_attribution_city = #{record.vehicleAttributionCity},
+      </if>
+      <if test="record.licenseNumber != null" >
+        license_number = #{record.licenseNumber},
+      </if>
+      <if test="record.carNature != null" >
+        car_nature = #{record.carNature},
+      </if>
+      <if test="record.useNature != null" >
+        use_nature = #{record.useNature},
+      </if>
+      <if test="record.isModification != null" >
+        is_modification = #{record.isModification},
+      </if>
+      <if test="record.originalPrice != null" >
+        original_price = #{record.originalPrice},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark},
+      </if>
+      <if test="record.intakeMethod != null" >
+        intake_method = #{record.intakeMethod},
+      </if>
+      <if test="record.remarkPhoto != null" >
+        remark_photo = #{record.remarkPhoto},
+      </if>
+      <if test="record.carShape != null" >
+        car_shape = #{record.carShape},
+      </if>
+      <if test="record.carShapeCn != null" >
+        car_shape_cn = #{record.carShapeCn},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser},
+      </if>
+
+      <if test="record.autoBrandCn != null" >
+        auto_brand_cn = #{record.autoBrandCn},
+      </if>
+      <if test="record.autoStyleCn != null" >
+        auto_style_cn = #{record.autoStyleCn},
+      </if>
+      <if test="record.autoSeriesCn != null" >
+        auto_series_cn = #{record.autoSeriesCn},
+      </if>
+      <if test="record.environmentCn != null" >
+        environment_cn = #{record.environmentCn},
+      </if>
+      <if test="record.oilSupplySystemCn != null" >
+        oil_supply_system_cn = #{record.oilSupplySystemCn},
+      </if>
+      <if test="record.transmissionCn != null" >
+        transmission_cn = #{record.transmissionCn},
+      </if>
+      <if test="record.vehicleDriverCn != null" >
+        vehicle_driver_cn = #{record.vehicleDriverCn},
+      </if>
+      <if test="record.colorCn != null" >
+        color_cn =  #{record.colorCn},
+      </if>
+      <if test="record.vehicleAttributionProvinceCn != null" >
+        vehicle_attribution_province_cn =  #{record.vehicleAttributionProvinceCn},
+      </if>
+      <if test="record.vehicleAttributionCityCn != null" >
+        vehicle_attribution_city_cn = #{record.vehicleAttributionCityCn},
+      </if>
+      <if test="record.carNatureCn != null" >
+        car_nature_cn = #{record.carNatureCn},
+      </if>
+      <if test="record.useNatureCn != null" >
+        use_nature_cn =  #{record.useNatureCn},
+      </if>
+      <if test="record.intakeMethodCn != null" >
+        intake_method_cn =  #{record.intakeMethodCn},
+      </if>
+
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update car_auto_info_detail
+    set id = #{record.id},
+      auto_id = #{record.autoId},
+      vin = #{record.vin},
+      auto_brand = #{record.autoBrand},
+      auto_style = #{record.autoStyle},
+      auto_series = #{record.autoSeries},
+      engine_capacity = #{record.engineCapacity},
+      engine_capacity_unit = #{record.engineCapacityUnit},
+      environment = #{record.environment},
+      oil_supply_system = #{record.oilSupplySystem},
+      transmission = #{record.transmission},
+      vehicle_driver = #{record.vehicleDriver},
+      mileage = #{record.mileage},
+      color = #{record.color},
+      color_changed = #{record.colorChanged},
+      manufacture_date = #{record.manufactureDate},
+      begin_register_date = #{record.beginRegisterDate},
+      vehicle_attribution_province = #{record.vehicleAttributionProvince},
+      vehicle_attribution_city = #{record.vehicleAttributionCity},
+      license_number = #{record.licenseNumber},
+      car_nature = #{record.carNature},
+      use_nature = #{record.useNature},
+      is_modification = #{record.isModification},
+      original_price = #{record.originalPrice},
+      remark = #{record.remark},
+      intake_method = #{record.intakeMethod},
+      remark_photo = #{record.remarkPhoto},
+      car_shape = #{record.carShape},
+      car_shape_cn = #{record.carShapeCn},
+      create_time = #{record.createTime},
+      create_user = #{record.createUser},
+      update_time = #{record.updateTime},
+      update_user = #{record.updateUser},
+      auto_brand_cn = #{record.autoBrandCn},
+      auto_style_cn = #{record.autoStyleCn},
+      auto_series_cn = #{record.autoSeriesCn},
+      environment_cn = #{record.environmentCn},
+      oil_supply_system_cn = #{record.oilSupplySystemCn},
+      transmission_cn = #{record.transmissionCn},
+      vehicle_driver_cn = #{record.vehicleDriverCn},
+      color_cn =  #{record.colorCn},
+      vehicle_attribution_province_cn =  #{record.vehicleAttributionProvinceCn},
+      vehicle_attribution_city_cn = #{record.vehicleAttributionCityCn},
+      car_nature_cn = #{record.carNatureCn},
+      use_nature_cn =  #{record.useNatureCn},
+      intake_method_cn =  #{record.intakeMethodCn}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarAutoInfoDetail" >
+    update car_auto_info_detail
+    <set >
+      <if test="autoId != null" >
+        auto_id = #{autoId},
+      </if>
+      <if test="vin != null" >
+        vin = #{vin},
+      </if>
+      <if test="autoBrand != null" >
+        auto_brand = #{autoBrand},
+      </if>
+      <if test="autoStyle != null" >
+        auto_style = #{autoStyle},
+      </if>
+      <if test="autoSeries != null" >
+        auto_series = #{autoSeries},
+      </if>
+      engine_capacity = #{engineCapacity},
+      <if test="engineCapacityUnit != null" >
+        engine_capacity_unit = #{engineCapacityUnit},
+      </if>
+
+      <if test="environment != null" >
+        environment = #{environment},
+      </if>
+      <if test="oilSupplySystem != null" >
+        oil_supply_system = #{oilSupplySystem},
+      </if>
+      <if test="transmission != null" >
+        transmission = #{transmission},
+      </if>
+      <if test="vehicleDriver != null" >
+        vehicle_driver = #{vehicleDriver},
+      </if>
+      mileage = #{mileage},
+      <if test="color != null" >
+        color = #{color},
+      </if>
+      <if test="colorChanged != null" >
+        color_changed = #{colorChanged},
+      </if>
+      <if test="manufactureDate != null" >
+        manufacture_date = #{manufactureDate},
+      </if>
+      <if test="beginRegisterDate != null" >
+        begin_register_date = #{beginRegisterDate},
+      </if>
+      <if test="vehicleAttributionProvince != null" >
+        vehicle_attribution_province = #{vehicleAttributionProvince},
+      </if>
+      <if test="vehicleAttributionCity != null" >
+        vehicle_attribution_city = #{vehicleAttributionCity},
+      </if>
+      license_number = #{licenseNumber},
+      <if test="carNature != null" >
+        car_nature = #{carNature},
+      </if>
+      <if test="useNature != null" >
+        use_nature = #{useNature},
+      </if>
+      <if test="isModification != null" >
+        is_modification = #{isModification},
+      </if>
+      original_price = #{originalPrice},
+      <if test="remark != null" >
+        remark = #{remark},
+      </if>
+      <if test="intakeMethod != null" >
+        intake_method = #{intakeMethod},
+      </if>
+      <if test="remarkPhoto != null" >
+        remark_photo = #{remarkPhoto},
+      </if>
+      <if test="carShape != null" >
+        car_shape = #{carShape},
+      </if>
+      <if test="carShapeCn != null" >
+        car_shape_cn = #{carShapeCn},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser},
+      </if>
+
+      <if test="autoBrandCn != null" >
+        auto_brand_cn = #{autoBrandCn},
+      </if>
+      <if test="autoStyleCn != null" >
+        auto_style_cn = #{autoStyleCn},
+      </if>
+      <if test="autoSeriesCn != null" >
+        auto_series_cn = #{autoSeriesCn},
+      </if>
+      <if test="environmentCn != null" >
+        environment_cn = #{environmentCn},
+      </if>
+      <if test="oilSupplySystemCn != null" >
+        oil_supply_system_cn = #{oilSupplySystemCn},
+      </if>
+      <if test="transmissionCn != null" >
+        transmission_cn = #{transmissionCn},
+      </if>
+      <if test="vehicleDriverCn != null" >
+        vehicle_driver_cn = #{vehicleDriverCn},
+      </if>
+      <if test="colorCn != null" >
+        color_cn =  #{colorCn},
+      </if>
+      <if test="vehicleAttributionProvinceCn != null" >
+        vehicle_attribution_province_cn =  #{vehicleAttributionProvinceCn},
+      </if>
+      <if test="vehicleAttributionCityCn != null" >
+        vehicle_attribution_city_cn = #{vehicleAttributionCityCn},
+      </if>
+      <if test="carNatureCn != null" >
+        car_nature_cn = #{carNatureCn},
+      </if>
+      <if test="useNatureCn != null" >
+        use_nature_cn =  #{useNatureCn},
+      </if>
+      <if test="intakeMethodCn != null" >
+        intake_method_cn =  #{intakeMethodCn},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarAutoInfoDetail" >
+    update car_auto_info_detail
+    set auto_id = #{autoId},
+      vin = #{vin},
+      auto_brand = #{autoBrand},
+      auto_style = #{autoStyle},
+      auto_series = #{autoSeries},
+      engine_capacity = #{engineCapacity},
+      engine_capacity_unit = #{engineCapacityUnit},
+
+      environment = #{environment},
+      oil_supply_system = #{oilSupplySystem},
+      transmission = #{transmission},
+      vehicle_driver = #{vehicleDriver},
+      mileage = #{mileage},
+      color = #{color},
+      color_changed = #{colorChanged},
+      manufacture_date = #{manufactureDate},
+      begin_register_date = #{beginRegisterDate},
+      vehicle_attribution_province = #{vehicleAttributionProvince},
+      vehicle_attribution_city = #{vehicleAttributionCity},
+      license_number = #{licenseNumber},
+      car_nature = #{carNature},
+      use_nature = #{useNature},
+      is_modification = #{isModification},
+      original_price = #{originalPrice},
+      remark = #{remark},
+      intake_method = #{intakeMethod},
+      remark_photo = #{remarkPhoto},
+      car_shape = #{carShape},
+      car_shape_cn = #{carShapeCn},
+      create_time = #{createTime},
+      create_user = #{createUser},
+      update_time = #{updateTime},
+      update_user = #{updateUser},
+
+      auto_brand_cn = #{autoBrandCn},
+      auto_style_cn = #{autoStyleCn},
+      auto_series_cn = #{autoSeriesCn},
+      environment_cn = #{environmentCn},
+      oil_supply_system_cn = #{oilSupplySystemCn},
+      transmission_cn = #{transmissionCn},
+      vehicle_driver_cn = #{vehicleDriverCn},
+      color_cn =  #{colorCn},
+      vehicle_attribution_province_cn =  #{vehicleAttributionProvinceCn},
+      vehicle_attribution_city_cn = #{vehicleAttributionCityCn},
+      car_nature_cn = #{carNatureCn},
+      use_nature_cn =  #{useNatureCn},
+      intake_method_cn =  #{intakeMethodCn}
+
+    where id = #{id}
+  </update>
+
+  <!--根据车辆id修改车辆对应的基本信息-->
+  <update id="updateRemarkByautoId" parameterType="com.wintop.ms.carauction.entity.CarAutoInfoDetail" >
+    update car_auto_info_detail
+    <set >
+      <if test="autoId != null" >
+        auto_id = #{autoId},
+      </if>
+      <if test="vin != null" >
+        vin = #{vin},
+      </if>
+      <if test="autoBrand != null" >
+        auto_brand = #{autoBrand},
+      </if>
+      <if test="autoStyle != null" >
+        auto_style = #{autoStyle},
+      </if>
+      <if test="autoSeries != null" >
+        auto_series = #{autoSeries},
+      </if>
+      <if test="engineCapacity != null" >
+        engine_capacity = #{engineCapacity},
+      </if>
+      <if test="engineCapacityUnit != null" >
+        engine_capacity_unit = #{engineCapacityUnit},
+      </if>
+
+      <if test="environment != null" >
+        environment = #{environment},
+      </if>
+      <if test="oilSupplySystem != null" >
+        oil_supply_system = #{oilSupplySystem},
+      </if>
+      <if test="transmission != null" >
+        transmission = #{transmission},
+      </if>
+      <if test="vehicleDriver != null" >
+        vehicle_driver = #{vehicleDriver},
+      </if>
+      <if test="mileage != null" >
+        mileage = #{mileage},
+      </if>
+      <if test="color != null" >
+        color = #{color},
+      </if>
+      <if test="colorChanged != null" >
+        color_changed = #{colorChanged},
+      </if>
+      <if test="manufactureDate != null" >
+        manufacture_date = #{manufactureDate},
+      </if>
+      <if test="beginRegisterDate != null" >
+        begin_register_date = #{beginRegisterDate},
+      </if>
+      <if test="vehicleAttributionProvince != null" >
+        vehicle_attribution_province = #{vehicleAttributionProvince},
+      </if>
+      <if test="vehicleAttributionCity != null" >
+        vehicle_attribution_city = #{vehicleAttributionCity},
+      </if>
+      <if test="licenseNumber != null" >
+        license_number = #{licenseNumber},
+      </if>
+      <if test="carNature != null" >
+        car_nature = #{carNature},
+      </if>
+      <if test="useNature != null" >
+        use_nature = #{useNature},
+      </if>
+      <if test="isModification != null" >
+        is_modification = #{isModification},
+      </if>
+      <if test="originalPrice != null" >
+        original_price = #{originalPrice},
+      </if>
+      remark = #{remark},
+      <if test="intakeMethod != null" >
+        intake_method = #{intakeMethod},
+      </if>
+      remark_photo = #{remarkPhoto},
+      <if test="carShape != null" >
+        car_shape = #{carShape},
+      </if>
+      <if test="carShapeCn != null" >
+        car_shape_cn = #{carShapeCn},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser},
+      </if>
+      <if test="autoBrandCn != null" >
+        auto_brand_cn = #{autoBrandCn},
+      </if>
+      <if test="autoStyleCn != null" >
+        auto_style_cn = #{autoStyleCn},
+      </if>
+      <if test="autoSeriesCn != null" >
+        auto_series_cn = #{autoSeriesCn},
+      </if>
+      <if test="environmentCn != null" >
+        environment_cn = #{environmentCn},
+      </if>
+      <if test="oilSupplySystemCn != null" >
+        oil_supply_system_cn = #{oilSupplySystemCn},
+      </if>
+      <if test="transmissionCn != null" >
+        transmission_cn = #{transmissionCn},
+      </if>
+      <if test="vehicleDriverCn != null" >
+        vehicle_driver_cn = #{vehicleDriverCn},
+      </if>
+      <if test="colorCn != null" >
+        color_cn =  #{colorCn},
+      </if>
+      <if test="vehicleAttributionProvinceCn != null" >
+        vehicle_attribution_province_cn =  #{vehicleAttributionProvinceCn},
+      </if>
+      <if test="vehicleAttributionCityCn != null" >
+        vehicle_attribution_city_cn = #{vehicleAttributionCityCn},
+      </if>
+      <if test="carNatureCn != null" >
+        car_nature_cn = #{carNatureCn},
+      </if>
+      <if test="useNatureCn != null" >
+        use_nature_cn =  #{useNatureCn},
+      </if>
+      <if test="intakeMethodCn != null" >
+        intake_method_cn =  #{intakeMethodCn},
+      </if>
+    </set>
+    where auto_id = #{autoId}
+  </update>
+</mapper>

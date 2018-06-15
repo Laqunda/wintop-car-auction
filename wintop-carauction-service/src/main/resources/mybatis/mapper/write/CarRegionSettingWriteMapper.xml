@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarRegionSettingWriteDao" >
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarRegionSetting" >
+    insert into car_region_setting (id, region_id, region_name, frozen_capital, pay_breach_day, pay_breach_time, 
+      create_time, create_person, status, transfer_breach_day, transfer_breach_time, 
+      agent_fee, update_time, update_person)
+    values (#{id}, #{regionId}, #{regionName}, #{frozenCapital}, #{payBreachDay}, #{payBreachTime}, 
+      #{createTime}, #{createPerson}, #{status}, #{transferBreachDay}, #{transferBreachTime}, 
+      #{agentFee}, #{updateTime}, #{updatePerson})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarRegionSetting" >
+    update car_region_setting
+    <set >
+      <if test="regionName != null" >
+        region_name = #{regionName},
+      </if>
+      <if test="frozenCapital != null" >
+        frozen_capital = #{frozenCapital},
+      </if>
+      <if test="payBreachDay != null" >
+        pay_breach_day = #{payBreachDay},
+      </if>
+      <if test="payBreachTime != null" >
+        pay_breach_time = #{payBreachTime},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="createPerson != null" >
+        create_person = #{createPerson},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="transferBreachDay != null" >
+        transfer_breach_day = #{transferBreachDay},
+      </if>
+      <if test="transferBreachTime != null" >
+        transfer_breach_time = #{transferBreachTime},
+      </if>
+      <if test="agentFee != null" >
+        agent_fee = #{agentFee},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="updatePerson != null" >
+        update_person = #{updatePerson},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+</mapper>

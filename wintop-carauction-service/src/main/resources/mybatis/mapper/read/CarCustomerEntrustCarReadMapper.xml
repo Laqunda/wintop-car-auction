@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarCustomerEntrustCarReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarCustomerEntrustCar" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="car_id" property="carId" jdbcType="BIGINT" />
+    <result column="auto_auction_id" property="autoAuctionId" jdbcType="BIGINT" />
+    <result column="customer_id" property="customerId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_manager" property="createManager" jdbcType="VARCHAR" />
+    <result column="entrust_fee" property="entrustFee" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    t1.id, t1.car_id, t1.customer_id, t1.create_time, t1.create_manager, t1.entrust_fee, t1.`status`
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_customer_entrust_car t1
+    where t1.id = #{id}
+  </select>
+
+  <select id="selectEntrustByCarId" resultMap="BaseResultMap">
+    SELECT t1.entrust_fee, t1.`status`
+    FROM car_customer_entrust_car t1
+    INNER JOIN car_auto t2 ON (t1.auto_auction_id=t2.auto_auction_id AND t1.car_id=t2.id)
+    WHERE t1.car_id=#{carId} AND t1.customer_id=#{customerId}
+  </select>
+
+  <select id="selectMaxEntrustByCarId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT t1.id, t1.car_id, t1.customer_id, t1.entrust_fee, t1.`status`
+    FROM car_customer_entrust_car t1
+    INNER JOIN car_auto t2 ON (t1.auto_auction_id=t2.auto_auction_id AND t1.car_id=t2.id)
+    INNER JOIN wt_app_user t3 ON t1.customer_id=t3.id
+    WHERE t1.`status`='1' AND t1.car_id=#{carId}
+    ORDER BY t1.entrust_fee DESC ,t1.create_time ASC
+    limit 0,1
+  </select>
+
+  <select id="selectValidEntrustList" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from car_customer_entrust_car t1
+    INNER JOIN car_auto t2 ON (t1.auto_auction_id=t2.auto_auction_id AND t1.car_id=t2.id)
+    INNER JOIN wt_app_user t3 ON t1.customer_id=t3.id
+    where t1.car_id=#{carId} and t1.`status`='1'
+    ORDER BY create_time ASC,t1.entrust_fee DESC
+  </select>
+</mapper>

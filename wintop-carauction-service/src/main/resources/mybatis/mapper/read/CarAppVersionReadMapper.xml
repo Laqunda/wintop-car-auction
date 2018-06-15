@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAppVersionReadDao" >
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.core.entity.AppVersion" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="app_name" property="appName" jdbcType="VARCHAR" />
+        <result column="new_app_size" property="newAppSize" jdbcType="VARCHAR" />
+        <result column="new_app_version_code" property="newAppVersionCode" jdbcType="VARCHAR" />
+        <result column="new_app_version_name" property="newAppVersionName" jdbcType="VARCHAR" />
+        <result column="new_app_update_desc" property="newAppUpdateDesc" jdbcType="VARCHAR" />
+        <result column="new_app_release_time" property="newAppReleaseTime" jdbcType="VARCHAR" />
+        <result column="new_app_url" property="newAppUrl" jdbcType="VARCHAR" />
+        <result column="is_force_update" property="isForceUpdate" jdbcType="VARCHAR" />
+        <result column="app_type" property="appType" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id,app_name,new_app_size,new_app_version_code,new_app_version_name,new_app_update_desc,new_app_release_time,
+        new_app_url,is_force_update,app_type
+    </sql>
+
+    <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from car_app_version
+        where id = #{id}
+    </select>
+
+    <!--查询客户端最新版本-->
+    <select id="findNewByAppType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from car_app_version
+        where app_type = #{appType}
+        ORDER BY new_app_release_time DESC
+        limit 0,1
+    </select>
+</mapper>

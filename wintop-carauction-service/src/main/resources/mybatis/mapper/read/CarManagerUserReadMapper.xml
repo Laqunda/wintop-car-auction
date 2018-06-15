@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarManagerUserReadDao">
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarManagerUser">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_key" jdbcType="VARCHAR" property="userKey" />
+    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+    <result column="user_code" jdbcType="VARCHAR" property="userCode" />
+    <result column="user_status" jdbcType="VARCHAR" property="userStatus" />
+    <result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
+    <result column="user_photo" jdbcType="VARCHAR" property="userPhoto" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="role_type_id" jdbcType="BIGINT" property="roleTypeId" />
+    <result column="role_type_name" jdbcType="VARCHAR" property="roleTypeName" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_person" jdbcType="BIGINT" property="createPerson" />
+    <result column="modify_person" jdbcType="BIGINT" property="modifyPerson" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="del_time" jdbcType="TIMESTAMP" property="delTime" />
+    <result column="del_person" jdbcType="BIGINT" property="delPerson" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="region_id" jdbcType="BIGINT" property="regionId" />
+  </resultMap>
+  <resultMap id="UserResultMap" type="com.wintop.ms.carauction.entity.CommonNameVo">
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="checked" property="checked" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    t1.id, t1.user_name, t1.user_key, t1.user_code, t1.user_status, t1.user_phone, t1.user_photo,
+    t1.role_id, t1.role_type_id, t1.department_id, t1.login_time, t1.create_time, t1.create_person, t1.modify_person,
+    t1.modify_time, t1.del_time, t1.del_person, t1.remark,t1.region_id
+  </sql>
+  <select id="selectByExample" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />,
+    t2.type_name AS role_type_name,t3.role_name
+    from car_manager_user t1
+    inner join car_manager_role_type t2 on t1.role_type_id=t2.id
+    inner join car_manager_role t3 on t1.role_id=t3.id
+    where 1=1
+    <if test="searchName != null ">
+      and (t1.user_name LIKE CONCAT(CONCAT('%', #{searchName}),'%') or
+      t1.user_key LIKE CONCAT(CONCAT('%', #{searchName}),'%') or
+      t1.user_phone LIKE CONCAT(CONCAT('%', #{searchName}),'%'))
+    </if>
+    <if test="roleTypeId != null ">
+      and t1.role_type_id=#{roleTypeId}
+    </if>
+    <if test="roleId != null ">
+      and t1.role_id=#{roleId}
+    </if>
+    <if test="departmentId != null ">
+      and t1.department_id=#{departmentId}
+    </if>
+    <if test="userStatus != null ">
+      and t1.user_status=#{userStatus}
+    </if>
+    <if test="userStatus == null ">
+      and t1.user_status <![CDATA[ <> ]]> '3'
+    </if>
+    order by t1.create_time desc
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(t1.id) from car_manager_user t1
+    where 1=1
+    <if test="searchName != null ">
+      and (t1.user_name LIKE CONCAT(CONCAT('%', #{searchName}),'%') or
+      t1.user_key LIKE CONCAT(CONCAT('%', #{searchName}),'%') or
+      t1.user_phone LIKE CONCAT(CONCAT('%', #{searchName}),'%'))
+    </if>
+    <if test="roleTypeId != null ">
+      and t1.role_type_id=#{roleTypeId}
+    </if>
+    <if test="roleId != null ">
+      and t1.role_id=#{roleId}
+    </if>
+    <if test="departmentId != null ">
+      and t1.department_id=#{departmentId}
+    </if>
+    <if test="userStatus != null ">
+      and t1.user_status=#{userStatus}
+    </if>
+    <if test="userStatus == null ">
+      and t1.user_status <![CDATA[ <> ]]> '3'
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />,t1.user_password,
+    t2.type_name AS role_type_name,t3.role_name
+    from car_manager_user t1
+    inner join car_manager_role_type t2 on t1.role_type_id=t2.id
+    inner join car_manager_role t3 on t1.role_id=t3.id
+    where t1.id = #{id}
+  </select>
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />,t1.user_password,
+    t2.type_name AS role_type_name,t3.role_name
+    FROM car_manager_user t1
+    inner join car_manager_role_type t2 on t1.role_type_id=t2.id
+    inner join car_manager_role t3 on t1.role_id=t3.id
+    WHERE t1.user_key=#{userKey}
+  </select>
+
+  <select id="selectAllManagerUser" parameterType="java.lang.Long" resultMap="UserResultMap">
+    select
+    t1.id,t1.user_name AS `name`
+    from car_manager_user t1
+    where t1.user_status='1' and t1.department_id=#{departmentId}
+  </select>
+</mapper>

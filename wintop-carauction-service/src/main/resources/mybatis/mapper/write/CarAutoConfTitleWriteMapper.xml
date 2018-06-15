@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAutoConfTitleWriteDao" >
+
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.title != null" >
+         and title = #{condition.title}
+      </if>
+      <if test="condition.createTime != null" >
+         and create_time = #{condition.createTime}
+      </if>
+      <if test="condition.createUser != null" >
+         and create_user = #{condition.createUser}
+      </if>
+      <if test="condition.status != null" >
+         and status = #{condition.status}
+      </if>
+      <if test="condition.sort != null" >
+         and sort = #{condition.sort}
+      </if>
+      <if test="condition.updateTime != null" >
+         and update_time = #{condition.updateTime}
+      </if>
+      <if test="condition.updateUser != null" >
+         and update_user = #{condition.updateUser}
+      </if>
+      <if test="condition.optionSize != null" >
+        and option_size = #{condition.optionSize}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, title, create_time, create_user, status, sort, update_time, update_user,option_size
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_auto_conf_title
+    where id = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    delete from car_auto_conf_title
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAutoConfTitle" >
+    insert into car_auto_conf_title (id, title, create_time, create_user, status, sort, update_time, 
+      update_user,option_size)
+    values (#{id}, #{title}, #{createTime}, #{createUser}, #{status}, #{sort}, #{updateTime}, 
+      #{updateUser},#{optionSize})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarAutoConfTitle" >
+    insert into car_auto_conf_title
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="optionSize != null" >
+        option_size,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="title != null" >
+        #{title},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="createUser != null" >
+        #{createUser},
+      </if>
+      <if test="status != null" >
+        #{status},
+      </if>
+      <if test="sort != null" >
+        #{sort},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser},
+      </if>
+      <if test="optionSize != null" >
+        #{optionSize},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByExampleSelective" parameterType="map" >
+    update car_auto_conf_title
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status},
+      </if>
+      <if test="record.sort != null" >
+        sort = #{record.sort},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser},
+      </if>
+      <if test="optionSize != null" >
+        option_size = #{optionSize},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update car_auto_conf_title
+    set id = #{record.id},
+      title = #{record.title},
+      create_time = #{record.createTime},
+      create_user = #{record.createUser},
+      status = #{record.status},
+      sort = #{record.sort},
+      update_time = #{record.updateTime},
+      option_size = #{optionSize},
+      update_user = #{record.updateUser}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarAutoConfTitle" >
+    update car_auto_conf_title
+    <set >
+      <if test="title != null" >
+        title = #{title},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser},
+      </if>
+      <if test="optionSize != null" >
+        option_size = #{optionSize},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarAutoConfTitle" >
+    update car_auto_conf_title
+    set title = #{title},
+      create_time = #{createTime},
+      create_user = #{createUser},
+      status = #{status},
+      sort = #{sort},
+      update_time = #{updateTime},
+      option_size = #{optionSize},
+      update_user = #{updateUser}
+    where id = #{id}
+  </update>
+</mapper>

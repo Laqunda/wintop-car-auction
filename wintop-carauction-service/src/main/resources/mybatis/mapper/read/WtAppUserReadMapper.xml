@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.IWtAppUserReadDao">
+    <resultMap id="result" type="com.wintop.ms.carauction.entity.WtAppUser">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="head_img" property="headImg" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="login_ip" property="loginIp" jdbcType="VARCHAR"/>
+        <result column="regist_time" property="registTime" jdbcType="TIMESTAMP"/>
+        <result column="login_time" property="loginTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="user_num" property="userNum" jdbcType="VARCHAR"/>
+        <result column="user_level_id" property="userLevelId" jdbcType="VARCHAR"/>
+        <result column="deposit_amount" property="depositAmount" jdbcType="VARCHAR"/>
+        <result column="identity_number" property="identityNumber" jdbcType="VARCHAR"/>
+        <result column="level_name" property="levelName" jdbcType="VARCHAR"/>
+        <result column="freeze_flag" property="freezeFlag" jdbcType="VARCHAR"/>
+        <result column="userStoreName" property="userStoreName" jdbcType="VARCHAR"/>
+        <result column="group_name" property="groupName" jdbcType="VARCHAR"/>
+        <result column="user_status" property="userStatus" jdbcType="VARCHAR"/>
+        <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+        <result column="auction_plate_num" property="auctionPlateNum" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.WtAppUser">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="user_num" property="userNum" jdbcType="VARCHAR"/>
+        <result column="regist_time" property="registTime" jdbcType="TIMESTAMP"/>
+        <result column="user_level_id" property="userLevelId" jdbcType="VARCHAR"/>
+        <result column="level_name" property="levelName" jdbcType="VARCHAR"/>
+        <result column="userStoreName" property="userStoreName" jdbcType="VARCHAR"/>
+        <result column="group_name" property="groupName" jdbcType="VARCHAR"/>
+        <result column="groupIds" property="groupIds" jdbcType="VARCHAR"/>
+        <result column="tel_1" property="tel1" jdbcType="VARCHAR"/>
+        <result column="tel_2" property="tel2" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="real_name" property="name" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="identity_number" property="identityNumber" jdbcType="VARCHAR" />
+        <result column="identity_photo_front" property="identityPhotoFront" jdbcType="VARCHAR" />
+        <result column="identity_photo_back" property="identityPhotoBack" jdbcType="VARCHAR" />
+        <result column="identity_photo_hand" property="identityPhotoHand" jdbcType="VARCHAR" />
+        <result column="province" property="province" jdbcType="BIGINT" />
+        <result column="region" property="region" jdbcType="BIGINT" />
+        <result column="county" property="county" jdbcType="BIGINT" />
+        <result column="is_share" property="isShare" jdbcType="VARCHAR" />
+        <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+        <result column="province_name" property="provinceName" jdbcType="VARCHAR" />
+        <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+        <result column="auction_plate_num" property="auctionPlateNum" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="UserResultMap" type="com.wintop.ms.carauction.entity.CommonNameVo">
+        <result column="id" property="id" jdbcType="BIGINT" />
+        <result column="checked" property="checked" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id,user_name,password,name,address,city,head_img,sex,mobile,login_ip,regist_time,login_time,status,
+        user_num,user_level_id,user_status,auction_plate_num
+    </sql>
+    <!--根据用户名获取用户信息-->
+    <select id="findByUserName" resultMap="result" parameterType="java.lang.String">
+      SELECT <include refid="Base_Column_List" />
+        FROM wt_app_user
+        <where>
+            <if test="userName!=null and userName!=''">
+                AND user_name = #{userName}
+            </if>
+        </where>
+    </select>
+    <!--根据用户ID获取用户信息-->
+    <select id="findById" resultMap="result" parameterType="java.lang.Long">
+        SELECT <include refid="Base_Column_List" />
+        FROM wt_app_user WHERE id = #{id}
+    </select>
+    <!--查看用户信息 app-->
+    <select id="selectUserById" resultMap="result" parameterType="java.lang.Long">
+        SELECT a.id,a.user_name,a.name,a.head_img,a.mobile,a.user_num,cl.level_name,
+        ca.address,ca.identity_number,cd.deposit_amount,cd.freeze_flag,a.user_status,a.status
+        FROM  wt_app_user a
+        LEFT JOIN car_customer_deposit cd ON (cd.user_id=a.id and cd.`status`='2' and cd.use_status='0')
+        LEFT JOIN car_customer_auth ca ON ca.user_id=a.id
+		LEFT JOIN car_customer_level cl ON cl.id=a.user_level_id
+        where a.id=#{userId}
+    </select>
+    <!--根据参数查询用户信息列表 zhangzijuan-->
+    <select id="selectListByParam" resultMap="result" >
+            SELECT
+                a.id,
+                a.user_name,
+                a.`name`,
+                a.mobile,
+                a.user_num,
+                a.user_status,
+                a.is_share,
+                cl.level_name,
+                sn.simple_name as userStoreName,
+                ca.real_name,ca.address,ca.city_name,ca.id as authId,
+                if(GROUP_CONCAT(DISTINCT cg.group_name) is null,'默认分组',GROUP_CONCAT(DISTINCT cg.group_name)) group_name,a.regist_time,a.status,
+                a.regist_time,a.status,
+                us.status_name,a.auction_plate_num
+            FROM
+                wt_app_user a
+            LEFT JOIN car_customer_level cl ON cl.id = a.user_level_id
+            LEFT JOIN car_store sn ON sn.id = a.store_id
+            LEFT JOIN car_customer_group_detail cgd on cgd.customer_id=a.id
+            LEFT JOIN car_customer_group cg ON cg.id = cgd.group_id
+            LEFT JOIN car_customer_auth ca on ca.user_id=a.id
+            LEFT JOIN car_relate_status us on (us.status=a.status and us.type='1')
+            WHERE 1=1
+            <if test="searchName != null and searchName !=''">
+                and(a.name like CONCAT(CONCAT('%', #{searchName}),'%')
+                OR a.mobile like CONCAT(CONCAT('%', #{searchName}),'%')
+                OR a.auction_plate_num like CONCAT(CONCAT('%', #{searchName}),'%')
+                )
+            </if>
+            <if test="userName!=null and userName!=''">
+                AND a.user_name = #{userName}
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                AND a.mobile = #{mobile}
+            </if>
+            <if test="status!=null and status!=''">
+                AND a.status = #{status}
+            </if>
+            <if test="groupId!=null and groupId!=''">
+                <if test="groupId==1">
+                    AND a.id NOT IN (SELECT customer_id FROM car_customer_group_detail)
+                </if>
+                <if test="groupId!=1">
+                    AND cg.id = #{groupId}
+                </if>
+            </if>
+            <if test="storeId!=null and storeId!=''">
+                AND a.store_id = #{storeId}
+            </if>
+            <if test="storeIds != null and storeIds.size!=0">
+                and a.store_id in
+                <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                    #{storeId}
+                </foreach>
+            </if>
+            GROUP BY a.id
+            ORDER BY a.update_time DESC,a.regist_time DESC
+        <if test="startRowNum!=null and endRowNum!=null">
+                limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+            </if>
+    </select>
+
+    <!--根据参数查询用户数量 zhangzijuan-->
+    <select id="selectCountByParam" resultType="java.lang.Integer">
+        SELECT
+          COUNT(DISTINCT a.id)
+        FROM
+        wt_app_user a
+        LEFT JOIN car_customer_group_detail cgd on cgd.customer_id=a.id
+        LEFT JOIN car_customer_group cg ON cg.id = cgd.group_id
+        WHERE 1=1
+        <if test="searchName != null and searchName !=''">
+            and(a.name like CONCAT(CONCAT('%', #{searchName}),'%')
+            OR a.mobile like CONCAT(CONCAT('%', #{searchName}),'%')
+            OR a.auction_plate_num like CONCAT(CONCAT('%', #{searchName}),'%')
+            )
+        </if>
+        <if test="userName!=null and userName!=''">
+            AND a.user_name = #{userName}
+        </if>
+        <if test="mobile!=null and mobile!=''">
+            AND a.mobile = #{mobile}
+        </if>
+        <if test="status!=null and status!=''">
+            AND a.status = #{status}
+        </if>
+        <if test="groupId!=null and groupId!=''">
+            <if test="groupId==1">
+                AND a.id NOT IN (SELECT customer_id FROM car_customer_group_detail)
+            </if>
+            <if test="groupId!=1">
+                AND cg.id = #{groupId}
+            </if>
+        </if>
+        <if test="storeId!=null and storeId!=''">
+            AND a.store_id = #{storeId}
+        </if>
+        <if test="storeIds != null and storeIds.size!=0">
+            and a.store_id in
+            <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                #{storeId}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 查询没有分组的会员数量 zhangzijuan-->
+    <select id="selectCountNoGroup" resultType="java.lang.Integer">
+        select count(a.id)
+        from wt_app_user a
+        WHERE a.id not in(SELECT gd.customer_id from car_customer_group_detail gd)
+        <if test="searchName != null and searchName !=''">
+            and(a.name like CONCAT(CONCAT('%', #{searchName}),'%')
+            OR a.mobile like CONCAT(CONCAT('%', #{searchName}),'%')
+            OR a.auction_plate_num like CONCAT(CONCAT('%', #{searchName}),'%')
+            )
+        </if>
+        <if test="userName!=null and userName!=''">
+            AND a.user_name = #{userName}
+        </if>
+        <if test="mobile!=null and mobile!=''">
+            AND a.mobile = #{mobile}
+        </if>
+        <if test="status!=null and status!=''">
+            AND a.status = #{status}
+        </if>
+        <if test="storeId!=null and storeId!=''">
+            AND a.store_id = #{storeId}
+        </if>
+    </select>
+
+    <!--查询会员车商号是否重复 zhangzijuan-->
+    <select id="selectUserNumIsRepeat" resultType="java.lang.Integer">
+        select count(1)
+        from wt_app_user a
+        WHERE a.user_num=#{userNum} and a.id!=#{userId}
+    </select>
+
+    <!--查询会员详情信息 zhangzijuan-->
+    <select id="getUserInfoById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT a.id,a.user_name,a.mobile,a.user_num,a.is_share,a.remark,a.tel_2,a.tel_1,a.user_level_id,a.status,a.store_id,a.name,
+        cl.level_name,ca.address,ca.identity_number,ca.identity_photo_front,ca.identity_photo_back,ca.identity_photo_hand,ca.real_name,
+        ca.province,ca.region,GROUP_CONCAT(DISTINCT cg.group_name) group_name, GROUP_CONCAT(DISTINCT cg.id) groupIds,
+        sn.simple_name as userStoreName,ca.city_name,us.status_name
+        FROM  wt_app_user a
+        LEFT JOIN car_customer_auth ca ON ca.user_id=a.id
+        LEFT JOIN car_customer_level cl ON cl.id=a.user_level_id
+        LEFT JOIN car_customer_group_detail cgd on cgd.customer_id=a.id
+        LEFT JOIN car_customer_group cg ON cg.id = cgd.group_id
+        LEFT JOIN car_store sn ON sn.id = a.store_id
+        LEFT JOIN car_relate_status us on (us.status=a.status and us.type='1')
+        where a.id=#{userId}
+    </select>
+
+    <!--查询可以出价的用户 zhangzijuan-->
+    <select id="selectAllUserForSelect" resultMap="UserResultMap">
+        SELECT id,`name`,auction_plate_num code
+        FROM wt_app_user
+        WHERE status='7'
+    </select>
+
+    <select id="getUserInfoByCode" resultMap="UserResultMap" parameterType="java.lang.String">
+        SELECT id,`name`,user_num code
+        FROM wt_app_user
+        WHERE status='7' and user_num=#{customerCode} limit 0,1
+    </select>
+
+    <select id="selectUserByAuctionPlateNum" resultMap="result" parameterType="java.lang.String">
+        SELECT <include refid="Base_Column_List" />
+        FROM  wt_app_user
+        where auction_plate_num=#{auctionPlateNum}
+        <if test="userId!=null and userId!=''">
+            AND id != #{userId}
+        </if>
+    </select>
+
+    <select id="selectUserByMobile" resultMap="result" parameterType="java.lang.String">
+        SELECT <include refid="Base_Column_List" />
+        FROM  wt_app_user
+        where mobile=#{mobile}
+        <if test="userId!=null and userId!=''">
+            AND id != #{userId}
+        </if>
+    </select>
+</mapper>

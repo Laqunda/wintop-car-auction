@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAgentReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAgent" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="car_id" property="carId" jdbcType="BIGINT" />
+    <result column="agent_company_id" property="agentCompanyId" jdbcType="BIGINT" />
+    <result column="agent_company_name" property="agentCompanyName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="BIGINT" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="orderTime" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
+    <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
+    <result column="license_number" property="licenseNumber" jdbcType="VARCHAR" />
+    <result column="move_address" property="moveAddress" jdbcType="VARCHAR" />
+    <result column="move_to_where" property="moveToWhere" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="auction_type" property="auctionType" jdbcType="VARCHAR" />
+    <result column="carStoreName" property="carStoreName" jdbcType="VARCHAR" />
+    <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+    <result column="transferId" property="transferId" jdbcType="BIGINT" />
+    <result column="handler_tel" property="handlerTel" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, car_id, agent_company_id, agent_company_name, create_time, create_user
+  </sql>
+    <!--根据参数查询代办列表 zhangzijuan-->
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+        a.id,
+        a.order_id,
+        o.order_no,
+        o.create_time orderTime,
+        a1.`name`,
+        a1.mobile,
+        a2.car_auto_no,
+        a2.auto_info_name,
+        d.license_number,
+        t.move_address,
+        t.move_to_where,
+        t.`status`,
+        a3.auction_type,
+        s.simple_name as carStoreName,
+        rs.status_name,
+        t.id as transferId
+    FROM car_agent a
+        INNER JOIN car_order o ON o.id = a.order_id
+        INNER JOIN wt_app_user a1 ON a1.id = o.customer_id
+        INNER JOIN car_auto a2 ON a2.id = a.car_id
+        INNER JOIN car_auto_info_detail d ON d.auto_id = a.car_id
+        INNER JOIN car_auto_transfer t ON t.order_id = a.order_id
+        INNER JOIN car_auto_auction a3 ON a3.id = a2.auto_auction_id
+        LEFT JOIN car_store s on s.id=a2.store_id
+        LEFT JOIN car_relate_status rs on (rs.status=t.status and rs.type='3')
+    WHERE 1=1
+    <if test="auctionType != null and auctionType!=''">
+      AND a3.auction_type = #{auctionType}
+    </if>
+    <if test="moveToWhere != null and moveToWhere!=''">
+      AND  t.move_to_where = #{moveToWhere}
+    </if>
+    <if test="startTime != null and startTime!=''">
+      AND  o.create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime!=''">
+      AND  o.create_time &lt;= #{endTime}
+    </if>
+      <if test="status != null and status!=''">
+          <if test="isEdit !=null and isEdit!=''">
+              AND  t.`status` IN ('5','7')
+          </if>
+          <if test="isEdit==null">
+              AND  t.`status`= #{status}
+          </if>
+      </if>
+    <if test="isBreach != null and isBreach!=''">
+      AND  t.is_breach= #{isBreach}
+    </if>
+    <if test="noStatus != null and noStatus!=''">
+    AND  t.`status`!= #{noStatus}
+    </if>
+      <if test="storeIds != null and storeIds.size!=0">
+          and a.agent_company_id in
+          <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+              #{storeId}
+          </foreach>
+      </if>
+    ORDER BY a.create_time DESC
+    <if test="startRowNum!=null and endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+    <!--根据参数查询代办总数 zhangzijuan-->
+  <select id="countByParam" parameterType="java.util.Map" resultType="java.lang.Integer" >
+        SELECT count(1)
+        FROM car_agent a
+        INNER JOIN car_order o ON o.id = a.order_id
+        INNER JOIN wt_app_user a1 ON a1.id = o.customer_id
+        INNER JOIN car_auto a2 ON a2.id = a.car_id
+        INNER JOIN car_auto_info_detail d ON d.auto_id = a.car_id
+        INNER JOIN car_auto_transfer t ON t.order_id = a.order_id
+        INNER JOIN car_auto_auction a3 ON a3.id = a2.auto_auction_id
+        LEFT JOIN car_store s on s.id=a2.store_id
+        LEFT JOIN car_relate_status rs on (rs.status=t.status and rs.type='3')
+        WHERE 1=1
+          <if test="auctionType != null and auctionType!=''">
+              AND a3.auction_type = #{auctionType}
+          </if>
+          <if test="moveToWhere != null and moveToWhere!=''">
+              AND  t.move_to_where = #{moveToWhere}
+          </if>
+          <if test="startTime != null and startTime!=''">
+              AND  o.create_time &gt;= #{startTime}
+          </if>
+          <if test="endTime != null and endTime!=''">
+              AND  o.create_time &lt;= #{endTime}
+          </if>
+          <if test="status != null and status!=''">
+              <if test="isEdit !=null and isEdit!=''">
+                  AND  t.`status` IN ('5','7')
+              </if>
+              <if test="isEdit==null">
+                  AND  t.`status`= #{status}
+              </if>
+          </if>
+            <if test="isBreach != null and isBreach!=''">
+              AND  t.is_breach= #{isBreach}
+            </if>
+            <if test="noStatus != null and noStatus!=''">
+              AND  t.`status`!= #{noStatus}
+            </if>
+          <if test="storeIds != null and storeIds.size!=0">
+              and a.agent_company_id in
+              <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                  #{storeId}
+              </foreach>
+          </if>
+  </select>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_agent
+    where id = #{id}
+  </select>
+
+
+    <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+         t1.id, t1.order_id, t1.car_id, t1.agent_company_id, t1.agent_company_name, t1.create_time, t1.create_user,t2.handler_tel
+        from car_agent t1
+        INNER JOIN  car_agent_company t2 on t1.agent_company_id=t2.id
+        where order_id = #{orderId}
+    </select>
+</mapper>

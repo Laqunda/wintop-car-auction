@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarFinancePlatformRecordReadDao" >
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarFinancePlatformRecord" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="pay_id" property="payId" jdbcType="BIGINT" />
+        <result column="accumulated_income" property="accumulatedIncome" jdbcType="DECIMAL" />
+        <result column="accumulated_outlay" property="accumulatedOutlay" jdbcType="DECIMAL" />
+        <result column="change_amount" property="changeAmount" jdbcType="DECIMAL" />
+        <result column="change_time" property="changeTime" jdbcType="TIMESTAMP" />
+        <result column="type" property="type" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, pay_id, accumulated_income, accumulated_outlay, change_amount, change_time, type
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List" />
+        from car_finance_platform_record
+        order by change_time desc
+        <if test="startRowNum != null and endRowNum != null ">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from car_finance_platform_record
+        where id = #{id}
+    </select>
+    <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+        select count(*) from car_finance_platform_record
+    </select>
+</mapper>

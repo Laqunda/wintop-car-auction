@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarMessageWriteDao" >
+
+    <insert id="save" parameterType="com.wintop.ms.carauction.entity.CarMessage" >
+        insert into car_message
+                (id,
+                title,
+                content,
+                open_obj_id,
+                open_obj_type,
+                push_time,
+                user_id,
+                is_read,
+                user_type)
+        VALUES
+                (#{id},
+                #{title},
+                #{content},
+                #{openObjId},
+                #{openObjType},
+                #{pushTime},
+                #{userId},
+                #{isRead},
+                #{userType})
+    </insert>
+
+    <update id="update" parameterType="com.wintop.ms.carauction.entity.CarMessage" >
+        update car_message
+        set is_read = #{isRead},
+        read_time = #{readTime}
+        where id = #{id}
+    </update>
+</mapper>

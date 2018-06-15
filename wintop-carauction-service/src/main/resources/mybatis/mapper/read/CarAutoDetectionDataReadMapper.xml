@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAutoDetectionDataReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAutoDetectionData" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="class_id" property="classId" jdbcType="BIGINT" />
+    <result column="auto_id" property="autoId" jdbcType="BIGINT" />
+    <result column="problem_description" property="problemDescription" jdbcType="VARCHAR" />
+    <result column="decreased_score" property="decreasedScore" jdbcType="DECIMAL" />
+    <result column="create_manager" property="createManager" jdbcType="VARCHAR" />
+    <result column="edit_time" property="editTime" jdbcType="TIMESTAMP" />
+    <result column="edit_manager" property="editManager" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="options_id" property="optionsId" jdbcType="BIGINT" />
+
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.classId != null" >
+         and class_id = #{condition.classId}
+      </if>
+      <if test="condition.autoId != null" >
+         and auto_id = #{condition.autoId}
+      </if>
+      <if test="condition.problemDescription != null" >
+         and problem_description = #{condition.problemDescription}
+      </if>
+      <if test="condition.decreasedScore != null" >
+         and decreased_score = #{condition.decreasedScore}
+      </if>
+      <if test="condition.createManager != null" >
+         and create_manager = #{condition.createManager}
+      </if>
+      <if test="condition.editTime != null" >
+         and edit_time = #{condition.editTime}
+      </if>
+      <if test="condition.editManager != null" >
+         and edit_manager = #{condition.editManager}
+      </if>
+      <if test="condition.createTime != null" >
+         and create_time = #{condition.createTime}
+      </if>
+      <if test="condition.optionsId != null" >
+        and options_id = #{condition.optionsId}
+      </if>
+
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, class_id, auto_id, problem_description, decreased_score, create_manager, edit_time, 
+    edit_manager, create_time,options_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from car_auto_detection_data
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_auto_detection_data
+    where id = #{id}
+  </select>
+
+  <select id="countByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" resultType="java.lang.Integer" >
+    select count(*) from car_auto_detection_data
+  </select>
+<!--查询某辆车的检测项损坏点-->
+  <select id="selectByAutoId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from car_auto_detection_data
+    where auto_id = #{autoId}
+  </select>
+</mapper>

@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAutoDetectionClassOptionsWriteDao" >
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.classId != null" >
+         and class_id = #{condition.classId}
+      </if>
+      <if test="condition.isDefault != null" >
+         and is_default = #{condition.isDefault}
+      </if>
+      <if test="condition.optionsName != null" >
+         and options_name = #{condition.optionsName}
+      </if>
+      <if test="condition.isClose != null" >
+         and is_close = #{condition.isClose}
+      </if>
+      <if test="condition.isDel != null" >
+         and is_del = #{condition.isDel}
+      </if>
+      <if test="condition.sort != null" >
+         and sort = #{condition.sort}
+      </if>
+      <if test="condition.deductMarks != null" >
+         and deduct_marks = #{condition.deductMarks}
+      </if>
+      <if test="condition.ifMustPhoto != null" >
+         and if_must_photo = #{condition.ifMustPhoto}
+      </if>
+      <if test="condition.createTime != null" >
+         and create_time = #{condition.createTime}
+      </if>
+      <if test="condition.createManager != null" >
+         and create_manager = #{condition.createManager}
+      </if>
+      <if test="condition.editTime != null" >
+         and edit_time = #{condition.editTime}
+      </if>
+      <if test="condition.editManager != null" >
+         and edit_manager = #{condition.editManager}
+      </if>
+      <if test="condition.detectionType != null" >
+         and detection_type = #{condition.detectionType}
+      </if>
+      <if test="condition.detectionTypeCn != null" >
+         and detection_type_cn = #{condition.detectionTypeCn}
+      </if>
+      <if test="condition.damagedType != null" >
+         and damaged_type = #{condition.damagedType}
+      </if>
+      <if test="condition.damagedTypeCn != null" >
+         and damaged_type_cn = #{condition.damagedTypeCn}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, class_id, is_default, options_name, is_close, is_del, sort, deduct_marks, if_must_photo, 
+    create_time, create_manager, edit_time, edit_manager, detection_type, detection_type_cn, 
+    damaged_type, damaged_type_cn
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_auto_detection_class_options
+    where id = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    delete from car_auto_detection_class_options
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAutoDetectionClassOptions" >
+    insert into car_auto_detection_class_options (id, class_id, is_default, options_name, is_close, is_del, sort, 
+      deduct_marks, if_must_photo, create_time, create_manager, edit_time, edit_manager, 
+      detection_type, detection_type_cn, damaged_type, damaged_type_cn)
+    values (#{id}, #{classId}, #{isDefault}, #{optionsName}, #{isClose}, #{isDel}, #{sort}, 
+      #{deductMarks}, #{ifMustPhoto}, #{createTime}, #{createManager}, #{editTime}, #{editManager}, 
+      #{detectionType}, #{detectionTypeCn}, #{damagedType}, #{damagedTypeCn})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarAutoDetectionClassOptions" >
+    insert into car_auto_detection_class_options
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="classId != null" >
+        class_id,
+      </if>
+      <if test="isDefault != null" >
+        is_default,
+      </if>
+      <if test="optionsName != null" >
+        options_name,
+      </if>
+      <if test="isClose != null" >
+        is_close,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="deductMarks != null" >
+        deduct_marks,
+      </if>
+      <if test="ifMustPhoto != null" >
+        if_must_photo,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createManager != null" >
+        create_manager,
+      </if>
+      <if test="editTime != null" >
+        edit_time,
+      </if>
+      <if test="editManager != null" >
+        edit_manager,
+      </if>
+      <if test="detectionType != null" >
+        detection_type,
+      </if>
+      <if test="detectionTypeCn != null" >
+        detection_type_cn,
+      </if>
+      <if test="damagedType != null" >
+        damaged_type,
+      </if>
+      <if test="damagedTypeCn != null" >
+        damaged_type_cn,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="classId != null" >
+        #{classId},
+      </if>
+      <if test="isDefault != null" >
+        #{isDefault},
+      </if>
+      <if test="optionsName != null" >
+        #{optionsName},
+      </if>
+      <if test="isClose != null" >
+        #{isClose},
+      </if>
+      <if test="isDel != null" >
+        #{isDel},
+      </if>
+      <if test="sort != null" >
+        #{sort},
+      </if>
+      <if test="deductMarks != null" >
+        #{deductMarks},
+      </if>
+      <if test="ifMustPhoto != null" >
+        #{ifMustPhoto},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="createManager != null" >
+        #{createManager},
+      </if>
+      <if test="editTime != null" >
+        #{editTime},
+      </if>
+      <if test="editManager != null" >
+        #{editManager},
+      </if>
+      <if test="detectionType != null" >
+        #{detectionType},
+      </if>
+      <if test="detectionTypeCn != null" >
+        #{detectionTypeCn},
+      </if>
+      <if test="damagedType != null" >
+        #{damagedType},
+      </if>
+      <if test="damagedTypeCn != null" >
+        #{damagedTypeCn},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByExampleSelective" parameterType="map" >
+    update car_auto_detection_class_options
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id},
+      </if>
+      <if test="record.classId != null" >
+        class_id = #{record.classId},
+      </if>
+      <if test="record.isDefault != null" >
+        is_default = #{record.isDefault},
+      </if>
+      <if test="record.optionsName != null" >
+        options_name = #{record.optionsName},
+      </if>
+      <if test="record.isClose != null" >
+        is_close = #{record.isClose},
+      </if>
+      <if test="record.isDel != null" >
+        is_del = #{record.isDel},
+      </if>
+      <if test="record.sort != null" >
+        sort = #{record.sort},
+      </if>
+      <if test="record.deductMarks != null" >
+        deduct_marks = #{record.deductMarks},
+      </if>
+      <if test="record.ifMustPhoto != null" >
+        if_must_photo = #{record.ifMustPhoto},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime},
+      </if>
+      <if test="record.createManager != null" >
+        create_manager = #{record.createManager},
+      </if>
+      <if test="record.editTime != null" >
+        edit_time = #{record.editTime},
+      </if>
+      <if test="record.editManager != null" >
+        edit_manager = #{record.editManager},
+      </if>
+      <if test="record.detectionType != null" >
+        detection_type = #{record.detectionType},
+      </if>
+      <if test="record.detectionTypeCn != null" >
+        detection_type_cn = #{record.detectionTypeCn},
+      </if>
+      <if test="record.damagedType != null" >
+        damaged_type = #{record.damagedType},
+      </if>
+      <if test="record.damagedTypeCn != null" >
+        damaged_type_cn = #{record.damagedTypeCn},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update car_auto_detection_class_options
+    set id = #{record.id},
+      class_id = #{record.classId},
+      is_default = #{record.isDefault},
+      options_name = #{record.optionsName},
+      is_close = #{record.isClose},
+      is_del = #{record.isDel},
+      sort = #{record.sort},
+      deduct_marks = #{record.deductMarks},
+      if_must_photo = #{record.ifMustPhoto},
+      create_time = #{record.createTime},
+      create_manager = #{record.createManager},
+      edit_time = #{record.editTime},
+      edit_manager = #{record.editManager},
+      detection_type = #{record.detectionType},
+      detection_type_cn = #{record.detectionTypeCn},
+      damaged_type = #{record.damagedType},
+      damaged_type_cn = #{record.damagedTypeCn}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarAutoDetectionClassOptions" >
+    update car_auto_detection_class_options
+    <set >
+      <if test="classId != null" >
+        class_id = #{classId},
+      </if>
+      <if test="isDefault != null" >
+        is_default = #{isDefault},
+      </if>
+      <if test="optionsName != null" >
+        options_name = #{optionsName},
+      </if>
+      <if test="isClose != null" >
+        is_close = #{isClose},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort},
+      </if>
+      <if test="deductMarks != null" >
+        deduct_marks = #{deductMarks},
+      </if>
+      <if test="ifMustPhoto != null" >
+        if_must_photo = #{ifMustPhoto},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="createManager != null" >
+        create_manager = #{createManager},
+      </if>
+      <if test="editTime != null" >
+        edit_time = #{editTime},
+      </if>
+      <if test="editManager != null" >
+        edit_manager = #{editManager},
+      </if>
+      <if test="detectionType != null" >
+        detection_type = #{detectionType},
+      </if>
+      <if test="detectionTypeCn != null" >
+        detection_type_cn = #{detectionTypeCn},
+      </if>
+      <if test="damagedType != null" >
+        damaged_type = #{damagedType},
+      </if>
+      <if test="damagedTypeCn != null" >
+        damaged_type_cn = #{damagedTypeCn},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarAutoDetectionClassOptions" >
+    update car_auto_detection_class_options
+    set class_id = #{classId},
+      is_default = #{isDefault},
+      options_name = #{optionsName},
+      is_close = #{isClose},
+      is_del = #{isDel},
+      sort = #{sort},
+      deduct_marks = #{deductMarks},
+      if_must_photo = #{ifMustPhoto},
+      create_time = #{createTime},
+      create_manager = #{createManager},
+      edit_time = #{editTime},
+      edit_manager = #{editManager},
+      detection_type = #{detectionType},
+      detection_type_cn = #{detectionTypeCn},
+      damaged_type = #{damagedType},
+      damaged_type_cn = #{damagedTypeCn}
+    where id = #{id}
+  </update>
+</mapper>

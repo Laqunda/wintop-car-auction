@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarRegionServerfeeSettingReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarRegionServerfeeSetting" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="region_setting_id" property="regionSettingId" jdbcType="BIGINT" />
+    <result column="start_closing_price" property="startClosingPrice" jdbcType="DECIMAL" />
+    <result column="end_closing_price" property="endClosingPrice" jdbcType="DECIMAL" />
+    <result column="service_fee" property="serviceFee" jdbcType="DECIMAL" />
+    <result column="show_text" property="showText" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, region_setting_id, start_closing_price, end_closing_price, service_fee,show_text
+  </sql>
+  <select id="selectByRegionSettingId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from car_region_serverfee_setting
+    where region_setting_id=#{regionSettingId}
+  </select>
+  <select id="selectByClosingPrice" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from car_region_serverfee_setting
+    where start_closing_price <![CDATA[ <= ]]> #{closingPrice} and end_closing_price <![CDATA[ >= ]]> #{closingPrice}
+    limit 1;
+  </select>
+</mapper>

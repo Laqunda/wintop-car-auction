@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarCenterWriteDao" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_center
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarCenter" >
+    insert into car_center (id, center_code, center_name, address, center_tel, status, 
+      remark, create_person, create_time, update_person, update_time, del_person,
+      del_time,region_id)
+    values (#{id}, #{centerCode}, #{centerName}, #{address}, #{centerTel}, #{status}, 
+      #{remark}, #{createPerson}, #{createTime}, #{updatePerson}, #{updateTime}, #{delPerson},
+      #{delTime},#{regionId})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarCenter" >
+    update car_center
+    <set >
+      <if test="centerName != null" >
+        center_name = #{centerName},
+      </if>
+      <if test="address != null" >
+        address = #{address},
+      </if>
+      <if test="centerTel != null" >
+        center_tel = #{centerTel},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark},
+      </if>
+      <if test="updatePerson != null" >
+        update_person = #{updatePerson},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="delPerson != null" >
+        del_person = #{delPerson},
+      </if>
+      <if test="delTime != null" >
+        del_time = #{delTime},
+      </if>
+      <if test="regionId != null" >
+        region_id = #{regionId},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarCenter" >
+    update car_center
+    set center_code = #{centerCode},
+      center_name = #{centerName},
+      address = #{address},
+      center_tel = #{centerTel},
+      status = #{status},
+      remark = #{remark},
+      create_person = #{createPerson},
+      create_time = #{createTime},
+      update_person = #{updatePerson},
+      update_time = #{updateTime},
+      del_person = #{delPerson},
+      del_time = #{delTime}
+    where id = #{id}
+  </update>
+</mapper>

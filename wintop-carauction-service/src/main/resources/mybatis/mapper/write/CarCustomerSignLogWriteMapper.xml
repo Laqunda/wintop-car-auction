@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarCustomerSignLogWriteDao">
+    <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarCustomerSignLog">
+        INSERT INTO car_customer_sign_log
+        (id,sign_id,log,create_time,`type`,pdf_file_url,pic_file_url)
+        VALUES (#{id},#{signId},#{log},#{createTime},#{type},#{pdfFileUrl},#{picFileUrl})
+    </insert>
+
+
+</mapper>

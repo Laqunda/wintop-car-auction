@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAgentWriteDao" >
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from car_agent
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAgent" >
+     insert into car_agent (id, order_id, car_id, agent_company_id, agent_company_name, create_time,
+      create_user)
+    values (#{id}, #{orderId}, #{carId}, #{agentCompanyId}, #{agentCompanyName}, #{createTime},
+      #{createUser})
+  </insert>
+  <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarAgent" >
+    update car_agent
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId},
+      </if>
+      <if test="carId != null" >
+        car_id = #{carId},
+      </if>
+      <if test="agentCompanyId != null" >
+        agent_company_id = #{agentCompanyId},
+      </if>
+      <if test="agentCompanyName != null" >
+        agent_company_name = #{agentCompanyName},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateById" parameterType="com.wintop.ms.carauction.entity.CarAgent" >
+    update car_agent
+    set order_id = #{orderId},
+      car_id = #{carId},
+      agent_company_id = #{agentCompanyId},
+      agent_company_name = #{agentCompanyName},
+      create_time = #{createTime},
+      create_user = #{createUser}
+    where id = #{id}
+  </update>
+</mapper>

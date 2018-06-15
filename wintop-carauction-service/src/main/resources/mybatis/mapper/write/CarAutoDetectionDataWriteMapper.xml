@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAutoDetectionDataWriteDao" >
+
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.classId != null" >
+         and class_id = #{condition.classId}
+      </if>
+      <if test="condition.autoId != null" >
+         and auto_id = #{condition.autoId}
+      </if>
+      <if test="condition.problemDescription != null" >
+         and problem_description = #{condition.problemDescription}
+      </if>
+      <if test="condition.decreasedScore != null" >
+         and decreased_score = #{condition.decreasedScore}
+      </if>
+      <if test="condition.createManager != null" >
+         and create_manager = #{condition.createManager}
+      </if>
+      <if test="condition.editTime != null" >
+         and edit_time = #{condition.editTime}
+      </if>
+      <if test="condition.editManager != null" >
+         and edit_manager = #{condition.editManager}
+      </if>
+      <if test="condition.createTime != null" >
+         and create_time = #{condition.createTime}
+      </if>
+      <if test="condition.optionsId != null" >
+        and options_id = #{condition.optionsId}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, class_id, auto_id, problem_description, decreased_score, create_manager, edit_time, 
+    edit_manager, create_time,options_id
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_auto_detection_data
+    where id = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    delete from car_auto_detection_data
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAutoDetectionData" >
+    insert into car_auto_detection_data (id, class_id, auto_id, problem_description, decreased_score, create_manager, 
+      edit_time, edit_manager, create_time,options_id)
+    values (#{id}, #{classId}, #{autoId}, #{problemDescription}, #{decreasedScore}, #{createManager}, 
+      #{editTime}, #{editManager}, #{createTime},#{optionsId})
+  </insert>
+<!--批量插入车辆检测损坏点数据-->
+  <insert id="insertArr" parameterType="java.util.List" >
+    insert into car_auto_detection_data (id, class_id, auto_id, problem_description, decreased_score, create_manager,
+    edit_time, edit_manager, create_time,options_id)
+    values
+    <foreach collection="dataList" item="data" index="index" separator=",">
+      (#{data.id}, #{data.classId}, #{data.autoId}, #{data.problemDescription}, #{data.decreasedScore},
+      #{data.createManager},#{data.editTime}, #{data.editManager}, #{data.createTime},#{data.optionsId})
+    </foreach>
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarAutoDetectionData" >
+    insert into car_auto_detection_data
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="classId != null" >
+        class_id,
+      </if>
+      <if test="autoId != null" >
+        auto_id,
+      </if>
+      <if test="problemDescription != null" >
+        problem_description,
+      </if>
+      <if test="decreasedScore != null" >
+        decreased_score,
+      </if>
+      <if test="createManager != null" >
+        create_manager,
+      </if>
+      <if test="editTime != null" >
+        edit_time,
+      </if>
+      <if test="editManager != null" >
+        edit_manager,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="optionsId != null" >
+        options_id,
+      </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="classId != null" >
+        #{classId},
+      </if>
+      <if test="autoId != null" >
+        #{autoId},
+      </if>
+      <if test="problemDescription != null" >
+        #{problemDescription},
+      </if>
+      <if test="decreasedScore != null" >
+        #{decreasedScore},
+      </if>
+      <if test="createManager != null" >
+        #{createManager},
+      </if>
+      <if test="editTime != null" >
+        #{editTime},
+      </if>
+      <if test="editManager != null" >
+        #{editManager},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="optionsId != null" >
+        #{optionsId},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByExampleSelective" parameterType="map" >
+    update car_auto_detection_data
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id},
+      </if>
+      <if test="record.classId != null" >
+        class_id = #{record.classId},
+      </if>
+      <if test="record.autoId != null" >
+        auto_id = #{record.autoId},
+      </if>
+      <if test="record.problemDescription != null" >
+        problem_description = #{record.problemDescription},
+      </if>
+      <if test="record.decreasedScore != null" >
+        decreased_score = #{record.decreasedScore},
+      </if>
+      <if test="record.createManager != null" >
+        create_manager = #{record.createManager},
+      </if>
+      <if test="record.editTime != null" >
+        edit_time = #{record.editTime},
+      </if>
+      <if test="record.editManager != null" >
+        edit_manager = #{record.editManager},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime},
+      </if>
+      <if test="record.optionsId != null" >
+        options_id = #{record.optionsId},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update car_auto_detection_data
+    set id = #{record.id},
+      class_id = #{record.classId},
+      auto_id = #{record.autoId},
+      problem_description = #{record.problemDescription},
+      decreased_score = #{record.decreasedScore},
+      create_manager = #{record.createManager},
+      edit_time = #{record.editTime},
+      edit_manager = #{record.editManager},
+      create_time = #{record.createTime},
+      options_id = #{record.optionsId}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarAutoDetectionData" >
+    update car_auto_detection_data
+    <set >
+      <if test="classId != null" >
+        class_id = #{classId},
+      </if>
+      <if test="autoId != null" >
+        auto_id = #{autoId},
+      </if>
+      <if test="problemDescription != null" >
+        problem_description = #{problemDescription},
+      </if>
+      <if test="decreasedScore != null" >
+        decreased_score = #{decreasedScore},
+      </if>
+      <if test="createManager != null" >
+        create_manager = #{createManager},
+      </if>
+      <if test="editTime != null" >
+        edit_time = #{editTime},
+      </if>
+      <if test="editManager != null" >
+        edit_manager = #{editManager},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarAutoDetectionData" >
+    update car_auto_detection_data
+    set class_id = #{classId},
+      auto_id = #{autoId},
+      problem_description = #{problemDescription},
+      decreased_score = #{decreasedScore},
+      create_manager = #{createManager},
+      edit_time = #{editTime},
+      edit_manager = #{editManager},
+      create_time = #{createTime},
+      options_id = #{optionsId}
+    where id = #{id}
+  </update>
+
+  <!--清理车辆的某检测项数据-->
+  <delete id="deleteByClassIdAutoId" parameterType="java.util.Map">
+    <if test="classId!=null and autoId!=null">
+      DELETE FROM car_auto_detection_data
+      WHERE class_id = #{classId} AND auto_id = #{autoId}
+    </if>
+  </delete>
+</mapper>

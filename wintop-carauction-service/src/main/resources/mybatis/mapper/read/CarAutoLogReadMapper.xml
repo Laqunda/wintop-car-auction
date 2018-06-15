@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAutoLogReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAutoLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="auto_id" property="autoId" jdbcType="BIGINT" />
+    <result column="msg" property="msg" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="user_type" property="userType" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="user_mobile" property="userMobile" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, auto_id, msg, status, time, user_type, user_id, user_mobile, user_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from car_auto_log
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_auto_log
+    where id = #{id}
+  </select>
+
+  <select id="countByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" resultType="java.lang.Integer" >
+    select count(*) from car_auto_log
+  </select>
+
+<!--查询车辆轨迹-->
+  <select id="selectCarLogByCarId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select l.id,l.status,l.user_name,l.user_mobile,l.time,s.status_name
+    from car_auto_log l
+    LEFT JOIN car_relate_status s on (s.status=l.status AND s.type='2')
+    WHERE 1=1
+    <if test="carId != null and carId != ''">
+     AND l.auto_id=#{carId}
+    </if>
+    order by l.time DESC
+  </select>
+
+  <select id="selectCarLog" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select l.id,l.status,l.user_name,l.user_mobile,l.time,s.status_name,msg
+    from car_auto_log l
+    LEFT JOIN car_relate_status s on (s.status=l.status AND s.type='2')
+    WHERE l.auto_id=#{carId} and l.status=#{status}
+    order by l.time DESC
+    limit 0,1;
+  </select>
+
+</mapper>

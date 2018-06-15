@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarStoreWriteDao" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_store
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarStore" >
+    insert into car_store (id, code, `name`, simple_name, store_photo, address,
+      service_tel, latitude, longitude,status,remark, create_time, create_person,update_time,update_person, del_time,
+      del_person,region_id)
+    values (#{id}, #{code}, #{name}, #{simpleName},  #{storePhoto}, #{address},
+      #{serviceTel}, #{latitude}, #{longitude}, #{status},#{remark},#{createTime},#{createPerson}, #{updateTime},#{updatePerson}, #{delTime},
+      #{delPerson},#{regionId})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarStore" >
+    update car_store
+    <set >
+      <if test="code != null" >
+        code = #{code},
+      </if>
+      <if test="name != null" >
+        `name` = #{name},
+      </if>
+      <if test="simpleName != null" >
+        simple_name = #{simpleName},
+      </if>
+      <if test="storePhoto != null" >
+        store_photo = #{storePhoto},
+      </if>
+      <if test="address != null" >
+        address = #{address},
+      </if>
+      <if test="serviceTel != null" >
+        service_tel = #{serviceTel},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="createPerson != null" >
+        create_person = #{createPerson},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="updatePerson != null" >
+        update_person = #{updatePerson},
+      </if>
+      <if test="delTime != null" >
+        del_time = #{delTime},
+      </if>
+      <if test="delPerson != null" >
+        del_person = #{delPerson},
+      </if>
+      <if test="region_id != null" >
+        region_id = #{regionId},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+</mapper>

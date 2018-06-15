@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAutoStyleWriteDao" >
+
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.jyid != null" >
+         and jyid = #{condition.jyid}
+      </if>
+      <if test="condition.brandId != null" >
+         and brand_id = #{condition.brandId}
+      </if>
+      <if test="condition.brandName != null" >
+         and brand_name = #{condition.brandName}
+      </if>
+      <if test="condition.brandLogo != null" >
+         and brand_logo = #{condition.brandLogo}
+      </if>
+      <if test="condition.brandMakeId != null" >
+         and brand_make_id = #{condition.brandMakeId}
+      </if>
+      <if test="condition.brandMakeName != null" >
+         and brand_make_name = #{condition.brandMakeName}
+      </if>
+      <if test="condition.autoFamilyId != null" >
+         and auto_family_id = #{condition.autoFamilyId}
+      </if>
+      <if test="condition.autoFamilyName != null" >
+         and auto_family_name = #{condition.autoFamilyName}
+      </if>
+      <if test="condition.groupId != null" >
+         and group_id = #{condition.groupId}
+      </if>
+      <if test="condition.groupName != null" >
+         and group_name = #{condition.groupName}
+      </if>
+      <if test="condition.vehicleName != null" >
+         and vehicle_name = #{condition.vehicleName}
+      </if>
+      <if test="condition.engineDesc != null" >
+         and engine_desc = #{condition.engineDesc}
+      </if>
+      <if test="condition.engineModel != null" >
+         and engine_model = #{condition.engineModel}
+      </if>
+      <if test="condition.gearboxName != null" >
+         and gearbox_name = #{condition.gearboxName}
+      </if>
+      <if test="condition.yearPattern != null" >
+         and year_pattern = #{condition.yearPattern}
+      </if>
+      <if test="condition.marketDate != null" >
+         and market_date = #{condition.marketDate}
+      </if>
+      <if test="condition.cfgLevel != null" >
+         and cfg_level = #{condition.cfgLevel}
+      </if>
+      <if test="condition.seat != null" >
+         and seat = #{condition.seat}
+      </if>
+      <if test="condition.createTime != null" >
+         and create_time = #{condition.createTime}
+      </if>
+      <if test="condition.alias != null" >
+         and alias = #{condition.alias}
+      </if>
+      <if test="condition.yearPatternId != null" >
+         and year_pattern_id = #{condition.yearPatternId}
+      </if>
+      <if test="condition.aliasId != null" >
+         and alias_id = #{condition.aliasId}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, jyid, brand_id, brand_name, brand_logo, brand_make_id, brand_make_name, auto_family_id, 
+    auto_family_name, group_id, group_name, vehicle_name, engine_desc, engine_model, 
+    gearbox_name, year_pattern, market_date, cfg_level, seat, create_time, alias, year_pattern_id, 
+    alias_id
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_auto_style
+    where id = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    delete from car_auto_style
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAutoStyle" >
+    insert into car_auto_style (id, jyid, brand_id, brand_name, brand_logo, brand_make_id, brand_make_name, 
+      auto_family_id, auto_family_name, group_id, group_name, vehicle_name, engine_desc, 
+      engine_model, gearbox_name, year_pattern, market_date, cfg_level, seat, 
+      create_time, alias, year_pattern_id, alias_id)
+    values (#{id}, #{jyid}, #{brandId}, #{brandName}, #{brandLogo}, #{brandMakeId}, #{brandMakeName}, 
+      #{autoFamilyId}, #{autoFamilyName}, #{groupId}, #{groupName}, #{vehicleName}, #{engineDesc}, 
+      #{engineModel}, #{gearboxName}, #{yearPattern}, #{marketDate}, #{cfgLevel}, #{seat}, 
+      #{createTime}, #{alias}, #{yearPatternId}, #{aliasId})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarAutoStyle" >
+    insert into car_auto_style
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="jyid != null" >
+        jyid,
+      </if>
+      <if test="brandId != null" >
+        brand_id,
+      </if>
+      <if test="brandName != null" >
+        brand_name,
+      </if>
+      <if test="brandLogo != null" >
+        brand_logo,
+      </if>
+      <if test="brandMakeId != null" >
+        brand_make_id,
+      </if>
+      <if test="brandMakeName != null" >
+        brand_make_name,
+      </if>
+      <if test="autoFamilyId != null" >
+        auto_family_id,
+      </if>
+      <if test="autoFamilyName != null" >
+        auto_family_name,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="groupName != null" >
+        group_name,
+      </if>
+      <if test="vehicleName != null" >
+        vehicle_name,
+      </if>
+      <if test="engineDesc != null" >
+        engine_desc,
+      </if>
+      <if test="engineModel != null" >
+        engine_model,
+      </if>
+      <if test="gearboxName != null" >
+        gearbox_name,
+      </if>
+      <if test="yearPattern != null" >
+        year_pattern,
+      </if>
+      <if test="marketDate != null" >
+        market_date,
+      </if>
+      <if test="cfgLevel != null" >
+        cfg_level,
+      </if>
+      <if test="seat != null" >
+        seat,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="alias != null" >
+        alias,
+      </if>
+      <if test="yearPatternId != null" >
+        year_pattern_id,
+      </if>
+      <if test="aliasId != null" >
+        alias_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="jyid != null" >
+        #{jyid},
+      </if>
+      <if test="brandId != null" >
+        #{brandId},
+      </if>
+      <if test="brandName != null" >
+        #{brandName},
+      </if>
+      <if test="brandLogo != null" >
+        #{brandLogo},
+      </if>
+      <if test="brandMakeId != null" >
+        #{brandMakeId},
+      </if>
+      <if test="brandMakeName != null" >
+        #{brandMakeName},
+      </if>
+      <if test="autoFamilyId != null" >
+        #{autoFamilyId},
+      </if>
+      <if test="autoFamilyName != null" >
+        #{autoFamilyName},
+      </if>
+      <if test="groupId != null" >
+        #{groupId},
+      </if>
+      <if test="groupName != null" >
+        #{groupName},
+      </if>
+      <if test="vehicleName != null" >
+        #{vehicleName},
+      </if>
+      <if test="engineDesc != null" >
+        #{engineDesc},
+      </if>
+      <if test="engineModel != null" >
+        #{engineModel},
+      </if>
+      <if test="gearboxName != null" >
+        #{gearboxName},
+      </if>
+      <if test="yearPattern != null" >
+        #{yearPattern},
+      </if>
+      <if test="marketDate != null" >
+        #{marketDate},
+      </if>
+      <if test="cfgLevel != null" >
+        #{cfgLevel},
+      </if>
+      <if test="seat != null" >
+        #{seat},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="alias != null" >
+        #{alias},
+      </if>
+      <if test="yearPatternId != null" >
+        #{yearPatternId},
+      </if>
+      <if test="aliasId != null" >
+        #{aliasId},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByExampleSelective" parameterType="map" >
+    update car_auto_style
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id},
+      </if>
+      <if test="record.jyid != null" >
+        jyid = #{record.jyid},
+      </if>
+      <if test="record.brandId != null" >
+        brand_id = #{record.brandId},
+      </if>
+      <if test="record.brandName != null" >
+        brand_name = #{record.brandName},
+      </if>
+      <if test="record.brandLogo != null" >
+        brand_logo = #{record.brandLogo},
+      </if>
+      <if test="record.brandMakeId != null" >
+        brand_make_id = #{record.brandMakeId},
+      </if>
+      <if test="record.brandMakeName != null" >
+        brand_make_name = #{record.brandMakeName},
+      </if>
+      <if test="record.autoFamilyId != null" >
+        auto_family_id = #{record.autoFamilyId},
+      </if>
+      <if test="record.autoFamilyName != null" >
+        auto_family_name = #{record.autoFamilyName},
+      </if>
+      <if test="record.groupId != null" >
+        group_id = #{record.groupId},
+      </if>
+      <if test="record.groupName != null" >
+        group_name = #{record.groupName},
+      </if>
+      <if test="record.vehicleName != null" >
+        vehicle_name = #{record.vehicleName},
+      </if>
+      <if test="record.engineDesc != null" >
+        engine_desc = #{record.engineDesc},
+      </if>
+      <if test="record.engineModel != null" >
+        engine_model = #{record.engineModel},
+      </if>
+      <if test="record.gearboxName != null" >
+        gearbox_name = #{record.gearboxName},
+      </if>
+      <if test="record.yearPattern != null" >
+        year_pattern = #{record.yearPattern},
+      </if>
+      <if test="record.marketDate != null" >
+        market_date = #{record.marketDate},
+      </if>
+      <if test="record.cfgLevel != null" >
+        cfg_level = #{record.cfgLevel},
+      </if>
+      <if test="record.seat != null" >
+        seat = #{record.seat},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime},
+      </if>
+      <if test="record.alias != null" >
+        alias = #{record.alias},
+      </if>
+      <if test="record.yearPatternId != null" >
+        year_pattern_id = #{record.yearPatternId},
+      </if>
+      <if test="record.aliasId != null" >
+        alias_id = #{record.aliasId},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update car_auto_style
+    set id = #{record.id},
+      jyid = #{record.jyid},
+      brand_id = #{record.brandId},
+      brand_name = #{record.brandName},
+      brand_logo = #{record.brandLogo},
+      brand_make_id = #{record.brandMakeId},
+      brand_make_name = #{record.brandMakeName},
+      auto_family_id = #{record.autoFamilyId},
+      auto_family_name = #{record.autoFamilyName},
+      group_id = #{record.groupId},
+      group_name = #{record.groupName},
+      vehicle_name = #{record.vehicleName},
+      engine_desc = #{record.engineDesc},
+      engine_model = #{record.engineModel},
+      gearbox_name = #{record.gearboxName},
+      year_pattern = #{record.yearPattern},
+      market_date = #{record.marketDate},
+      cfg_level = #{record.cfgLevel},
+      seat = #{record.seat},
+      create_time = #{record.createTime},
+      alias = #{record.alias},
+      year_pattern_id = #{record.yearPatternId},
+      alias_id = #{record.aliasId}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarAutoStyle" >
+    update car_auto_style
+    <set >
+      <if test="jyid != null" >
+        jyid = #{jyid},
+      </if>
+      <if test="brandId != null" >
+        brand_id = #{brandId},
+      </if>
+      <if test="brandName != null" >
+        brand_name = #{brandName},
+      </if>
+      <if test="brandLogo != null" >
+        brand_logo = #{brandLogo},
+      </if>
+      <if test="brandMakeId != null" >
+        brand_make_id = #{brandMakeId},
+      </if>
+      <if test="brandMakeName != null" >
+        brand_make_name = #{brandMakeName},
+      </if>
+      <if test="autoFamilyId != null" >
+        auto_family_id = #{autoFamilyId},
+      </if>
+      <if test="autoFamilyName != null" >
+        auto_family_name = #{autoFamilyName},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId},
+      </if>
+      <if test="groupName != null" >
+        group_name = #{groupName},
+      </if>
+      <if test="vehicleName != null" >
+        vehicle_name = #{vehicleName},
+      </if>
+      <if test="engineDesc != null" >
+        engine_desc = #{engineDesc},
+      </if>
+      <if test="engineModel != null" >
+        engine_model = #{engineModel},
+      </if>
+      <if test="gearboxName != null" >
+        gearbox_name = #{gearboxName},
+      </if>
+      <if test="yearPattern != null" >
+        year_pattern = #{yearPattern},
+      </if>
+      <if test="marketDate != null" >
+        market_date = #{marketDate},
+      </if>
+      <if test="cfgLevel != null" >
+        cfg_level = #{cfgLevel},
+      </if>
+      <if test="seat != null" >
+        seat = #{seat},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="alias != null" >
+        alias = #{alias},
+      </if>
+      <if test="yearPatternId != null" >
+        year_pattern_id = #{yearPatternId},
+      </if>
+      <if test="aliasId != null" >
+        alias_id = #{aliasId},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarAutoStyle" >
+    update car_auto_style
+    set jyid = #{jyid},
+      brand_id = #{brandId},
+      brand_name = #{brandName},
+      brand_logo = #{brandLogo},
+      brand_make_id = #{brandMakeId},
+      brand_make_name = #{brandMakeName},
+      auto_family_id = #{autoFamilyId},
+      auto_family_name = #{autoFamilyName},
+      group_id = #{groupId},
+      group_name = #{groupName},
+      vehicle_name = #{vehicleName},
+      engine_desc = #{engineDesc},
+      engine_model = #{engineModel},
+      gearbox_name = #{gearboxName},
+      year_pattern = #{yearPattern},
+      market_date = #{marketDate},
+      cfg_level = #{cfgLevel},
+      seat = #{seat},
+      create_time = #{createTime},
+      alias = #{alias},
+      year_pattern_id = #{yearPatternId},
+      alias_id = #{aliasId}
+    where id = #{id}
+  </update>
+</mapper>

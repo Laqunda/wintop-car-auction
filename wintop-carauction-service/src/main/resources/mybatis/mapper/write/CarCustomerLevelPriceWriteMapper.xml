@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarCustomerLevelPriceWriteDao" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_customer_level_price
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarCustomerLevelPrice" >
+    insert into car_customer_level_price (id, level_id, fare_id, create_time, create_manager)
+    values (#{id}, #{levelId}, #{fareId}, #{createTime}, #{createManager})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerLevelPrice" >
+    insert into car_customer_level_price
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="levelId != null" >
+        level_id,
+      </if>
+      <if test="fareId != null" >
+        fare_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createManager != null" >
+        create_manager,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="levelId != null" >
+        #{levelId},
+      </if>
+      <if test="fareId != null" >
+        #{fareId},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="createManager != null" >
+        #{createManager},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerLevelPrice" >
+    update car_customer_level_price
+    <set >
+      <if test="levelId != null" >
+        level_id = #{levelId},
+      </if>
+      <if test="fareId != null" >
+        fare_id = #{fareId},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="createManager != null" >
+        create_manager = #{createManager},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarCustomerLevelPrice" >
+    update car_customer_level_price
+    set level_id = #{levelId},
+      fare_id = #{fareId},
+      create_time = #{createTime},
+      create_manager = #{createManager}
+    where id = #{id}
+  </update>
+
+  <delete id="deleteByLevelId" parameterType="java.lang.Long" >
+    delete from car_customer_level_price
+    where level_id = #{levelId}
+  </delete>
+</mapper>

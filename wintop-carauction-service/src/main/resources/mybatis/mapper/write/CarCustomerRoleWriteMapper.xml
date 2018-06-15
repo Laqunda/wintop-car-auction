@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarCustomerRoleWriteDao" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_customer_role
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarCustomerRole" >
+    insert into car_customer_role (id, name, code, create_time, create_manager, status)
+    values (#{id}, #{name}, #{code}, #{createTime}, #{createManager}, #{status})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerRole" >
+    insert into car_customer_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createManager != null" >
+        create_manager,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="name != null" >
+        #{name},
+      </if>
+      <if test="code != null" >
+        #{code},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="createManager != null" >
+        #{createManager},
+      </if>
+      <if test="status != null" >
+        #{status},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerRole" >
+    update car_customer_role
+    <set >
+      <if test="name != null" >
+        name = #{name},
+      </if>
+      <if test="code != null" >
+        code = #{code},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="createManager != null" >
+        create_manager = #{createManager},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarCustomerRole" >
+    update car_customer_role
+    set name = #{name},
+      code = #{code},
+      create_time = #{createTime},
+      create_manager = #{createManager},
+      status = #{status}
+    where id = #{id}
+  </update>
+</mapper>

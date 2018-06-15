@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAppSlideshowWriteDao" >
+
+    <delete id="deleteById" parameterType="java.lang.Long" >
+        delete from car_app_slideshow
+        where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAppSlideshow" >
+        insert into car_app_slideshow
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="title != null" >
+                title,
+            </if>
+            <if test="openType != null" >
+                open_type,
+            </if>
+            <if test="img != null" >
+                img,
+            </if>
+            <if test="describe != null" >
+                `describe``,
+            </if>
+            <if test="openObj != null" >
+                open_obj,
+            </if>
+            <if test="sort != null" >
+                sort,
+            </if>
+            <if test="ifShow != null" >
+                if_show,
+            </if>
+            <if test="editor != null" >
+                editor,
+            </if>
+            <if test="editTime != null" >
+                edit_time,
+            </if>
+            <if test="type != null" >
+                `type`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id},
+            </if>
+            <if test="title != null" >
+                #{title},
+            </if>
+            <if test="openType != null" >
+                #{openType},
+            </if>
+            <if test="img != null" >
+                #{img},
+            </if>
+            <if test="describe != null" >
+                #{describe},
+            </if>
+            <if test="openObj != null" >
+                #{openObj},
+            </if>
+            <if test="sort != null" >
+                #{sort},
+            </if>
+            <if test="ifShow != null" >
+                #{ifShow},
+            </if>
+            <if test="editor != null" >
+                #{editor},
+            </if>
+            <if test="editTime != null" >
+                #{editTime},
+            </if>
+            <if test="type != null" >
+                #{type},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarAppSlideshow" >
+        update car_app_slideshow
+        <set >
+            <if test="title != null" >
+                title = #{title},
+            </if>
+            <if test="openType != null" >
+                open_type = #{openType},
+            </if>
+            <if test="img != null" >
+                img = #{img},
+            </if>
+            <if test="describe != null" >
+                `describe` = #{describe},
+            </if>
+            <if test="openObj != null" >
+                open_obj = #{openObj},
+            </if>
+            <if test="sort != null" >
+                sort = #{sort},
+            </if>
+            <if test="ifShow != null" >
+                if_show = #{ifShow},
+            </if>
+            <if test="editor != null" >
+                editor = #{editor},
+            </if>
+            <if test="editTime != null" >
+                edit_time = #{editTime},
+            </if>
+            <if test="type != null" >
+                type = #{type},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateById" parameterType="com.wintop.ms.carauction.entity.CarAppSlideshow" >
+        update car_app_slideshow
+        set title = #{title},
+        open_type = #{openType},
+        img = #{img},
+        `describe` = #{describe},
+        open_obj = #{openObj},
+        sort = #{sort},
+        if_show = #{ifShow},
+        editor = #{editor},
+        edit_time = #{editTime},
+        `type` = #{type}
+        where id = #{id}
+    </update>
+</mapper>

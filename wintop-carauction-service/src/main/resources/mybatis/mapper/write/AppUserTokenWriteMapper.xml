@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.AppUserTokenWriteDao" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from wt_app_user_token
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.AppUserToken" >
+    insert into wt_app_user_token (id, user_id, app_id, token, open_id, update_time, expiresIn
+      )
+    values (#{id}, #{userId}, #{appId}, #{token}, #{openId}, #{updateTime}, #{expiresin}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.AppUserToken" >
+    insert into wt_app_user_token
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="appId != null" >
+        app_id,
+      </if>
+      <if test="token != null" >
+        token,
+      </if>
+      <if test="openId != null" >
+        open_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="expiresin != null" >
+        expiresIn,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="userId != null" >
+        #{userId},
+      </if>
+      <if test="appId != null" >
+        #{appId},
+      </if>
+      <if test="token != null" >
+        #{token},
+      </if>
+      <if test="openId != null" >
+        #{openId},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="expiresin != null" >
+        #{expiresin},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.AppUserToken" >
+    update wt_app_user_token
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId},
+      </if>
+      <if test="appId != null" >
+        app_id = #{appId},
+      </if>
+      <if test="token != null" >
+        token = #{token},
+      </if>
+      <if test="openId != null" >
+        open_id = #{openId},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="expiresin != null" >
+        expiresIn = #{expiresin},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.AppUserToken" >
+    update wt_app_user_token
+    set user_id = #{userId},
+      app_id = #{appId},
+      token = #{token},
+      open_id = #{openId},
+      update_time = #{updateTime},
+      expiresIn = #{expiresin}
+    where id = #{id}
+  </update>
+</mapper>

@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAutoProceduresWriteDao" >
+
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.autoId != null" >
+         and auto_id = #{condition.autoId}
+      </if>
+      <if test="condition.purchaseTax != null" >
+         and purchase_tax = #{condition.purchaseTax}
+      </if>
+      <if test="condition.drivingLicense != null" >
+         and driving_license = #{condition.drivingLicense}
+      </if>
+      <if test="condition.registrationCertificate != null" >
+         and registration_certificate = #{condition.registrationCertificate}
+      </if>
+      <if test="condition.instruction != null" >
+         and instruction = #{condition.instruction}
+      </if>
+      <if test="condition.compulsoryInsurance != null" >
+         and compulsory_insurance = #{condition.compulsoryInsurance}
+      </if>
+      <if test="condition.businessInsurance != null" >
+         and business_insurance = #{condition.businessInsurance}
+      </if>
+      <if test="condition.transferNumber != null" >
+         and transfer_number = #{condition.transferNumber}
+      </if>
+      <if test="condition.newCarInvoice != null" >
+         and new_car_invoice = #{condition.newCarInvoice}
+      </if>
+      <if test="condition.qualityGuarantee != null" >
+         and quality_guarantee = #{condition.qualityGuarantee}
+      </if>
+      <if test="condition.carKeys != null" >
+         and car_keys = #{condition.carKeys}
+      </if>
+      <if test="condition.maintenanceManual != null" >
+         and maintenance_manual = #{condition.maintenanceManual}
+      </if>
+      <if test="condition.yearInsurance != null" >
+         and year_insurance = #{condition.yearInsurance}
+      </if>
+      <if test="condition.ticketOfTransfer != null" >
+         and ticket_of_transfer = #{condition.ticketOfTransfer}
+      </if>
+      <if test="condition.costPrice != null" >
+         and cost_price = #{condition.costPrice}
+      </if>
+      <if test="condition.unIllegal != null" >
+         and un_illegal = #{condition.unIllegal}
+      </if>
+      <if test="condition.createTime != null" >
+         and create_time = #{condition.createTime}
+      </if>
+      <if test="condition.createUser != null" >
+         and create_user = #{condition.createUser}
+      </if>
+      <if test="condition.updateTime != null" >
+         and update_time = #{condition.updateTime}
+      </if>
+      <if test="condition.updateUser != null" >
+         and update_user = #{condition.updateUser}
+      </if>
+      <if test="condition.freightWho != null" >
+        and freight_who = #{condition.freightWho}
+      </if>
+      <if test="condition.mentionFeeWho != null" >
+        and mention_fee_who = #{condition.mentionFeeWho}
+      </if>
+      <if test="condition.transferFee != null" >
+        and transfer_fee = #{condition.transferFee}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, auto_id, purchase_tax, driving_license, registration_certificate, instruction, 
+    compulsory_insurance, business_insurance, transfer_number, new_car_invoice, quality_guarantee, 
+    car_keys, maintenance_manual, year_insurance, ticket_of_transfer,
+    cost_price, un_illegal, create_time, create_user, update_time, update_user,freight_who,mention_fee_who,
+    transfer_fee,illegal_price,illegal_score,illegal_who
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_auto_procedures
+    where id = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    delete from car_auto_procedures
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAutoProcedures" >
+    insert into car_auto_procedures (id, auto_id, purchase_tax, driving_license, registration_certificate, 
+      instruction, compulsory_insurance, business_insurance, transfer_number, 
+      new_car_invoice, quality_guarantee, car_keys, maintenance_manual, year_insurance, 
+      ticket_of_transfer, cost_price, un_illegal, create_time,
+      create_user, update_time, update_user,freight_who,mention_fee_who,transfer_fee,illegal_price,illegal_score,illegal_who)
+    values (#{id}, #{autoId}, #{purchaseTax}, #{drivingLicense}, #{registrationCertificate}, 
+      #{instruction}, #{compulsoryInsurance}, #{businessInsurance}, #{transferNumber}, 
+      #{newCarInvoice}, #{qualityGuarantee}, #{carKeys}, #{maintenanceManual}, #{yearInsurance}, 
+      #{ticketOfTransfer}, #{costPrice}, #{unIllegal}, #{createTime},
+      #{createUser}, #{updateTime}, #{updateUser},#{freightWho},#{mentionFeeWho},#{transferFee},#{illegalPrice},#{illegalScore},#{illegalWho})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarAutoProcedures" >
+    insert into car_auto_procedures
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="autoId != null" >
+        auto_id,
+      </if>
+      <if test="purchaseTax != null" >
+        purchase_tax,
+      </if>
+      <if test="drivingLicense != null" >
+        driving_license,
+      </if>
+      <if test="registrationCertificate != null" >
+        registration_certificate,
+      </if>
+      <if test="instruction != null" >
+        instruction,
+      </if>
+      <if test="compulsoryInsurance != null" >
+        compulsory_insurance,
+      </if>
+      <if test="businessInsurance != null" >
+        business_insurance,
+      </if>
+      <if test="transferNumber != null" >
+        transfer_number,
+      </if>
+      <if test="newCarInvoice != null" >
+        new_car_invoice,
+      </if>
+      <if test="qualityGuarantee != null" >
+        quality_guarantee,
+      </if>
+      <if test="carKeys != null" >
+        car_keys,
+      </if>
+      <if test="maintenanceManual != null" >
+        maintenance_manual,
+      </if>
+      <if test="yearInsurance != null" >
+        year_insurance,
+      </if>
+      <if test="ticketOfTransfer != null" >
+        ticket_of_transfer,
+      </if>
+      <if test="costPrice != null" >
+        cost_price,
+      </if>
+      <if test="unIllegal != null" >
+        un_illegal,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="freightWho != null" >
+        and freight_who = #{freightWho}
+      </if>
+      <if test="mentionFeeWho != null" >
+        and mention_fee_who = #{mentionFeeWho}
+      </if>
+      <if test="transferFee != null" >
+        and transfer_fee = #{transferFee}
+      </if>
+
+      <if test="illegalPrice != null" >
+        and illegal_price = #{illegalPrice}
+      </if>
+      <if test="illegalScore != null" >
+        and illegal_score = #{illegalScore}
+      </if>
+      <if test="illegalWho != null" >
+        and illegal_who = #{illegalWho}
+      </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="autoId != null" >
+        #{autoId},
+      </if>
+      <if test="purchaseTax != null" >
+        #{purchaseTax},
+      </if>
+      <if test="drivingLicense != null" >
+        #{drivingLicense},
+      </if>
+      <if test="registrationCertificate != null" >
+        #{registrationCertificate},
+      </if>
+      <if test="instruction != null" >
+        #{instruction},
+      </if>
+      <if test="compulsoryInsurance != null" >
+        #{compulsoryInsurance},
+      </if>
+      <if test="businessInsurance != null" >
+        #{businessInsurance},
+      </if>
+      <if test="transferNumber != null" >
+        #{transferNumber},
+      </if>
+      <if test="newCarInvoice != null" >
+        #{newCarInvoice},
+      </if>
+      <if test="qualityGuarantee != null" >
+        #{qualityGuarantee},
+      </if>
+      <if test="carKeys != null" >
+        #{carKeys},
+      </if>
+      <if test="maintenanceManual != null" >
+        #{maintenanceManual},
+      </if>
+      <if test="yearInsurance != null" >
+        #{yearInsurance},
+      </if>
+      <if test="ticketOfTransfer != null" >
+        #{ticketOfTransfer},
+      </if>
+      <if test="costPrice != null" >
+        #{costPrice},
+      </if>
+      <if test="unIllegal != null" >
+        #{unIllegal},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="createUser != null" >
+        #{createUser},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser},
+      </if>
+      <if test="freightWho != null" >
+        #{freightWho},
+      </if>
+      <if test="mentionFeeWho != null" >
+        #{mentionFeeWho},
+      </if>
+      <if test="transferFee != null" >
+        #{transferFee},
+      </if>
+
+      <if test="illegalPrice != null" >
+        #{illegalPrice},
+      </if>
+      <if test="illegalScore != null" >
+        #{illegalScore},
+      </if>
+      <if test="illegalWho != null" >
+        #{illegalWho},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByExampleSelective" parameterType="map" >
+    update car_auto_procedures
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id},
+      </if>
+      <if test="record.autoId != null" >
+        auto_id = #{record.autoId},
+      </if>
+      <if test="record.purchaseTax != null" >
+        purchase_tax = #{record.purchaseTax},
+      </if>
+      <if test="record.drivingLicense != null" >
+        driving_license = #{record.drivingLicense},
+      </if>
+      <if test="record.registrationCertificate != null" >
+        registration_certificate = #{record.registrationCertificate},
+      </if>
+      <if test="record.instruction != null" >
+        instruction = #{record.instruction},
+      </if>
+      <if test="record.compulsoryInsurance != null" >
+        compulsory_insurance = #{record.compulsoryInsurance},
+      </if>
+      <if test="record.businessInsurance != null" >
+        business_insurance = #{record.businessInsurance},
+      </if>
+      <if test="record.transferNumber != null" >
+        transfer_number = #{record.transferNumber},
+      </if>
+      <if test="record.newCarInvoice != null" >
+        new_car_invoice = #{record.newCarInvoice},
+      </if>
+      <if test="record.qualityGuarantee != null" >
+        quality_guarantee = #{record.qualityGuarantee},
+      </if>
+      <if test="record.carKeys != null" >
+        car_keys = #{record.carKeys},
+      </if>
+      <if test="record.maintenanceManual != null" >
+        maintenance_manual = #{record.maintenanceManual},
+      </if>
+      <if test="record.yearInsurance != null" >
+        year_insurance = #{record.yearInsurance},
+      </if>
+      <if test="record.ticketOfTransfer != null" >
+        ticket_of_transfer = #{record.ticketOfTransfer},
+      </if>
+      <if test="record.costPrice != null" >
+        cost_price = #{record.costPrice},
+      </if>
+      <if test="record.unIllegal != null" >
+        un_illegal = #{record.unIllegal},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser},
+      </if>
+      <if test="record.freightWho != null" >
+        freight_who = #{record.freightWho},
+      </if>
+      <if test="record.mentionFeeWho != null" >
+        mention_fee_who = #{record.mentionFeeWho},
+      </if>
+      <if test="record.transferFee != null" >
+        transfer_fee = #{record.transferFee},
+      </if>
+      <if test="record.illegalPrice != null" >
+        illegal_price = #{record.illegalPrice},
+      </if>
+      <if test="record.illegalScore != null" >
+        illegal_score = #{record.illegalScore},
+      </if>
+      <if test="record.illegalWho != null" >
+        illegal_who = #{record.illegalWho},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update car_auto_procedures
+    set id = #{record.id},
+      auto_id = #{record.autoId},
+      purchase_tax = #{record.purchaseTax},
+      driving_license = #{record.drivingLicense},
+      registration_certificate = #{record.registrationCertificate},
+      instruction = #{record.instruction},
+      compulsory_insurance = #{record.compulsoryInsurance},
+      business_insurance = #{record.businessInsurance},
+      transfer_number = #{record.transferNumber},
+      new_car_invoice = #{record.newCarInvoice},
+      quality_guarantee = #{record.qualityGuarantee},
+      car_keys = #{record.carKeys},
+      maintenance_manual = #{record.maintenanceManual},
+      year_insurance = #{record.yearInsurance},
+      ticket_of_transfer = #{record.ticketOfTransfer},
+      cost_price = #{record.costPrice},
+      un_illegal = #{record.unIllegal},
+      create_time = #{record.createTime},
+      create_user = #{record.createUser},
+      update_time = #{record.updateTime},
+      update_user = #{record.updateUser},
+      freight_who = #{record.freightWho},
+      mention_fee_who = #{record.mentionFeeWho},
+      transfer_fee = #{record.transferFee},
+      illegal_price = #{record.illegalPrice},
+      illegal_score = #{record.illegalScore},
+      illegal_who = #{record.illegalWho}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarAutoProcedures" >
+    update car_auto_procedures
+    <set >
+      <if test="autoId != null" >
+        auto_id = #{autoId},
+      </if>
+      <if test="purchaseTax != null" >
+        purchase_tax = #{purchaseTax},
+      </if>
+      <if test="drivingLicense != null" >
+        driving_license = #{drivingLicense},
+      </if>
+      <if test="registrationCertificate != null" >
+        registration_certificate = #{registrationCertificate},
+      </if>
+      <if test="instruction != null" >
+        instruction = #{instruction},
+      </if>
+      <if test="compulsoryInsurance != null" >
+        compulsory_insurance = #{compulsoryInsurance},
+      </if>
+      <if test="businessInsurance != null" >
+        business_insurance = #{businessInsurance},
+      </if>
+      <if test="transferNumber != null" >
+        transfer_number = #{transferNumber},
+      </if>
+      <if test="newCarInvoice != null" >
+        new_car_invoice = #{newCarInvoice},
+      </if>
+      <if test="qualityGuarantee != null" >
+        quality_guarantee = #{qualityGuarantee},
+      </if>
+      <if test="carKeys != null" >
+        car_keys = #{carKeys},
+      </if>
+      <if test="maintenanceManual != null" >
+        maintenance_manual = #{maintenanceManual},
+      </if>
+      <if test="yearInsurance != null" >
+        year_insurance = #{yearInsurance},
+      </if>
+      <if test="ticketOfTransfer != null" >
+        ticket_of_transfer = #{ticketOfTransfer},
+      </if>
+      <if test="costPrice != null" >
+        cost_price = #{costPrice},
+      </if>
+      <if test="unIllegal != null" >
+        un_illegal = #{unIllegal},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser},
+      </if>
+      <if test="freightWho != null" >
+        freight_who = #{freightWho},
+      </if>
+      <if test="mentionFeeWho != null" >
+        mention_fee_who = #{mentionFeeWho},
+      </if>
+      <if test="transferFee != null" >
+        transfer_fee = #{transferFee},
+      </if>
+      <if test="illegalPrice != null" >
+        illegal_price = #{illegalPrice},
+      </if>
+      <if test="illegalScore != null" >
+        illegal_score = #{illegalScore},
+      </if>
+      <if test="illegalWho != null" >
+        illegal_who = #{illegalWho},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarAutoProcedures" >
+    update car_auto_procedures
+    set auto_id = #{autoId},
+      purchase_tax = #{purchaseTax},
+      driving_license = #{drivingLicense},
+      registration_certificate = #{registrationCertificate},
+      instruction = #{instruction},
+      compulsory_insurance = #{compulsoryInsurance},
+      business_insurance = #{businessInsurance},
+      transfer_number = #{transferNumber},
+      new_car_invoice = #{newCarInvoice},
+      quality_guarantee = #{qualityGuarantee},
+      car_keys = #{carKeys},
+      maintenance_manual = #{maintenanceManual},
+      year_insurance = #{yearInsurance},
+      ticket_of_transfer = #{ticketOfTransfer},
+      cost_price = #{costPrice},
+      un_illegal = #{unIllegal},
+      create_time = #{createTime},
+      create_user = #{createUser},
+      update_time = #{updateTime},
+      update_user = #{updateUser},
+      freight_who = #{freightWho},
+      mention_fee_who = #{mentionFeeWho},
+      transfer_fee = #{transferFee},
+      illegal_price = #{illegalPrice},
+      illegal_score = #{illegalScore},
+      illegal_who = #{illegalWho}
+    where id = #{id}
+  </update>
+</mapper>

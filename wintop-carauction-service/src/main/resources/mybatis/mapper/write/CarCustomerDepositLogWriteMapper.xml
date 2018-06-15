@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarCustomerDepositLogWriteDao" >
+
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarCustomerDepositLog" >
+    insert into car_customer_deposit_log (id, deposit_id, deposit_amount, file_url, create_time, create_person, 
+      remark, user_type, log_type,user_id)
+    values (#{id}, #{depositId}, #{depositAmount}, #{fileUrl}, #{createTime}, #{createPerson}, 
+      #{remark}, #{userType}, #{logType},#{userId})
+  </insert>
+</mapper>

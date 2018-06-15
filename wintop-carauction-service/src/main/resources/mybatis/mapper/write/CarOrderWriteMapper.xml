@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarOrderWriteDao" >
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from car_order
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarOrder" >
+    insert into car_order (id, auction_id, order_no, car_id, customer_id, transaction_fee,bargain_fee,
+      service_fee, pay_time, pay_fee, pay_auth_time, pay_auth_manager, status, 
+      lock_fee, create_time, pay_end_time,auto_auction_id,remark,agent_fee,amount_fee,auction_bid_record_id)
+    values (#{id}, #{auctionId}, #{orderNo}, #{carId}, #{customerId}, #{transactionFee}, #{bargainFee},
+      #{serviceFee}, #{payTime}, #{payFee}, #{payAuthTime}, #{payAuthManager}, #{status}, 
+      #{lockFee}, #{createTime}, #{payEndTime},#{autoAuctionId},#{remark},#{agentFee},#{amountFee},#{auctionBidRecordId})
+  </insert>
+  <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarOrder" >
+    update car_order
+    <set >
+      <if test="auctionId != null" >
+        auction_id = #{auctionId},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo},
+      </if>
+      <if test="carId != null" >
+        car_id = #{carId},
+      </if>
+      <if test="customerId != null" >
+        customer_id = #{customerId},
+      </if>
+      <if test="transactionFee != null" >
+        transaction_fee = #{transactionFee},
+      </if>
+      <if test="bargainFee != null" >
+        bargain_fee = #{bargainFee},
+      </if>
+      <if test="serviceFee != null" >
+        service_fee = #{serviceFee},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime},
+      </if>
+      <if test="payFee != null" >
+        pay_fee = #{payFee},
+      </if>
+      <if test="payAuthTime != null" >
+        pay_auth_time = #{payAuthTime},
+      </if>
+      <if test="payAuthManager != null" >
+        pay_auth_manager = #{payAuthManager},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="lockFee != null" >
+        lock_fee = #{lockFee},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="payEndTime != null" >
+        pay_end_time = #{payEndTime},
+      </if>
+      <if test="autoAuctionId != null" >
+        auto_auction_id = #{autoAuctionId},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark},
+      </if>
+      <if test="agentFee != null" >
+        agent_fee = #{agentFee},
+      </if>
+      <if test="amountFee != null" >
+        amount_fee = #{amountFee},
+      </if>
+      <if test="auctionBidRecordId != null" >
+        auction_bid_record_id = #{auctionBidRecordId},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateById" parameterType="com.wintop.ms.carauction.entity.CarOrder" >
+    update car_order
+    set auction_id = #{auctionId},
+      order_no = #{orderNo},
+      car_id = #{carId},
+      customer_id = #{customerId},
+      transaction_fee = #{transactionFee},
+      service_fee = #{serviceFee},
+      pay_time = #{payTime},
+      pay_fee = #{payFee},
+      pay_auth_time = #{payAuthTime},
+      pay_auth_manager = #{payAuthManager},
+      status = #{status},
+      lock_fee = #{lockFee},
+      create_time = #{createTime},
+      pay_end_time = #{payEndTime}
+    where id = #{id}
+  </update>
+  <update id="updateOrderUser" >
+    update car_order
+    set customer_id = #{customerId}
+    where id = #{id}
+  </update>
+</mapper>

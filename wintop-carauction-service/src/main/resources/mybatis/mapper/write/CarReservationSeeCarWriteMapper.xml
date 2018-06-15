@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarReservationSeeCarWriteDao" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_reservation_see_car
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarReservationSeeCar" >
+    insert into car_reservation_see_car (id, reservation_id, contact_phone, create_time, type)
+    values (#{id}, #{reservationId}, #{contactPhone}, #{createTime}, #{type})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarReservationSeeCar" >
+    update car_reservation_see_car
+    <set >
+      <if test="reservationId != null" >
+        reservation_id = #{reservationId},
+      </if>
+      <if test="contactPhone != null" >
+        contact_phone = #{contactPhone},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="type != null" >
+        type = #{type},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarReservationSeeCar" >
+    update car_reservation_see_car
+    set reservation_id = #{reservationId},
+      contact_phone = #{contactPhone},
+      create_time = #{createTime},
+      type = #{type}
+    where id = #{id}
+  </update>
+</mapper>

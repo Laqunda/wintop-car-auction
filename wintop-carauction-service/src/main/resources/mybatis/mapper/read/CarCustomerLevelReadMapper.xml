@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarCustomerLevelReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarCustomerLevel" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="level_name" property="levelName" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_manager" property="createManager" jdbcType="BIGINT" />
+    <result column="deposit_money" property="depositMoney" jdbcType="DECIMAL" />
+    <result column="is_default" property="isDefault" jdbcType="VARCHAR" />
+    <result column="is_open" property="isOpen" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="fare_price" property="farePrice" jdbcType="VARCHAR" />
+    <result column="createPersonName" property="createPersonName" jdbcType="VARCHAR" />
+    <result column="fareIds" property="fareIds" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, level_name, code, create_time, create_manager, deposit_money,is_default,is_open,sort,remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_customer_level
+    where id = #{id}
+  </select>
+  <!--根据参数查询会员等级列表 zhangzijuan-->
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map" >
+   SELECT a.id, a.level_name, a.`code`, a.create_time, mu.user_name as createPersonName, a.deposit_money,a.is_default,a.is_open,a.sort,a.remark,GROUP_CONCAT(fs.fare_price) fare_price
+    FROM car_customer_level a
+    LEFT JOIN car_manager_user mu ON mu.id=a.create_manager
+    LEFT JOIN car_customer_level_price lp on lp.level_id=a.id
+    LEFT JOIN car_auction_fare_setting fs on fs.id=lp.fare_id
+    WHERE 1=1
+        <if test="levelName!=null and levelName!=''">
+        AND a.level_name like CONCAT(CONCAT('%', #{levelName}),'%')
+        </if>
+        <if test="isOpen!=null and isOpen!=''">
+        AND a.is_open = #{isOpen}
+        </if>
+      GROUP BY a.id
+      ORDER BY a.sort
+      <if test="startRowNum!=null and endRowNum!=null">
+          limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+      </if>
+  </select>
+
+  <!--根据参数查询会员等级总数量 zhangzijuan-->
+  <select id="selectCountByParam" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    SELECT COUNT(DISTINCT a.id)
+    FROM car_customer_level a
+    LEFT JOIN car_manager_user mu ON mu.id=a.create_manager
+    LEFT JOIN car_customer_level_price lp on lp.level_id=a.id
+    LEFT JOIN car_auction_fare_setting fs on fs.id=lp.fare_id
+    WHERE 1=1
+    <if test="levelName!=null and levelName!=''">
+      AND a.level_name like CONCAT(CONCAT('%', #{levelName}),'%')
+    </if>
+  </select>
+
+    <!--根据级别id查询级别详情 zhangzijuan-->
+    <select id="selectLevelById" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        SELECT
+            a.id,
+            a.level_name,
+            a.`code`,
+            a.create_time,
+            a.deposit_money,
+            a.is_default,
+            a.is_open,
+            a.sort,
+            a.remark,
+            GROUP_CONCAT(fs.fare_price) fare_price,
+            GROUP_CONCAT(fs.id) fareIds
+        FROM
+            car_customer_level a
+            LEFT JOIN car_customer_level_price lp ON lp.level_id = a.id
+            LEFT JOIN car_auction_fare_setting fs ON fs.id = lp.fare_id
+            WHERE
+            a.id = #{levelId}
+    </select>
+
+    <!--查询默认级别-->
+    <select id="getDefaultLevel" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from car_customer_level
+        where is_default ='1'
+    </select>
+</mapper>

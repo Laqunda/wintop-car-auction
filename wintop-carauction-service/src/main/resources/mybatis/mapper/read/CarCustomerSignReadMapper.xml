@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarCustomerSignReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarCustomerSign" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="customer_id" property="customerId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="signature_time" property="signatureTime" jdbcType="TIMESTAMP" />
+    <result column="auth_time" property="authTime" jdbcType="VARCHAR" />
+    <result column="auth_manager" property="authManager" jdbcType="VARCHAR" />
+    <result column="auth_msg" property="authMsg" jdbcType="VARCHAR" />
+    <result column="user_status" property="userStatus" jdbcType="VARCHAR" />
+    <result column="deposit_status" property="depositStatus" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    t.id,t.customer_id,t.status,t.signature_time,t.auth_time,t.auth_manager,t.auth_msg
+  </sql>
+
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_customer_sign t
+    where t.id = #{id}
+  </select>
+
+  <select id="findByCustomerId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />,t1.`status` user_status,t2.`status` deposit_status
+    from car_customer_sign t
+    LEFT JOIN wt_app_user t1 ON t.customer_id = t1.id
+    LEFT JOIN car_customer_deposit t2 ON t.customer_id = t2.user_id
+    where t.is_delete='0' and t.customer_id = #{customerId}
+    ORDER BY t.signature_time DESC,t2.pay_time DESC
+    limit 0,1
+  </select>
+
+  <select id="findByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_customer_sign t
+    WHERE t.is_delete='0'
+      <if test="status!=null and status != ''">
+        AND t.status = #{status}
+      </if>
+      <if test="customerId!=null and customerId != ''">
+        AND t.customer_id = #{customerId}
+      </if>
+    ORDER BY t.signature_time DESC
+  </select>
+
+  <select id="querySignByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    SELECT t.id,t.status,t.signature_time FROM car_customer_sign t
+    INNER JOIN (SELECT MAX(id) as id from car_customer_sign WHERE `status` !='3' and is_delete = '0' GROUP BY customer_id)t1 ON t1.id=t.id
+    WHERE t.customer_id=#{customerId}
+  </select>
+</mapper>

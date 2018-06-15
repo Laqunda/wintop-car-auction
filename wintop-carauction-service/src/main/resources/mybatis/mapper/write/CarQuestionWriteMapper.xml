@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarQuestionWriteDao" >
+
+    <delete id="deleteById" parameterType="java.lang.Long" >
+        delete from car_question
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByClassifyId" parameterType="java.lang.Long" >
+        delete from car_question
+        where classify_id = #{classifyId}
+    </delete>
+
+    <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarQuestion" >
+        insert into car_question
+        (id,title,classify_id,is_open,sort,phone,create_time,create_person,content,show_index)
+        values
+        (#{id},#{title}, #{classifyId},#{isOpen},#{sort}, #{phone}, #{createTime},#{createPerson},#{content},#{showIndex})
+    </insert>
+
+    <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarQuestion" >
+        update car_question
+        <set >
+            <if test="title != null" >
+                title = #{title},
+            </if>
+            <if test="classifyId != null" >
+                classify_id = #{classifyId},
+            </if>
+            <if test="isOpen != null" >
+                is_open = #{isOpen},
+            </if>
+            <if test="sort != null" >
+                sort = #{sort},
+            </if>
+            <if test="phone != null" >
+                phone = #{phone},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime},
+            </if>
+            <if test="createPerson != null" >
+                create_person = #{createPerson},
+            </if>
+            <if test="content != null" >
+                content = #{content},
+            </if>
+            <if test="showIndex != null" >
+                show_index = #{showIndex},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateById" parameterType="com.wintop.ms.carauction.entity.CarQuestion" >
+        update car_question
+        set title = #{title},
+        classify_id = #{classifyId},
+        is_open = #{isOpen},
+        sort = #{sort},
+        phone = #{phone},
+        create_time = #{createTime},
+        create_person = #{createPerson}
+        where id = #{id}
+    </update>
+</mapper>

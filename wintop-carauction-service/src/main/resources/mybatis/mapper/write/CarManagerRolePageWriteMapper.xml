@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarManagerRolePageWriteDao" >
+  <delete id="deleteByRoleId" parameterType="java.lang.Long" >
+    delete from car_manager_role_page
+    where role_id = #{roleId}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarManagerRolePage" >
+    insert into car_manager_role_page (id, role_id, page_id)
+    values (#{id}, #{roleId}, #{pageId})
+  </insert>
+  <insert id="batchInsert" parameterType="com.wintop.ms.carauction.entity.CarManagerRolePage" >
+    insert into car_manager_role_page (id, role_id, page_id)
+    VALUES
+    <foreach collection="rolePages" item="item" index="index" separator="," >
+      (#{item.id}, #{item.roleId}, #{item.pageId})
+    </foreach>
+  </insert>
+</mapper>

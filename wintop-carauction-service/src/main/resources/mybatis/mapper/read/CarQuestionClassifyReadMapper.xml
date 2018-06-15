@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarQuestionClassifyReadDao" >
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarQuestionClassify" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="classify_name" property="classifyName" jdbcType="VARCHAR" />
+        <result column="is_open" property="isOpen" jdbcType="VARCHAR" />
+        <result column="sort" property="sort" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, classify_name, is_open, sort, create_time, create_person
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List" />
+        from car_question_classify
+        where 1=1
+        <if test="classifyName!=null">
+            and classifyName like CONCAT(CONCAT('%', #{classifyName}),'%')
+        </if>
+        <if test="isOpen!=null">
+            and is_open=#{isOpen}
+        </if>
+        order by sort
+        <if test="startRowNum != null and endRowNum != null ">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from car_question_classify
+        where id = #{id}
+    </select>
+    <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+        select count(*) from car_question_classify
+    </select>
+
+</mapper>

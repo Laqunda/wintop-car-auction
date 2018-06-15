@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.IWtAppUserWriteDao">
+    <insert id="saveUser" parameterType="com.wintop.ms.carauction.entity.WtAppUser">
+        INSERT INTO wt_app_user
+        (id,user_name,password,name,mobile,regist_time,
+        status,user_num,user_level_id,auction_plate_num,is_share,manual_add,user_code)
+        VALUES (#{id},#{userName},#{password},#{name},#{mobile},#{registTime},
+        #{status},#{userNum},#{userLevelId},#{auctionPlateNum},#{isShare},#{manualAdd},#{userCode})
+    </insert>
+    <update id="updateUser" parameterType="com.wintop.ms.carauction.entity.WtAppUser">
+        UPDATE wt_app_user
+        SET
+        <if test="password!=null and password !=''">
+            password=#{password},
+        </if>
+        <if test="userName!=null and userName !=''">
+            user_name=#{userName},
+        </if>
+        <if test="isShare!=null and isShare !=''">
+            store_id=#{isShare},
+        </if>
+        <if test="storeId!=null and storeId !=''">
+            is_share=#{storeId},
+        </if>
+        <if test="name!=null and name !=''">
+            name=#{name},
+        </if>
+        <if test="mobile!=null and mobile !=''">
+            mobile=#{mobile},
+        </if>
+        <if test="status!=null and status !=''">
+            status=#{status},
+        </if>
+        <if test="userNum!=null and userNum !=''">
+            user_num=#{userNum},
+        </if>
+        <if test="userLevelId!=null and userLevelId !=''">
+            user_level_id=#{userLevelId},
+        </if>
+        <if test="headImg!=null and headImg !=''">
+            head_img=#{headImg},
+        </if>
+        <if test="remark!=null and remark !=''">
+            remark=#{remark},
+        </if>
+        <if test="address!=null and address !=''">
+            address=#{address},
+        </if>
+        <if test="tel2!=null and tel2 !=''">
+            tel_2=#{tel2},
+        </if>
+        <if test="tel1!=null and tel1 !=''">
+            tel_1=#{tel1},
+        </if>
+        <if test="userStatus!=null and userStatus !=''">
+            user_status=#{userStatus},
+        </if>
+        <if test="auctionPlateNum!=null and auctionPlateNum !=''">
+            auction_plate_num=#{auctionPlateNum},
+        </if>
+        update_time=#{updateTime}
+        WHERE id=#{id}
+    </update>
+
+    <!-- 修改登陆密码 -->
+    <update id="updatePwd" parameterType="com.wintop.ms.carauction.entity.WtAppUser">
+        UPDATE wt_app_user
+        SET password=#{password}, update_time=#{updateTime}
+        WHERE user_name = #{userName}
+    </update>
+
+    <!-- 修改用户状态 zhangzijuan-->
+    <update id="updateUserStatus" parameterType="com.wintop.ms.carauction.entity.WtAppUser">
+        UPDATE wt_app_user
+        SET status=#{status}, update_time=#{updateTime}
+        WHERE id=#{id}
+    </update>
+    <!--批量修改用户级别 zhangzijuan-->
+    <update id="batchUpdateUserLevel" parameterType="java.util.Map">
+        UPDATE wt_app_user
+        SET user_level_id=#{userLevelId}, update_time=#{updateTime}
+        WHERE id IN
+        <foreach item="userId" index="index" collection="userIds" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </update>
+</mapper>

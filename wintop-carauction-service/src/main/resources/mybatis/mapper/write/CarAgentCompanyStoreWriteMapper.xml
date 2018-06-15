@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAgentCompanyStoreWriteDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAgentCompanyStore" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="store_id" property="storeId" jdbcType="BIGINT" />
+  </resultMap>
+  <delete id="deleteByCompanyId" parameterType="java.lang.Long" >
+    delete from car_agent_company_store
+    where company_id = #{companyId}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAgentCompanyStore" >
+    insert into car_agent_company_store (id, company_id, store_id)
+    values (#{id}, #{companyId}, #{storeId})
+  </insert>
+</mapper>

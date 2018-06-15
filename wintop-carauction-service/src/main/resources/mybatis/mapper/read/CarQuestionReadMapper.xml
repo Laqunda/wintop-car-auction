@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarQuestionReadDao" >
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarQuestion" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="classify_id" property="classifyId" jdbcType="BIGINT" />
+        <result column="is_open" property="isOpen" jdbcType="CHAR" />
+        <result column="sort" property="sort" jdbcType="INTEGER" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="show_index" property="showIndex" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+        <result column="classify_name" property="classifyName" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        t1.id, t1.title, t1.classify_id, t1.is_open, t1.sort, t1.phone, t1.create_time, t1.create_person,
+        t1.content,t1.description,t1.show_index
+    </sql>
+    <!-- 查询问题集-->
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List" />,t2.classify_name
+        from car_question t1
+        inner join car_question_classify t2 on t1.classify_id = t2.id
+        where 1=1
+        <if test="questionName!=null">
+            and t1.title like CONCAT(CONCAT('%', #{questionName}),'%')
+        </if>
+        <if test="isOpen!=null">
+            and t1.is_open=#{isOpen}
+        </if>
+        <if test="classifyId!=null">
+            and classify_id=#{classifyId}
+        </if>
+        order by t1.sort
+        <if test="startRowNum != null and endRowNum != null ">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />,t2.classify_name
+        from car_question t1
+        inner join car_question_classify t2 on t1.classify_id = t2.id
+        where t1.id = #{id}
+    </select>
+    <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+        select count(t1.id) from car_question t1
+        where 1=1
+        <if test="title!=null">
+            and t1.title like CONCAT(CONCAT('%', #{title}),'%')
+        </if>
+        <if test="isOpen!=null">
+            and t1.is_open=#{isOpen}
+        </if>
+        <if test="classifyId!=null">
+            and classify_id=#{classifyId}
+        </if>
+    </select>
+    <!--根据问题分类查询该分类下面的问题集   付陈林  2018-3-5-->
+    <select id="selectByClassifyId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        t1.id, t1.title, t1.classify_id, t1.is_open, t1.sort, t1.phone, t1.create_time, t1.create_person,content,
+        t2.classify_name
+        from car_question t1
+        inner join car_question_classify t2 on t1.classify_id = t2.id
+        where t1.classify_id = #{classifyId}
+    </select>
+    <!--根据问题分类编码该分类下面的问题集 -->
+    <select id="getQuestionByCode" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from car_question t1
+        where t1.code = #{code}
+    </select>
+
+    <select id="selectIndexQuestion" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List" />
+        from car_question t1
+        where t1.is_open='1' and t1.show_index = '1'
+        order by sort,create_time desc
+        limit 0,#{limit}
+    </select>
+</mapper>

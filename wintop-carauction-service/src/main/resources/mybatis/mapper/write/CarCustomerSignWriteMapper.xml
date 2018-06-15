@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarCustomerSignWriteDao">
+    <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarCustomerSign">
+        INSERT INTO car_customer_sign
+        (id,customer_id,status,signature_time,auth_time,auth_manager,auth_msg)
+        VALUES (#{id},#{customerId},#{status},#{signatureTime},#{authTime},#{authManager},#{authMsg})
+    </insert>
+    <update id="update" parameterType="com.wintop.ms.carauction.entity.CarCustomerSign">
+        UPDATE car_customer_sign
+        SET
+        <if test="authManager!=null and authManager !=''">
+            auth_manager=#{authManager},
+        </if>
+         auth_time=#{authTime}
+        WHERE id=#{id}
+    </update>
+
+    <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerSign" >
+        insert into car_customer_sign
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="customerId != null" >
+                customer_id,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="signatureTime != null" >
+                signature_time,
+            </if>
+            <if test="authTime != null" >
+                auth_time,
+            </if>
+            <if test="authManager != null" >
+                auth_manager,
+            </if>
+            <if test="authMsg != null" >
+                auth_msg,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id},
+            </if>
+            <if test="customerId != null" >
+                #{customerId},
+            </if>
+            <if test="status != null" >
+                #{status},
+            </if>
+            <if test="signatureTime != null" >
+                #{signatureTime},
+            </if>
+            <if test="authTime != null" >
+                #{authTime},
+            </if>
+            <if test="authManager != null" >
+                #{authManager},
+            </if>
+            <if test="authMsg != null" >
+                #{authMsg},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarCustomerSign" >
+        update car_customer_sign
+        <set >
+            <if test="customerId != null" >
+                customer_id = #{customerId},
+            </if>
+            <if test="status != null" >
+                status = #{status},
+            </if>
+            <if test="signatureTime != null" >
+                signature_time = #{signatureTime},
+            </if>
+            <if test="authTime != null" >
+                auth_time = #{authTime},
+            </if>
+            <if test="authManager != null" >
+                auth_manager = #{authManager},
+            </if>
+            <if test="authMsg != null" >
+                auth_msg = #{authMsg},
+            </if>
+            <if test="isDelete != null" >
+                is_delete = #{isDelete},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateByUserId" parameterType="com.wintop.ms.carauction.entity.CarCustomerSign" >
+          update car_customer_sign
+          set is_delete=#{isDelete}
+          WHERE customer_id=#{customerId}
+    </update>
+</mapper>

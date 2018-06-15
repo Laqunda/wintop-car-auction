@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.CarAuctionCityMapper" >
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from car_auction_city
+    where id = #{id}
+  </delete>
+  <update id="updateDelById" parameterType="java.lang.Long" >
+    update car_auction_city set if_del='-1'
+    where id=#{id}
+  </update>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAuctionCity" >
+    insert into car_auction_city (id, name, frozen_capital, service_fee, breach_day, breach_time, 
+      edit_time, editor, if_del)
+    values (#{id}, #{name}, #{frozenCapital}, #{serviceFee}, #{breachDay}, #{breachTime}, 
+      #{editTime}, #{editor}, #{ifDel})
+  </insert>
+  <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarAuctionCity" >
+    update car_auction_city
+    <set >
+      <if test="name != null" >
+        name = #{name},
+      </if>
+      <if test="frozenCapital != null" >
+        frozen_capital = #{frozenCapital},
+      </if>
+      <if test="serviceFee != null" >
+        service_fee = #{serviceFee},
+      </if>
+      <if test="breachDay != null" >
+        breach_day = #{breachDay},
+      </if>
+      <if test="breachTime != null" >
+        breach_time = #{breachTime},
+      </if>
+      <if test="editTime != null" >
+        edit_time = #{editTime},
+      </if>
+      <if test="editor != null" >
+        editor = #{editor},
+      </if>
+      <if test="ifDel != null" >
+        if_del = #{ifDel},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateById" parameterType="com.wintop.ms.carauction.entity.CarAuctionCity" >
+    update car_auction_city
+    set name = #{name},
+      frozen_capital = #{frozenCapital},
+      service_fee = #{serviceFee},
+      breach_day = #{breachDay},
+      breach_time = #{breachTime},
+      edit_time = #{editTime},
+      editor = #{editor},
+      if_del = #{ifDel}
+    where id = #{id}
+  </update>
+</mapper>

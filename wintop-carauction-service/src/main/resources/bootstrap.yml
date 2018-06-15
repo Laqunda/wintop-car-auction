@@ -1,0 +1,25 @@
+#server.port: 8185
+#spring.profiles.active: dev
+#spring:
+#  cloud:
+#    config:
+#      discovery:
+#        enabled: true
+#        service-id: configserver
+#      profile: ${spring.profiles.active}
+#      label: master
+#  application:
+#    name: carauctionservice     # 对应service-config-server所获取的配置文件的{application}
+#    index: ${random.long} #解决 多实例相同端口的话，就只刷新一个端口，用index区分下
+#
+##服务注册中心的地址
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://admin:admin2018@wt.eurekaserver.com:1000/eureka
+#  instance:
+#    lease-renewal-interval-in-seconds: 10
+#    lease-expiration-duration-in-seconds: 20
+#    eureka-service-url-poll-interval-seconds: 5
+#    prefer-ip-address: true
+#    instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}

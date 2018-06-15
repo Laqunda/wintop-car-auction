@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarOrderBargainReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarOrderBargain" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="car_id" property="carId" jdbcType="BIGINT" />
+    <result column="customer_id" property="customerId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="transaction_fee" property="transactionFee" jdbcType="DECIMAL" />
+    <result column="bargain_fee" property="bargainFee" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="auth_manager" property="authManager" jdbcType="VARCHAR" />
+    <result column="auth_time" property="authTime" jdbcType="TIMESTAMP" />
+    <result column="auth_msg" property="authMsg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+     id, order_id, car_id, customer_id,create_time, transaction_fee, bargain_fee, status, auth_manager,
+    auth_time, auth_msg
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_order_bargain
+    order by auth_time desc
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    select count(1) from car_order_bargain
+  </select>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_order_bargain
+    where id = #{id}
+  </select>
+
+  <select id="selectBargainByCarId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_order_bargain
+    where car_id = #{carId} and status=#{status}
+  </select>
+</mapper>

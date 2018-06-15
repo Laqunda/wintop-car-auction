@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAutoAuctionReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAutoAuction" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="auto_id" property="autoId" jdbcType="BIGINT" />
+    <result column="owner_name" property="ownerName" jdbcType="VARCHAR" />
+    <result column="owner_mobile" property="ownerMobile" jdbcType="VARCHAR" />
+    <result column="link_man_name" property="linkManName" jdbcType="VARCHAR" />
+    <result column="link_man_mobile" property="linkManMobile" jdbcType="VARCHAR" />
+    <result column="auction_start_time" property="auctionStartTime" jdbcType="TIMESTAMP" />
+    <result column="expected_feedback_time" property="expectedFeedbackTime" jdbcType="DATE" />
+    <result column="auction_end_time" property="auctionEndTime" jdbcType="TIMESTAMP" />
+    <result column="if_agent" property="ifAgent" jdbcType="VARCHAR" />
+    <result column="starting_price" property="startingPrice" jdbcType="DECIMAL" />
+    <result column="reserve_price" property="reservePrice" jdbcType="DECIMAL" />
+    <result column="service_price" property="servicePrice" jdbcType="DECIMAL" />
+    <result column="agent_price" property="agentPrice" jdbcType="DECIMAL" />
+    <result column="owner_price" property="ownerPrice" jdbcType="DECIMAL" />
+    <result column="auction_type" property="auctionType" jdbcType="VARCHAR" />
+    <result column="open_limit_cn" property="openLimitCn" jdbcType="VARCHAR" />
+    <result column="open_limit" property="openLimit" jdbcType="VARCHAR" />
+    <result column="car_location" property="carLocation" jdbcType="VARCHAR" />
+    <result column="top_pricer_id" property="topPricerId" jdbcType="BIGINT" />
+    <result column="top_bid_price" property="topBidPrice" jdbcType="DECIMAL" />
+    <result column="top_bid_time" property="topBidTime" jdbcType="VARCHAR" />
+    <result column="bids_count" property="bidsCount" jdbcType="INTEGER" />
+    <result column="biders_count" property="bidersCount" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_person" property="modifyPerson" jdbcType="BIGINT" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="del_person" property="delPerson" jdbcType="BIGINT" />
+    <result column="del_time" property="delTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="CHAR" />
+    <result column="store_id" property="storeId" jdbcType="BIGINT" />
+    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+    <result column="car_status" property="carStatus" jdbcType="CHAR" />
+    <result column="source_type" property="sourceType" jdbcType="CHAR" />
+    <result column="my_bid_price" property="myBidPrice" jdbcType="DECIMAL" />
+    <result column="out_reserve" property="outReserve" jdbcType="CHAR" />
+    <result column="move_to_where" property="moveToWhere" jdbcType="VARCHAR" />
+    <result column="region_id" property="regionId" jdbcType="BIGINT" />
+  </resultMap>
+  <resultMap id="AutoResultMap" type="com.wintop.ms.carauction.entity.CommonNameVo">
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="checked" property="checked" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, auto_id, owner_name, owner_mobile, link_man_name, link_man_mobile, auction_start_time,
+    expected_feedback_time, auction_end_time, if_agent, starting_price, reserve_price,
+    service_price, agent_price, owner_price, auction_type, open_limit_cn, open_limit,
+    car_location, top_pricer_id, top_bid_price, top_bid_time, bids_count, biders_count,
+    status, create_person, create_time, modify_person, modify_time, del_person, del_time,
+    del_flag,move_to_where
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_auto_auction
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_auto_auction
+    where id = #{id}
+  </select>
+
+  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    select count(*) from car_auto_auction
+  </select>
+
+  <select id="selectAutoAuction"  resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT t1.*,t2.status AS car_status,t2.source_type,t2.store_id,t2.store_name,t2.region_id
+    FROM car_auto_auction t1
+    INNER JOIN car_auto t2 ON t1.id=t2.auto_auction_id
+    WHERE t2.id=#{carId}
+    ORDER BY t1.create_time DESC limit 1
+  </select>
+
+  <!-- 查询所有有效的竞拍车辆-->
+  <select id="selectAllValidAuto"  resultMap="AutoResultMap">
+    SELECT t1.id,t1.car_auto_no AS code,t1.auto_info_name AS `name`
+    FROM car_auto t1
+    INNER JOIN car_auto_auction t2 ON t2.auto_id=t1.id
+    WHERE t1.status IN ('5','6','7')
+    AND t2.auction_end_time>=now()
+  </select>
+
+  <!--获取竞拍信息-->
+  <select id="selectAuctionInformation" parameterType="java.lang.Long" resultMap="BaseResultMap">
+      SELECT
+          t2.source_type,
+          t1.starting_price,
+          t1.reserve_price,
+          t1.link_man_mobile,
+          t1.link_man_name,
+          t1.expected_feedback_time,
+          t1.remark,
+          t1.if_agent,
+          t2.store_id,
+          t2.store_name,
+          t1.owner_price,
+          t1.move_to_where
+      from car_auto_auction t1
+      left  JOIN car_auto t2 on t2.id = t1.auction_end_time
+      left  join car_store t3 on t2.store_id = t3.id
+      where t1.auto_id = #{carId}
+  </select>
+
+  <select id="selectAutoAuctionByCarId"  resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM car_auto_auction t1
+    WHERE t1.auto_id=#{carId}
+    ORDER BY t1.create_time DESC limit 1
+  </select>
+</mapper>

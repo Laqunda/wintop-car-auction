@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAgentLogWriteDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAgentLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="agent_id" property="agentId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="status_cn" property="statusCn" jdbcType="VARCHAR" />
+    <result column="log_msg" property="logMsg" jdbcType="VARCHAR" />
+    <result column="up_doc" property="upDoc" jdbcType="VARCHAR" />
+    <result column="up_time" property="upTime" jdbcType="TIMESTAMP" />
+    <result column="auth_time" property="authTime" jdbcType="TIMESTAMP" />
+    <result column="auth_msg" property="authMsg" jdbcType="VARCHAR" />
+    <result column="auth_manager" property="authManager" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, agent_id, status, status_cn, log_msg, up_time, auth_time, auth_msg, auth_manager
+  </sql>
+  <sql id="Blob_Column_List" >
+    up_doc
+  </sql>
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from car_agent_log
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAgentLog" >
+    insert into car_agent_log (id, agent_id, status, status_cn, log_msg, up_time, auth_time,
+    auth_msg, auth_manager, up_doc)
+    values (#{id}, #{agentId}, #{status}, #{statusCn}, #{logMsg}, #{upTime}, #{authTime},
+    #{authMsg}, #{authManager}, #{upDoc})
+  </insert>
+  <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarAgentLog" >
+    update car_agent_log
+    <set >
+      <if test="agentId != null" >
+        agent_id = #{agentId},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="statusCn != null" >
+        status_cn = #{statusCn},
+      </if>
+      <if test="logMsg != null" >
+        log_msg = #{logMsg},
+      </if>
+      <if test="upTime != null" >
+        up_time = #{upTime},
+      </if>
+      <if test="authTime != null" >
+        auth_time = #{authTime},
+      </if>
+      <if test="authMsg != null" >
+        auth_msg = #{authMsg},
+      </if>
+      <if test="authManager != null" >
+        auth_manager = #{authManager},
+      </if>
+      <if test="upDoc != null" >
+        up_doc = #{upDoc},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateById" parameterType="com.wintop.ms.carauction.entity.CarAgentLog" >
+    update car_agent_log
+    set agent_id = #{agentId},
+      status = #{status},
+      status_cn = #{statusCn},
+      log_msg = #{logMsg},
+      up_time = #{upTime},
+      auth_time = #{authTime},
+      auth_msg = #{authMsg},
+      auth_manager = #{authManager}
+    where id = #{id}
+  </update>
+</mapper>

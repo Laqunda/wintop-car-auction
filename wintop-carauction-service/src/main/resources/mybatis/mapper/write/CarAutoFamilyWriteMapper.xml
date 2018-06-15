@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAutoFamilyWriteDao" >
+
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.name != null" >
+         and name = #{condition.name}
+      </if>
+      <if test="condition.jyid != null" >
+         and jyid = #{condition.jyid}
+      </if>
+      <if test="condition.brandId != null" >
+         and brand_id = #{condition.brandId}
+      </if>
+      <if test="condition.brandName != null" >
+         and brand_name = #{condition.brandName}
+      </if>
+      <if test="condition.brandMakeId != null" >
+         and brand_make_id = #{condition.brandMakeId}
+      </if>
+      <if test="condition.brandMakeName != null" >
+         and brand_make_name = #{condition.brandMakeName}
+      </if>
+      <if test="condition.sort != null" >
+         and sort = #{condition.sort}
+      </if>
+      <if test="condition.familyPhoto != null" >
+         and family_photo = #{condition.familyPhoto}
+      </if>
+      <if test="condition.createTime != null" >
+         and create_time = #{condition.createTime}
+      </if>
+      <if test="condition.updateTime != null" >
+         and update_time = #{condition.updateTime}
+      </if>
+      <if test="condition.delTime != null" >
+         and del_time = #{condition.delTime}
+      </if>
+      <if test="condition.delFlag != null" >
+         and del_flag = #{condition.delFlag}
+      </if>
+      <if test="condition.isLoopPlay != null" >
+         and is_loop_play = #{condition.isLoopPlay}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, name, jyid, brand_id, brand_name, brand_make_id, brand_make_name, sort, family_photo, 
+    create_time, update_time, del_time, del_flag, is_loop_play
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_auto_family
+    where id = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    delete from car_auto_family
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAutoFamily" >
+    insert into car_auto_family (id, name, jyid, brand_id, brand_name, brand_make_id, brand_make_name, 
+      sort, family_photo, create_time, update_time, del_time, del_flag, 
+      is_loop_play)
+    values (#{id}, #{name}, #{jyid}, #{brandId}, #{brandName}, #{brandMakeId}, #{brandMakeName}, 
+      #{sort}, #{familyPhoto}, #{createTime}, #{updateTime}, #{delTime}, #{delFlag}, 
+      #{isLoopPlay})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarAutoFamily" >
+    insert into car_auto_family
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="jyid != null" >
+        jyid,
+      </if>
+      <if test="brandId != null" >
+        brand_id,
+      </if>
+      <if test="brandName != null" >
+        brand_name,
+      </if>
+      <if test="brandMakeId != null" >
+        brand_make_id,
+      </if>
+      <if test="brandMakeName != null" >
+        brand_make_name,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="familyPhoto != null" >
+        family_photo,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="delTime != null" >
+        del_time,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="isLoopPlay != null" >
+        is_loop_play,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="name != null" >
+        #{name},
+      </if>
+      <if test="jyid != null" >
+        #{jyid},
+      </if>
+      <if test="brandId != null" >
+        #{brandId},
+      </if>
+      <if test="brandName != null" >
+        #{brandName},
+      </if>
+      <if test="brandMakeId != null" >
+        #{brandMakeId},
+      </if>
+      <if test="brandMakeName != null" >
+        #{brandMakeName},
+      </if>
+      <if test="sort != null" >
+        #{sort},
+      </if>
+      <if test="familyPhoto != null" >
+        #{familyPhoto},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="delTime != null" >
+        #{delTime},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag},
+      </if>
+      <if test="isLoopPlay != null" >
+        #{isLoopPlay},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByExampleSelective" parameterType="map" >
+    update car_auto_family
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name},
+      </if>
+      <if test="record.jyid != null" >
+        jyid = #{record.jyid},
+      </if>
+      <if test="record.brandId != null" >
+        brand_id = #{record.brandId},
+      </if>
+      <if test="record.brandName != null" >
+        brand_name = #{record.brandName},
+      </if>
+      <if test="record.brandMakeId != null" >
+        brand_make_id = #{record.brandMakeId},
+      </if>
+      <if test="record.brandMakeName != null" >
+        brand_make_name = #{record.brandMakeName},
+      </if>
+      <if test="record.sort != null" >
+        sort = #{record.sort},
+      </if>
+      <if test="record.familyPhoto != null" >
+        family_photo = #{record.familyPhoto},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime},
+      </if>
+      <if test="record.delTime != null" >
+        del_time = #{record.delTime},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag},
+      </if>
+      <if test="record.isLoopPlay != null" >
+        is_loop_play = #{record.isLoopPlay},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update car_auto_family
+    set id = #{record.id},
+      name = #{record.name},
+      jyid = #{record.jyid},
+      brand_id = #{record.brandId},
+      brand_name = #{record.brandName},
+      brand_make_id = #{record.brandMakeId},
+      brand_make_name = #{record.brandMakeName},
+      sort = #{record.sort},
+      family_photo = #{record.familyPhoto},
+      create_time = #{record.createTime},
+      update_time = #{record.updateTime},
+      del_time = #{record.delTime},
+      del_flag = #{record.delFlag},
+      is_loop_play = #{record.isLoopPlay}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarAutoFamily" >
+    update car_auto_family
+    <set >
+      <if test="name != null" >
+        name = #{name},
+      </if>
+      <if test="jyid != null" >
+        jyid = #{jyid},
+      </if>
+      <if test="brandId != null" >
+        brand_id = #{brandId},
+      </if>
+      <if test="brandName != null" >
+        brand_name = #{brandName},
+      </if>
+      <if test="brandMakeId != null" >
+        brand_make_id = #{brandMakeId},
+      </if>
+      <if test="brandMakeName != null" >
+        brand_make_name = #{brandMakeName},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort},
+      </if>
+      <if test="familyPhoto != null" >
+        family_photo = #{familyPhoto},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="delTime != null" >
+        del_time = #{delTime},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag},
+      </if>
+      <if test="isLoopPlay != null" >
+        is_loop_play = #{isLoopPlay},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarAutoFamily" >
+    update car_auto_family
+    set name = #{name},
+      jyid = #{jyid},
+      brand_id = #{brandId},
+      brand_name = #{brandName},
+      brand_make_id = #{brandMakeId},
+      brand_make_name = #{brandMakeName},
+      sort = #{sort},
+      family_photo = #{familyPhoto},
+      create_time = #{createTime},
+      update_time = #{updateTime},
+      del_time = #{delTime},
+      del_flag = #{delFlag},
+      is_loop_play = #{isLoopPlay}
+    where id = #{id}
+  </update>
+</mapper>

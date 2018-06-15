@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAutoDetectionDataPhotoWriteDao" >
+
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and|or" >
+      <if test="condition.classId != null" >
+         and class_id = #{condition.classId}
+      </if>
+      <if test="condition.autoId != null" >
+         and auto_id = #{condition.autoId}
+      </if>
+      <if test="condition.photoUrl != null" >
+         and photo_url = #{condition.photoUrl}
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, class_id, auto_id, photo_url
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_auto_detection_data_photo
+    where id = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wintop.ms.carauction.entity.Criteria" >
+    delete from car_auto_detection_data_photo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAutoDetectionDataPhoto" >
+    insert into car_auto_detection_data_photo (id, class_id, auto_id, photo_url)
+    values (#{id}, #{classId}, #{autoId}, #{photoUrl})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarAutoDetectionDataPhoto" >
+    insert into car_auto_detection_data_photo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="classId != null" >
+        class_id,
+      </if>
+      <if test="autoId != null" >
+        auto_id,
+      </if>
+      <if test="photoUrl != null" >
+        photo_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="classId != null" >
+        #{classId},
+      </if>
+      <if test="autoId != null" >
+        #{autoId},
+      </if>
+      <if test="photoUrl != null" >
+        #{photoUrl},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByExampleSelective" parameterType="map" >
+    update car_auto_detection_data_photo
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id},
+      </if>
+      <if test="record.classId != null" >
+        class_id = #{record.classId},
+      </if>
+      <if test="record.autoId != null" >
+        auto_id = #{record.autoId},
+      </if>
+      <if test="record.photoUrl != null" >
+        photo_url = #{record.photoUrl},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update car_auto_detection_data_photo
+    set id = #{record.id},
+      class_id = #{record.classId},
+      auto_id = #{record.autoId},
+      photo_url = #{record.photoUrl}
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarAutoDetectionDataPhoto" >
+    update car_auto_detection_data_photo
+    <set >
+      <if test="classId != null" >
+        class_id = #{classId},
+      </if>
+      <if test="autoId != null" >
+        auto_id = #{autoId},
+      </if>
+      <if test="photoUrl != null" >
+        photo_url = #{photoUrl},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarAutoDetectionDataPhoto" >
+    update car_auto_detection_data_photo
+    set class_id = #{classId},
+      auto_id = #{autoId},
+      photo_url = #{photoUrl}
+    where id = #{id}
+  </update>
+<!--批量插入车辆检测照片-->
+  <insert id="insertArr" parameterType="java.util.List">
+    insert into car_auto_detection_data_photo (id, class_id, auto_id, photo_url)
+    values
+    <foreach collection="photoList" item="photo" index="index" separator=",">
+      (#{photo.id}, #{photo.classId}, #{photo.autoId}, #{photo.photoUrl})
+    </foreach>
+  </insert>
+
+  <delete id="deleteByClassIdAutoId" parameterType="java.util.Map">
+    <if test="classId!=null and autoId!=null">
+      DELETE FROM car_auto_detection_data_photo
+      WHERE class_id = #{classId} AND auto_id = #{autoId}
+    </if>
+  </delete>
+</mapper>

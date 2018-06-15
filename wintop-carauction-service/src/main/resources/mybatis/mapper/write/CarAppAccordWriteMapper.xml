@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAppAccordWriteDao" >
+    <delete id="deleteById" parameterType="java.lang.Long" >
+        delete from car_app_accord
+        where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAppAccord" >
+        insert into car_app_accord
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="title != null" >
+                title,
+            </if>
+            <if test="type != null" >
+                type,
+            </if>
+            <if test="describe != null" >
+                `describe`,
+            </if>
+            <if test="author != null" >
+                author,
+            </if>
+            <if test="pulishDate != null" >
+                pulish_date,
+            </if>
+            <if test="ifShow != null" >
+                if_show,
+            </if>
+            <if test="editor != null" >
+                editor,
+            </if>
+            <if test="editTime != null" >
+                edit_time,
+            </if>
+            <if test="content != null" >
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id},
+            </if>
+            <if test="title != null" >
+                #{title},
+            </if>
+            <if test="type != null" >
+                #{type},
+            </if>
+            <if test="describe != null" >
+                #{describe},
+            </if>
+            <if test="author != null" >
+                #{author},
+            </if>
+            <if test="pulishDate != null" >
+                #{pulishDate},
+            </if>
+            <if test="ifShow != null" >
+                #{ifShow},
+            </if>
+            <if test="editor != null" >
+                #{editor},
+            </if>
+            <if test="editTime != null" >
+                #{editTime},
+            </if>
+            <if test="content != null" >
+                #{content},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarAppAccord" >
+        update car_app_accord
+        <set >
+            <if test="title != null" >
+                title = #{title},
+            </if>
+            <if test="type != null" >
+                type = #{type},
+            </if>
+            <if test="describe != null" >
+                `describe` = #{describe},
+            </if>
+            <if test="author != null" >
+                author = #{author},
+            </if>
+            <if test="pulishDate != null" >
+                pulish_date = #{pulishDate},
+            </if>
+            <if test="ifShow != null" >
+                if_show = #{ifShow},
+            </if>
+            <if test="editor != null" >
+                editor = #{editor},
+            </if>
+            <if test="editTime != null" >
+                edit_time = #{editTime},
+            </if>
+            <if test="content != null" >
+                content = #{content},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateById" parameterType="com.wintop.ms.carauction.entity.CarAppAccord" >
+        update car_app_accord
+        set title = #{title},
+        type = #{type},
+        content = #{content},
+        `describe` = #{describe},
+        author = #{author},
+        pulish_date = #{pulishDate},
+        if_show = #{ifShow},
+        editor = #{editor},
+        edit_time = #{editTime}
+        where id = #{id}
+    </update>
+</mapper>

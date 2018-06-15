@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAuctionBidRecordReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAuctionBidRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="auction_id" property="auctionId" jdbcType="BIGINT" />
+    <result column="auction_car_id" property="auctionCarId" jdbcType="BIGINT" />
+    <result column="car_id" property="carId" jdbcType="BIGINT" />
+    <result column="customer_id" property="customerId" jdbcType="BIGINT" />
+    <result column="bid_fee" property="bidFee" jdbcType="DECIMAL" />
+    <result column="add_fee" property="addFee" jdbcType="DECIMAL" />
+    <result column="bid_time" property="bidTime" jdbcType="TIMESTAMP" />
+    <result column="main_photo" property="mainPhoto" jdbcType="VARCHAR" />
+    <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
+    <result column="vehicle_attribution_city" property="vehicleAttributionCity" jdbcType="VARCHAR" />
+    <result column="mileage" property="mileage" jdbcType="DECIMAL" />
+    <result column="report_servicing_ranks" property="reportServicingRanks" jdbcType="VARCHAR" />
+    <result column="report_score" property="reportScore" jdbcType="VARCHAR" />
+    <result column="autoId" property="autoId" jdbcType="BIGINT" />
+    <result column="auction_start_time" property="auctionStartTime" jdbcType="TIMESTAMP" />
+    <result column="auction_end_time" property="auctionEndTime" jdbcType="TIMESTAMP" />
+    <result column="report_colligation_ranks" property="reportColligationRanks" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
+    <result column="carStoreName" property="carStoreName" jdbcType="VARCHAR" />
+    <result column="starting_price" property="startingPrice" jdbcType="DECIMAL" />
+    <result column="max_bid_price" property="maxBidPrice" jdbcType="DECIMAL" />
+    <result column="entrustPrice" property="entrustPrice" jdbcType="DECIMAL" />
+    <result column="bidSuccess" property="bidSuccess" jdbcType="VARCHAR" />
+    <result column="auction_type" property="auctionType" jdbcType="VARCHAR" />
+    <result column="vehicle_attribution_city_cn" property="vehicleAttributionCityCn" jdbcType="VARCHAR" />
+    <result column="auction_code" property="auctionCode" jdbcType="VARCHAR" />
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    t1.id, t1.auction_id,t1.auction_car_id, t1.car_id, t1.customer_id, t1.bid_fee, t1.add_fee, t1.bid_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_auction_bid_record t1
+    order by t1.id desc
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    select count(t1.id) from car_auction_bid_record t1
+  </select>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from car_auction_bid_record t1
+    where t1.id = #{id}
+  </select>
+
+  <select id="selectLastBidInfo" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+      select
+      <include refid="Base_Column_List" />
+      from car_auction_bid_record t1
+      where t1.auction_car_id=#{auctionCarId}
+      order by t1.id desc limit 0,1
+  </select>
+
+  <select id="selectByAuctionId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from car_auction_bid_record t1
+    where t1.auction_id = #{auctionId}
+  </select>
+
+  <select id="selectMaxPrice" resultType="java.math.BigDecimal">
+    SELECT MAX(t1.bid_fee) AS bid_fee FROM car_auction_bid_record t1
+    WHERE t1.car_id=#{carId}
+    <if test="customerId != null">
+      AND t1.customer_id=#{customerId}
+    </if>
+    <if test="auctionCarId != null">
+      AND t1.auction_car_id=#{auctionCarId}
+    </if>
+    <if test="auctionId != null">
+      AND t1.auction_id=#{auctionId}
+    </if>
+  </select>
+  <!--根据条件查询用户出价的车辆列表-->
+  <select id="queryUserBidList" resultMap="BaseResultMap">
+    SELECT
+        t2.main_photo,
+        t1.car_id,
+        t2.car_auto_no,
+        t1.add_fee,
+        MAX(t1.bid_fee) bid_fee,
+        t2.auto_info_name,
+        t3.vehicle_attribution_city,
+        t3.vehicle_attribution_city_cn,
+        t3.mileage,
+        t2.report_servicing_ranks,
+        t2.report_colligation_ranks,
+        t2.status as status,
+        t2.report_score,
+        t2.id AS autoId,
+        t4.auction_start_time,
+        t4.auction_end_time,
+        t4.starting_price,
+        t1.bid_time,
+        cs.simple_name as carStoreName,
+        t4.starting_price,
+        t4.auction_type,
+        t7.auction_code,
+        t4.top_bid_price max_bid_price,
+        t1.id,
+        t1.auction_id,
+      (CASE WHEN t5.entrust_fee IS NULL THEN 0 ELSE t5.entrust_fee END ) AS entrustPrice,
+      (CASE WHEN o.id IS NOT NULL THEN '1' ELSE '2' END ) AS bidSuccess
+      FROM car_auction_bid_record t1
+      INNER JOIN car_auto t2 ON t1.car_id = t2.id
+      INNER JOIN car_auto_info_detail t3 ON t3.auto_id = t1.car_id
+      INNER JOIN car_auto_auction t4 ON t4.id = t1.auction_id
+      LEFT JOIN car_store cs on cs.id=t2.store_id
+      LEFT JOIN car_order o on (o.auction_bid_record_id=t1.id AND o.customer_id=#{customerId})
+      LEFT JOIN car_customer_entrust_car t5 ON (t5.auto_auction_id=t1.auction_id AND t5.customer_id=#{customerId})
+      LEFT JOIN car_locale_auction_car t7 ON t7.car_id = t1.car_id
+      WHERE  t1.customer_id = #{customerId}
+      GROUP BY t1.car_id
+      ORDER BY t1.id DESC
+    <if test="startRowNum!=null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <!--根据条件查询出价的车辆数量-->
+  <select id="selectBidCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+      SELECT
+          COUNT(DISTINCT t1.car_id)
+      FROM car_auction_bid_record t1
+      INNER JOIN car_auto t2 ON t1.car_id = t2.id
+      INNER JOIN car_auto_info_detail t3 ON t3.auto_id = t1.car_id
+      INNER JOIN car_auto_auction t4 ON t4.id = t2.auto_auction_id
+      WHERE t1.customer_id = #{customerId}
+  </select>
+
+    <select id="getCustomerBidPriceList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM car_auction_bid_record t1
+        WHERE t1.car_id=#{carId}
+        <if test="customerId != null">
+            AND t1.customer_id=#{customerId}
+        </if>
+        <if test="auctionCarId != null">
+            AND t1.auction_car_id=#{auctionCarId}
+        </if>
+        <if test="auctionId != null">
+            AND t1.auction_id=#{auctionId}
+        </if>
+    </select>
+
+    <select id="selectLastBidRecord" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        t1.id,
+        t1.auction_id,
+        t1.car_id,
+        t1.auction_car_id,
+        t1.customer_id,
+        t1.bid_fee,
+        t1.add_fee,
+        t1.bid_time
+        FROM car_auction_bid_record t1
+        where t1.auction_car_id=#{auctionCarId}
+        order by bid_fee DESC limit 1
+    </select>
+    <select id="selectBidCountForLocale" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT
+        count(t1.id)
+        FROM car_auction_bid_record t1
+        where t1.auction_car_id=#{auctionCarId}
+    </select>
+    <select id="selectCustomerBidCountForLocale" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        select count(*) from (SELECT
+        count(t1.id)
+        FROM car_auction_bid_record t1
+        where t1.auction_car_id=#{auctionCarId}
+        group by t1.customer_id) t2
+    </select>
+    <select id="selectMaxBidRecordByCarId" resultMap="BaseResultMap">
+        SELECT
+        t1.id,
+        t1.auction_id,
+        t1.car_id,
+        t1.auction_car_id,
+        t1.customer_id,
+        t1.bid_fee,
+        t1.add_fee,
+        t1.bid_time
+        FROM car_auction_bid_record t1
+        WHERE t1.car_id=#{carId} AND t1.auction_id=#{autoAuctionId}
+        ORDER BY t1.bid_fee DESC,t1.id DESC limit 0,1
+    </select>
+</mapper>

@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarAutoAuctionWriteDao" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_auto_auction
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarAutoAuction" >
+    insert into car_auto_auction (id, auto_id, owner_name, owner_mobile, link_man_name, link_man_mobile,
+      auction_start_time, expected_feedback_time, auction_end_time, if_agent, starting_price,
+      reserve_price, service_price, agent_price, owner_price, auction_type,
+      open_limit_cn, open_limit, car_location, top_pricer_id, top_bid_price, top_bid_time,
+      bids_count, biders_count, status, create_person, create_time, modify_person,
+      modify_time, del_person, del_time, del_flag, remark,move_to_where,auction_end_default_time)
+    values (#{id}, #{autoId}, #{ownerName}, #{ownerMobile}, #{linkManName}, #{linkManMobile},
+      #{auctionStartTime}, #{expectedFeedbackTime}, #{auctionEndTime}, #{ifAgent}, #{startingPrice},
+      #{reservePrice}, #{servicePrice}, #{agentPrice}, #{ownerPrice}, #{auctionType},
+      #{openLimitCn}, #{openLimit}, #{carLocation}, #{topPricerId}, #{topBidPrice}, #{topBidTime},
+      #{bidsCount}, #{bidersCount}, #{status}, #{createPerson}, #{createTime}, #{modifyPerson},
+      #{modifyTime}, #{delPerson}, #{delTime}, #{delFlag}, #{remark},#{moveToWhere},#{auctionEndDefaultTime})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarAutoAuction" >
+    insert into car_auto_auction
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="autoId != null" >
+        auto_id,
+      </if>
+      <if test="ownerName != null" >
+        owner_name,
+      </if>
+      <if test="ownerMobile != null" >
+        owner_mobile,
+      </if>
+      <if test="linkManName != null" >
+        link_man_name,
+      </if>
+      <if test="linkManMobile != null" >
+        link_man_mobile,
+      </if>
+      <if test="auctionStartTime != null" >
+        auction_start_time,
+      </if>
+      <if test="expectedFeedbackTime != null" >
+        expected_feedback_time,
+      </if>
+      <if test="auctionEndTime != null" >
+        auction_end_time,
+      </if>
+      <if test="ifAgent != null" >
+        if_agent,
+      </if>
+      <if test="startingPrice != null" >
+        starting_price,
+      </if>
+      <if test="reservePrice != null" >
+        reserve_price,
+      </if>
+      <if test="servicePrice != null" >
+        service_price,
+      </if>
+      <if test="agentPrice != null" >
+        agent_price,
+      </if>
+      <if test="ownerPrice != null" >
+        owner_price,
+      </if>
+      <if test="auctionType != null" >
+        auction_type,
+      </if>
+      <if test="openLimitCn != null" >
+        open_limit_cn,
+      </if>
+      <if test="openLimit != null" >
+        open_limit,
+      </if>
+      <if test="carLocation != null" >
+        car_location,
+      </if>
+      <if test="topPricerId != null" >
+        top_pricer_id,
+      </if>
+      <if test="topBidPrice != null" >
+        top_bid_price,
+      </if>
+      <if test="topBidTime != null" >
+        top_bid_time,
+      </if>
+      <if test="bidsCount != null" >
+        bids_count,
+      </if>
+      <if test="bidersCount != null" >
+        biders_count,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createPerson != null" >
+        create_person,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyPerson != null" >
+        modify_person,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="delPerson != null" >
+        del_person,
+      </if>
+      <if test="delTime != null" >
+        del_time,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="moveToWhere != null" >
+        move_to_where,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="autoId != null" >
+        #{autoId},
+      </if>
+      <if test="ownerName != null" >
+        #{ownerName},
+      </if>
+      <if test="ownerMobile != null" >
+        #{ownerMobile},
+      </if>
+      <if test="linkManName != null" >
+        #{linkManName},
+      </if>
+      <if test="linkManMobile != null" >
+        #{linkManMobile},
+      </if>
+      <if test="auctionStartTime != null" >
+        #{auctionStartTime},
+      </if>
+      <if test="expectedFeedbackTime != null" >
+        #{expectedFeedbackTime},
+      </if>
+      <if test="auctionEndTime != null" >
+        #{auctionEndTime},
+      </if>
+      <if test="ifAgent != null" >
+        #{ifAgent},
+      </if>
+      <if test="startingPrice != null" >
+        #{startingPrice},
+      </if>
+      <if test="reservePrice != null" >
+        #{reservePrice},
+      </if>
+      <if test="servicePrice != null" >
+        #{servicePrice},
+      </if>
+      <if test="agentPrice != null" >
+        #{agentPrice},
+      </if>
+      <if test="ownerPrice != null" >
+        #{ownerPrice},
+      </if>
+      <if test="auctionType != null" >
+        #{auctionType},
+      </if>
+      <if test="openLimitCn != null" >
+        #{openLimitCn},
+      </if>
+      <if test="openLimit != null" >
+        #{openLimit},
+      </if>
+      <if test="carLocation != null" >
+        #{carLocation},
+      </if>
+      <if test="topPricerId != null" >
+        #{topPricerId},
+      </if>
+      <if test="topBidPrice != null" >
+        #{topBidPrice},
+      </if>
+      <if test="topBidTime != null" >
+        #{topBidTime},
+      </if>
+      <if test="bidsCount != null" >
+        #{bidsCount},
+      </if>
+      <if test="bidersCount != null" >
+        #{bidersCount},
+      </if>
+      <if test="status != null" >
+        #{status},
+      </if>
+      <if test="createPerson != null" >
+        #{createPerson},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="modifyPerson != null" >
+        #{modifyPerson},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime},
+      </if>
+      <if test="delPerson != null" >
+        #{delPerson},
+      </if>
+      <if test="delTime != null" >
+        #{delTime},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag},
+      </if>
+      <if test="remark != null" >
+        #{remark},
+      </if>
+      <if test="moveToWhere != null" >
+        #{moveToWhere},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarAutoAuction" >
+    update car_auto_auction
+    <set >
+      <if test="autoId != null" >
+        auto_id = #{autoId},
+      </if>
+      <if test="ownerName != null" >
+        owner_name = #{ownerName},
+      </if>
+      <if test="ownerMobile != null" >
+        owner_mobile = #{ownerMobile},
+      </if>
+      <if test="linkManName != null" >
+        link_man_name = #{linkManName},
+      </if>
+      <if test="linkManMobile != null" >
+       link_man_mobile = #{linkManMobile},
+      </if>
+      <if test="auctionStartTime != null" >
+        auction_start_time = #{auctionStartTime},
+      </if>
+      <if test="expectedFeedbackTime != null" >
+        expected_feedback_time = #{expectedFeedbackTime},
+      </if>
+      <if test="auctionEndTime != null" >
+        auction_end_time = #{auctionEndTime},
+      </if>
+      <if test="ifAgent != null" >
+        if_agent = #{ifAgent},
+      </if>
+      <if test="startingPrice != null" >
+        starting_price = #{startingPrice},
+      </if>
+      <if test="reservePrice != null" >
+        reserve_price = #{reservePrice},
+      </if>
+      <if test="servicePrice != null" >
+        service_price = #{servicePrice},
+      </if>
+      <if test="agentPrice != null" >
+        agent_price = #{agentPrice},
+      </if>
+      <if test="ownerPrice != null" >
+        owner_price = #{ownerPrice},
+      </if>
+      <if test="auctionType != null" >
+        auction_type = #{auctionType},
+      </if>
+      <if test="openLimitCn != null" >
+        open_limit_cn = #{openLimitCn},
+      </if>
+      <if test="openLimit != null" >
+        open_limit = #{openLimit},
+      </if>
+      <if test="carLocation != null" >
+        car_location = #{carLocation},
+      </if>
+      <if test="topPricerId != null" >
+        top_pricer_id = #{topPricerId},
+      </if>
+      <if test="topBidPrice != null" >
+        top_bid_price = #{topBidPrice},
+      </if>
+      <if test="topBidTime != null" >
+        top_bid_time = #{topBidTime},
+      </if>
+      <if test="bidsCount != null" >
+        bids_count = #{bidsCount},
+      </if>
+      <if test="bidersCount != null" >
+        biders_count = #{bidersCount},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="createPerson != null" >
+        create_person = #{createPerson},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="modifyPerson != null" >
+        modify_person = #{modifyPerson},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="delPerson != null" >
+        del_person = #{delPerson},
+      </if>
+      <if test="delTime != null" >
+        del_time = #{delTime},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark},
+      </if>
+      <if test="moveToWhere != null" >
+        move_to_where = #{moveToWhere},
+      </if>
+      <if test="auctionEndDefaultTime != null" >
+        auction_end_default_time = #{auctionEndDefaultTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarAutoAuction" >
+    update car_auto_auction
+    set auto_id = #{autoId},
+      owner_name = #{ownerName},
+      owner_mobile = #{ownerMobile},
+      link_man_name = #{linkManName},
+      link_man_mobile = #{linkManMobile},
+      auction_start_time = #{auctionStartTime},
+      expected_feedback_time = #{expectedFeedbackTime},
+      auction_end_time = #{auctionEndTime},
+      if_agent = #{ifAgent},
+      starting_price = #{startingPrice},
+      reserve_price = #{reservePrice},
+      service_price = #{servicePrice},
+      agent_price = #{agentPrice},
+      owner_price = #{ownerPrice},
+      auction_type = #{auctionType},
+      open_limit_cn = #{openLimitCn},
+      open_limit = #{openLimit},
+      car_location = #{carLocation},
+      top_pricer_id = #{topPricerId},
+      top_bid_price = #{topBidPrice},
+      top_bid_time = #{topBidTime},
+      bids_count = #{bidsCount},
+      biders_count = #{bidersCount},
+      status = #{status},
+      create_person = #{createPerson},
+      create_time = #{createTime},
+      modify_person = #{modifyPerson},
+      modify_time = #{modifyTime},
+      del_person = #{delPerson},
+      del_time = #{delTime},
+      del_flag = #{delFlag},
+      move_to_where = #{moveToWhere}
+    where id = #{id}
+  </update>
+
+  <update id="batchUpdateById" parameterType="java.util.List" >
+    <foreach collection="autoAuctionList" item="item" index="index" separator=";">
+    update car_auto_auction
+    <set >
+      <if test="item.startingPrice != null" >
+        starting_price = #{item.startingPrice},
+      </if>
+      <if test="item.reservePrice != null" >
+        reserve_price = #{item.reservePrice},
+      </if>
+      <if test="item.modifyTime != null" >
+        modify_time = #{item.modifyTime},
+      </if>
+      <if test="item.moveToWhere != null" >
+        move_to_where = #{item.moveToWhere},
+      </if>
+    </set>
+    where id = #{item.id}
+    </foreach>
+  </update>
+  <update id="updateAuctionEndTime" parameterType="com.wintop.ms.carauction.entity.CarAutoAuction">
+    update car_auto_auction t1,car_auto t2
+    <set >
+      <if test="auctionEndTime != null" >
+        t1.auction_end_time = #{auctionEndTime},
+      </if>
+      <if test="status != null" >
+        t1.status = #{status},
+      </if>
+      <if test="topPricerId != null" >
+        t1.top_pricer_id = #{topPricerId},
+      </if>
+      <if test="topBidPrice != null" >
+        t1.top_bid_price = #{topBidPrice},
+      </if>
+      <if test="topBidTime != null" >
+        t1.top_bid_time = #{topBidTime},
+      </if>
+    </set>
+    where t1.id=t2.auto_auction_id and t2.id = #{autoId}
+  </update>
+</mapper>
