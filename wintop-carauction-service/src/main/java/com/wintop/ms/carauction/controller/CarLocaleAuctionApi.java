@@ -1243,10 +1243,13 @@ public class CarLocaleAuctionApi {
         if(obj.getLong("cityId")!=null&&!"".equals(obj.getLong("cityId"))){
             paramMap.put("cityId",obj.getLong("cityId"));
         }
-        int count = carLocaleAuctionCarService.hasAuctionCarCount(paramMap).getResult();
-        PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
-        paramMap.put("startRowNum",pageEntity.getStartRowNum());
-        paramMap.put("endRowNum",pageEntity.getEndRowNum());
+        int count=0;
+        if(obj.get("page")!=null && obj.get("limit")!=null){
+            count = carLocaleAuctionCarService.hasAuctionCarCount(paramMap).getResult();
+            PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
+            paramMap.put("startRowNum",pageEntity.getStartRowNum());
+            paramMap.put("endRowNum",pageEntity.getEndRowNum());
+        }
         List<CarLocaleAuctionCar> carLocaleAuctionCars =  carLocaleAuctionCarService.hasAuctionCarList(paramMap).getResult();
         List<Map<String,Object>> list = new ArrayList<>();
         for(CarLocaleAuctionCar carLocaleAuctionCar:carLocaleAuctionCars){

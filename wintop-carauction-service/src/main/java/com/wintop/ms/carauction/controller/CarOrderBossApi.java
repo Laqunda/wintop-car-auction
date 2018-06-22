@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -688,13 +689,21 @@ public class CarOrderBossApi {
             Map<String,Object> map = new HashMap<>();
             map.put("carAutoNo",order.getCarAutoNo());
             map.put("licenseNumber",order.getLicenseNumber());
-            map.put("autoInfoName",order.getAutoInfoName());
+            String name="";
+            if (StringUtils.isNotBlank(order.getAutoInfoName())){
+                String [] autoName=order.getAutoInfoName().split(" ");
+                if (autoName!=null && autoName.length>3){
+                    name=autoName[1]+autoName[2];
+                }
+            }
+            map.put("autoInfoName",name);
             map.put("vin",order.getVin());
             map.put("auctionPlateNum",order.getAuctionPlateNum());
             map.put("serviceFee",order.getServiceFee());
             map.put("transactionFee",order.getTransactionFee());
             map.put("agentFee",order.getAgentFee());
             map.put("amountFee",order.getAmountFee());
+            map.put("customerName",order.getCustomerName());
             result.setResult(map);
             result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
         }catch (Exception e){
