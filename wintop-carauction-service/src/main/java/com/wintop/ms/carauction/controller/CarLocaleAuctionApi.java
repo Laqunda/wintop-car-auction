@@ -1243,6 +1243,9 @@ public class CarLocaleAuctionApi {
         if(obj.getLong("cityId")!=null&&!"".equals(obj.getLong("cityId"))){
             paramMap.put("cityId",obj.getLong("cityId"));
         }
+        if(obj.get("status")!=null&&!"".equals(obj.getString("status"))){
+            paramMap.put("status",obj.getLong("status"));
+        }
         int count=0;
         if(obj.get("page")!=null && obj.get("limit")!=null){
             count = carLocaleAuctionCarService.hasAuctionCarCount(paramMap).getResult();

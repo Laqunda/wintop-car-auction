@@ -205,6 +205,9 @@
         <if test="title != null">
             AND t2.title like CONCAT(CONCAT('%', #{title}),'%')
         </if>
+        <if test="status != null">
+            AND t1.auction_status = #{status}
+        </if>
         <if test="beginTime != null">
             AND t2.start_time <![CDATA[ >= ]]> #{beginTime}
         </if>
