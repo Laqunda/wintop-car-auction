@@ -243,5 +243,13 @@
         <if test="endTime != null">
             AND t2.start_time <![CDATA[ <= ]]> #{endTime}
         </if>
+        <if test="status != null">
+            <if test="status==2">
+                AND t1.auction_status in ('2','3')
+            </if>
+            <if test="status!=2">
+                AND t1.auction_status = #{status}
+            </if>
+        </if>
     </select>
 </mapper>
