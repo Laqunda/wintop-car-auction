@@ -237,6 +237,7 @@ public class CarOrderBossApi {
                 if(breach==null){
                     breach = new CarCustomerBreach();
                 }
+                map.put("breachOrderStatus",breach.getBreachOrderStatus());
                 map.put("breachId",breach.getId());
                 map.put("initiatCn",breach.getInitiatCn());
                 map.put("initiatTime",breach.getInitiatTime());

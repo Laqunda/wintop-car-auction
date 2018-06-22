@@ -50,7 +50,8 @@ public enum ResultCode {
     NO_ALLOW_UPDATE(421,"只允许操作自己的发拍的车辆"),
     AMOUNT_ERROR(422,"金额填写错误"),
     DELETE_LEVEL_DEFAUIT(423,"该级别为默认级别，不能删除"),
-    PARAM_ERROR(424,"参数错误");
+    PARAM_ERROR(424,"参数错误"),
+    NO_UPDATE_BREACH(425,"修改车价必须是争议之前订单状态为待付款");
     private final int value;
     private final String remark;
 

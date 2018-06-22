@@ -252,18 +252,24 @@ public class CarCustomerBreachServiceImpl implements ICarCustomerBreachService {
 //            orderLog.setStatus(newBreach.getBreachOrderStatus());
 //        }
         else if("5".equals(breach.getStatus())){
-            //***5争议议价--修改待付车款（订单状态变为等待支付，车辆状态变为成交-等待付款）
-            CarAuto carAuto = new CarAuto(newBreach.getAutoId(),CarStatusEnum.WAITING_PAY.value(),date);
-            carAutoModel.updateByPrimaryKeySelective(carAuto);
-            autoLog.setStatus(CarStatusEnum.WAITING_PAY.value());
+            //修改车款的只能在待付款之前,1==订单申请争议之前的订单状态是待付款
+            if ("1".equals(newBreach.getBreachOrderStatus())){
+                //***5争议议价--修改待付车款（订单状态变为等待支付，车辆状态变为成交-等待付款）
+                CarAuto carAuto = new CarAuto(newBreach.getAutoId(),CarStatusEnum.WAITING_PAY.value(),date);
+                carAutoModel.updateByPrimaryKeySelective(carAuto);
+                autoLog.setStatus(CarStatusEnum.WAITING_PAY.value());
 //            CarOrder carOrder = new CarOrder(newBreach.getOrderId(),OrderStatusEnum.WAITING_PAY.value());
-            CarOrder carOrder=carOrderModel.queryOrderBaseInfo(newBreach.getOrderId());
-            carOrder.setBargainFee(carOrder.getTransactionFee());
-            carOrder.setTransactionFee(amount);
-            carOrder.setAmountFee(carOrder.getTransactionFee().add(carOrder.getServiceFee()).add(carOrder.getAgentFee()));
-            carOrder.setStatus(OrderStatusEnum.WAITING_PAY.value());
-            carOrderModel.updateByIdSelective(carOrder);
-            orderLog.setStatus(OrderStatusEnum.WAITING_PAY.value());
+                CarOrder carOrder=carOrderModel.queryOrderBaseInfo(newBreach.getOrderId());
+                carOrder.setBargainFee(carOrder.getTransactionFee());
+                carOrder.setTransactionFee(amount);
+                carOrder.setAmountFee(carOrder.getTransactionFee().add(carOrder.getServiceFee()).add(carOrder.getAgentFee()));
+                carOrder.setStatus(OrderStatusEnum.WAITING_PAY.value());
+                carOrderModel.updateByIdSelective(carOrder);
+                orderLog.setStatus(OrderStatusEnum.WAITING_PAY.value());
+            }else {
+                return -2;
+            }
+
         }
 //        else if("6".equals(breach.getStatus())){
 //            //***6,卖家赔付（车辆继续成交）

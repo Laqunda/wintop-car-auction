@@ -41,7 +41,7 @@
   </select>
 
   <select id="queryNewBreachInfo"  resultMap="BaseResultMap" parameterType="java.util.Map">
-    SELECT t1.id,t1.breach_obj_type,t1.initiat_msg,t1.breach_source,t1.initiat_cn,t1.initiat_time
+    SELECT t1.id,t1.breach_obj_type,t1.initiat_msg,t1.breach_source,t1.initiat_cn,t1.initiat_time,breach_order_status
     FROM car_customer_breach t1
     WHERE t1.order_id=#{orderId}
     <if test="carId!=null">
