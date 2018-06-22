@@ -76,10 +76,10 @@ public class ExportLocaleAuctionCar {
                     c0.setCellValue(UtilDate.dataFormat(object.getDate("startTime")));
 
                     HSSFCell c12 = itemRow.createCell(1);
-                    c12.setCellValue(object.getString("carAutoNo"));
+                    c12.setCellValue(object.getString("title"));
 
                     HSSFCell c10 = itemRow.createCell(2);
-                    c10.setCellValue(object.getString("title"));
+                    c10.setCellValue(object.getString("carAutoNo"));
 
                     HSSFCell c1 = itemRow.createCell(3);
                     c1.setCellValue(object.getString("autoInfoName"));
