@@ -1238,7 +1238,7 @@ public class CarLocaleAuctionApi {
             paramMap.put("beginTime",obj.getString("beginTime"));
         }
         if(obj.getString("endTime")!=null&&!"".equals(obj.getString("endTime"))){
-            paramMap.put("endTime",obj.getString("endTime"));
+            paramMap.put("endTime",obj.getString("endTime")+"23:59:59");
         }
         if(obj.getLong("cityId")!=null&&!"".equals(obj.getLong("cityId"))){
             paramMap.put("cityId",obj.getLong("cityId"));

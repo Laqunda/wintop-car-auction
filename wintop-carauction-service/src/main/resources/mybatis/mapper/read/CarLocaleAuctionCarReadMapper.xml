@@ -206,7 +206,12 @@
             AND t2.title like CONCAT(CONCAT('%', #{title}),'%')
         </if>
         <if test="status != null">
-            AND t1.auction_status = #{status}
+            <if test="status==2">
+              AND t1.auction_status in ('2','3')
+            </if>
+            <if test="status!=2">
+                AND t1.auction_status = #{status}
+            </if>
         </if>
         <if test="beginTime != null">
             AND t2.start_time <![CDATA[ >= ]]> #{beginTime}
@@ -214,7 +219,7 @@
         <if test="endTime != null">
             AND t2.start_time <![CDATA[ <= ]]> #{endTime}
         </if>
-        ORDER BY t2.start_time DESC
+        ORDER BY t2.start_time DESC,t1.auction_code asc
         <if test="startRowNum!=null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
         </if>

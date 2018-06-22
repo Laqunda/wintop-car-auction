@@ -105,13 +105,13 @@ public class ExportLocaleAuctionCar {
                     HSSFCell c7 = itemRow.createCell(10);
                     if ("0".equals(object.getString("auctionStatus"))){
                         c7.setCellValue("等待开拍");
-                    }else if ("1".equals(object.getString("auctionType"))){
+                    }else if ("1".equals(object.getString("auctionStatus"))){
                         c7.setCellValue("拍卖中");
-                    }else if ("2".equals(object.getString("auctionType"))){
+                    }else if ("2".equals(object.getString("auctionStatus"))){
                         c7.setCellValue("已成交");
-                    }else if ("3".equals(object.getString("auctionType"))){
+                    }else if ("3".equals(object.getString("auctionStatus"))){
                         c7.setCellValue("流拍");
-                    }else if ("4".equals(object.getString("auctionType"))){
+                    }else if ("4".equals(object.getString("auctionStatus"))){
                         c7.setCellValue("已设置二拍");
                     }else {
                         c7.setCellValue("");
