@@ -696,7 +696,7 @@ public class CarOrderBossApi {
                     name=autoName[1]+autoName[2];
                 }
             }
-            map.put("autoInfoName",name);
+            map.put("autoInfoName",StringUtils.isNotBlank(name)?name:order.getAutoInfoName());
             map.put("vin",order.getVin());
             map.put("auctionPlateNum",order.getAuctionPlateNum());
             map.put("serviceFee",order.getServiceFee());
