@@ -146,6 +146,7 @@
         <if test="auctionCarId != null">
             AND t1.auction_car_id=#{auctionCarId}
         </if>
+        order by t1.bid_time DESC
     </select>
 
     <select id="selectLastBidRecord" resultMap="BaseResultMap" parameterType="java.lang.Long">

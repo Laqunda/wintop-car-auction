@@ -28,6 +28,8 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
     @Autowired
     private RedisAutoManager redisAutoManager;
     @Autowired
+    private CarLocaleAuctionCarModel carLocaleAuctionCarModel;
+    @Autowired
     private CarCustomerEntrustCarModel entrustCarModel;
     @Autowired
     private CarAuctionFareSettingModel fareSettingModel;
@@ -276,9 +278,10 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
                 //最高出价
                 CarAuctionBidRecord carAuctionBidRecord =model.selectLastBidRecord(updateAuctionBidRecord.getAuctionCarId());
                 if(carAuctionBidRecord!=null&&carAuctionBidRecord.getId().equals(updateAuctionBidRecord.getId())){
+                    CarLocaleAuctionCar carLocaleAuctionCar=carLocaleAuctionCarModel.selectById(carAuctionBidRecord.getAuctionCarId());
                     Map<String,Object> paramMap=new HashMap<>();
                     paramMap.put("carId",carAuctionBidRecord.getCarId());
-                    paramMap.put("auctionId",carAuctionBidRecord.getAuctionId());
+                    paramMap.put("auctionId",carLocaleAuctionCar.getAuctionId());
                     CarOrder carOrder = carOrderModel.selectOrderByCarId(paramMap);
                     if(carOrder!=null){
                         CarOrder updateCarOrder =new CarOrder();
