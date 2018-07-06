@@ -151,7 +151,11 @@ public class CarOrderBossApi {
                 map.put("payWay",carOrder.getPayWay());
                 map.put("createTime",carOrder.getCreateTime());
                 map.put("mainPhoto",carOrder.getMainPhoto());
-                map.put("carAutoNo",carOrder.getCarAutoNo());
+                if (StringUtils.isNotBlank(carOrder.getAuctionCode())){
+                    map.put("carAutoNo",carOrder.getAuctionCode());
+                }else {
+                    map.put("carAutoNo",carOrder.getCarAutoNo());
+                }
                 map.put("userName",carOrder.getUserName());
                 map.put("mobile",carOrder.getMobile());
                 list.add(map);
@@ -687,7 +691,11 @@ public class CarOrderBossApi {
                 return result;
             }
             Map<String,Object> map = new HashMap<>();
-            map.put("carAutoNo",order.getCarAutoNo());
+            if (StringUtils.isNotBlank(order.getAuctionCode())){
+                map.put("carAutoNo",order.getAuctionCode());
+            }else {
+                map.put("carAutoNo",order.getCarAutoNo());
+            }
             map.put("licenseNumber",order.getLicenseNumber());
             String name="";
             if (StringUtils.isNotBlank(order.getAutoInfoName())){
