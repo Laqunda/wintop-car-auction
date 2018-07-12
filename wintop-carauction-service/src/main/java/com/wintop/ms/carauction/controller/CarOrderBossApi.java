@@ -158,6 +158,7 @@ public class CarOrderBossApi {
                 }
                 map.put("userName",carOrder.getUserName());
                 map.put("mobile",carOrder.getMobile());
+                map.put("auctionName",carOrder.getAuctionName());
                 list.add(map);
             }
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();
@@ -712,6 +713,7 @@ public class CarOrderBossApi {
             map.put("agentFee",order.getAgentFee());
             map.put("amountFee",order.getAmountFee());
             map.put("customerName",order.getCustomerName());
+            map.put("auctionName",order.getAuctionName());
             result.setResult(map);
             result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
         }catch (Exception e){
