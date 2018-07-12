@@ -86,6 +86,7 @@
     <result column="auction_plate_num" property="auctionPlateNum" jdbcType="VARCHAR" />
     <result column="customerName" property="customerName" jdbcType="VARCHAR" />
     <result column="auction_code" property="auctionCode" jdbcType="VARCHAR" />
+    <result column="auctionName" property="auctionName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     t1.id, t1.auction_id, t1.order_no, t1.car_id, t1.customer_id, t1.transaction_fee, t1.service_fee, t1.pay_time,t1.bargain_fee,
@@ -97,7 +98,7 @@
     t2.main_photo,t2.car_auto_no,t2.auto_info_name,t2.auction_num,t2.report_colligation_ranks,t2.report_servicing_ranks,t2.auction_num,
     t3.vehicle_attribution_city_cn AS cityName,t3.vin,t3.license_number,DATE_FORMAT(t3.begin_register_date,'%Y') AS registDate,
     t3.mileage,t4.starting_price,t4.reserve_price,
-    t5.name AS user_name,t5.mobile,t4.auction_type,t6.pay_way,t7.auction_code
+    t5.name AS user_name,t5.mobile,t4.auction_type,t6.pay_way,t7.auction_code,t8.title as auctionName
     FROM car_order t1
     INNER JOIN car_auto t2 ON t1.car_id=t2.id
     INNER JOIN car_auto_info_detail t3 ON t2.id=t3.auto_id
@@ -105,6 +106,7 @@
     LEFT JOIN wt_app_user t5 ON t1.customer_id=t5.id
     LEFT JOIN car_finance_pay_log t6 ON (t1.id=t6.order_id and t6.`type`='3')
     LEFT JOIN car_locale_auction_car t7 on t7.auto_auction_id = t1.auto_auction_id
+    LEFT JOIN car_locale_auction t8 on t8.id=t1.auction_id
     WHERE 1=1
     <if test="searchName!=null">
       AND (t1.order_no like CONCAT(CONCAT('%', #{searchName}),'%')
@@ -583,12 +585,13 @@
   </select>
   <select id="selectOrderPrintInfo" resultMap="BaseResultMap" parameterType="java.lang.Long">
     SELECT t2.car_auto_no,t3.license_number,t2.auto_info_name,t3.vin,t4.auction_plate_num,t1.service_fee,
-    t1.transaction_fee,t1.agent_fee,t1.amount_fee,t4.name as customerName,t5.auction_code
+    t1.transaction_fee,t1.agent_fee,t1.amount_fee,t4.name as customerName,t5.auction_code,t6.title AS auctionName
     FROM car_order t1
     INNER JOIN car_auto t2 ON t1.car_id=t2.id
     INNER JOIN car_auto_info_detail t3 ON t2.id=t3.auto_id
     LEFT JOIN wt_app_user t4 ON t1.customer_id=t4.id
     LEFT JOIN car_locale_auction_car t5 on t5.auto_auction_id = t1.auto_auction_id
+    LEFT JOIN car_locale_auction t6 on t6.id=t1.auction_id
     WHERE t1.id=#{id}
   </select>
 </mapper>

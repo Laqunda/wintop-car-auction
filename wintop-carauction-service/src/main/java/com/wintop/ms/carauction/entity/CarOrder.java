@@ -180,6 +180,8 @@ public class CarOrder implements Serializable {
 
     //现场拍场次内号码
     private String auctionCode;
+    //现场拍场次名称
+    private String auctionName;
 
     public String getCustomerName() {
         return customerName;
@@ -949,5 +951,13 @@ public class CarOrder implements Serializable {
 
     public void setAuctionCode(String auctionCode) {
         this.auctionCode = auctionCode;
+    }
+
+    public String getAuctionName() {
+        return auctionName;
+    }
+
+    public void setAuctionName(String auctionName) {
+        this.auctionName = auctionName;
     }
 }
