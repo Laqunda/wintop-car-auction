@@ -834,6 +834,7 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
             WtAppUser appUser=new WtAppUser();
             appUser.setId(idWorker.nextId());
             appUser.setRegistTime(new Timestamp(System.currentTimeMillis()));
+            appUser.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 //        7签约审核通过
             appUser.setStatus("7");
             appUser.setMobile(object.getString("mobile"));
