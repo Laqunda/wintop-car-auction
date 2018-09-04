@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarDataWriteDao" >
+    <insert id="insertCarDataList" parameterType="java.util.List" >
+        INSERT INTO car_data
+        (id,store_name,license_number,vin,auto_brand_cn,
+        manufacture_date,begin_register_date,engine_capacity,
+        color_cn,mileage,if_agent,
+        year_insurance,use_nature_cn,driving_license,
+        registration_certificate,transfer_number,purchase_tax,
+        business_insurance,compulsory_insurance,un_illegal,remark,remark1)
+        VALUES
+        <foreach collection="list" item="carDataExcel" index="index" separator=",">
+            (
+            #{carDataExcel.id,jdbcType=BIGINT},#{carDataExcel.storeName,jdbcType=VARCHAR},
+            #{carDataExcel.licenseNumber,jdbcType=VARCHAR},#{carDataExcel.vin,jdbcType=VARCHAR},
+            #{carDataExcel.autoBrandCn,jdbcType=VARCHAR},#{carDataExcel.manufactureDate,jdbcType=VARCHAR},
+            #{carDataExcel.beginRegisterDate,jdbcType=VARCHAR},#{carDataExcel.engineCapacity,jdbcType=VARCHAR},
+            #{carDataExcel.colorCn,jdbcType=VARCHAR},
+            #{carDataExcel.mileage,jdbcType=VARCHAR},#{carDataExcel.ifAgent,jdbcType=VARCHAR},
+            #{carDataExcel.yearInsurance,jdbcType=VARCHAR},
+            #{carDataExcel.useNatureCn,jdbcType=VARCHAR},#{carDataExcel.drivingLicense,jdbcType=VARCHAR},
+            #{carDataExcel.registrationCertificate,jdbcType=BIGINT},#{carDataExcel.transferNumber,jdbcType=VARCHAR},
+            #{carDataExcel.purchaseTax,jdbcType=VARCHAR},#{carDataExcel.businessInsurance,jdbcType=VARCHAR},
+            #{carDataExcel.compulsoryInsurance,jdbcType=VARCHAR},#{carDataExcel.unIllegal,jdbcType=VARCHAR},
+            #{carDataExcel.remark,jdbcType=VARCHAR},#{carDataExcel.remark1,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertCarAutoDataList" parameterType="java.util.Map" >
+        INSERT INTO car_auto
+        (`id`,
+        `publish_user_id`,
+        `publish_user_name`,
+        `publish_user_mobile`,
+        `auto_info_name`,
+        `store_id`,
+        `store_name`,
+        `source_type`,
+        `views`,
+        `publish_time`,
+        `report_score`,
+        `report_colligation_ranks`,
+        `report_servicing_ranks`,
+        `report_time`,
+        `status`,
+        `car_auto_no`,
+        `main_photo`,
+        `if_new`,
+        `create_user`,
+        `create_time`,
+        `update_user`,
+        `update_time`,
+        `auction_num`,
+        `region_id`,
+        `auto_auction_id`)
+        VALUES
+        <foreach collection="list" item="carDataExcel" index="index" separator=",">
+            (
+            #{carDataExcel.id,jdbcType=BIGINT},2,'赵娜','136815210520',
+            #{carDataExcel.autoBrandCn,jdbcType=VARCHAR},NULL ,
+            #{carDataExcel.storeName,jdbcType=VARCHAR},'3',0, now(),
+            null,null,null,null,'5',#{carDataExcel.id,jdbcType=BIGINT},
+            '','1',2,now(),2,now(),0,#{regionId},#{carDataExcel.id,jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateCarStoreName">
+        UPDATE
+          car_auto t1,car_store t2
+        SET
+          t1.store_id=t2.id
+        WHERE
+          t1.store_name=t2.simple_name;
+    </update>
+
+    <insert id="insertCarAutoAuctionDataList" parameterType="java.util.List" >
+        INSERT INTO car_auto_auction
+        (`id`,
+        `auto_id`,
+        `owner_name`,
+        `owner_mobile`,
+        `link_man_name`,
+        `link_man_mobile`,
+        `auction_start_time`,
+        `expected_feedback_time`,
+        `auction_end_time`,
+        `if_agent`,
+        `starting_price`,
+        `reserve_price`,
+        `service_price`,
+        `agent_price`,
+        `owner_price`,
+        `auction_type`,
+        `open_limit_cn`,
+        `open_limit`,
+        `car_location`,
+        `remark`,
+        `top_pricer_id`,
+        `top_bid_price`,
+        `top_bid_time`,
+        `bids_count`,
+        `biders_count`,
+        `status`,
+        `create_person`,
+        `create_time`,
+        `del_flag`)
+        VALUES
+        <foreach collection="list" item="carDataExcel" index="index" separator=",">
+            (
+            #{carDataExcel.id,jdbcType=BIGINT},#{carDataExcel.id,jdbcType=BIGINT},null,null,null,null,null,null,null,
+            #{carDataExcel.ifAgent,jdbcType=VARCHAR},
+            0,NULL,null,null,null,'2',
+            null,null,null,#{carDataExcel.remark1,jdbcType=VARCHAR},null,null,null,0,0,'1',2,now(),'0'
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertCarAutoInfoDetailDataList" parameterType="java.util.List" >
+        INSERT INTO car_auto_info_detail
+        (`id`,
+        `auto_id`,
+        `vin`,
+        `auto_brand`,
+        `auto_brand_cn`,
+        `auto_style`,
+        `auto_style_cn`,
+        `auto_series`,
+        `auto_series_cn`,
+        `engine_capacity`,
+        `engine_capacity_unit`,
+        `environment`,
+        `environment_cn`,
+        `oil_supply_system`,
+        `oil_supply_system_cn`,
+        `transmission`,
+        `transmission_cn`,
+        `vehicle_driver`,
+        `vehicle_driver_cn`,
+        `mileage`,
+        `color`,
+        `color_cn`,
+        `color_changed`,
+        `manufacture_date`,
+        `begin_register_date`,
+        `vehicle_attribution_province_cn`,
+        `vehicle_attribution_province`,
+        `vehicle_attribution_city`,
+        `vehicle_attribution_city_cn`,
+        `license_number`,
+        `car_nature`,
+        `car_nature_cn`,
+        `use_nature`,
+        `use_nature_cn`,
+        `is_modification`,
+        `original_price`,
+        `remark`,
+        `intake_method`,
+        `intake_method_cn`,
+        `remark_photo`,
+        `car_shape`,
+        `car_shape_cn`,
+        `create_time`,
+        `create_user`)
+        VALUES
+        <foreach collection="list" item="carDataExcel" index="index" separator=",">
+            (
+            #{carDataExcel.id,jdbcType=BIGINT},#{carDataExcel.id,jdbcType=BIGINT},
+            #{carDataExcel.vin,jdbcType=VARCHAR},#{carDataExcel.autoBrandCn,jdbcType=VARCHAR},
+            #{carDataExcel.autoBrandCn,jdbcType=VARCHAR},
+            null,null,null,null,
+            #{carDataExcel.engineCapacity,jdbcType=VARCHAR},
+            NULL ,null,'',null,null,null,null,null,null,
+            #{carDataExcel.mileage,jdbcType=DECIMAL}*10000,null,
+            #{carDataExcel.colorCn,jdbcType=VARCHAR},
+            null,#{carDataExcel.manufactureDate,jdbcType=TIMESTAMP},
+            #{carDataExcel.beginRegisterDate,jdbcType=TIMESTAMP},
+            null,null,1,'北京市',
+            #{carDataExcel.licenseNumber,jdbcType=VARCHAR},
+            null,null,null,
+            #{carDataExcel.useNatureCn,jdbcType=VARCHAR},
+            null,null,
+            #{carDataExcel.remark1,jdbcType=VARCHAR},
+            null,null,null,null,null,now(),2)
+        </foreach>
+    </insert>
+
+    <insert id="insertCarAutoProceduresDataList" parameterType="java.util.List" >
+        INSERT INTO car_auto_procedures
+        (`id`,
+        `auto_id`,
+        `purchase_tax`,
+        `driving_license`,
+        `registration_certificate`,
+        `instruction`,
+        `compulsory_insurance`,
+        `business_insurance`,
+        `transfer_number`,
+        `new_car_invoice`,
+        `quality_guarantee`,
+        `car_keys`,
+        `maintenance_manual`,
+        `year_insurance`,
+        `ticket_of_transfer`,
+        `move_to_where`,
+        `cost_price`,
+        `create_time`,
+        `create_user`,
+        `illegal_price`,
+        `illegal_score`,
+        `illegal_who`,
+        `un_illegal`,
+        `freight_who`,
+        `mention_fee_who`,
+        `transfer_fee`)
+        VALUES
+        <foreach collection="list" item="carDataExcel" index="index" separator=",">
+            (
+            #{carDataExcel.id,jdbcType=BIGINT},
+            #{carDataExcel.id,jdbcType=BIGINT},
+            #{carDataExcel.purchaseTax,jdbcType=VARCHAR},
+            #{carDataExcel.drivingLicense,jdbcType=VARCHAR},
+            #{carDataExcel.registrationCertificate,jdbcType=VARCHAR},
+            NULL,
+            #{carDataExcel.compulsoryInsurance,jdbcType=TIMESTAMP},
+            #{carDataExcel.businessInsurance,jdbcType=TIMESTAMP},
+            #{carDataExcel.transferNumber,jdbcType=VARCHAR},
+            NULL,NULL,1,NULL,
+            #{carDataExcel.yearInsurance,jdbcType=TIMESTAMP},
+            NULL,NULL,'1',now(),2,'0','0','2',
+            #{carDataExcel.unIllegal,jdbcType=VARCHAR},'1','1','1')
+        </foreach>
+    </insert>
+
+    <update id="updateColor" parameterType="java.lang.Integer">
+        UPDATE
+          car_auto_info_detail t1,wt_dictionary t2
+        SET
+          t1.color=t2.value
+        WHERE t1.id <![CDATA[ > ]]> #{id} and t1.id <![CDATA[ < ]]> #{id}+1000 and t1.color_cn=t2.name;
+    </update>
+
+    <update id="updateUseNature" parameterType="java.lang.Integer">
+        UPDATE
+          car_auto_info_detail t1,wt_dictionary t2
+        SET
+          t1.use_nature=t2.value
+        WHERE t1.id <![CDATA[ > ]]> #{id} and t1.id <![CDATA[ < ]]> #{id}+1000 and t1.use_nature_cn=t2.name;
+    </update>
+
+    <update id="updateMainPhoto" parameterType="java.lang.Integer">
+        UPDATE
+          car_auto t1,car_photo_temp t2
+        SET
+          t1.main_photo=t2.main_photo
+        WHERE
+          t1.id=t2.id and t1.id <![CDATA[ > ]]> #{id} and t1.id <![CDATA[ < ]]> #{id}+1000;
+    </update>
+
+
+
+</mapper>

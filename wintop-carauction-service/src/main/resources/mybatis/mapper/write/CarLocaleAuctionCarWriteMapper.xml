@@ -71,4 +71,33 @@
       create_time = #{createTime}
     where id = #{id}
   </update>
+  <!--批量插入车辆竞拍信息-->
+  <insert id="insertCarLocaleAuctionCarList" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuctionCar" >
+    insert into car_locale_auction_car (
+    id,
+    auction_id,
+    auto_auction_id,
+    car_id,
+    auction_code,
+    auction_status,
+    sort,
+    create_person,
+    create_time
+    )
+
+    values
+    <foreach collection="list" item="carLocaleAuctionCar" index="index" separator=",">
+      (
+        #{carLocaleAuctionCar.id,jdbcType=BIGINT},
+        #{carLocaleAuctionCar.auctionId,jdbcType=BIGINT},
+        #{carLocaleAuctionCar.autoAuctionId,jdbcType=BIGINT},
+        #{carLocaleAuctionCar.carId,jdbcType=BIGINT},
+        #{carLocaleAuctionCar.auctionCode,jdbcType=VARCHAR},
+        #{carLocaleAuctionCar.auctionStatus,jdbcType=VARCHAR},
+        #{carLocaleAuctionCar.sort,jdbcType=INTEGER},
+        #{carLocaleAuctionCar.createPerson,jdbcType=BIGINT},
+        now()
+    )
+    </foreach>
+  </insert>
 </mapper>

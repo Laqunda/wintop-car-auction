@@ -143,4 +143,12 @@ public class CarLocaleAuctionCarModel {
     public Integer hasAuctionCarCount(Map<String,Object> map){
         return readDao.hasAuctionCarCount(map);
     }
+
+
+    /**
+     * 批量插入竞拍车辆信息
+     */
+    public Integer insertCarLocaleAuctionCarList(List<CarLocaleAuctionCar> list){
+        return writeDao.insertCarLocaleAuctionCarList(list);
+    };
 }
