@@ -40,6 +40,10 @@ public class CarDataModel {
         return writeDao.insertCarAutoProceduresDataList(list);
     };
 
+    public Integer insertCarAutoPhoto(Integer id){
+        return writeDao.insertCarAutoPhoto(id);
+    };
+
     public Integer updateCarStoreName(){
         return writeDao.updateCarStoreName();
     };
@@ -52,4 +56,30 @@ public class CarDataModel {
         return writeDao.updateUseNature(id);
     };
 
+    public Integer updateMainPhoto(Integer id){return writeDao.updateMainPhoto(id);};
+
+    public Integer deleteCarDataById(List<Long> idList){
+        return writeDao.deleteCarDataById(idList);
+    };
+
+    public Integer deleteCarAutoById(List<Long> idList){
+        return writeDao.deleteCarAutoById(idList);
+    };
+
+    public Integer deleteCarAutoAuctionById(List<Long> idList){
+        return writeDao.deleteCarAutoAuctionById(idList);
+    };
+    public Integer deleteCarAutoInfoDetailById(List<Long> idList){
+        return writeDao.deleteCarAutoInfoDetailById(idList);
+    };
+
+    public Integer deleteCarAutoProceduresById(List<Long> idList){
+        return writeDao.deleteCarAutoProceduresById(idList);
+    };
+
+    public Integer deleteCarAutoPhotoById(List<Long> idList){
+        return writeDao.deleteCarAutoPhotoById(idList);
+    };
+
+    public Integer deleteCarLocaleAuctionCarById(Long auctionId){return  writeDao.deleteCarLocaleAuctionCarById(auctionId);};
 }

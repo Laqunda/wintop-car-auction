@@ -84,7 +84,10 @@ public class ImportCarDataApi {
             }else {
                 result.setError(ResultCode.FAIL.strValue(),ResultCode.FAIL.getRemark());
             }
-        }catch (Exception e){
+        }catch (RuntimeException e){
+            result.setError(ResultCode.REQUEST_DISABLED.strValue(),"表格数据存在问题！请仔细检查无误后联系开发人员！");
+            e.printStackTrace();
+        } catch (Exception e){
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
             e.printStackTrace();
         }finally{
@@ -115,13 +118,13 @@ public class ImportCarDataApi {
                 cellValue=cellValue.trim();
             }
         }else if("transferNumber".equals(name)){
-            if(cellValue==null||StringUtils.isBlank(cellValue.trim())||("无").equals(cellValue.trim())){
+            if(cellValue==null||StringUtils.isBlank(cellValue.trim())||cellValue.indexOf("无")!=-1){
                 cellValue="0";
-            }else if(("有").equals(cellValue.trim())){
+            }else if(cellValue.indexOf("无")==-1){
                 cellValue="1";
             }
         }else if("unIllegal".equals(name)){
-            if(cellValue==null||StringUtils.isBlank(cellValue.trim())||("无").equals(cellValue.trim())){
+            if(cellValue==null||StringUtils.isBlank(cellValue.trim())||cellValue.indexOf("无")!=-1){
                 cellValue="2";
             }else if(cellValue.indexOf("无")==-1){
                 cellValue="1";

@@ -1,6 +1,8 @@
 package com.wintop.ms.carauction.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.wintop.ms.carauction.core.annotation.AuthPublic;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.annotation.RequestAuth;
 import com.wintop.ms.carauction.core.config.Constants;
@@ -9,23 +11,24 @@ import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.entity.CarDataExcel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.ExcelUtil;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -70,18 +73,34 @@ public class ImportCarDataApi {
             Workbook workbook= ExcelUtil.createWorkbook(multipartFile.getInputStream(),fileName );
             //创建工作表sheet,并将上载文件转为对象
             Sheet sheet = ExcelUtil.getSheet(workbook, 0);
-            //获取sheet中数据的行数，去掉了空行
-            int rowNum = sheet.getPhysicalNumberOfRows();
             if (sheet==null || sheet.getRow(0)==null){
                 return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
             }
+            //获取sheet中数据的行数，去掉了空行
+            int rowNum = sheet.getPhysicalNumberOfRows();
+            System.out.println("总行数："+rowNum);
+            if (rowNum>1000){
+                return new ResultModel(false, ResultCode.REQUEST_DISABLED.value(),"数据量过大，请联系开发人员导入！",null);
+            }
             //获取Excel列数
             int colNum = sheet.getRow(0).getLastCellNum();
+            System.out.println("总列数："+colNum);
+            if (colNum!=22){
+                return new ResultModel(false, ResultCode.REQUEST_DISABLED.value(),"请您使用提供的excel模板进行导入！",null);
+            }
             List<CarDataExcel> carDataExcels=new ArrayList<>();
+            //用来存放首列id判断是否重复
+            Set<Double> set=new HashSet<Double>();
             //读取每一行，第一行为标题，从第二行开始
             for(int i=1;i<rowNum;i++){
                 //获取第一行
                 Row row=sheet.getRow(i);
+                if(row.getCell(0).getCellType()!=HSSFCell.CELL_TYPE_NUMERIC){
+                    return new ResultModel(false, ResultCode.REQUEST_DISABLED.value(),"表格首列必须为数字编号！请检查您的表格第"+(i+1)+"行",null);
+                }else if(row.getCell(0).getNumericCellValue()<1||row.getCell(0).getNumericCellValue()>999){
+                    return new ResultModel(false, ResultCode.REQUEST_DISABLED.value(),"首列编号需要在1~999之间！请检查您的表格第"+(i+1)+"行",null);
+                }
+                set.add(row.getCell(0).getNumericCellValue());
                 //如果为空，终止循环，理论上不会为空，因为获取的行数已经把空行去掉了
                 if (row==null){
                     break;
@@ -108,6 +127,9 @@ public class ImportCarDataApi {
                     carDataExcels.add(carDataExcel);
                 }
             }
+            if (set.size()<rowNum-1){
+                return new ResultModel(false, ResultCode.REQUEST_DISABLED.value(),"首列编号不可重复！请检查您的首列编号！",null);
+            }
             //TODO 是否需要根据登录人获取？怎么获取
             Long managerId=2L;
             map.put("carDataExcels", carDataExcels);
@@ -127,6 +149,9 @@ public class ImportCarDataApi {
         }
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
+
+
+
     //用来处理cell中的数据
     public static String checkCellValue(Cell cell){
         String str="";

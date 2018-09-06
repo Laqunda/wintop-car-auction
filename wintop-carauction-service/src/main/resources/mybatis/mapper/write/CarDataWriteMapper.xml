@@ -61,7 +61,7 @@
             #{carDataExcel.id,jdbcType=BIGINT},2,'赵娜','136815210520',
             #{carDataExcel.autoBrandCn,jdbcType=VARCHAR},NULL ,
             #{carDataExcel.storeName,jdbcType=VARCHAR},'3',0, now(),
-            null,null,null,null,'5',#{carDataExcel.id,jdbcType=BIGINT},
+            null,null,null,null,'6',#{carDataExcel.id,jdbcType=BIGINT},
             '','1',2,now(),2,now(),0,#{regionId},#{carDataExcel.id,jdbcType=BIGINT}
             )
         </foreach>
@@ -234,6 +234,22 @@
         </foreach>
     </insert>
 
+    <insert id="insertCarAutoPhoto" parameterType="java.lang.Integer">
+        insert into
+        `car_auto_photo` (
+        `id`,
+        `auto_id`,
+        `photo_url`,
+        `create_time`,
+        `photo_type`,
+        `sort`,
+        `create_user`)
+        select id,id,main_photo,now(),'1',1,2
+        from car_auto
+        where id <![CDATA[ > ]]> #{id} and id <![CDATA[ < ]]> #{id}+1000
+        and main_photo is not null and main_photo <![CDATA[ != ]]> '';
+    </insert>
+
     <update id="updateColor" parameterType="java.lang.Integer">
         UPDATE
           car_auto_info_detail t1,wt_dictionary t2
@@ -259,6 +275,50 @@
           t1.id=t2.id and t1.id <![CDATA[ > ]]> #{id} and t1.id <![CDATA[ < ]]> #{id}+1000;
     </update>
 
-
-
+    <delete id="deleteCarDataById" parameterType="java.util.List">
+        delete from car_data
+        where id in
+        <foreach collection="list" item="id" index="index" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>;
+    </delete>
+    <delete id="deleteCarAutoById" parameterType="java.util.List">
+        delete from car_auto where id in
+        <foreach collection="list" item="id" index="index" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>;
+    </delete>
+    <delete id="deleteCarAutoAuctionById" parameterType="java.util.List">
+        delete from car_auto_auction where id in
+        <foreach collection="list" item="id" index="index" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>;
+    </delete>
+    <delete id="deleteCarAutoInfoDetailById" parameterType="java.util.List">
+        delete from car_auto_info_detail where id in
+        <foreach collection="list" item="id" index="index" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>;
+    </delete>
+    <delete id="deleteCarAutoProceduresById" parameterType="java.util.List">
+        delete from car_auto_procedures where id in
+        <foreach collection="list" item="id" index="index" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>;
+    </delete>
+    <delete id="deleteCarAutoPhotoById" parameterType="java.util.List">
+        delete from car_auto_photo where id in
+        <foreach collection="list" item="id" index="index" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>;
+    </delete>
+    <delete id="deleteCarLocaleAuctionCarById" parameterType="java.util.List">
+        delete from car_locale_auction_car where auction_id=#{auctionId};
+    </delete>
 </mapper>

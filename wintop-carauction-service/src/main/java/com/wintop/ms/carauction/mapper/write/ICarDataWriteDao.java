@@ -25,9 +25,27 @@ public interface ICarDataWriteDao {
 
     Integer insertCarAutoProceduresDataList(List<CarDataExcel> list);
 
+    Integer insertCarAutoPhoto(Integer id);
+
     Integer updateCarStoreName();
 
     Integer updateColor(Integer id);
 
     Integer updateUseNature(Integer id);
+
+    Integer updateMainPhoto(Integer id);
+
+    Integer deleteCarDataById(List<Long> idList);
+
+    Integer deleteCarAutoById(List<Long> idList);
+
+    Integer deleteCarAutoAuctionById(List<Long> idList);
+
+    Integer deleteCarAutoInfoDetailById(List<Long> idList);
+
+    Integer deleteCarAutoProceduresById(List<Long> idList);
+
+    Integer deleteCarAutoPhotoById(List<Long> idList);
+
+    Integer deleteCarLocaleAuctionCarById(Long auctionId);
 }

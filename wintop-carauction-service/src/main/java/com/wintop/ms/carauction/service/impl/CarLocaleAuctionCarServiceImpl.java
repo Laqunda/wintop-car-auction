@@ -153,9 +153,9 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
     @Transactional
     public ServiceResult<Map<String,Object>> updateAuctionCode(Long auctionCarId) {
 
-        CarLocaleAuctionCar auctionCar = carLocaleAuctionCarModel.selectById(auctionCarId);
+        //CarLocaleAuctionCar auctionCar = carLocaleAuctionCarModel.selectById(auctionCarId);
 
-        List<CarLocaleAuctionCar> carLocaleAuctionCars = model.getAuctionCarList(auctionCar.getAuctionId());
+        List<CarLocaleAuctionCar> carLocaleAuctionCars = model.getAuctionCarList(auctionCarId);
         List<CarLocaleAuctionCar> updateList=new ArrayList<>();
         int auctionCode =1;
         for(int i=0;i<carLocaleAuctionCars.size();i++){

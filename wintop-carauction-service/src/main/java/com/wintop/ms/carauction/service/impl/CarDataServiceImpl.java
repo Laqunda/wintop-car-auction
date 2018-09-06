@@ -41,8 +41,24 @@ public class CarDataServiceImpl implements ICarDataService{
     @Transactional
     @Override
     public Integer insertCarDataList(List<CarDataExcel> list,Long managerId,Long auctionId) throws RuntimeException{
+        //用来计算导入持久层的时间
         Long startTime=System.currentTimeMillis();
+        //用来存储添加数据的id
         Integer id=carDataImportRecordModel.selectCarDataImportRecord(1);
+        //用来判断是否第一次为某场次导入车辆信息,默认为true
+        Boolean checkFlag=true;
+        //根据auctionId获取所有的场次拍卖车辆，
+        // 如果为空或者0，则直接添加新的数据
+        // 否则，先清空以前的
+        List<CarLocaleAuctionCar> checkList=carLocaleAuctionCarModel.getAuctionCarList(auctionId);
+        //存放当前拍卖场次车辆的Id集合
+        List<Long> idList=new ArrayList<Long>();
+        if (checkList!=null&&checkList.size()!=0){
+            checkFlag=false;
+            for (CarLocaleAuctionCar carLocaleAuctionCar:checkList){
+                idList.add(carLocaleAuctionCar.getCarId());
+            }
+        }
         List<CarLocaleAuctionCar> carLocaleAuctionCars=new ArrayList<CarLocaleAuctionCar>();
         Map<String,Object> paramMap=new HashMap<String,Object>();
         Long regionId=1L;
@@ -53,6 +69,7 @@ public class CarDataServiceImpl implements ICarDataService{
             carLocaleAuctionCar.setId(IdWorker.getInstance().nextId());
             carLocaleAuctionCar.setAuctionId(auctionId);
             carLocaleAuctionCar.setCarId(Long.parseLong(carDataExcel.getId()));
+            carLocaleAuctionCar.setAutoAuctionId(Long.parseLong(carDataExcel.getId()));
             carLocaleAuctionCar.setAuctionCode(carDataExcel.getId().substring(carDataExcel.getId().length()-3));
             carLocaleAuctionCar.setAuctionStatus("0");
             carLocaleAuctionCar.setSort(Integer.parseInt(carLocaleAuctionCar.getAuctionCode()));
@@ -62,7 +79,17 @@ public class CarDataServiceImpl implements ICarDataService{
         }
         paramMap.put("list",list);
         paramMap.put("regionId",regionId);
-        Integer count=carDataImportRecordModel.updateCarDataImportRecord(1);
+        Integer count=0;
+        count=carDataImportRecordModel.updateCarDataImportRecord(1);
+        if(!checkFlag){
+            System.out.println("开始清空之前的拍卖车辆信息.........."+id);
+            carDataModel.deleteCarAutoById(idList);
+            carDataModel.deleteCarAutoAuctionById(idList);
+            carDataModel.deleteCarAutoInfoDetailById(idList);
+            carDataModel.deleteCarAutoProceduresById(idList);
+            carDataModel.deleteCarAutoPhotoById(idList);
+            carDataModel.deleteCarLocaleAuctionCarById(auctionId);
+        }
         Integer number=0;
         if (count>0){
             carDataModel.insertCarAutoDataList(paramMap);
@@ -72,6 +99,8 @@ public class CarDataServiceImpl implements ICarDataService{
             carDataModel.insertCarAutoProceduresDataList(list);
             carDataModel.updateColor(id);
             carDataModel.updateUseNature(id);
+            carDataModel.updateMainPhoto(id);
+            carDataModel.insertCarAutoPhoto(id);
             number=carLocaleAuctionCarModel.insertCarLocaleAuctionCarList(carLocaleAuctionCars);
         }
         Long endTime=System.currentTimeMillis()-startTime;
