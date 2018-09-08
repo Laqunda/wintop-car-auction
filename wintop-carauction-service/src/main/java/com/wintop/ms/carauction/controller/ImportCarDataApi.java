@@ -81,7 +81,9 @@ public class ImportCarDataApi {
             Integer count=carDataService.insertCarDataList(carDataExcels,Long.parseLong(managerId),Long.parseLong(auctionId));
             if (count>0&&count==carDataExcels.size()){
                 result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
-            }else {
+            }else if (count==-1){
+                result.setError(ResultCode.REQUEST_DISABLED.strValue(),"请您先上传车辆图片！");
+            } else {
                 result.setError(ResultCode.FAIL.strValue(),ResultCode.FAIL.getRemark());
             }
         }catch (RuntimeException e){

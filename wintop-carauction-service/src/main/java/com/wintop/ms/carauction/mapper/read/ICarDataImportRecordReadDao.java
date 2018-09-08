@@ -1,5 +1,7 @@
 package com.wintop.ms.carauction.mapper.read;
 
+import com.wintop.ms.carauction.entity.CarDataImportRecord;
+
 /**
  * class_name: ICarDataImportRecordReadDao
  * package: com.wintop.ms.carauction.mapper.read
@@ -8,5 +10,5 @@ package com.wintop.ms.carauction.mapper.read;
  * creat_date-time: 2018/8/27/18:58
  **/
 public interface ICarDataImportRecordReadDao {
-    Integer selectCarDataImportRecord(Integer id);
+    CarDataImportRecord selectCarDataImportRecord(Long id);
 }

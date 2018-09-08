@@ -1,13 +1,8 @@
 package com.wintop.ms.carauction.service.impl;
 
 import com.wintop.core.util.IdWorker;
-import com.wintop.ms.carauction.entity.CarDataExcel;
-import com.wintop.ms.carauction.entity.CarLocaleAuction;
-import com.wintop.ms.carauction.entity.CarLocaleAuctionCar;
-import com.wintop.ms.carauction.model.CarDataImportRecordModel;
-import com.wintop.ms.carauction.model.CarDataModel;
-import com.wintop.ms.carauction.model.CarLocaleAuctionCarModel;
-import com.wintop.ms.carauction.model.CarLocaleAuctionModel;
+import com.wintop.ms.carauction.entity.*;
+import com.wintop.ms.carauction.model.*;
 import com.wintop.ms.carauction.service.ICarDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,15 +32,22 @@ public class CarDataServiceImpl implements ICarDataService{
     private CarLocaleAuctionModel carLocaleAuctionModel;
     @Resource
     private CarLocaleAuctionCarModel carLocaleAuctionCarModel;
+    @Resource
+    private CarPhotoTempModel carPhotoTempModel;
     private static final Logger logger = LoggerFactory.getLogger(CarDataServiceImpl.class);
     @Transactional
     @Override
     public Integer insertCarDataList(List<CarDataExcel> list,Long managerId,Long auctionId) throws RuntimeException{
         //用来计算导入持久层的时间
         Long startTime=System.currentTimeMillis();
-        //用来存储添加数据的id
-        Integer id=carDataImportRecordModel.selectCarDataImportRecord(1);
-        //用来判断是否第一次为某场次导入车辆信息,默认为true
+        CarDataImportRecord carDataImportRecord=carDataImportRecordModel.selectCarDataImportRecord(auctionId);
+        Integer idRecord=0;
+        if(carDataImportRecord==null){
+            return -1;
+        }else {
+            idRecord=carDataImportRecord.getIdRecord();
+        }
+        //用来判断是否第一次为某场次导入车辆信息,默认为true第一次
         Boolean checkFlag=true;
         //根据auctionId获取所有的场次拍卖车辆，
         // 如果为空或者0，则直接添加新的数据
@@ -64,7 +66,7 @@ public class CarDataServiceImpl implements ICarDataService{
         Long regionId=1L;
         regionId=carLocaleAuctionModel.selectById(auctionId).getCityId();
         for (CarDataExcel carDataExcel:list){
-            carDataExcel.setId(Integer.parseInt(carDataExcel.getId())+id+"");
+            carDataExcel.setId(Integer.parseInt(carDataExcel.getId())+idRecord+"");
             CarLocaleAuctionCar carLocaleAuctionCar=new CarLocaleAuctionCar();
             carLocaleAuctionCar.setId(IdWorker.getInstance().nextId());
             carLocaleAuctionCar.setAuctionId(auctionId);
@@ -79,10 +81,8 @@ public class CarDataServiceImpl implements ICarDataService{
         }
         paramMap.put("list",list);
         paramMap.put("regionId",regionId);
-        Integer count=0;
-        count=carDataImportRecordModel.updateCarDataImportRecord(1);
         if(!checkFlag){
-            System.out.println("开始清空之前的拍卖车辆信息.........."+id);
+            System.out.println("开始清空之前的拍卖车辆信息.........."+idRecord);
             carDataModel.deleteCarAutoById(idList);
             carDataModel.deleteCarAutoAuctionById(idList);
             carDataModel.deleteCarAutoInfoDetailById(idList);
@@ -91,20 +91,39 @@ public class CarDataServiceImpl implements ICarDataService{
             carDataModel.deleteCarLocaleAuctionCarById(auctionId);
         }
         Integer number=0;
-        if (count>0){
             carDataModel.insertCarAutoDataList(paramMap);
             carDataModel.updateCarStoreName();
             carDataModel.insertCarAutoAuctionDataList(list);
             carDataModel.insertCarAutoInfoDetailDataList(list);
             carDataModel.insertCarAutoProceduresDataList(list);
-            carDataModel.updateColor(id);
-            carDataModel.updateUseNature(id);
-            carDataModel.updateMainPhoto(id);
-            carDataModel.insertCarAutoPhoto(id);
+            carDataModel.updateColor(idRecord);
+            carDataModel.updateUseNature(idRecord);
+            carDataModel.updateMainPhoto(idRecord);
+            carDataModel.insertCarAutoPhoto(idRecord);
             number=carLocaleAuctionCarModel.insertCarLocaleAuctionCarList(carLocaleAuctionCars);
-        }
         Long endTime=System.currentTimeMillis()-startTime;
         System.out.println("导入持久层耗时："+endTime);
         return number;
+    }
+    @Transactional
+    @Override
+    public Integer insertCarPhoto(List<CarPhotoTemp> list, Long auctionId) throws RuntimeException{
+        //首先根据auctionId查询是否有对应的导入记录
+        CarDataImportRecord carDataImportRecord=carDataImportRecordModel.selectCarDataImportRecord(auctionId);
+        Integer id=0;
+        //如果没有，获取当前id为1的记录，以此为新的id新增导入记录
+        if(carDataImportRecord==null){
+            id=carDataImportRecordModel.selectCarDataImportRecord(1L).getIdRecord();
+            carDataImportRecordModel.insertCarDataImportRecord(new CarDataImportRecord(auctionId,id));
+            carDataImportRecordModel.updateCarDataImportRecord(1L);
+        }else {//如果有
+            carPhotoTempModel.clearCarPhotoTemp();
+            id=carDataImportRecord.getIdRecord();
+        }
+        for (CarPhotoTemp carPhotoTemp:list){
+            carPhotoTemp.setId(carPhotoTemp.getId()+id);
+        }
+        Integer count=carPhotoTempModel.insertCarPhotoTemp(list);
+        return count;
     }
 }

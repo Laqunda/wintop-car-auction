@@ -1,5 +1,7 @@
 package com.wintop.ms.carauction.mapper.write;
 
+import com.wintop.ms.carauction.entity.CarDataImportRecord;
+
 /**
  * class_name: ICarDataImportRecordWriteDao
  * package: com.wintop.ms.carauction.mapper.write
@@ -8,5 +10,7 @@ package com.wintop.ms.carauction.mapper.write;
  * creat_date-time: 2018/8/27/18:58
  **/
 public interface ICarDataImportRecordWriteDao {
-    Integer updateCarDataImportRecord(Integer id);
+    Integer updateCarDataImportRecord(Long id);
+
+    Integer insertCarDataImportRecord(CarDataImportRecord carDataImportRecord);
 }

@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.service;
 
 import com.wintop.ms.carauction.entity.CarDataExcel;
+import com.wintop.ms.carauction.entity.CarPhotoTemp;
 
 import java.util.List;
 
@@ -13,4 +14,5 @@ import java.util.List;
  **/
 public interface ICarDataService {
     Integer insertCarDataList(List<CarDataExcel> list,Long managerId,Long auctionId);
+    Integer insertCarPhoto(List<CarPhotoTemp> list,Long auctionId);
 }

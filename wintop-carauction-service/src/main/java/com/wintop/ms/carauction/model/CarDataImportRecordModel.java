@@ -1,5 +1,6 @@
 package com.wintop.ms.carauction.model;
 
+import com.wintop.ms.carauction.entity.CarDataImportRecord;
 import com.wintop.ms.carauction.mapper.read.ICarDataImportRecordReadDao;
 import com.wintop.ms.carauction.mapper.write.ICarDataImportRecordWriteDao;
 import org.springframework.stereotype.Repository;
@@ -19,10 +20,13 @@ public class CarDataImportRecordModel {
     private ICarDataImportRecordReadDao readDao;
     @Resource
     private ICarDataImportRecordWriteDao writeDao;
-    public Integer selectCarDataImportRecord(Integer id){
+    public CarDataImportRecord selectCarDataImportRecord(Long id){
         return  readDao.selectCarDataImportRecord(id);
     }
-    public Integer updateCarDataImportRecord(Integer id){
+    public Integer updateCarDataImportRecord(Long id){
         return writeDao.updateCarDataImportRecord(id);
+    }
+    public Integer insertCarDataImportRecord(CarDataImportRecord carDataImportRecord){
+        return writeDao.insertCarDataImportRecord(carDataImportRecord);
     }
 }

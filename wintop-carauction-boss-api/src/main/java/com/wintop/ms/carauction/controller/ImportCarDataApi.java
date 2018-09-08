@@ -9,8 +9,17 @@ import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.entity.CarDataExcel;
+import com.wintop.ms.carauction.entity.CarPhotoTemp;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.ExcelUtil;
+import jdk.nashorn.internal.ir.TernaryNode;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -28,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -47,6 +57,7 @@ import java.util.*;
 @RequestMapping("/importCarData")
 public class ImportCarDataApi {
     private final RestTemplate restTemplate;
+    public static final Long IMG_MAX_SIZE=100L;
     ImportCarDataApi(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
@@ -149,9 +160,127 @@ public class ImportCarDataApi {
         }
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
+//用来生成数据填写模板
+    @GetMapping(value = "/exportCarDataModelExcel",
+            produces="application/json; charset=UTF-8")
+    @AuthPublic
+    public void exportCarPriceTemplate(HttpServletRequest request, HttpServletResponse response){
+        String[] headerName={"牌号(序列号)","经销店","车牌号码","车架号码","品牌型号","出厂时间","登记日期","年检日期"
+                ,"保险截止日期","强险截止日期","排量","颜色","表里显程(万公里)","是否需要代办过户/转籍",
+                "使用性质","行驶证","登记证","过户变更次数","购置证","违章情况","备注(过户后手续留存特殊需要、本市或外迁、是否指定过户场地等）\n" +
+                "该车辆如有重大车损、事故及故障、影响过户的所有因素、是否为转籍车辆必须注明)","备注一"};
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        //生成一个表格
+        HSSFSheet sheet = workbook.createSheet("车辆信息批量导入模板");
+        //设置表格默认列宽20个字节
+        sheet.setDefaultColumnWidth(20);
+        //生成表格标题
+        HSSFRow row = sheet.createRow(0);
+        row.setHeight((short)300);
+        HSSFCell cell = null;
+        for (int i = 0; i < headerName.length; i++) {
+            cell = row.createCell(i);
+            cell.setCellValue(headerName[i]);
+        }
+        String filename = String.valueOf(ExcelUtil.processFileName(request,"车辆信息批量导入模板")).concat(".xls");
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        response.setHeader("Content-disposition", "attachment;filename=" + filename);
+        try {
+            ServletOutputStream ouputStream = response.getOutputStream();
+            workbook.write(ouputStream);
+            ouputStream.flush();
+            ouputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
-
+    @PostMapping(value = "/importCarPhoto", produces="application/json; charset=UTF-8")
+    @ResponseBody
+    @RequestAuth(false)
+    public ResultModel importCarPhoto(@RequestParam(value = "file", required = false)List<MultipartFile> multipartFiles,
+                                          @RequestParam("auctionId") Long auctionId){
+        //1.判断传入参数的非空
+        if( multipartFiles==null || multipartFiles.size()==0){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        if(multipartFiles.size()>999){
+            return new ResultModel(false, ResultCode.REQUEST_DISABLED.value(),"上传图片数量过多！",null);
+        }
+        String fileName=null;
+        Map<String,Object> map=new HashMap<>();
+        HttpPost httpPost=new HttpPost("http://test.yuntongauto.com/file/uploadImageForQuality");
+        httpPost.setHeader("appId","1234567_boss");
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+        ResponseEntity<JSONObject> responseEntity=null;
+        Integer count =1;
+        List<CarPhotoTemp> list=new ArrayList<CarPhotoTemp>();
+        //用来存放图片序号id判断是否重复
+        Set<Integer> set=new HashSet<Integer>();
+        try {
+            for (MultipartFile multipartFile:multipartFiles){
+                //2.获取上载文件的文件名
+                fileName=multipartFile.getOriginalFilename();
+                //3.如果文件不是jpg或者png文件，则返回文件格式不正确提示
+                if (!fileName.endsWith(".jpg") && !fileName.endsWith(".png")){
+                    return new ResultModel(false, ResultCode.FILE_FORMAT.value(),ResultCode.FILE_FORMAT.getRemark(),null);
+                }
+                Integer id=0;
+                if(fileName.endsWith(".jpg")){
+                    id=Integer.valueOf(fileName.replace(".jpg",""));
+                }else if (fileName.endsWith(".png")){
+                    id=Integer.valueOf(fileName.replace(".png",""));
+                }
+                if(id<1||id>999){
+                    return new ResultModel(false, ResultCode.REQUEST_DISABLED.value(),"图片名称序号超出限定！",null);
+                }
+                //判断图片名称序号是否重复
+                set.add(id);
+                if(set.size()<count){
+                    return new ResultModel(false, ResultCode.REQUEST_DISABLED.value(),"图片名称序号不能重复！",null);
+                }
+                count++;
+                //4.将提交过来的图片保存为服务器临时文件
+                File tempFile = File.createTempFile(UUID.randomUUID().toString(),fileName.substring(fileName.lastIndexOf(".")));
+                //5.multipartFile转化为File
+                multipartFile.transferTo(tempFile);
+                MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+                multipartEntityBuilder.addBinaryBody("file",tempFile);
+                Long imgSize=tempFile.length()/1024;
+                //6.判断图片大小
+                if(imgSize>IMG_MAX_SIZE){
+                    return new ResultModel(false, ResultCode.REQUEST_DISABLED.value(),"图片"+fileName+"大小超限",null);
+                }
+                HttpEntity httpEntity = multipartEntityBuilder.build();
+                httpPost.setEntity(httpEntity);
+                response = httpclient.execute(httpPost);
+                HttpEntity entity2 = response.getEntity();
+                String result = EntityUtils.toString(entity2,"UTF-8");
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                CarPhotoTemp carPhotoTemp=new CarPhotoTemp();
+                carPhotoTemp.setId(id);
+                carPhotoTemp.setMainPhoto(jsonObject.getString("result"));
+                list.add(carPhotoTemp);
+            }
+            map.put("auctionId",auctionId);
+            map.put("carPhotoTemps",list);
+            responseEntity = this.restTemplate.exchange(
+                    RequestEntity
+                            .post(URI.create(Constants.ROOT+"/service/importCarPhotoApi/importCarPhoto"))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(map),JSONObject.class);
+        }catch (NumberFormatException e){
+            e.printStackTrace();
+            return new ResultModel(false, ResultCode.REQUEST_DISABLED.value(),"请确定上传图片文件名为数字！确认无误联系开发人员",null);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResultModel(false, ResultCode.BUSS_EXCEPTION.value(),ResultCode.BUSS_EXCEPTION.getRemark(),null);
+        }
+        return ApiUtil.getResultModel(responseEntity,ApiUtil.OBJECT);
+    }
     //用来处理cell中的数据
     public static String checkCellValue(Cell cell){
         String str="";
