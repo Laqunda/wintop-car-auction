@@ -107,17 +107,17 @@ public class CarDataServiceImpl implements ICarDataService{
     }
     @Transactional
     @Override
-    public Integer insertCarPhoto(List<CarPhotoTemp> list, Long auctionId) throws RuntimeException{
+    public Integer insertCarPhoto(List<CarPhotoTemp> list, Long auctionId,Long timeCheck) throws RuntimeException{
         //首先根据auctionId查询是否有对应的导入记录
         CarDataImportRecord carDataImportRecord=carDataImportRecordModel.selectCarDataImportRecord(auctionId);
         Integer id=0;
         //如果没有，获取当前id为1的记录，以此为新的id新增导入记录
         if(carDataImportRecord==null){
+            System.out.println("当前第一次导入车辆图片");
             id=carDataImportRecordModel.selectCarDataImportRecord(1L).getIdRecord();
-            carDataImportRecordModel.insertCarDataImportRecord(new CarDataImportRecord(auctionId,id));
+            carDataImportRecordModel.insertCarDataImportRecord(new CarDataImportRecord(auctionId,id,timeCheck));
             carDataImportRecordModel.updateCarDataImportRecord(1L);
         }else {//如果有
-            carPhotoTempModel.clearCarPhotoTemp();
             id=carDataImportRecord.getIdRecord();
         }
         for (CarPhotoTemp carPhotoTemp:list){
@@ -126,4 +126,16 @@ public class CarDataServiceImpl implements ICarDataService{
         Integer count=carPhotoTempModel.insertCarPhotoTemp(list);
         return count;
     }
+
+    @Override
+    public Integer deleteCarPhoto(Long auctionId) throws RuntimeException{
+        CarDataImportRecord carDataImportRecord=carDataImportRecordModel.selectCarDataImportRecord(auctionId);
+        Integer count=0;
+        if(carDataImportRecord!=null){
+            count=carPhotoTempModel.deleteCarPhotoTempById(carDataImportRecord.getIdRecord());
+        }
+        return count;
+    }
+
+
 }

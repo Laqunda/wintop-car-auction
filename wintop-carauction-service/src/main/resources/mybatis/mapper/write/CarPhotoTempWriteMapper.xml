@@ -10,7 +10,7 @@
             )
         </foreach>
     </insert>
-    <delete id="clearCarPhotoTemp">
-        DELETE  FROM  car_photo_temp WHERE  id <![CDATA[ > ]]> -1
+    <delete id="deleteCarPhotoTempById" parameterType="java.lang.Integer">
+        DELETE  FROM  car_photo_temp WHERE  id <![CDATA[ > ]]> #{id} and id <![CDATA[ < ]]> #{id}+1000
     </delete>
 </mapper>

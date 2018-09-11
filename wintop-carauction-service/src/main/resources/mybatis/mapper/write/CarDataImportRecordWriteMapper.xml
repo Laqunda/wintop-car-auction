@@ -4,10 +4,12 @@
     <update id="updateCarDataImportRecord" parameterType="java.lang.Long">
         update car_data_import_record set id_record=id_record+1000 where id=#{id}
     </update>
-
+    <update id="updateCarDataImportRecordByTimeCheck" parameterType="com.wintop.ms.carauction.entity.CarDataImportRecord">
+        update car_data_import_record set time_check=#{timeCheck} where id=#{id}
+    </update>
     <insert id="insertCarDataImportRecord" parameterType="com.wintop.ms.carauction.entity.CarDataImportRecord">
         insert into
          car_data_import_record
-         VALUE (#{id},#{idRecord})
+         VALUE (#{id},#{idRecord},#{timeCheck})
     </insert>
 </mapper>

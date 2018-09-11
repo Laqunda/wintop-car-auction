@@ -14,5 +14,6 @@ import java.util.List;
  **/
 public interface ICarDataService {
     Integer insertCarDataList(List<CarDataExcel> list,Long managerId,Long auctionId);
-    Integer insertCarPhoto(List<CarPhotoTemp> list,Long auctionId);
+    Integer insertCarPhoto(List<CarPhotoTemp> list,Long auctionId,Long timeCheck);
+    Integer deleteCarPhoto(Long auctionId);
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,22 +35,40 @@ public class ImportCarPhotoApi {
     @PostMapping(value = "importCarPhoto")
     public ServiceResult<Map<String,Object>> importCarData(@RequestBody Map<String,Object> map){
         ServiceResult<Map<String,Object>> result=new ServiceResult<>();
+        Map<String,Object> resultMap=new HashMap<String,Object>();
         try {
             //解析最上层api传过来的参数，拿到车辆信息对象数组
             List<CarPhotoTemp> carPhotoTemps=new ArrayList<CarPhotoTemp>();
             carPhotoTemps= JSONObject.parseArray(JSONObject.toJSONString(map.get("carPhotoTemps")),CarPhotoTemp.class);
             String auctionId=JSONObject.toJSONString(map.get("auctionId"));
+            String timeCheck=JSONObject.toJSONString(map.get("timeCheck"));
             Integer count=0;
             if (carPhotoTemps==null||carPhotoTemps.size()==0){
                 result.setError(ResultCode.FAIL.strValue(),ResultCode.FAIL.getRemark());
             }else {
-               count=carDataService.insertCarPhoto(carPhotoTemps,Long.parseLong(auctionId));
+               count=carDataService.insertCarPhoto(carPhotoTemps,Long.parseLong(auctionId),Long.parseLong(timeCheck));
             }
+            resultMap.put("count",count);
             if (count>0&&count==carPhotoTemps.size()){
+                result.setResult(resultMap);
                 result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
             }else {
                 result.setError(ResultCode.FAIL.strValue(),ResultCode.FAIL.getRemark());
             }
+        } catch (Exception e){
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @PostMapping(value="deleteCarPhoto")
+    public ServiceResult<Map<String,Object>> deleteCarData(@RequestBody Map<String,Object> map){
+        ServiceResult<Map<String,Object>> result=new ServiceResult<>();
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        try {
+            String auctionId=JSONObject.toJSONString(map.get("auctionId"));
+            carDataService.deleteCarPhoto(Long.parseLong(auctionId));
         } catch (Exception e){
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
             e.printStackTrace();

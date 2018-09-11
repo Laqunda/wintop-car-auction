@@ -2,6 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wintop.ms.carauction.mapper.read.ICarDataImportRecordReadDao" >
     <select id="selectCarDataImportRecord" parameterType="java.lang.Long" resultType="com.wintop.ms.carauction.entity.CarDataImportRecord">
-      select id,id_record from car_data_import_record where id=#{id}
+      select id,id_record,time_check from car_data_import_record where id=#{id}
     </select>
 </mapper>

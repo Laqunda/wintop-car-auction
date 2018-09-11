@@ -201,7 +201,7 @@ public class ImportCarDataApi {
     @ResponseBody
     @RequestAuth(false)
     public ResultModel importCarPhoto(@RequestParam(value = "file", required = false)List<MultipartFile> multipartFiles,
-                                          @RequestParam("auctionId") Long auctionId){
+                                          @RequestParam("auctionId") Long auctionId,@RequestParam("timeCheck") Long timeCheck){
         //1.判断传入参数的非空
         if( multipartFiles==null || multipartFiles.size()==0){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
@@ -267,6 +267,7 @@ public class ImportCarDataApi {
             }
             map.put("auctionId",auctionId);
             map.put("carPhotoTemps",list);
+            map.put("timeCheck",timeCheck);
             responseEntity = this.restTemplate.exchange(
                     RequestEntity
                             .post(URI.create(Constants.ROOT+"/service/importCarPhotoApi/importCarPhoto"))
@@ -281,6 +282,31 @@ public class ImportCarDataApi {
         }
         return ApiUtil.getResultModel(responseEntity,ApiUtil.OBJECT);
     }
+
+    @PostMapping(value = "/deleteCarPhoto", produces="application/json; charset=UTF-8")
+    @ResponseBody
+    @RequestAuth(false)
+    public ResultModel deleteCarPhoto(@RequestParam("auctionId") Long auctionId){
+        //1.判断传入参数的非空
+        if( auctionId==null || auctionId==0){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        ResponseEntity<JSONObject> responseEntity=null;
+        try {
+            Map<String,Object> map=new HashMap<>();
+            map.put("auctionId",auctionId);
+            responseEntity = this.restTemplate.exchange(
+                    RequestEntity
+                            .post(URI.create(Constants.ROOT+"/service/importCarPhotoApi/deleteCarPhoto"))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(map),JSONObject.class);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResultModel(false, ResultCode.BUSS_EXCEPTION.value(),ResultCode.BUSS_EXCEPTION.getRemark(),null);
+        }
+        return ApiUtil.getResultModel(responseEntity,ApiUtil.OBJECT);
+    }
+
     //用来处理cell中的数据
     public static String checkCellValue(Cell cell){
         String str="";

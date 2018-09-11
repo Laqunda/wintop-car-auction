@@ -11,6 +11,6 @@ import com.wintop.ms.carauction.entity.CarDataImportRecord;
  **/
 public interface ICarDataImportRecordWriteDao {
     Integer updateCarDataImportRecord(Long id);
-
+    Integer updateCarDataImportRecordByTimeCheck(CarDataImportRecord carDataImportRecord);
     Integer insertCarDataImportRecord(CarDataImportRecord carDataImportRecord);
 }

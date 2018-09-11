@@ -26,6 +26,9 @@ public class CarDataImportRecordModel {
     public Integer updateCarDataImportRecord(Long id){
         return writeDao.updateCarDataImportRecord(id);
     }
+    public Integer updateCarDataImportRecordByTimeCheck(CarDataImportRecord carDataImportRecord){
+        return writeDao.updateCarDataImportRecordByTimeCheck(carDataImportRecord);
+    }
     public Integer insertCarDataImportRecord(CarDataImportRecord carDataImportRecord){
         return writeDao.insertCarDataImportRecord(carDataImportRecord);
     }

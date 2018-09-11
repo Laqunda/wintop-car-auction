@@ -13,7 +13,7 @@ import java.io.Serializable;
  **/
 public class CarDataImportRecord implements Serializable{
 
-    private static final long serialVersionUID = 4884996489308992856L;
+    private static final long serialVersionUID = -5558595000037767925L;
     /**
      * 唯一标识性id
      */
@@ -23,12 +23,15 @@ public class CarDataImportRecord implements Serializable{
      */
     private Integer idRecord;
 
+    private Long timeCheck;
+
     public CarDataImportRecord() {
     }
 
-    public CarDataImportRecord(Long id, Integer idRecord) {
+    public CarDataImportRecord(Long id, Integer idRecord, Long timeCheck) {
         this.id = id;
         this.idRecord = idRecord;
+        this.timeCheck = timeCheck;
     }
 
     public Long getId() {
@@ -47,6 +50,14 @@ public class CarDataImportRecord implements Serializable{
         this.idRecord = idRecord;
     }
 
+    public Long getTimeCheck() {
+        return timeCheck;
+    }
+
+    public void setTimeCheck(Long timeCheck) {
+        this.timeCheck = timeCheck;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -55,13 +66,15 @@ public class CarDataImportRecord implements Serializable{
         CarDataImportRecord that = (CarDataImportRecord) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        return idRecord != null ? idRecord.equals(that.idRecord) : that.idRecord == null;
+        if (idRecord != null ? !idRecord.equals(that.idRecord) : that.idRecord != null) return false;
+        return timeCheck != null ? timeCheck.equals(that.timeCheck) : that.timeCheck == null;
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (idRecord != null ? idRecord.hashCode() : 0);
+        result = 31 * result + (timeCheck != null ? timeCheck.hashCode() : 0);
         return result;
     }
 
@@ -70,6 +83,7 @@ public class CarDataImportRecord implements Serializable{
         return "CarDataImportRecord{" +
                 "id=" + id +
                 ", idRecord=" + idRecord +
+                ", timeCheck=" + timeCheck +
                 '}';
     }
 }

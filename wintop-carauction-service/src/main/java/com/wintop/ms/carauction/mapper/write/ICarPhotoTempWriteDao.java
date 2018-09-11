@@ -12,5 +12,5 @@ import java.util.List;
  **/
 public interface ICarPhotoTempWriteDao {
     Integer insertCarPhotoTemp(List<CarPhotoTemp> list);
-    Integer clearCarPhotoTemp();
+    Integer deleteCarPhotoTempById(Integer id);
 }

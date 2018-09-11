@@ -22,7 +22,7 @@ public class CarPhotoTempModel {
     public Integer insertCarPhotoTemp(List<CarPhotoTemp> list){
         return writeDao.insertCarPhotoTemp(list);
     };
-    public Integer clearCarPhotoTemp(){
-        return writeDao.clearCarPhotoTemp();
+    public Integer deleteCarPhotoTempById(Integer id){
+        return writeDao.deleteCarPhotoTempById(id);
     };
 }
