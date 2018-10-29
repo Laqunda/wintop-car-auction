@@ -235,12 +235,14 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
                 //设置会员状态为未实名认证
                 user.setStatus("1");
                 user.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+//                拍牌号置空
+                user.setAuctionPlateNum(null);
                 Map<String,Object> map=new HashMap<>();
                 map.put("userId",userId);
                 map.put("status",'2');
                 //查询会员的可用保证金
                 CarCustomerDeposit deposit=depositModel.selectDepositByUserId(map);
-                if(deposit!=null &&  appUserModel.updateUserStatus(user)>0){
+                if(deposit!=null &&  appUserModel.updateUser(user)>0){
                     //将会员的认证状态更改 1==不可用
                     CarCustomerAuth auth=authModel.getAuthInfoByUserId(userId);
                     auth.setIsAvailable("1");

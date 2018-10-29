@@ -87,7 +87,7 @@ public class AppUserApi {
     @PostMapping(value = "/userSignOut",produces="application/json; charset=UTF-8")
     @AuthUserToken
     public ResultModel userSignOut(@CurrentUserId Long managerId,@RequestBody Map<String,Object> map) {
-        if(map.get("userId")==null || map.get("msg")==null){
+        if(map.get("userId")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
         map.put("managerId",managerId);
