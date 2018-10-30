@@ -243,16 +243,20 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
                 //查询会员的可用保证金
                 CarCustomerDeposit deposit=depositModel.selectDepositByUserId(map);
                 if(appUserModel.updateUserInfo(user)>0){
+
                     //将会员的认证状态更改 1==不可用
                     CarCustomerAuth auth=authModel.getAuthInfoByUserId(userId);
-                    auth.setIsAvailable("1");
-                    authModel.updateByPrimaryKeySelective(auth);
+                    if (auth!=null){
+                        auth.setIsAvailable("1");
+                        authModel.updateByPrimaryKeySelective(auth);
+                    }
 
                     //将会员的签约状态更改为删除 1==已删除
                     CarCustomerSign sign=signModel.querySignByUserId(userId);
-                    sign.setIsDelete("1");
-                    signModel.updateByPrimaryKeySelective(sign);
-
+                    if (sign!=null){
+                        sign.setIsDelete("1");
+                        signModel.updateByPrimaryKeySelective(sign);
+                    }
                     tokenManager.deleteCusAppUserToken(user.getId()+"");
                     appUserManager.cleanAppUser(user.getId()+"");
 
