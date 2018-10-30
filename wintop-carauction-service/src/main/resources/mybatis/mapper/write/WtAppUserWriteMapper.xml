@@ -76,6 +76,14 @@
         SET status=#{status}, update_time=#{updateTime}
         WHERE id=#{id}
     </update>
+
+    <!-- 修改用户信息 zhangzijuan-->
+    <update id="updateUserInfo" parameterType="com.wintop.ms.carauction.entity.WtAppUser">
+        UPDATE wt_app_user
+        SET status=#{status}, update_time=#{updateTime}, auction_plate_num=#{auctionPlateNum}
+        WHERE id=#{id}
+    </update>
+
     <!--批量修改用户级别 zhangzijuan-->
     <update id="batchUpdateUserLevel" parameterType="java.util.Map">
         UPDATE wt_app_user

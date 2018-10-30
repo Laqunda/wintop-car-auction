@@ -242,7 +242,7 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
                 map.put("status",'2');
                 //查询会员的可用保证金
                 CarCustomerDeposit deposit=depositModel.selectDepositByUserId(map);
-                if(appUserModel.updateUser(user)>0){
+                if(appUserModel.updateUserInfo(user)>0){
                     //将会员的认证状态更改 1==不可用
                     CarCustomerAuth auth=authModel.getAuthInfoByUserId(userId);
                     auth.setIsAvailable("1");

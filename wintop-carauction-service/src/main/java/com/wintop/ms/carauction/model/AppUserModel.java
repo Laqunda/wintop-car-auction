@@ -170,4 +170,8 @@ public class AppUserModel {
     public WtAppUser selectUserByMobile(Map<String,Object> map){
         return readDao.selectUserByMobile(map);
     }
+
+    public Integer updateUserInfo(WtAppUser appUser){
+        return  writeDao.updateUserInfo(appUser);
+    }
 }
