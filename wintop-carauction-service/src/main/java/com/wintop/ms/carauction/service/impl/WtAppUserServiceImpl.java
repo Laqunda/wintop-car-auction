@@ -242,7 +242,7 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
                 map.put("status",'2');
                 //查询会员的可用保证金
                 CarCustomerDeposit deposit=depositModel.selectDepositByUserId(map);
-                if(deposit!=null &&  appUserModel.updateUser(user)>0){
+                if(appUserModel.updateUser(user)>0){
                     //将会员的认证状态更改 1==不可用
                     CarCustomerAuth auth=authModel.getAuthInfoByUserId(userId);
                     auth.setIsAvailable("1");
@@ -255,37 +255,6 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
 
                     tokenManager.deleteCusAppUserToken(user.getId()+"");
                     appUserManager.cleanAppUser(user.getId()+"");
-                    //将保证金金额设置为0
-                    deposit.setDepositAmount(new BigDecimal(0));
-                    //将保证金状态设置为 1：不可用
-                    deposit.setUseStatus("1");
-                    deposit.setUserId(userId);
-                    depositModel.updateByPrimaryKeySelective(deposit);
-
-                    //保存资金流水日志
-                    CarFinancePayLog financePayLog=new CarFinancePayLog();
-                    financePayLog.setId(idWorker.nextId());
-                    financePayLog.setLogNo(RandCodeUtil.getOrderNumber());
-//                支付类型 1保证金
-                    financePayLog.setType("1");
-                    financePayLog.setPayFee(deposit.getDepositAmount());
-                    financePayLog.setPayTime(new Date());
-                    financePayLog.setOrderId(deposit.getId());
-                    financePayLog.setOrderNo(deposit.getDepositNo());
-                    financePayLog.setUserId(userId);
-//                支付状态 3退款
-                    financePayLog.setStatus("3");
-//                支付途径 2线下
-                    financePayLog.setPayType("2");
-                    financePayLog.setPayEvidence(object.getString("file"));
-                    financePayLog.setRemark(object.getString("msg"));
-                    financePayLog.setCreatePerson(managerId);
-                    financePayLog.setCreatePersonType("2");
-                    financePayLog.setCreateTime(new Date());
-//                支付方式 5其他
-                    financePayLog.setPayWay("5");
-                    payLogModel.insert(financePayLog);
-
 
                     //保存客户操作日志
                     CarCustomerLog log=new CarCustomerLog();
@@ -296,8 +265,42 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
                     log.setMsg(object.getString("msg"));
                     log.setEditType("2");
                     log.setEditTime(new Date());
-                    log.setLogId(financePayLog.getId());
+
                     log.setEditUserId(managerId);
+                    if (deposit!=null){
+                        //将保证金金额设置为0
+                        deposit.setDepositAmount(new BigDecimal(0));
+                        //将保证金状态设置为 1：不可用
+                        deposit.setUseStatus("1");
+                        deposit.setUserId(userId);
+                        depositModel.updateByPrimaryKeySelective(deposit);
+
+                        //保存资金流水日志
+                        CarFinancePayLog financePayLog=new CarFinancePayLog();
+                        financePayLog.setId(idWorker.nextId());
+                        financePayLog.setLogNo(RandCodeUtil.getOrderNumber());
+//                支付类型 1保证金
+                        financePayLog.setType("1");
+                        financePayLog.setPayFee(deposit.getDepositAmount());
+                        financePayLog.setPayTime(new Date());
+                        financePayLog.setOrderId(deposit.getId());
+                        financePayLog.setOrderNo(deposit.getDepositNo());
+                        financePayLog.setUserId(userId);
+//                支付状态 3退款
+                        financePayLog.setStatus("3");
+//                支付途径 2线下
+                        financePayLog.setPayType("2");
+                        financePayLog.setPayEvidence(object.getString("file"));
+                        financePayLog.setRemark(object.getString("msg"));
+                        financePayLog.setCreatePerson(managerId);
+                        financePayLog.setCreatePersonType("2");
+                        financePayLog.setCreateTime(new Date());
+//                支付方式 5其他
+                        financePayLog.setPayWay("5");
+                        payLogModel.insert(financePayLog);
+
+                        log.setLogId(financePayLog.getId());
+                    }
                     i=logModel.insertSelective(log);
 
 
