@@ -150,5 +150,14 @@ public class CarLocaleAuctionCarModel {
      */
     public Integer insertCarLocaleAuctionCarList(List<CarLocaleAuctionCar> list){
         return writeDao.insertCarLocaleAuctionCarList(list);
-    };
+    }
+
+    /***
+     * 修改某场次内的指定顺序号的车 顺延序号
+     * @param map
+     * @return
+     */
+    public Integer updateSortAuctionCar(Map map){
+        return writeDao.updateSortAuctionCar(map);
+    }
 }

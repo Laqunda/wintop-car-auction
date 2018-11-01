@@ -100,4 +100,12 @@
     )
     </foreach>
   </insert>
+
+  <!-- 修改某场次内的指定顺序号的车 顺延序号 -->
+  <update id="updateSortAuctionCar" parameterType="java.util.Map" >
+    update car_locale_auction_car
+    set sort = sort+1
+    where auction_id = #{auctionId} AND sort > #{sort}
+  </update>
+
 </mapper>

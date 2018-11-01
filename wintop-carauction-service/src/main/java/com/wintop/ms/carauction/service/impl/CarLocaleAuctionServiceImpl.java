@@ -300,15 +300,19 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
             map.put("auctionId",carLocaleAuction.getId());
 
             Integer carNum =carAuctionCarModel.selectCarNumByAuction(map);
+            //查询已结束拍卖的车辆
+            map.put("auctionStatusArr","'2','3','4'");
+            Integer finishCarNum =carAuctionCarModel.selectCarNumByAuction(map);
+            map.put("auctionStatusArr",null);
             map.put("auctionStatus","2");
             Integer successNum =carAuctionCarModel.selectCarNumByAuction(map);
             entityMap.put("auctionId",carLocaleAuction.getId());
             entityMap.put("carNum",carNum);
             entityMap.put("successNum",successNum);
             BigDecimal successScale =new BigDecimal(0);
-            BigDecimal carNumB=new BigDecimal(carNum);
+            BigDecimal carNumB=new BigDecimal(finishCarNum);
             BigDecimal successNumB=new BigDecimal(successNum);
-            if(carNum!=null&&carNum!=0&&successNum!=null&&successNum!=0){
+            if(finishCarNum!=null&&finishCarNum!=0&&successNum!=null&&successNum!=0){
                 successScale = successNumB.multiply(new BigDecimal(100)).divide(carNumB,2,BigDecimal.ROUND_HALF_UP);
             }
             entityMap.put("successScale",successScale);
