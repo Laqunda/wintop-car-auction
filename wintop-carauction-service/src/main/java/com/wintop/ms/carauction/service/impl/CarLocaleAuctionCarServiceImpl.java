@@ -506,9 +506,9 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
             //将二拍车辆放到后面第二位后，需要将剩余其他车辆循序号顺延
             Map map = new HashMap();
             map.put("auctionId",carLocaleAuctionCar.getAuctionId());
-            map.put("sort",carLocaleAuctionCar.getSort()+1);
+            map.put("sort",carLocaleAuctionCar.getSort()+2);
             model.updateSortAuctionCar(map);
-            insertAuctionCar.setSort(carLocaleAuctionCar.getSort()+2);
+            insertAuctionCar.setSort(carLocaleAuctionCar.getSort()+3);
         }else {
             //如果当前二拍车辆就是最后一辆车则直接新增一条竞拍，序号+1
             insertAuctionCar.setSort(carLocaleAuctionCar.getSort()+1);
