@@ -928,7 +928,7 @@ public class CarLocaleAuctionApi {
         if(obj.getLong("auctionCarId")==null||obj.getLong("auctionCarId")==0){
             return new ServiceResult<>(false,"竞拍场次车辆Id为空！","101");
         }
-//        paramMap.put("auctionCarId",obj.getLong("auctionCarId"));
+        paramMap.put("auctionCarId",obj.getLong("auctionCarId"));
         if(obj.getLong("carId")==null||obj.getLong("carId")==0){
             return new ServiceResult<>(false,"车辆Id为空！","101");
         }
