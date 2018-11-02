@@ -505,20 +505,19 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
         if (minSort==0){
             minSort=maxSort;
         }
-        //设置该2拍车辆拍到即将拍卖的车辆后面，并且其他生于未拍的序号统一+1
-        if (maxSort>carLocaleAuctionCar.getSort()&&(carLocaleAuctionCar.getSort()+1)>maxSort){
+        if (maxSort==carLocaleAuctionCar.getSort()) {
+            //如果当前二拍车辆就是最后一辆车则直接新增一条竞拍，序号+1
+            insertAuctionCar.setSort(carLocaleAuctionCar.getSort() + 1);
+        }else if (maxSort>carLocaleAuctionCar.getSort()&&(carLocaleAuctionCar.getSort()+1)==maxSort) {
+            //当后面仅剩一个车时，直接将当前车辆拍到后面即可
+            insertAuctionCar.setSort(carLocaleAuctionCar.getSort()+2);
+        }else {
             //将二拍车辆放到后面第三位后，需要将剩余其他车辆循序号顺延
             Map map = new HashMap();
             map.put("auctionId",carLocaleAuctionCar.getAuctionId());
             map.put("sort",minSort+1);
             model.updateSortAuctionCar(map);
             insertAuctionCar.setSort(minSort+2);
-        }else if (maxSort>carLocaleAuctionCar.getSort()&&(carLocaleAuctionCar.getSort()+1)==maxSort) {
-            //当后面仅剩一个车时，直接将当前车辆拍到后面即可
-            insertAuctionCar.setSort(carLocaleAuctionCar.getSort()+2);
-        }else {
-            //如果当前二拍车辆就是最后一辆车则直接新增一条竞拍，序号+1
-            insertAuctionCar.setSort(carLocaleAuctionCar.getSort() + 1);
         }
 
         insertAuctionCar.setCreateTime(new Date());
