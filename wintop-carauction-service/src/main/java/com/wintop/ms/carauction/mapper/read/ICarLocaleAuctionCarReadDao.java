@@ -46,6 +46,12 @@ public interface ICarLocaleAuctionCarReadDao {
      * */
     Integer getMaxSortForActionCar(Long auctionId);
 
+    /**
+     * 查询最近的正在拍卖的车辆序号
+     * @param auctionId
+     * @return
+     */
+    Integer getMinSortForActionCar(Long auctionId);
 
     CarLocaleAuctionCar getCarLocaleAuctionCar(Long auctionCarId);
 

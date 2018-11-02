@@ -101,6 +101,15 @@ public class CarLocaleAuctionCarModel {
     }
 
     /**
+     * 查询场次内最近正在竞拍的车辆序号
+     * @param auctionId
+     * @return
+     */
+    public Integer getMinSortForActionCar(Long auctionId){
+        return readDao.getMinSortForActionCar(auctionId);
+    }
+
+    /**
      * @Autor 付陈林
      * @Date 2018-3-24
      * @About 根据车辆关联ID，查询车辆的基本信息
