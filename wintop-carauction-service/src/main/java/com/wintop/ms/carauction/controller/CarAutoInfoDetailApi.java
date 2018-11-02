@@ -10,6 +10,7 @@ import com.wintop.ms.carauction.service.ICarAutoInfoDetailService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +112,11 @@ public class CarAutoInfoDetailApi {
         detail.setIntakeMethodCn(object.getString("intakeMethodCn"));
         detail.setUpdateTime(new Date());
         detail.setUpdateUser(object.getString("updateUser"));
-        detail.setAutoInfoName(object.getString("autoInfoName"));
+        if (StringUtils.isBlank(object.getString("autoInfoName"))){
+            detail.setAutoInfoName(detail.getAutoStyleCn());
+        }else {
+            detail.setAutoInfoName(object.getString("autoInfoName"));
+        }
         return carAutoInfoDetailService.updateByPrimaryKeySelective(detail);
     }
 
