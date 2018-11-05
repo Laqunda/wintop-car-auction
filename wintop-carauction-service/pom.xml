@@ -24,21 +24,21 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot</artifactId>
         </dependency>
-       <!-- &lt;!&ndash; 开启eureka客户端注册依赖 &ndash;&gt;
+        <!-- 开启eureka客户端注册依赖 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>
         </dependency>
-        &lt;!&ndash; 开启eureka健康检查依赖 &ndash;&gt;
+        <!-- 开启eureka健康检查依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        &lt;!&ndash; 开启eureka客户端随机调用服务依赖 &ndash;&gt;
+        <!-- 开启eureka客户端随机调用服务依赖 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-ribbon</artifactId>
-        </dependency>-->
+        </dependency>
         <!-- 访问数据库模块 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -149,10 +149,10 @@
             <artifactId>wintop-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <!-- <dependency>
+         <dependency>
              <groupId>org.springframework.cloud</groupId>
              <artifactId>spring-cloud-starter-config</artifactId>
-         </dependency>-->
+         </dependency>
        <!-- <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-stream-kafka</artifactId>

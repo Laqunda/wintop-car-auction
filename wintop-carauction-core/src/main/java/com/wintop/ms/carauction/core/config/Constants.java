@@ -156,8 +156,8 @@ public class Constants {
      * 保证金支付宝支付通知接口
      */
 //    public static final String ALIPAY_NOTIFY_URL = "http://111.202.186.103:8080/mobile/aliPay/payNotifyDeposit";
-    public static final String ALIPAY_NOTIFY_URL = "http://test.yuntongauto.com/mobile/aliPay/payNotifyDeposit";
-//    public static final String ALIPAY_NOTIFY_URL = "http://2sc.wintop2sc.com/mobile/aliPay/payNotifyDeposit";
+//    public static final String ALIPAY_NOTIFY_URL = "http://test.yuntongauto.com/mobile/aliPay/payNotifyDeposit";
+    public static final String ALIPAY_NOTIFY_URL = "http://2sc.wintop2sc.com/mobile/aliPay/payNotifyDeposit";
 
     /**图片上传*/
 //    public static final String UPLOADFILE_URL = COMMON_MODULE_ROOT+"/file/uploadFile";
