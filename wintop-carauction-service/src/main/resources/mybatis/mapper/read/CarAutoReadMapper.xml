@@ -572,7 +572,7 @@
     LEFT JOIN car_relate_status cas on (cas.status=a.status AND cas.type='2')
     LEFT JOIN car_manager_user mu on mu.id=a.create_user
     LEFT JOIN car_order  co on co.auto_auction_id=a.auto_auction_id
-    LEFT JOIN wt_app_user ar on ar.id=co.customer_id
+    LEFT JOIN wt_app_user ar on ar.id=aa.top_pricer_id
     WHERE a.status != '0' AND ((a.status='1' AND a.create_user=#{managerId}) OR a.status>'1')
     <if test="storeId!=null and storeId!=''">
       AND a.store_id=#{storeId}
