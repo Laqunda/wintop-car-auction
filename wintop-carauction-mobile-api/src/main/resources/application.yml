@@ -1,26 +1,27 @@
-spring:
-  application.name: wintop-carauction-mobile-api
-  # remove::start[]
-  cloud.stream.bindings.input.destination: verifications
-  # remove::end[]
-  redis:
-    host: 192.168.22.143
-    password: wintop-yth
-    port: 6379
-    pool:
-      max-active: 1000 #--最大活动链接---#
-      max-idle: 50      #------最大允许空闲-----#
-      max-wait: 100     #--------最大等待时间-----------#
-
-server:
-  connection-timeout: 5000
-  tomcat:
-    max-threads: 600  #--最大线程数---#
-    min-spare-threads: 20 #---允许空先线程数----#
-  port: ${PORT:8080}
-  context-path: /mobile
-
-
-logging:
-  level:
-    org.springframework.cloud: debug
+#spring:
+#  application.name: wintop-carauction-mobile-api
+#  # remove::start[]
+#  cloud.stream.bindings.input.destination: verifications
+#  # remove::end[]
+#  redis:
+#    host: 192.168.22.143
+#    password: wintop-yth
+#    port: 6379
+#    pool:
+#      max-active: 1000 #--最大活动链接---#
+#      max-idle: 50      #------最大允许空闲-----#
+#      max-wait: 100     #--------最大等待时间-----------#
+#
+#server:
+#  connection-timeout: 5000
+#  tomcat:
+#    max-threads: 600  #--最大线程数---#
+#    min-spare-threads: 20 #---允许空先线程数----#
+#  port: ${PORT:8080}
+#  context-path: /mobile
+#
+#
+#logging:
+#  level:
+#    org.springframework.cloud: debug
+eureka.client.healthcheck.enabled: true

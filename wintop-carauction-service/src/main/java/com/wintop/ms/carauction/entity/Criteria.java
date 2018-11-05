@@ -4,21 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 公用条件查询类
  */
 public class Criteria {
     /**
-     * 存放条件查询值
      */
     private Map<String, Object> condition;
 
     /**
-     * 是否相异
      */
     protected boolean distinct;
 
     /**
-     * 排序字段
      */
     protected String orderByClause;
 
@@ -48,9 +44,6 @@ public class Criteria {
 
     /**
      * @param condition 
-	 *            查询的条件名称
-	 * @param value
-	 *            查询的值
      */
     public Criteria put(String condition, Object value) {
         this.condition.put(condition, value);
@@ -59,7 +52,6 @@ public class Criteria {
 
     /**
      * @param orderByClause 
-	 *            排序字段
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -67,7 +59,6 @@ public class Criteria {
 
     /**
      * @param distinct 
-	 *            是否相异
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -83,8 +74,6 @@ public class Criteria {
 
     /**
      * @param mysqlOffset 
-	 *            指定返回记录行的偏移量<br>
-	 *            mysqlOffset= 5,mysqlLength=10;  // 检索记录行 6-15
      */
     public void setMysqlOffset(Integer mysqlOffset) {
         this.mysqlOffset = mysqlOffset;
@@ -92,8 +81,6 @@ public class Criteria {
 
     /**
      * @param mysqlLength 
-	 *            指定返回记录行的最大数目<br>
-	 *            mysqlOffset= 5,mysqlLength=10;  // 检索记录行 6-15
      */
     public void setMysqlLength(Integer mysqlLength) {
         this.mysqlLength = mysqlLength;

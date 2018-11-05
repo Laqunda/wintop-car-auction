@@ -1,0 +1,62 @@
+version: '2'
+
+services:
+  carauction-service:
+    image: '47.104.153.232:5000/car-auction/carauction-service:0.0.1-SNAPSHOT'
+    container_name: carauction-service
+    privileged: true
+    environment:
+      JAVA_OPTS:  '-Xms128m  -Xmx512m -server'
+      SPRING_OPTS:  '--spring.profiles.active=uat'
+    ports:
+      - '9500:9500'
+    volumes:
+      - '/home/data/msappslogs:/home/msapps/work'
+  carauction-boss-api:
+    image: '47.104.153.232:5000/car-auction/carauction-boss-api:0.0.1-SNAPSHOT'
+    container_name: carauction-boss-api
+    container_id:
+    privileged: true
+    ehost:
+    environment:
+      JAVA_OPTS:  '-Xms128m  -Xmx512m -server'
+      SPRING_OPTS:  '--spring.profiles.active=uat'
+    ports:
+      - '9500:9500'
+    volumes:
+      - '/home/data/msappslogs:/home/msapps/work'
+  carauction-mobile-api:
+      image: '47.104.153.232:5000/car-auction/carauction-mobile-api:0.0.1-SNAPSHOT'
+      container_name: carauction-mobile-api
+      privileged: true
+      environment:
+        JAVA_OPTS:  '-Xms128m  -Xmx512m -server'
+        SPRING_OPTS:  '--spring.profiles.active=uat'
+      ports:
+        - '9501:9501'
+      volumes:
+        - '/home/data/msappslogs:/home/msapps/work'
+  carauction-store-api:
+      image: '47.104.153.232:5000/car-auction/carauction-store-api:0.0.1-SNAPSHOT'
+      container_name: carauction-store-api
+      privileged: true
+      environment:
+        JAVA_OPTS:  '-Xms128m  -Xmx512m -server'
+        SPRING_OPTS:  '--spring.profiles.active=uat'
+      ports:
+        - '9505:9505'
+      volumes:
+        - '/home/data/msappslogs:/home/msapps/work'
+
+#volumes:
+#  advice_data:
+#    driver: local
+#  advice:
+#    driver: local
+
+#1、首先检查linux有没有安装python-pip包，终端执行 pip -V
+#2、没有python-pip包就执行命令 yum -y install epel-release
+#3、执行成功之后，再次执行yum -y install python-pip
+#4、对安装好的pip进行升级 pip install --upgrade pip
+#pip install docker-compose
+#启动命令 docker-compose up -d

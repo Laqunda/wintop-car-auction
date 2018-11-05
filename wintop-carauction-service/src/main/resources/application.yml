@@ -1,70 +1,71 @@
-server:
-  port: 8185
-  connection-timeout: 5000
-  tomcat:
-    max-threads: 600  #--最大线程数---#
-    min-spare-threads: 20 #---允许空先线程数----#
-
-
-spring:
-  redis:
-    host: 192.168.22.143
-    password: wintop-yth
-    port: 6379
-    pool:
-      max-active: 1000 #--最大活动链接---#
-      max-idle: 50      #------最大允许空闲-----#
-      max-wait: 100     #--------最大等待时间-----------#
-  application:
-    name: wintop-carauction-service  #全部小写
-  datasource:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://192.168.22.143:3306/ningmengcar?characterEncoding=utf8&useSSL=false&allowMultiQueries=true
-      username: root
-      password: wintop@2016
-          # 使用druid数据源
-      type: com.alibaba.druid.pool.DruidDataSource
-#####################################################################################################
-# mysql 属性配置
+#server:
+#  port: 8185
+#  connection-timeout: 5000
+#  tomcat:
+#    max-threads: 600  #--最大线程数---#
+#    min-spare-threads: 20 #---允许空先线程数----#
+#
+#
+#spring:
+#  redis:
+#    host: 192.168.22.143
+#    password: wintop-yth
+#    port: 6379
+#    pool:
+#      max-active: 1000 #--最大活动链接---#
+#      max-idle: 50      #------最大允许空闲-----#
+#      max-wait: 100     #--------最大等待时间-----------#
+#  application:
+#    name: wintop-carauction-service  #全部小写
 #  datasource:
-#    driver-class-name: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://172.16.108.17:3306/wintop
-#    username: root
-#    password: wintop@2016
-#  jpa:
-#    show-sql: true
-#####################################################################################################
-
-
-
-
-
-#####################################################################################################
-# mybatis mapper xml 配置
-mybatis:
-  # mybatis.type-aliases-package：指定domain类的基包，即指定其在*Mapper.xml文件中可以使用简名来代替全类名（看后边的UserMapper.xml介绍）
-  type-aliases-package: com.wintop.ms.carauction.mapper,com.wintop.ms.carauction.model
-  mapper-locations: classpath:mybatis/mapper/*.xml,classpath:mybatis/mapper/*/*.xml
-  config-location: classpath:mybatis/mybatis-config.xml
-#####################################################################################################
-
-
-
-#####################################################################################################
-# 打印日志
-logging:
-  level:
-    root: INFO
-    org.mybatis: INFO
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.hibernate.type.descriptor.sql.BasicExtractor: TRACE
-    com.springms: DEBUG
-    org.springframework.cloud: debug
-#####################################################################################################
-
-
-
-
-
-
-
+#      driver-class-name: com.mysql.jdbc.Driver
+#      url: jdbc:mysql://192.168.22.143:3306/ningmengcar?characterEncoding=utf8&useSSL=false&allowMultiQueries=true
+#      username: root
+#      password: wintop@2016
+#          # 使用druid数据源
+#      type: com.alibaba.druid.pool.DruidDataSource
+######################################################################################################
+## mysql 属性配置
+##  datasource:
+##    driver-class-name: com.mysql.jdbc.Driver
+##    url: jdbc:mysql://172.16.108.17:3306/wintop
+##    username: root
+##    password: wintop@2016
+##  jpa:
+##    show-sql: true
+######################################################################################################
+#
+#
+#
+#
+#
+######################################################################################################
+## mybatis mapper xml 配置
+#mybatis:
+#  # mybatis.type-aliases-package：指定domain类的基包，即指定其在*Mapper.xml文件中可以使用简名来代替全类名（看后边的UserMapper.xml介绍）
+#  type-aliases-package: com.wintop.ms.carauction.mapper,com.wintop.ms.carauction.model
+#  mapper-locations: classpath:mybatis/mapper/*.xml,classpath:mybatis/mapper/*/*.xml
+#  config-location: classpath:mybatis/mybatis-config.xml
+######################################################################################################
+#
+#
+#
+######################################################################################################
+## 打印日志
+#logging:
+#  level:
+#    root: INFO
+#    org.mybatis: INFO
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+#    org.hibernate.type.descriptor.sql.BasicExtractor: TRACE
+#    com.springms: DEBUG
+#    org.springframework.cloud: debug
+######################################################################################################
+#
+#
+#
+#
+#
+#
+#
+eureka.client.healthcheck.enabled: true

@@ -146,11 +146,6 @@
                 <artifactId>jedis</artifactId>
                 <version>${redis-version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-commons</artifactId>
-                <version>RELEASE</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
