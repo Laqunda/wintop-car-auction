@@ -78,6 +78,9 @@
     <if test="auctionCarId != null">
       AND t1.auction_car_id=#{auctionCarId}
     </if>
+    <if test="auctionId != null">
+      AND t1.auction_id=#{auctionId}
+    </if>
   </select>
   <!--根据条件查询用户出价的车辆列表-->
   <select id="queryUserBidList" resultMap="BaseResultMap">
