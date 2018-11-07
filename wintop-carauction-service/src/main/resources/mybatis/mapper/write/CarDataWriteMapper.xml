@@ -283,40 +283,37 @@
             #{id}
         </foreach>;
     </delete>
-    <delete id="deleteCarAutoById" parameterType="java.util.List">
-        delete from car_auto where id in
-        <foreach collection="list" item="id" index="index" open="("
-                 separator="," close=")">
-            #{id}
-        </foreach>;
+    <delete id="deleteCarAutoById" parameterType="java.lang.Integer">
+        delete from car_auto
+        where
+        id <![CDATA[ >= ]]> #{idRecord}
+        and
+        id <![CDATA[ <= ]]> #{idRecord}+1000;
     </delete>
-    <delete id="deleteCarAutoAuctionById" parameterType="java.util.List">
-        delete from car_auto_auction where id in
-        <foreach collection="list" item="id" index="index" open="("
-                 separator="," close=")">
-            #{id}
-        </foreach>;
+    <delete id="deleteCarAutoAuctionById" parameterType="java.lang.Integer">
+        delete from car_auto_auction
+        where
+        id <![CDATA[ >= ]]> #{idRecord}
+        and
+        id <![CDATA[ <= ]]> #{idRecord}+1000;
     </delete>
-    <delete id="deleteCarAutoInfoDetailById" parameterType="java.util.List">
-        delete from car_auto_info_detail where id in
-        <foreach collection="list" item="id" index="index" open="("
-                 separator="," close=")">
-            #{id}
-        </foreach>;
+    <delete id="deleteCarAutoInfoDetailById" parameterType="java.lang.Integer">
+        delete from car_auto_info_detail where
+        id <![CDATA[ >= ]]> #{idRecord}
+        and
+        id <![CDATA[ <= ]]> #{idRecord}+1000;
     </delete>
-    <delete id="deleteCarAutoProceduresById" parameterType="java.util.List">
-        delete from car_auto_procedures where id in
-        <foreach collection="list" item="id" index="index" open="("
-                 separator="," close=")">
-            #{id}
-        </foreach>;
+    <delete id="deleteCarAutoProceduresById" parameterType="java.lang.Integer">
+        delete from car_auto_procedures where
+        id <![CDATA[ >= ]]> #{idRecord}
+        and
+        id <![CDATA[ <= ]]> #{idRecord}+1000;
     </delete>
-    <delete id="deleteCarAutoPhotoById" parameterType="java.util.List">
-        delete from car_auto_photo where id in
-        <foreach collection="list" item="id" index="index" open="("
-                 separator="," close=")">
-            #{id}
-        </foreach>;
+    <delete id="deleteCarAutoPhotoById" parameterType="java.lang.Integer">
+        delete from car_auto_photo where
+        id <![CDATA[ >= ]]> #{idRecord}
+        and
+        id <![CDATA[ <= ]]> #{idRecord}+1000;
     </delete>
     <delete id="deleteCarLocaleAuctionCarById" parameterType="java.util.List">
         delete from car_locale_auction_car where auction_id=#{auctionId};
