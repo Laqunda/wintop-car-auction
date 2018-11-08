@@ -83,11 +83,11 @@ public class CarDataServiceImpl implements ICarDataService{
         paramMap.put("regionId",regionId);
         if(!checkFlag){
             System.out.println("开始清空之前的拍卖车辆信息.........."+idRecord);
-            carDataModel.deleteCarAutoById(idList);
-            carDataModel.deleteCarAutoAuctionById(idList);
-            carDataModel.deleteCarAutoInfoDetailById(idList);
-            carDataModel.deleteCarAutoProceduresById(idList);
-            carDataModel.deleteCarAutoPhotoById(idList);
+            carDataModel.deleteCarAutoById(idRecord);
+            carDataModel.deleteCarAutoAuctionById(idRecord);
+            carDataModel.deleteCarAutoInfoDetailById(idRecord);
+            carDataModel.deleteCarAutoProceduresById(idRecord);
+            carDataModel.deleteCarAutoPhotoById(idRecord);
             carDataModel.deleteCarLocaleAuctionCarById(auctionId);
         }
         Integer number=0;

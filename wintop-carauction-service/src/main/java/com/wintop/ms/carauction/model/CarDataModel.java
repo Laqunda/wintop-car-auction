@@ -62,23 +62,23 @@ public class CarDataModel {
         return writeDao.deleteCarDataById(idList);
     };
 
-    public Integer deleteCarAutoById(List<Long> idList){
-        return writeDao.deleteCarAutoById(idList);
+    public Integer deleteCarAutoById(Integer idRecord){
+        return writeDao.deleteCarAutoById(idRecord);
     };
 
-    public Integer deleteCarAutoAuctionById(List<Long> idList){
-        return writeDao.deleteCarAutoAuctionById(idList);
+    public Integer deleteCarAutoAuctionById(Integer idRecord){
+        return writeDao.deleteCarAutoAuctionById(idRecord);
     };
-    public Integer deleteCarAutoInfoDetailById(List<Long> idList){
-        return writeDao.deleteCarAutoInfoDetailById(idList);
-    };
-
-    public Integer deleteCarAutoProceduresById(List<Long> idList){
-        return writeDao.deleteCarAutoProceduresById(idList);
+    public Integer deleteCarAutoInfoDetailById(Integer idRecord){
+        return writeDao.deleteCarAutoInfoDetailById(idRecord);
     };
 
-    public Integer deleteCarAutoPhotoById(List<Long> idList){
-        return writeDao.deleteCarAutoPhotoById(idList);
+    public Integer deleteCarAutoProceduresById(Integer idRecord){
+        return writeDao.deleteCarAutoProceduresById(idRecord);
+    };
+
+    public Integer deleteCarAutoPhotoById(Integer idRecord){
+        return writeDao.deleteCarAutoPhotoById(idRecord);
     };
 
     public Integer deleteCarLocaleAuctionCarById(Long auctionId){return  writeDao.deleteCarLocaleAuctionCarById(auctionId);};
