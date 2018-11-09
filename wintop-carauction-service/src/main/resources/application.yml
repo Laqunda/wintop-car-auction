@@ -19,9 +19,9 @@ spring:
     name: wintop-carauction-service  #全部小写
   datasource:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://192.168.22.143:3306/ningmengcar?characterEncoding=utf8&useSSL=false&allowMultiQueries=true
+      url: jdbc:mysql://192.168.22.67:14006/ningmengcar?characterEncoding=utf8&useSSL=false&allowMultiQueries=true
       username: root
-      password: wintop@2016
+      password: wintop123
           # 使用druid数据源
       type: com.alibaba.druid.pool.DruidDataSource
 #####################################################################################################
