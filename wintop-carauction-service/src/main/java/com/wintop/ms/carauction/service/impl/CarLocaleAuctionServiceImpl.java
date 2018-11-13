@@ -362,7 +362,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
             Map<String,Object> paramMap =new HashMap<>();
             paramMap.put("carId",carLocaleAuctionCar.getCarId());
             paramMap.put("auctionCarId",carLocaleAuctionCar.getId());
-            paramMap.put("auctionId",carLocaleAuctionCar.getAuctionId());
+//            paramMap.put("auctionId",carLocaleAuctionCar.getAutoAuctionId());
             BigDecimal lastBidPrice = carAuctionBidRecordModel.selectMaxPrice(paramMap);
             carMap.put("lastBidPrice",lastBidPrice);
             carMap.put("beginRegisterDate",carLocaleAuctionCar.getBeginRegisterDate());
