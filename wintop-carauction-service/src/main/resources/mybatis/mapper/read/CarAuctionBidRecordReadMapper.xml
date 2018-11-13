@@ -78,6 +78,9 @@
     <if test="auctionCarId != null">
       AND t1.auction_car_id=#{auctionCarId}
     </if>
+    <if test="auctionId != null">
+      AND t1.auction_id=#{auctionId}
+    </if>
   </select>
   <!--根据条件查询用户出价的车辆列表-->
   <select id="queryUserBidList" resultMap="BaseResultMap">
@@ -145,7 +148,7 @@
         </if>
         <if test="auctionCarId != null">
             AND t1.auction_car_id=#{auctionCarId}
-            AND t1.bid_time = (select MIN(bid_time) FROM car_auction_bid_record where add_fee=t1.add_fee AND auction_car_id=#{auctionCarId})
+            AND t1.bid_time = (select MAX(bid_time) FROM car_auction_bid_record where add_fee=t1.add_fee AND auction_car_id=#{auctionCarId})
         </if>
         order by t1.bid_time DESC
     </select>

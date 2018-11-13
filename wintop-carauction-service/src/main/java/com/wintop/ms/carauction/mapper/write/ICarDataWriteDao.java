@@ -37,15 +37,15 @@ public interface ICarDataWriteDao {
 
     Integer deleteCarDataById(List<Long> idList);
 
-    Integer deleteCarAutoById(List<Long> idList);
+    Integer deleteCarAutoById(Integer idRecord);
 
-    Integer deleteCarAutoAuctionById(List<Long> idList);
+    Integer deleteCarAutoAuctionById(Integer idRecord);
 
-    Integer deleteCarAutoInfoDetailById(List<Long> idList);
+    Integer deleteCarAutoInfoDetailById(Integer idRecord);
 
-    Integer deleteCarAutoProceduresById(List<Long> idList);
+    Integer deleteCarAutoProceduresById(Integer idRecord);
 
-    Integer deleteCarAutoPhotoById(List<Long> idList);
+    Integer deleteCarAutoPhotoById(Integer idRecord);
 
     Integer deleteCarLocaleAuctionCarById(Long auctionId);
 }
