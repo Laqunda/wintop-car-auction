@@ -98,7 +98,7 @@
     t2.main_photo,t2.car_auto_no,t2.auto_info_name,t2.auction_num,t2.report_colligation_ranks,t2.report_servicing_ranks,t2.auction_num,
     t3.vehicle_attribution_city_cn AS cityName,t3.vin,t3.license_number,DATE_FORMAT(t3.begin_register_date,'%Y') AS registDate,
     t3.mileage,t4.starting_price,t4.reserve_price,
-    t5.name AS user_name,t5.mobile,t4.auction_type,t6.pay_way,t7.auction_code,t8.title as auctionName,t5.user_num AS userNum
+    t5.name AS user_name,t5.mobile,t4.auction_type,t6.pay_way,t7.auction_code,t8.title as auctionName,t5.user_num AS userNum,t5.auction_plate_num AS auctionPlateNum
     FROM car_order t1
     INNER JOIN car_auto t2 ON t1.car_id=t2.id
     INNER JOIN car_auto_info_detail t3 ON t2.id=t3.auto_id
