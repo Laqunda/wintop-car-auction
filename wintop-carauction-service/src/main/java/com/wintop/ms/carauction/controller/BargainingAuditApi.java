@@ -92,6 +92,7 @@ public class BargainingAuditApi {
             produces="application/json; charset=UTF-8")
     public ServiceResult<Map<String,Object>> sureBargaining(@RequestBody JSONObject obj){
         ServiceResult<Map<String,Object>> result=new ServiceResult<>();
+        try {
         Long userId=obj.getLong("managerId");
         CarAuto auto = autoService.selectByPrimaryKey(obj.getLong("carId")).getResult();
         //**,2只能操作自己的数据
@@ -110,6 +111,12 @@ public class BargainingAuditApi {
         }else {
             result.setError(ResultCode.FAIL.strValue(),ResultCode.FAIL.getRemark());
         }
+        }catch (Exception e){
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+            e.printStackTrace();
+            logger.info("议价失败",e);
+        }
+
         return result;
     }
 }
