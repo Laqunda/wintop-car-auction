@@ -184,6 +184,8 @@ public class CarOrder implements Serializable {
     private String auctionName;
     //成交人车上号
     private String userNum;
+    //车辆初次上牌日期
+    private String beginRegisterDate;
 
     public String getCustomerName() {
         return customerName;
@@ -969,5 +971,13 @@ public class CarOrder implements Serializable {
 
     public void setUserNum(String userNum) {
         this.userNum = userNum;
+    }
+
+    public String getBeginRegisterDate() {
+        return beginRegisterDate;
+    }
+
+    public void setBeginRegisterDate(String beginRegisterDate) {
+        this.beginRegisterDate = beginRegisterDate;
     }
 }
