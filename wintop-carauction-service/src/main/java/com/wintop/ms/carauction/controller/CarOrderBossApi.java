@@ -159,6 +159,8 @@ public class CarOrderBossApi {
                 map.put("userName",carOrder.getUserName());
                 map.put("mobile",carOrder.getMobile());
                 map.put("auctionName",carOrder.getAuctionName());
+                map.put("auctionPlateNum",carOrder.getAuctionPlateNum());
+                map.put("userNum",carOrder.getUserNum());
                 list.add(map);
             }
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();

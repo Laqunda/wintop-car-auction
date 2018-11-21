@@ -244,6 +244,7 @@ public class CarOrderApi {
                 map.put("ifAgent",carOrder.getIfAgent());
                 map.put("auctionType",carOrder.getAuctionType());
                 map.put("topBidPrice",carOrder.getTopBidPrice());
+                map.put("beginRegisterDate",carOrder.getBeginRegisterDate());
                 if("2".equals(carOrder.getStatus())){
                     map.put("submitTime",carOrder.getAutoUpdateTime());
                     map.put("approveTime","");
