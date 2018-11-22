@@ -12,6 +12,9 @@ import com.wintop.ms.carauction.util.utils.RedisAutoManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
+@RequestMapping("service/carAutoSchedule")
 public class CarAutoSchedule {
     @Autowired
     private RedisAutoManager redisAutoManager;
@@ -31,8 +35,10 @@ public class CarAutoSchedule {
      * 开发环境请将@Scheduled   注释掉
      * 每1000毫秒执行一次job方法
      */
-    @Scheduled(fixedRate = 1000)
-    public void RedisAutoDataJob(){
+    @RequestMapping("/dataJob")
+    @ResponseBody
+    public int RedisAutoDataJob(){
+        //System.out.println("--------1------");
         List<RedisAutoData> dataList = redisAutoManager.getRedisAutoDataList(Constants.CAR_AUTO_AUCTION+"_*");
         long currentTime = System.currentTimeMillis();
         for(RedisAutoData autoData:dataList){
@@ -108,6 +114,7 @@ public class CarAutoSchedule {
             //System.out.println("1=="+JSONObject.toJSONString(autoData));
         }
         //System.out.println(LocalDateTime.now());
+        return 1;
     }
 
 }
