@@ -4,7 +4,7 @@ server:
   tomcat:
     max-threads: 600  #--最大线程数---#
     min-spare-threads: 20 #---允许空先线程数----#
-
+    max-connections: 3000 #---最大链接数----#
 
 spring:
   redis:
