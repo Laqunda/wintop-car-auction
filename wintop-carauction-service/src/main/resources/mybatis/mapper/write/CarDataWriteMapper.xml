@@ -118,7 +118,7 @@
         </foreach>
     </insert>
 
-    <insert id="insertCarAutoInfoDetailDataList" parameterType="java.util.List" >
+    <insert id="insertCarAutoInfoDetailDataList" parameterType="java.util.Map" >
         INSERT INTO car_auto_info_detail
         (`id`,
         `auto_id`,
@@ -177,7 +177,7 @@
             #{carDataExcel.colorCn,jdbcType=VARCHAR},
             null,#{carDataExcel.manufactureDate,jdbcType=TIMESTAMP},
             #{carDataExcel.beginRegisterDate,jdbcType=TIMESTAMP},
-            null,null,1,'北京市',
+            null,null,#{regionId},#{regionName},
             #{carDataExcel.licenseNumber,jdbcType=VARCHAR},
             null,null,null,
             #{carDataExcel.useNatureCn,jdbcType=VARCHAR},

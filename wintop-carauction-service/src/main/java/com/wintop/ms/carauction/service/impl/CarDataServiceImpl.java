@@ -34,6 +34,8 @@ public class CarDataServiceImpl implements ICarDataService{
     private CarLocaleAuctionCarModel carLocaleAuctionCarModel;
     @Resource
     private CarPhotoTempModel carPhotoTempModel;
+    @Resource
+    private WtRegionModel wtRegionModel;
     private static final Logger logger = LoggerFactory.getLogger(CarDataServiceImpl.class);
     @Transactional
     @Override
@@ -64,7 +66,14 @@ public class CarDataServiceImpl implements ICarDataService{
         List<CarLocaleAuctionCar> carLocaleAuctionCars=new ArrayList<CarLocaleAuctionCar>();
         Map<String,Object> paramMap=new HashMap<String,Object>();
         Long regionId=1L;
-        regionId=carLocaleAuctionModel.selectById(auctionId).getCityId();
+        String regionName="";
+        CarLocaleAuction carLocaleAuction=carLocaleAuctionModel.selectById(auctionId);
+        WtRegion wtRegion=new WtRegion();
+        if(carLocaleAuction!=null){
+            regionId=carLocaleAuction.getCityId();
+            wtRegion=wtRegionModel.findById(regionId);
+            regionName=wtRegion.getName();
+        }
         for (CarDataExcel carDataExcel:list){
             carDataExcel.setId(Integer.parseInt(carDataExcel.getId())+idRecord+"");
             CarLocaleAuctionCar carLocaleAuctionCar=new CarLocaleAuctionCar();
@@ -81,6 +90,7 @@ public class CarDataServiceImpl implements ICarDataService{
         }
         paramMap.put("list",list);
         paramMap.put("regionId",regionId);
+        paramMap.put("regionName",regionName);
         if(!checkFlag){
             System.out.println("开始清空之前的拍卖车辆信息.........."+idRecord);
             carDataModel.deleteCarAutoById(idRecord);
@@ -94,7 +104,7 @@ public class CarDataServiceImpl implements ICarDataService{
             carDataModel.insertCarAutoDataList(paramMap);
             carDataModel.updateCarStoreName();
             carDataModel.insertCarAutoAuctionDataList(list);
-            carDataModel.insertCarAutoInfoDetailDataList(list);
+            carDataModel.insertCarAutoInfoDetailDataList(paramMap);
             carDataModel.insertCarAutoProceduresDataList(list);
             carDataModel.updateColor(idRecord);
             carDataModel.updateUseNature(idRecord);
