@@ -149,7 +149,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-commons</artifactId>
-                <version>RELEASE</version>
+              <!--  <version>RELEASE</version>-->
             </dependency>
         </dependencies>
     </dependencyManagement>
