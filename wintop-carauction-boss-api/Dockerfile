@@ -29,4 +29,4 @@ ENV SPRING_OPTS=""
 ENV LANG C.UTF-8
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ  /etc/localtime && echo $TZ > /etc/timezone
-ENTRYPOINT java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar apps/app.jar $SPRING_OPTS
+#ENTRYPOINT java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar apps/app.jar $SPRING_OPTS
