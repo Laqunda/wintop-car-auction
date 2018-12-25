@@ -1,0 +1,46 @@
+version: '2'
+services:
+  wintop-carauction-boss-api:
+      image: dockerhub.yuntongauto.com:80/wintop-car-auction/wintop-carauction-boss-api:0.0.1-SNAPSHOT
+      container_name: ms-carmodellib
+      environment:
+        JAVA_OPTS:  '-Xms128m  -Xmx512m -server'
+        SPRING_OPTS:  '--spring.profiles.active=huawei'
+      external_links:
+        - rabbitmq-3/rabbitmq
+        - wintop-ms/register
+        - data-central/mysql
+        - data-central/redis
+  wintop-carauction-mobile-api:
+    image: dockerhub.yuntongauto.com:80/wintop-car-auction/wintop-carauction-mobile-api:0.0.1-SNAPSHOT
+    container_name: wintop-carauction-mobile-api
+    environment:
+      JAVA_OPTS:  '-Xms128m  -Xmx512m -server'
+      SPRING_OPTS:  '--spring.profiles.active=huawei'
+    external_links:
+      - rabbitmq-3/rabbitmq
+      - wintop-ms/register
+      - data-central/mysql
+      - data-central/redis
+  wintop-carauction-service:
+    image: dockerhub.yuntongauto.com:80/wintop-car-auction/wintop-carauction-service:0.0.1-SNAPSHOT
+    container_name: wintop-carauction-service
+    environment:
+      JAVA_OPTS:  '-Xms128m  -Xmx512m -server'
+      SPRING_OPTS:  '--spring.profiles.active=huawei'
+    external_links:
+      - rabbitmq-3/rabbitmq
+      - wintop-ms/register
+      - data-central/mysql
+      - data-central/redis
+  wintop-carauction-store-api:
+    image: dockerhub.yuntongauto.com:80/wintop-car-auction/wintop-carauction-store-api:0.0.1-SNAPSHOT
+    container_name: wintop-carauction-store-api
+    environment:
+      JAVA_OPTS:  '-Xms128m  -Xmx512m -server'
+      SPRING_OPTS:  '--spring.profiles.active=huawei'
+    external_links:
+      - rabbitmq-3/rabbitmq
+      - wintop-ms/register
+      - data-central/mysql
+      - data-central/redis

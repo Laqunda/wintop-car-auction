@@ -1,0 +1,7 @@
+build:
+    stage: build
+    script:
+      - mvn clean install -P docker dependency:copy-dependencies -Dmaven.test.skip=true
+      - docker rmi --force $(docker images | grep wintop-car-auction | awk '{print $3}')
+    only:
+      - hua-wei-yun

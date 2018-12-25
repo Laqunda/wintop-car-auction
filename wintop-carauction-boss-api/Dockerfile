@@ -1,20 +1,32 @@
-#
-# Dockerfile for wintop-ms-carmodellib
-#
-
-# 基于哪个镜像
-FROM jdk:8
-MAINTAINER Mike
-# 将本地文件夹挂载到当前容器
-VOLUME /tmp
-
-# 拷贝文件到容器，也可以直接写成ADD  wintop-ms-carmodellib-0.0.1-SNAPSHOT.jar /app.jar
-COPY  wintop-ms-carmodellib-0.0.1-SNAPSHOT.jar /home/ms/service.jar
-
-RUN bash -c 'touch /home/ms/service.jar'
-
-# 开放8281端口
-EXPOSE 8281
-
-# 配置容器启动后执行的命令
-CMD ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/home/ms/service.jar",">/home/ms/service.log &"]
+FROM java:openjdk-8-alpine
+MAINTAINER ligongzhaoyang@163.com
+ARG JAR_FILE
+WORKDIR /home
+ADD  ${JAR_FILE} apps/app.jar
+EXPOSE 8080
+ENV JAVA_OPTS="\
+-server \
+-Xmx512m \
+-Xms256m \
+-Xmn256m \
+-XX:SurvivorRatio=8 \
+-XX:MetaspaceSize=50m \
+-XX:MaxMetaspaceSize=100m \
+-XX:+UseParallelGC \
+-XX:ParallelGCThreads=4 \
+-XX:+UseParallelOldGC \
+-XX:+UseAdaptiveSizePolicy \
+-XX:+PrintGCDetails \
+-XX:+PrintTenuringDistribution \
+-XX:+PrintGCTimeStamps \
+-XX:+HeapDumpOnOutOfMemoryError \
+-XX:HeapDumpPath=/ \
+-Xloggc:work/gc.log \
+-XX:+UseGCLogFileRotation \
+-XX:NumberOfGCLogFiles=5 \
+-XX:GCLogFileSize=10M"
+ENV SPRING_OPTS=""
+ENV LANG C.UTF-8
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ  /etc/localtime && echo $TZ > /etc/timezone
+ENTRYPOINT java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar apps/app.jar $SPRING_OPTSS
