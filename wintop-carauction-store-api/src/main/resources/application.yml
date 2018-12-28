@@ -23,3 +23,7 @@
 #logging:
 #  level:
 #    org.springframework.cloud: debug
+eureka:
+  client:
+    healthcheck:
+          enabled: true
