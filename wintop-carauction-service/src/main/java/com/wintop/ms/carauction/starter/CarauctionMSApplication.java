@@ -22,7 +22,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @MapperScan("com.wintop.ms.carauction.mapper.**")
 @ComponentScan("com.wintop.ms.carauction")
-//@EnableCaching
+@EnableCaching
 public class CarauctionMSApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CarauctionMSApplication.class, args);
