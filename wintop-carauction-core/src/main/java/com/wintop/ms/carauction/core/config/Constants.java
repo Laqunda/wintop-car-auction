@@ -60,10 +60,10 @@ public class Constants {
      */
     public static final String HEADER_APPID = "appid";
 
-    public static final String ROOT = "http://localhost:8185" ;
+    public static final String ROOT = "http://carauctionservice" ;
 
     /**在线签约微服务地址*/
-    public static final String COMMON_MODULE_ROOT = "http://test.yuntongauto.com" ;
+    public static final String COMMON_MODULE_ROOT = "http://onlinesignatureserver" ;
 
     /**pdf模板方式合同生成甲方签字合同**/
     public static final String CREATESIGNATURE_TEMP_URL =  Constants.COMMON_MODULE_ROOT + "/signature/gosign/pdf/fill";
@@ -101,7 +101,7 @@ public class Constants {
     /**
      * 短信发送服务器地址
      */
-    public static final String SENDSMS_URL = "http://192.168.22.67:2004/message/sendMessage";
+    public static final String SENDSMS_URL = "http://sendmessageserver/message/sendMessage";
 
     /***
      * 车辆配置，两个选项
@@ -124,27 +124,27 @@ public class Constants {
 
     /**获取品牌信息
      * */
-    public static final String GET_BRANDS_URL = COMMON_MODULE_ROOT+"/carmodel/brands";
+    public static final String GET_BRANDS_URL = "http://carmodellibserver/carmodel/brands";
 
     /**获取品牌下车系
      * */
-    public static final String GET_SERIES_URL = COMMON_MODULE_ROOT+"/carmodel/series";
+    public static final String GET_SERIES_URL = "http://carmodellibserver/carmodel/series";
 
     /**获取车系下车型
      * */
-    public static final String GET_VEHICLE_URL = COMMON_MODULE_ROOT+"/carmodel/vehicle";
+    public static final String GET_VEHICLE_URL = "http://carmodellibserver/carmodel/vehicle";
 
     /***
      * 根据vin码匹配车型列表
      */
 //    public static final String VIN_GET_VEHICLELIST_URL = COMMON_MODULE_ROOT+"/carmodel/vehiclelist";
-    public static final String VIN_GET_VEHICLELIST_URL = "http://192.168.22.67:2001/carmodel/vehiclelist";
+    public static final String VIN_GET_VEHICLELIST_URL = "http://carmodellibserver/carmodel/vehiclelist";
 
     /***
      * 根据具体车型获取车辆详细配置信息
      */
 //    public static final String ID_GET_VEHICLEDETAIL_URL = COMMON_MODULE_ROOT+"/carmodel/vehicledetail";
-    public static final String ID_GET_VEHICLEDETAIL_URL = "http://192.168.22.67:2001/carmodel/vehicledetail";
+    public static final String ID_GET_VEHICLEDETAIL_URL = "http://carmodellibserver/carmodel/vehicledetail";
 
 
     /**
@@ -155,30 +155,39 @@ public class Constants {
     /***
      * 保证金支付宝支付通知接口
      */
-    public static final String ALIPAY_NOTIFY_URL = "http://111.202.186.103:8080/mobile/aliPay/payNotifyDeposit";
-//    public static final String ALIPAY_NOTIFY_URL = "http://2sc.wintop2sc.com/mobile/aliPay/payNotifyDeposit";
+//    public static final String ALIPAY_NOTIFY_URL = "http://111.202.186.103:8080/mobile/aliPay/payNotifyDeposit";
+//    public static final String ALIPAY_NOTIFY_URL = "http://test.yuntongauto.com/mobile/aliPay/payNotifyDeposit";
+    public static final String ALIPAY_NOTIFY_URL = "http://114.116.112.37/mobile/aliPay/payNotifyDeposit";
 
     /**图片上传*/
 //    public static final String UPLOADFILE_URL = COMMON_MODULE_ROOT+"/file/uploadFile";
-    public static final String UPLOADFILE_URL = "http://192.168.22.67:2003/file/uploadFile";
+    public static final String UPLOADFILE_URL = "http://fileuploadserver/file/uploadFile";
     /**图片上传*/
 //    public static final String UPLOADIMAGEFORQUALITY_URL = COMMON_MODULE_ROOT+"/file/uploadImageForQuality";
-    public static final String UPLOADIMAGEFORQUALITY_URL = "http://192.168.22.67:2003/file/uploadImageForQuality";
+    public static final String UPLOADIMAGEFORQUALITY_URL = "http://fileuploadserver/file/uploadImageForQuality";
 
+   /* **
+     * 买家端appid--*/
+
+//    public static final String CUS_APP_ID = "1234567";
 
     /***
-     * 买家端appid--
-     */
-    public static final String CUS_APP_ID = "1234567";
+     * 卖家端appid---*/
 
+//    public static final String STORE_APP_ID = "1234567_store";
     /***
-     * 卖家端appid---
-     */
-    public static final String STORE_APP_ID = "1234567_store";
+     * 买家端appid--*/
+
+    public static final String CUS_APP_ID = "0f833b21fb8ead02206e957ee4209ddf";
+
+   /* **
+     * 卖家端appid---*/
+
+    public static final String STORE_APP_ID = "24a050abd43b78569b42566737dee4c4";
     /***
      * 静态资源服务器地址
      */
-    public static final String STATIC_WEBSITE = "http://2sc.wintop2sc.com";
+    public static final String STATIC_WEBSITE = "http://114.116.112.37";
 
     /***
      * 柠檬竞价logo，用于通用图片使用
