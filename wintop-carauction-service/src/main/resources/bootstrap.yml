@@ -1,5 +1,4 @@
 server.port: 8185
-spring.profiles.active: dev
 spring:
   cloud:
     config:
