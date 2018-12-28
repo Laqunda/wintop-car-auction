@@ -9,7 +9,7 @@ spring:
       label: master
   application:
     name: carauctionmobileapi     # 对应service-config-server所获取的配置文件的{application}
-    index: ${random.long} #解决 多实例相同端口的话，就只刷新一个端口，用index区分下
+    index: ${random.long}
 
 #服务注册中心的地址
 eureka:
@@ -22,3 +22,9 @@ eureka:
     eureka-service-url-poll-interval-seconds: 5
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}
+spring:
+  rabbitmq:
+   host: rabbitmq
+   port: 5672
+   username: guest
+   password: guest
