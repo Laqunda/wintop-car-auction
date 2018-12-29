@@ -15,6 +15,13 @@ spring:
    port: 5672
    username: guest
    password: guest
+  redis:
+    host: redis
+    port: 6379
+    password: redis1998@wintop.club
+  activemq:
+    pool:
+      max-connections: 5000
 #服务注册中心的地址
 eureka:
   client:
