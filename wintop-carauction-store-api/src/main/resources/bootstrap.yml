@@ -10,7 +10,11 @@ spring:
   application:
     name: carauctionstoreapi     # 对应service-config-server所获取的配置文件的{application}
     index: ${random.long} #解决 多实例相同端口的话，就只刷新一个端口，用index区分下
-
+  rabbitmq:
+   host: rabbitmq
+   port: 5672
+   username: guest
+   password: guest
 #服务注册中心的地址
 eureka:
   client:
