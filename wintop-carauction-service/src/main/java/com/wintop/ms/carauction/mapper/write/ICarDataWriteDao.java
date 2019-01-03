@@ -21,7 +21,7 @@ public interface ICarDataWriteDao {
 
     Integer insertCarAutoAuctionDataList(List<CarDataExcel> list);
 
-    Integer insertCarAutoInfoDetailDataList(List<CarDataExcel> list);
+    Integer insertCarAutoInfoDetailDataList(Map<String,Object> paramMap);
 
     Integer insertCarAutoProceduresDataList(List<CarDataExcel> list);
 

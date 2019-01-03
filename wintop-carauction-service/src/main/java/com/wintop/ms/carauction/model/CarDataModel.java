@@ -32,8 +32,8 @@ public class CarDataModel {
         return writeDao.insertCarAutoAuctionDataList(list);
     };
 
-    public Integer insertCarAutoInfoDetailDataList(List<CarDataExcel> list){
-        return writeDao.insertCarAutoInfoDetailDataList(list);
+    public Integer insertCarAutoInfoDetailDataList(Map<String,Object> paramMap){
+        return writeDao.insertCarAutoInfoDetailDataList(paramMap);
     };
 
     public Integer insertCarAutoProceduresDataList(List<CarDataExcel> list){

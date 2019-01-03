@@ -108,7 +108,7 @@ public class ImportCarDataApi {
         String returnValue=null;
         if (cellValue!=null){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = sdf.parse(cellValue);
+            Date date = sdf.parse(cellValue.trim());
             returnValue = sdf.format(date);
         }
         return returnValue;

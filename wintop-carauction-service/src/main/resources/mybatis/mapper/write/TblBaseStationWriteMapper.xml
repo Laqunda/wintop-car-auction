@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.TblBaseStationWriteDao" >
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tbl_base_station
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.TblBaseStation" >
+    insert into tbl_base_station (id, station_real_code, station_code, token, auction_name, sys_user, 
+      phone, enable, remarks)
+    values (#{id}, #{stationRealCode}, #{stationCode}, #{token}, #{auctionName}, #{sysUser}, 
+      #{phone}, #{enable}, #{remarks})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.TblBaseStation" >
+    update tbl_base_station
+    <set >
+      <if test="stationRealCode != null" >
+        station_real_code = #{stationRealCode},
+      </if>
+      <if test="stationCode != null" >
+        station_code = #{stationCode},
+      </if>
+      <if test="token != null" >
+        token = #{token},
+      </if>
+      <if test="auctionName != null" >
+        auction_name = #{auctionName},
+      </if>
+      <if test="sysUser != null" >
+        sys_user = #{sysUser},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+</mapper>

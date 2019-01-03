@@ -25,13 +25,22 @@ public class IdWorker {
 
     private long              lastTimestamp      = -1L;
 
+    private static IdWorker idWorker = null;
+
     public IdWorker(final long workerId) {
         super();
         if (workerId > this.maxWorkerId || workerId < 0) {
             throw new IllegalArgumentException(String
-                .format("worker Id can't be greater than %d or less than 0", this.maxWorkerId));
+                    .format("worker Id can't be greater than %d or less than 0", this.maxWorkerId));
         }
         this.workerId = workerId;
+    }
+
+    public static IdWorker getInstance(){
+        if(idWorker==null){
+            idWorker = new IdWorker(10);
+        }
+        return idWorker;
     }
 
     public synchronized long nextId() {
@@ -48,8 +57,8 @@ public class IdWorker {
         if (timestamp < this.lastTimestamp) {
             try {
                 throw new Exception(String.format(
-                    "Clock moved backwards.  Refusing to generate id for %d milliseconds",
-                    this.lastTimestamp - timestamp));
+                        "Clock moved backwards.  Refusing to generate id for %d milliseconds",
+                        this.lastTimestamp - timestamp));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -57,7 +66,7 @@ public class IdWorker {
 
         this.lastTimestamp = timestamp;
         long nextId = ((timestamp - twepoch << timestampLeftShift))
-                      | (this.workerId << this.workerIdShift) | (this.sequence);
+                | (this.workerId << this.workerIdShift) | (this.sequence);
         return nextId;
     }
 

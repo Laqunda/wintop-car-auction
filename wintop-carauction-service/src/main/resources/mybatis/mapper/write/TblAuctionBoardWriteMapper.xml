@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.TblAuctionBoardWriteDao" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tbl_auction_board
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.TblAuctionBoard" >
+    insert into tbl_auction_board (id, board_real_id, board_real_name, bs_id, cutting_sign, enable, 
+      remarks, create_time)
+    values (#{id}, #{boardRealId}, #{boardRealName}, #{bsId}, #{cuttingSign}, #{enable}, 
+      #{remarks}, #{createTime})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.TblAuctionBoard" >
+    update tbl_auction_board
+    <set >
+      <if test="boardRealId != null" >
+        board_real_id = #{boardRealId},
+      </if>
+      <if test="boardRealName != null" >
+        board_real_name = #{boardRealName},
+      </if>
+      <if test="bsId != null" >
+        bs_id = #{bsId},
+      </if>
+      <if test="cuttingSign != null" >
+        cutting_sign = #{cuttingSign},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+</mapper>
