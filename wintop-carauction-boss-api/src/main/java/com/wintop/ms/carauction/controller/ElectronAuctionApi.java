@@ -12,7 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -50,5 +52,19 @@ public class ElectronAuctionApi {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
+    @RequestMapping(value = "/selectLogList",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthPublic
+    public ResultModel selectOrderList(@RequestBody Map<String,Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/electronAuction/selectLogList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 }
