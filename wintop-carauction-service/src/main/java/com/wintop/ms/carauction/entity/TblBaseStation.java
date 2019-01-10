@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class TblBaseStation implements Serializable {
 
@@ -46,6 +47,20 @@ public class TblBaseStation implements Serializable {
      * 备注
      */
     private String remarks;
+
+    private Long createPerson;
+
+    private Date createTime;
+
+    private Long modifyPerson;
+
+    private Date modifyTime;
+
+    private Long delPerson;
+
+    private Date delTime;
+    //,,"1" 未删除  “2” 已删除
+    private String delFlag;
 
     public Long getId() {
         return id;
@@ -173,5 +188,61 @@ public class TblBaseStation implements Serializable {
      */
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public Long getCreatePerson() {
+        return createPerson;
+    }
+
+    public void setCreatePerson(Long createPerson) {
+        this.createPerson = createPerson;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Long getModifyPerson() {
+        return modifyPerson;
+    }
+
+    public void setModifyPerson(Long modifyPerson) {
+        this.modifyPerson = modifyPerson;
+    }
+
+    public Date getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
+    }
+
+    public Long getDelPerson() {
+        return delPerson;
+    }
+
+    public void setDelPerson(Long delPerson) {
+        this.delPerson = delPerson;
+    }
+
+    public Date getDelTime() {
+        return delTime;
+    }
+
+    public void setDelTime(Date delTime) {
+        this.delTime = delTime;
+    }
+
+    public String getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(String delFlag) {
+        this.delFlag = delFlag;
     }
 }

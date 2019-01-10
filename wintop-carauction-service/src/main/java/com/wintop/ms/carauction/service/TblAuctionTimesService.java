@@ -39,5 +39,5 @@ public interface TblAuctionTimesService {
     /**
      * 根据条件查询对象
      */
-    TblAuctionTimes selectByParam(Map<String,Object> map);
+    TblAuctionTimes saveBidding(Map<String,Object> map);
 }

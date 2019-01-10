@@ -9,67 +9,39 @@
     <result column="cutting_sign" property="cuttingSign" jdbcType="VARCHAR" />
     <result column="enable" property="enable" jdbcType="VARCHAR" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_person" property="modifyPerson" jdbcType="BIGINT" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="del_person" property="delPerson" jdbcType="BIGINT" />
+    <result column="del_time" property="delTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, board_real_id, board_real_name, bs_id, cutting_sign, enable, remarks, create_time
+    t1.id, t1.board_real_id, t1.board_real_name, t1.bs_id, t1.cutting_sign, t1.enable, t1.remarks, t1.create_time,t1.create_person
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
     <include refid="Base_Column_List" />
-    from tbl_auction_board
-    order by id desc
+    from tbl_auction_board t1
+    where t1.del_flag='1'
+    order by t1.id desc
     <if test="startRowNum != null and endRowNum != null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
   </select>
 
   <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
-    select count(*) from tbl_auction_board
+    select count(t1.id)
+    from tbl_auction_board t1
+    where t1.del_flag='1'
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from tbl_auction_board
-    where id = #{id}
+    from tbl_auction_board t1
+    where t1.id = #{id}
   </select>
-  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.TblAuctionBoard" >
-    update tbl_auction_board
-    <set >
-      <if test="boardRealId != null" >
-        board_real_id = #{boardRealId},
-      </if>
-      <if test="boardRealName != null" >
-        board_real_name = #{boardRealName},
-      </if>
-      <if test="bsId != null" >
-        bs_id = #{bsId},
-      </if>
-      <if test="cuttingSign != null" >
-        cutting_sign = #{cuttingSign},
-      </if>
-      <if test="enable != null" >
-        enable = #{enable},
-      </if>
-      <if test="remarks != null" >
-        remarks = #{remarks},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime},
-      </if>
-    </set>
-    where id = #{id}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.TblAuctionBoard" >
-    update tbl_auction_board
-    set board_real_id = #{boardRealId},
-      board_real_name = #{boardRealName},
-      bs_id = #{bsId},
-      cutting_sign = #{cuttingSign},
-      enable = #{enable},
-      remarks = #{remarks},
-      create_time = #{createTime}
-    where id = #{id}
-  </update>
+
 </mapper>

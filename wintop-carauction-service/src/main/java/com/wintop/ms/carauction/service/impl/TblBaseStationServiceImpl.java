@@ -24,12 +24,12 @@ public class TblBaseStationServiceImpl implements TblBaseStationService {
     }
 
     @Override
-    public TblBaseStation selectByPrimaryKey(Integer id) {
+    public TblBaseStation selectByPrimaryKey(Long id) {
         return tblBaseStationModel.selectByPrimaryKey(id);
     }
 
     @Override
-    public int deleteByPrimaryKey(Integer id) {
+    public int deleteByPrimaryKey(Long id) {
         return tblBaseStationModel.deleteByPrimaryKey(id);
     }
 
@@ -41,5 +41,23 @@ public class TblBaseStationServiceImpl implements TblBaseStationService {
     @Override
     public int updateByPrimaryKeySelective(TblBaseStation tblBaseStation) {
         return tblBaseStationModel.updateByPrimaryKeySelective(tblBaseStation);
+    }
+
+    /**
+     * 根据物理ID查询记录
+     */
+    @Override
+    public TblBaseStation selectByRealCode(String realCode){
+        return tblBaseStationModel.selectByRealCode(realCode);
+    }
+
+    /**
+     * 逻辑删除基站
+     * @param tblBaseStation
+     * @return
+     */
+    @Override
+    public int updateDeleteFlag(TblBaseStation tblBaseStation){
+        return tblBaseStationModel.updateDeleteFlag(tblBaseStation);
     }
 }

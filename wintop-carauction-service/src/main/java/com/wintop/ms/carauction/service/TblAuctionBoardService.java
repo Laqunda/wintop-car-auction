@@ -19,12 +19,12 @@ public interface TblAuctionBoardService {
     /**
      * 根据主键查询记录
      */
-    TblAuctionBoard selectByPrimaryKey(Integer id);
+    TblAuctionBoard selectByPrimaryKey(Long id);
 
     /**
      * 根据主键删除记录
      */
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     /**
      * 保存记录,不管记录里面的属性是否为空

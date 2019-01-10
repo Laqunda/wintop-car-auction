@@ -56,7 +56,7 @@ public class TblAuctionTimesServiceImpl implements TblAuctionTimesService {
      */
     @Override
     @Transactional
-    public TblAuctionTimes selectByParam(Map<String,Object> map){
+    public TblAuctionTimes saveBidding(Map<String,Object> map){
         TblAuctionTimes auctionTimes = tblAuctionTimesModel.selectByParam(map);
         if(auctionTimes!=null){
             TblAuctionLog auctionLog = new TblAuctionLog();
@@ -67,13 +67,13 @@ public class TblAuctionTimesServiceImpl implements TblAuctionTimesService {
             auctionLog.setLocalAuctionId(auctionTimes.getLocalAuctionId());
             //TODO,读取当前拍卖车辆
             auctionLog.setAuctionCarId(null);
-            auctionLog.setBidFee(new BigDecimal(100));
+            auctionLog.setBidFee(auctionTimes.getInitPrice());
             auctionLog.setAuctionTimesId(auctionTimes.getId());
-            auctionLog.setAuctionTimes(auctionTimes.getAuctionTimes());
+            auctionLog.setAuctionTimesName(auctionTimes.getAuctionTimesName());
             auctionLog.setBsId(auctionTimes.getBsId());
             auctionLog.setBoardRealName(auctionTimes.getBoardRealName());
             auctionLog.setAuctionTime(new Date());
-            auctionLog.setEnable("0");
+            auctionLog.setCuttingSign(auctionTimes.getCuttingSign());
             tblAuctionLogModel.insert(auctionLog);
         }
         return auctionTimes;

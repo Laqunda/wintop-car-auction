@@ -55,7 +55,8 @@ public enum ResultCode {
 
     JZ_INVALID(501,"基站无效"),
     PP_INVALID(502,"拍牌无效"),
-    MM_INVALID(503,"密码无效");
+    MM_INVALID(503,"密码无效"),
+    DUPLICATE_ADD(504,"不可重复添加");
     private final int value;
     private final String remark;
 

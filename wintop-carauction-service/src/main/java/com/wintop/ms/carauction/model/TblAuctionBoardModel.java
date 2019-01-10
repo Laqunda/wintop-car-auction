@@ -33,14 +33,14 @@ public class TblAuctionBoardModel {
     /**
      * 根据主键查询记录
      */
-    public TblAuctionBoard selectByPrimaryKey(Integer id){
+    public TblAuctionBoard selectByPrimaryKey(Long id){
         return tblAuctionBoardReadDao.selectByPrimaryKey(id);
     }
 
     /**
      * 根据主键删除记录
      */
-    public int deleteByPrimaryKey(Integer id){
+    public int deleteByPrimaryKey(Long id){
         return tblAuctionBoardWriteDao.deleteByPrimaryKey(id);
     }
 

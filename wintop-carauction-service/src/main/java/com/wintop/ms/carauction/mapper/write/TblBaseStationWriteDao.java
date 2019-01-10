@@ -11,7 +11,7 @@ public interface TblBaseStationWriteDao {
     /**
      * 根据主键删除记录
      */
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     /**
      * 保存记录,不管记录里面的属性是否为空
@@ -22,5 +22,12 @@ public interface TblBaseStationWriteDao {
      * 根据主键更新属性不为空的记录
      */
     int updateByPrimaryKeySelective(TblBaseStation tblBaseStation);
+
+    /**
+     * 逻辑删除基站
+     * @param tblBaseStation
+     * @return
+     */
+    int updateDeleteFlag(TblBaseStation tblBaseStation);
 
 }

@@ -7,10 +7,10 @@
   </delete>
 
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
-    insert into tbl_auction_log (id, station_real_code, board_real_id, token, auction_times_id, auction_times, 
-      bs_id, board_real_name, auction_time, enable,local_auction_id,auction_car_id,bid_fee)
-    values (#{id}, #{stationRealCode}, #{boardRealId}, #{token}, #{auctionTimesId}, #{auctionTimes}, 
-      #{bsId}, #{boardRealName}, #{auctionTime}, #{enable},#{localAuctionId},#{auctionCarId},#{bidFee})
+    insert into tbl_auction_log (id, station_real_code, board_real_id, token, auction_times_id, auction_times_name,
+      bs_id, board_real_name, auction_time, local_auction_id,auction_car_id,bid_fee,cutting_sign)
+    values (#{id}, #{stationRealCode}, #{boardRealId}, #{token}, #{auctionTimesId}, #{auctionTimesName},
+      #{bsId}, #{boardRealName}, #{auctionTime}, #{localAuctionId},#{auctionCarId},#{bidFee},#{cuttingSign})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
     update tbl_auction_log

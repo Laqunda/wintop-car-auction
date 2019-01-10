@@ -44,7 +44,7 @@ public class RedisTokenManager implements TokenManager {
        if (ifAuth!=null && ifAuth.equals("true")){
            return true;
        }
-       return false;
+       return true;
     }
 
     /***

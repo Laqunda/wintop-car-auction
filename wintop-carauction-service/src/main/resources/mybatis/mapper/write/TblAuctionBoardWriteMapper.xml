@@ -7,9 +7,9 @@
   </delete>
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.TblAuctionBoard" >
     insert into tbl_auction_board (id, board_real_id, board_real_name, bs_id, cutting_sign, enable, 
-      remarks, create_time)
+      remarks, create_person,create_time,del_flag)
     values (#{id}, #{boardRealId}, #{boardRealName}, #{bsId}, #{cuttingSign}, #{enable}, 
-      #{remarks}, #{createTime})
+      #{remarks},  #{createPerson}, #{createTime}, #{delFlag})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.TblAuctionBoard" >
     update tbl_auction_board
@@ -32,8 +32,20 @@
       <if test="remarks != null" >
         remarks = #{remarks},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime},
+      <if test="modifyPerson != null" >
+        modify_person = #{modifyPerson},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="delPerson != null" >
+        del_person = #{delPerson},
+      </if>
+      <if test="delTime != null" >
+        del_time = #{delTime},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag},
       </if>
     </set>
     where id = #{id}

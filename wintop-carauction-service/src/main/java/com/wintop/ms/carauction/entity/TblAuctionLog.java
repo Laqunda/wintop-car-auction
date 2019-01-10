@@ -32,7 +32,7 @@ public class TblAuctionLog implements Serializable {
     /**
      * 拍卖场次
      */
-    private String auctionTimes;
+    private String auctionTimesName;
 
     /**
      * 基站ID(冗余字段)(基站主键)
@@ -49,16 +49,16 @@ public class TblAuctionLog implements Serializable {
      */
     private Date auctionTime;
 
-    /**
-     * 是否有效(0:有效；1:无效)
-     */
-    private String enable;
-
     private Long localAuctionId;
 
     private Long auctionCarId;
 
     private BigDecimal bidFee;
+
+    /**
+     * 是否时间切割拍牌（一个拍卖场只能有一个（0：正常拍牌；1：时间切割拍牌））
+     */
+    private String cuttingSign;
 
     public Long getId() {
         return id;
@@ -128,19 +128,12 @@ public class TblAuctionLog implements Serializable {
         this.auctionTimesId = auctionTimesId;
     }
 
-    /**
-     * @return 拍卖场次
-     */
-    public String getAuctionTimes() {
-        return auctionTimes;
+    public String getAuctionTimesName() {
+        return auctionTimesName;
     }
 
-    /**
-     * @param auctionTimes 
-	 *            拍卖场次
-     */
-    public void setAuctionTimes(String auctionTimes) {
-        this.auctionTimes = auctionTimes;
+    public void setAuctionTimesName(String auctionTimesName) {
+        this.auctionTimesName = auctionTimesName;
     }
 
     /**
@@ -188,21 +181,6 @@ public class TblAuctionLog implements Serializable {
         this.auctionTime = auctionTime;
     }
 
-    /**
-     * @return 是否有效(0:有效；1:无效)
-     */
-    public String getEnable() {
-        return enable;
-    }
-
-    /**
-     * @param enable 
-	 *            是否有效(0:有效；1:无效)
-     */
-    public void setEnable(String enable) {
-        this.enable = enable;
-    }
-
     public Long getLocalAuctionId() {
         return localAuctionId;
     }
@@ -225,5 +203,13 @@ public class TblAuctionLog implements Serializable {
 
     public void setBidFee(BigDecimal bidFee) {
         this.bidFee = bidFee;
+    }
+
+    public String getCuttingSign() {
+        return cuttingSign;
+    }
+
+    public void setCuttingSign(String cuttingSign) {
+        this.cuttingSign = cuttingSign;
     }
 }

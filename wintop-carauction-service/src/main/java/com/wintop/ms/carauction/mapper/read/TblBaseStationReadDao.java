@@ -19,10 +19,10 @@ public interface TblBaseStationReadDao {
     /**
      * 根据主键查询记录
      */
-    TblBaseStation selectByPrimaryKey(Integer id);
+    TblBaseStation selectByPrimaryKey(Long id);
 
     /**
      * 根据物理ID查询记录
      */
-    TblBaseStation selectByCode(Integer id);
+    TblBaseStation selectByRealCode(String realCode);
 }

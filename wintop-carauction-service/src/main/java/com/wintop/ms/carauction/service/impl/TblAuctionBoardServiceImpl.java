@@ -25,12 +25,12 @@ public class TblAuctionBoardServiceImpl implements TblAuctionBoardService {
     }
 
     @Override
-    public TblAuctionBoard selectByPrimaryKey(Integer id) {
+    public TblAuctionBoard selectByPrimaryKey(Long id) {
         return tblAuctionBoardModel.selectByPrimaryKey(id);
     }
 
     @Override
-    public int deleteByPrimaryKey(Integer id) {
+    public int deleteByPrimaryKey(Long id) {
         return tblAuctionBoardModel.deleteByPrimaryKey(id);
     }
 

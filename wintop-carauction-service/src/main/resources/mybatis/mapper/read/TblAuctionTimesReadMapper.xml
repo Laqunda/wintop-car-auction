@@ -6,20 +6,20 @@
     <result column="station_real_code" property="stationRealCode" jdbcType="VARCHAR" />
     <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
     <result column="local_auction_id" property="localAuctionId" jdbcType="BIGINT" />
-    <result column="auction_times" property="auctionTimes" jdbcType="VARCHAR" />
+    <result column="auction_times_name" property="auctionTimesName" jdbcType="VARCHAR" />
     <result column="start_auction_time" property="startAuctionTime" jdbcType="TIMESTAMP" />
     <result column="end_auction_time" property="endAuctionTime" jdbcType="TIMESTAMP" />
-    <result column="num" property="num" jdbcType="INTEGER" />
-    <result column="enable" property="enable" jdbcType="VARCHAR" />
+    <result column="init_price" property="initPrice" jdbcType="DECIMAL" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
     <result column="board_real_name" property="boardRealName" jdbcType="VARCHAR" />
     <result column="bs_id" property="bsId" jdbcType="BIGINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="cutting_sign" property="cuttingSign" jdbcType="VARCHAR" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    t1.id, t1.station_real_code, t1.station_code, t1.local_auction_id, t1.auction_times, t1.start_auction_time,
-    t1.end_auction_time, t1.num, t1.enable, t1.remarks
+    t1.id, t1.station_real_code, t1.station_code, t1.local_auction_id, t1.auction_times_name, t1.start_auction_time,
+    t1.end_auction_time, t1.init_price, t1.remarks,t1.bs_id,t1.create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
@@ -41,7 +41,7 @@
   </select>
   <select id="selectByParam" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
-    t1.*,t3.board_real_name
+    t1.*,t3.board_real_name,t3.cutting_sign
     from tbl_auction_times t1
     inner join tbl_base_station t2 on t1.bs_id=t2.id
     inner join tbl_auction_board t3 on t2.id=t3.bs_id

@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class TblAuctionTimes implements Serializable {
@@ -36,7 +37,7 @@ public class TblAuctionTimes implements Serializable {
     /**
      * 拍卖场次名字
      */
-    private String auctionTimes;
+    private String auctionTimesName;
 
     /**
      * 开拍时间
@@ -49,9 +50,9 @@ public class TblAuctionTimes implements Serializable {
     private Date endAuctionTime;
 
     /**
-     * 总拍卖数量
+     * 初始加价幅度
      */
-    private Integer num;
+    private BigDecimal initPrice;
 
     /**
      * 是否有效(0:有效；1:无效)
@@ -64,6 +65,8 @@ public class TblAuctionTimes implements Serializable {
     private String remarks;
 
     private Date createTime;
+
+    private String cuttingSign;
 
     public Long getId() {
         return id;
@@ -118,19 +121,12 @@ public class TblAuctionTimes implements Serializable {
         this.localAuctionId = localAuctionId;
     }
 
-    /**
-     * @return 拍卖场次名字
-     */
-    public String getAuctionTimes() {
-        return auctionTimes;
+    public String getAuctionTimesName() {
+        return auctionTimesName;
     }
 
-    /**
-     * @param auctionTimes 
-	 *            拍卖场次名字
-     */
-    public void setAuctionTimes(String auctionTimes) {
-        this.auctionTimes = auctionTimes;
+    public void setAuctionTimesName(String auctionTimesName) {
+        this.auctionTimesName = auctionTimesName;
     }
 
     /**
@@ -163,19 +159,12 @@ public class TblAuctionTimes implements Serializable {
         this.endAuctionTime = endAuctionTime;
     }
 
-    /**
-     * @return 总拍卖数量
-     */
-    public Integer getNum() {
-        return num;
+    public BigDecimal getInitPrice() {
+        return initPrice;
     }
 
-    /**
-     * @param num 
-	 *            总拍卖数量
-     */
-    public void setNum(Integer num) {
-        this.num = num;
+    public void setInitPrice(BigDecimal initPrice) {
+        this.initPrice = initPrice;
     }
 
     /**
@@ -230,5 +219,13 @@ public class TblAuctionTimes implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getCuttingSign() {
+        return cuttingSign;
+    }
+
+    public void setCuttingSign(String cuttingSign) {
+        this.cuttingSign = cuttingSign;
     }
 }

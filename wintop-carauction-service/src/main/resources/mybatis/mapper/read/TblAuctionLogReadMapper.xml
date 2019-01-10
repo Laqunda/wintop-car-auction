@@ -7,36 +7,36 @@
     <result column="board_real_id" property="boardRealId" jdbcType="VARCHAR" />
     <result column="token" property="token" jdbcType="VARCHAR" />
     <result column="auction_times_id" property="auctionTimesId" jdbcType="BIGINT" />
-    <result column="auction_times" property="auctionTimes" jdbcType="VARCHAR" />
+    <result column="auction_times_name" property="auctionTimesName" jdbcType="VARCHAR" />
     <result column="bs_id" property="bsId" jdbcType="BIGINT" />
     <result column="board_real_name" property="boardRealName" jdbcType="VARCHAR" />
     <result column="auction_time" property="auctionTime" jdbcType="TIMESTAMP" />
-    <result column="enable" property="enable" jdbcType="VARCHAR" />
     <result column="local_auction_id" property="localAuctionId" jdbcType="BIGINT" />
     <result column="auction_car_id" property="auctionCarId" jdbcType="BIGINT" />
     <result column="bid_fee" property="bidFee" jdbcType="DECIMAL" />
+    <result column="cutting_sign" property="cuttingSign" jdbcType="VARCHAR" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, station_real_code, board_real_id, auction_times_id, auction_times, bs_id,
-    board_real_name, auction_time, enable,local_auction_id,auction_car_id,bid_fee
+    t1.id, t1.station_real_code, t1.board_real_id, t1.auction_times_id, t1.auction_times_name, t1.bs_id,
+    t1.board_real_name, t1.auction_time,t1.local_auction_id,t1.auction_car_id,t1.bid_fee,t1.cutting_sign
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
     <include refid="Base_Column_List" />
-    from tbl_auction_log
-    order by id desc
+    from tbl_auction_log t1
+    order by t1.auction_time desc
     <if test="startRowNum != null and endRowNum != null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
   </select>
   <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
-    select count(*) from tbl_auction_log
+    select count(t1.id) from tbl_auction_log t1
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from tbl_auction_log
-    where id = #{id}
+    from tbl_auction_log t1
+    where t1.id = #{id}
   </select>
 </mapper>

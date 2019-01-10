@@ -41,7 +41,7 @@ public class ElectronAuctionApi {
         ServiceResult<TblAuctionTimes> result = new ServiceResult<>();
         try {
             map.put("auctionTime",new Date());
-            TblAuctionTimes auctionTimes = tblAuctionTimesService.selectByParam(map);
+            TblAuctionTimes auctionTimes = tblAuctionTimesService.saveBidding(map);
             if(auctionTimes==null){
                 result.setResult(null);
                 result.setSuccess(ResultCode.REQUEST_DISABLED.strValue(),ResultCode.REQUEST_DISABLED.getRemark());
@@ -58,7 +58,7 @@ public class ElectronAuctionApi {
     }
 
     /***
-     * 查询所有店铺
+     * 查询所有竞价记录
      * @return
      */
     @RequestMapping(value = "/selectLogList",
@@ -80,7 +80,6 @@ public class ElectronAuctionApi {
             result.setResult(listEntity);
             result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
         }catch (Exception e){
-            e.printStackTrace();
             logger.info("查询所有电子竞价接口失败",e);
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
         }

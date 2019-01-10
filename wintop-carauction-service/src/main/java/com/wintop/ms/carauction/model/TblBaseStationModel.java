@@ -33,14 +33,14 @@ public class TblBaseStationModel {
     /**
      * 根据主键查询记录
      */
-    public TblBaseStation selectByPrimaryKey(Integer id){
+    public TblBaseStation selectByPrimaryKey(Long id){
         return tblBaseStationReadDao.selectByPrimaryKey(id);
     }
 
     /**
      * 根据主键删除记录
      */
-    public int deleteByPrimaryKey(Integer id){
+    public int deleteByPrimaryKey(Long id){
         return tblBaseStationWriteDao.deleteByPrimaryKey(id);
     }
 
@@ -56,5 +56,21 @@ public class TblBaseStationModel {
      */
     public int updateByPrimaryKeySelective(TblBaseStation tblBaseStation){
         return tblBaseStationWriteDao.updateByPrimaryKeySelective(tblBaseStation);
+    }
+
+    /**
+     * 根据物理ID查询记录
+     */
+    public TblBaseStation selectByRealCode(String realCode){
+        return tblBaseStationReadDao.selectByRealCode(realCode);
+    }
+
+    /**
+     * 逻辑删除基站
+     * @param tblBaseStation
+     * @return
+     */
+    public int updateDeleteFlag(TblBaseStation tblBaseStation){
+        return tblBaseStationWriteDao.updateDeleteFlag(tblBaseStation);
     }
 }

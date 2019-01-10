@@ -20,6 +20,6 @@ public interface TblAuctionBoardReadDao {
     /**
      * 根据主键查询记录
      */
-    TblAuctionBoard selectByPrimaryKey(Integer id);
+    TblAuctionBoard selectByPrimaryKey(Long id);
 
 }
