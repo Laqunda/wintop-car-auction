@@ -23,4 +23,11 @@ public interface TblAuctionBoardWriteDao {
      */
     int updateByPrimaryKeySelective(TblAuctionBoard tblAuctionBoard);
 
+    /**
+     * 逻辑删除拍牌
+     * @param tblAuctionBoard
+     * @return
+     */
+    int updateDeleteFlag(TblAuctionBoard tblAuctionBoard);
+
 }

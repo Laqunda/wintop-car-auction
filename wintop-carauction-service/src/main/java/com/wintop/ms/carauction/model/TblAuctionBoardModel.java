@@ -57,4 +57,22 @@ public class TblAuctionBoardModel {
     public int updateByPrimaryKeySelective(TblAuctionBoard tblAuctionBoard){
         return tblAuctionBoardWriteDao.updateByPrimaryKeySelective(tblAuctionBoard);
     }
+
+    /**
+     * 逻辑删除拍牌
+     * @param tblAuctionBoard
+     * @return
+     */
+    public int updateDeleteFlag(TblAuctionBoard tblAuctionBoard){
+        return tblAuctionBoardWriteDao.updateDeleteFlag(tblAuctionBoard);
+    }
+
+    /**
+     * 根据拍牌物理ID查询
+     * @param realId
+     * @return
+     */
+    public TblAuctionBoard selectByRealId(String realId){
+        return tblAuctionBoardReadDao.selectByRealId(realId);
+    }
 }

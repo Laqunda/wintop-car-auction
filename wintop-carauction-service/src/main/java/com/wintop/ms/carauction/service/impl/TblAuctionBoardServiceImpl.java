@@ -6,6 +6,7 @@ import com.wintop.ms.carauction.service.TblAuctionBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,5 +43,42 @@ public class TblAuctionBoardServiceImpl implements TblAuctionBoardService {
     @Override
     public int updateByPrimaryKeySelective(TblAuctionBoard tblAuctionBoard) {
         return tblAuctionBoardModel.updateByPrimaryKeySelective(tblAuctionBoard);
+    }
+
+    /**
+     * 逻辑删除拍牌
+     * @param tblAuctionBoard
+     * @return
+     */
+    @Override
+    public int updateDeleteFlag(TblAuctionBoard tblAuctionBoard){
+        return tblAuctionBoardModel.updateDeleteFlag(tblAuctionBoard);
+    }
+
+    /**
+     * 根据拍牌物理ID查询
+     * @param realId
+     * @return
+     */
+    @Override
+    public TblAuctionBoard selectByRealId(String realId){
+        return tblAuctionBoardModel.selectByRealId(realId);
+    }
+
+    /**
+     * 查询同一个拍卖场是否存在调价器
+     * @param bsId
+     * @param cuttingSign
+     * @return
+     */
+    public TblAuctionBoard selectCuttingSignByBsId(Long bsId,String cuttingSign){
+        if("0".equals(cuttingSign)){
+            return null;
+        }
+        Map<String,Object> map = new HashMap<>();
+        map.put("bsId",bsId);
+        map.put("cuttingSign","1");
+        List<TblAuctionBoard> boards = tblAuctionBoardModel.selectByExample(map);
+        return boards.size()>0?boards.get(0):null;
     }
 }

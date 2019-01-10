@@ -50,5 +50,6 @@
     <include refid="Base_Column_List" />
     from tbl_base_station t1
     where t1.del_flag='1' and t1.station_real_code = #{realCode}
+    limit 1
   </select>
 </mapper>

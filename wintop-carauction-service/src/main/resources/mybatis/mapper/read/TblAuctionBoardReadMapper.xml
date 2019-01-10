@@ -26,7 +26,19 @@
     <include refid="Base_Column_List" />
     from tbl_auction_board t1
     where t1.del_flag='1'
-    order by t1.id desc
+    <if test="bsId != null">
+      and t1.bs_id=#{bsId}
+    </if>
+    <if test="realName != null">
+      and t1.board_real_name=#{boardRealName}
+    </if>
+    <if test="cuttingSign != null">
+      and t1.cutting_sign=#{cuttingSign}
+    </if>
+    <if test="boardRealId != null">
+      and t1.board_real_id=#{boardRealId}
+    </if>
+    order by t1.create_time desc
     <if test="startRowNum != null and endRowNum != null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
@@ -42,6 +54,13 @@
     <include refid="Base_Column_List" />
     from tbl_auction_board t1
     where t1.id = #{id}
+  </select>
+  <select id="selectByRealId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_auction_board t1
+    where t1.del_flag='1' and t1.board_real_id = #{realId}
+    limit 1
   </select>
 
 </mapper>

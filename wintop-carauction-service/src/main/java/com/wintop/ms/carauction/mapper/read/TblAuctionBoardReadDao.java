@@ -22,4 +22,11 @@ public interface TblAuctionBoardReadDao {
      */
     TblAuctionBoard selectByPrimaryKey(Long id);
 
+    /**
+     * 根据拍牌物理ID查询
+     * @param realId
+     * @return
+     */
+    TblAuctionBoard selectByRealId(String realId);
+
 }
