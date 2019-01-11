@@ -6,7 +6,9 @@ import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.ListEntity;
 import com.wintop.ms.carauction.entity.TblAuctionBoard;
+import com.wintop.ms.carauction.entity.TblBaseStation;
 import com.wintop.ms.carauction.service.TblAuctionBoardService;
+import com.wintop.ms.carauction.service.TblBaseStationService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,8 @@ import java.util.Map;
 public class ElectronAuctionBoardApi {
     @Autowired
     private TblAuctionBoardService tblAuctionBoardService;
+    @Autowired
+    private TblBaseStationService tblBaseStationService;
 
     private static final Logger logger = LoggerFactory.getLogger(ElectronAuctionBoardApi.class);
 
@@ -32,8 +36,7 @@ public class ElectronAuctionBoardApi {
      * 查询所有拍牌
      * @return
      */
-    @RequestMapping(value = "/selectBaseAuctionBoardList",
-            method= RequestMethod.POST,
+    @RequestMapping(value = "/selectAuctionBoardList",
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     public ServiceResult<ListEntity<TblAuctionBoard>> selectAuctionBoardList(@RequestBody JSONObject obj) {
@@ -43,6 +46,7 @@ public class ElectronAuctionBoardApi {
             PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
+            paramMap.put("boardRealName",obj.get("boardRealName"));
             List<TblAuctionBoard> boardList = tblAuctionBoardService.selectByExample(paramMap);
             int count = tblAuctionBoardService.countByExample(paramMap);
             ListEntity<TblAuctionBoard> listEntity = new ListEntity<>();
@@ -84,10 +88,18 @@ public class ElectronAuctionBoardApi {
                 result.setSuccess(ResultCode.DUPLICATE_ADD.strValue(),ResultCode.DUPLICATE_ADD.getRemark());
                 return result;
             }else{
-                tblAuctionBoardService.insert(auctionBoard);
-                result.setResult(auctionBoard);
-                result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
-                return result;
+                TblBaseStation baseStation = tblBaseStationService.selectByRealCode(auctionBoard.getStationRealCode());
+                if(baseStation==null){
+                    result.setResult(auctionBoard);
+                    result.setSuccess(ResultCode.NO_OBJECT.strValue(),"基站不存在");
+                    return result;
+                }else{
+                    auctionBoard.setBsId(baseStation.getId());
+                    tblAuctionBoardService.insert(auctionBoard);
+                    result.setResult(auctionBoard);
+                    result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+                    return result;
+                }
             }
         }catch (Exception e){
             logger.info("保存拍牌失败",e);
@@ -112,7 +124,7 @@ public class ElectronAuctionBoardApi {
             TblAuctionBoard auctionBoard = JSONObject.toJavaObject(obj,TblAuctionBoard.class);
             //,,时间切割车牌只能有一个
             TblAuctionBoard auctionBoard0 = tblAuctionBoardService.selectCuttingSignByBsId(auctionBoard.getBsId(),auctionBoard.getCuttingSign());
-            if(auctionBoard0 != null){
+            if(auctionBoard0 != null && auctionBoard.getId().compareTo(auctionBoard0.getId())!=0){
                 result.setResult(auctionBoard);
                 result.setSuccess(ResultCode.DUPLICATE_ADD.strValue(),"调价器只能有一个");
                 return result;
@@ -124,10 +136,18 @@ public class ElectronAuctionBoardApi {
                 result.setSuccess(ResultCode.DUPLICATE_ADD.strValue(),ResultCode.DUPLICATE_ADD.getRemark());
                 return result;
             }else{
-                tblAuctionBoardService.updateByPrimaryKeySelective(auctionBoard);
-                result.setResult(auctionBoard);
-                result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
-                return result;
+                TblBaseStation baseStation = tblBaseStationService.selectByRealCode(auctionBoard.getStationRealCode());
+                if(baseStation==null){
+                    result.setResult(auctionBoard);
+                    result.setSuccess(ResultCode.NO_OBJECT.strValue(),"基站不存在");
+                    return result;
+                }else{
+                    auctionBoard.setBsId(baseStation.getId());
+                    tblAuctionBoardService.updateByPrimaryKeySelective(auctionBoard);
+                    result.setResult(auctionBoard);
+                    result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+                    return result;
+                }
             }
         }catch (Exception e){
             logger.info("更新拍牌失败",e);

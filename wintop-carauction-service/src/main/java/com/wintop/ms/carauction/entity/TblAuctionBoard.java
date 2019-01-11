@@ -24,6 +24,11 @@ public class TblAuctionBoard implements Serializable {
     private Long bsId;
 
     /**
+     * 基站物理ID
+     */
+    private String stationRealCode;
+
+    /**
      * 是否时间切割拍牌（一个拍卖场只能有一个（0：正常拍牌；1：时间切割拍牌））
      */
     private String cuttingSign;
@@ -204,5 +209,13 @@ public class TblAuctionBoard implements Serializable {
 
     public void setDelFlag(String delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public String getStationRealCode() {
+        return stationRealCode;
+    }
+
+    public void setStationRealCode(String stationRealCode) {
+        this.stationRealCode = stationRealCode;
     }
 }

@@ -29,17 +29,8 @@ public class TblAuctionLogServiceImpl implements TblAuctionLogService {
     }
 
     @Override
-    public int deleteByPrimaryKey(Integer id) {
-        return tblAuctionLogModel.deleteByPrimaryKey(id);
-    }
-
-    @Override
     public int insert(TblAuctionLog tblAuctionLog) {
         return tblAuctionLogModel.insert(tblAuctionLog);
     }
 
-    @Override
-    public int updateByPrimaryKeySelective(TblAuctionLog tblAuctionLog) {
-        return tblAuctionLogModel.updateByPrimaryKeySelective(tblAuctionLog);
-    }
 }

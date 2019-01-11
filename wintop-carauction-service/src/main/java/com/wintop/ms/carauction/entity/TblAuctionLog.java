@@ -53,6 +53,10 @@ public class TblAuctionLog implements Serializable {
 
     private Long auctionCarId;
 
+    private Long carId;
+
+    private Long customerId;
+
     private BigDecimal bidFee;
 
     /**
@@ -211,5 +215,21 @@ public class TblAuctionLog implements Serializable {
 
     public void setCuttingSign(String cuttingSign) {
         this.cuttingSign = cuttingSign;
+    }
+
+    public Long getCarId() {
+        return carId;
+    }
+
+    public void setCarId(Long carId) {
+        this.carId = carId;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 }

@@ -1,49 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wintop.ms.carauction.mapper.write.TblAuctionLogWriteDao" >
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from tbl_auction_log
-    where id = #{id}
-  </delete>
 
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
     insert into tbl_auction_log (id, station_real_code, board_real_id, token, auction_times_id, auction_times_name,
-      bs_id, board_real_name, auction_time, local_auction_id,auction_car_id,bid_fee,cutting_sign)
+      bs_id, board_real_name, auction_time, local_auction_id,auction_car_id,car_id,customer_id,bid_fee,cutting_sign)
     values (#{id}, #{stationRealCode}, #{boardRealId}, #{token}, #{auctionTimesId}, #{auctionTimesName},
-      #{bsId}, #{boardRealName}, #{auctionTime}, #{localAuctionId},#{auctionCarId},#{bidFee},#{cuttingSign})
+      #{bsId}, #{boardRealName}, #{auctionTime}, #{localAuctionId},#{auctionCarId},#{carId},#{customerId},#{bidFee},#{cuttingSign})
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
-    update tbl_auction_log
-    <set >
-      <if test="stationRealCode != null" >
-        station_real_code = #{stationRealCode},
-      </if>
-      <if test="boardRealId != null" >
-        board_real_id = #{boardRealId},
-      </if>
-      <if test="token != null" >
-        token = #{token},
-      </if>
-      <if test="auctionTimesId != null" >
-        auction_times_id = #{auctionTimesId},
-      </if>
-      <if test="auctionTimes != null" >
-        auction_times = #{auctionTimes},
-      </if>
-      <if test="bsId != null" >
-        bs_id = #{bsId},
-      </if>
-      <if test="boardRealName != null" >
-        board_real_name = #{boardRealName},
-      </if>
-      <if test="auctionTime != null" >
-        auction_time = #{auctionTime},
-      </if>
-      <if test="enable != null" >
-        enable = #{enable},
-      </if>
-    </set>
-    where id = #{id}
-  </update>
 
 </mapper>

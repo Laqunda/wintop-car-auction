@@ -38,23 +38,10 @@ public class TblAuctionLogModel {
     }
 
     /**
-     * 根据主键删除记录
-     */
-    public int deleteByPrimaryKey(Integer id){
-        return tblAuctionLogWriteDao.deleteByPrimaryKey(id);
-    }
-
-    /**
      * 保存记录,不管记录里面的属性是否为空
      */
     public int insert(TblAuctionLog tblAuctionLog){
         return tblAuctionLogWriteDao.insert(tblAuctionLog);
     }
 
-    /**
-     * 根据主键更新属性不为空的记录
-     */
-    public int updateByPrimaryKeySelective(TblAuctionLog tblAuctionLog){
-        return tblAuctionLogWriteDao.updateByPrimaryKeySelective(tblAuctionLog);
-    }
 }

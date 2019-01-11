@@ -6,9 +6,9 @@
     where id = #{id}
   </delete>
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.TblAuctionBoard" >
-    insert into tbl_auction_board (id, board_real_id, board_real_name, bs_id, cutting_sign, enable, 
+    insert into tbl_auction_board (id, board_real_id, board_real_name, bs_id, station_real_code, cutting_sign, enable,
       remarks, create_person,create_time,del_flag)
-    values (#{id}, #{boardRealId}, #{boardRealName}, #{bsId}, #{cuttingSign}, #{enable}, 
+    values (#{id}, #{boardRealId}, #{boardRealName}, #{bsId}, #{stationRealCode}, #{cuttingSign}, #{enable},
       #{remarks},  #{createPerson}, #{createTime}, #{delFlag})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.TblAuctionBoard" >
@@ -22,6 +22,9 @@
       </if>
       <if test="bsId != null" >
         bs_id = #{bsId},
+      </if>
+      <if test="stationRealCode != null" >
+        station_real_code = #{stationRealCode},
       </if>
       <if test="cuttingSign != null" >
         cutting_sign = #{cuttingSign},

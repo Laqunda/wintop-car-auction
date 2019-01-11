@@ -34,7 +34,6 @@ public class ElectronBaseStationApi {
      * @return
      */
     @RequestMapping(value = "/selectBaseStationList",
-            method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     public ServiceResult<ListEntity<TblBaseStation>> selectBaseStationList(@RequestBody JSONObject obj) {

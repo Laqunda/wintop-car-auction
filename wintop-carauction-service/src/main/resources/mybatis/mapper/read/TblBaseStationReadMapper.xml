@@ -43,7 +43,7 @@
     select 
     <include refid="Base_Column_List" />
     from tbl_base_station t1
-    where t1.id = #{id}
+    where t1.id = #{id} and t1.del_flag='1'
   </select>
   <select id="selectByRealCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
