@@ -3,8 +3,8 @@
 <mapper namespace="com.wintop.ms.carauction.mapper.read.TblBaseStationReadDao" >
   <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.TblBaseStation" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="station_real_code" property="stationRealCode" jdbcType="VARCHAR" />
-    <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+    <result column="station_real_id" property="stationRealId" jdbcType="VARCHAR" />
+    <result column="station_name" property="stationName" jdbcType="VARCHAR" />
     <result column="token" property="token" jdbcType="VARCHAR" />
     <result column="auction_name" property="auctionName" jdbcType="VARCHAR" />
     <result column="sys_user" property="sysUser" jdbcType="VARCHAR" />
@@ -21,7 +21,7 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    t1.id, t1.station_real_code, t1.station_code, t1.token, t1.auction_name, t1.sys_user, t1.phone, t1.enable,
+    t1.id, t1.station_real_id, t1.station_name, t1.token, t1.auction_name, t1.sys_user, t1.phone, t1.enable,
     t1.remarks,t1.create_person,t1.create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
@@ -45,11 +45,11 @@
     from tbl_base_station t1
     where t1.id = #{id} and t1.del_flag='1'
   </select>
-  <select id="selectByRealCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByRealId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
     from tbl_base_station t1
-    where t1.del_flag='1' and t1.station_real_code = #{realCode}
+    where t1.del_flag='1' and t1.station_real_id = #{stationRealId}
     limit 1
   </select>
 </mapper>

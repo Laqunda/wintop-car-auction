@@ -2,6 +2,7 @@ package com.wintop.ms.carauction.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class TblAuctionBoard implements Serializable {
 
@@ -16,17 +17,7 @@ public class TblAuctionBoard implements Serializable {
     /**
      * 拍牌显示名字
      */
-    private String boardRealName;
-
-    /**
-     * 基站主键id
-     */
-    private Long bsId;
-
-    /**
-     * 基站物理ID
-     */
-    private String stationRealCode;
+    private String boardName;
 
     /**
      * 是否时间切割拍牌（一个拍卖场只能有一个（0：正常拍牌；1：时间切割拍牌））
@@ -57,6 +48,11 @@ public class TblAuctionBoard implements Serializable {
     //,,"1" 未删除  “2” 已删除
     private String delFlag;
 
+    //多个基站物理id
+    private String stationRealIds;
+
+    private List<TblBoardStation> baseStations;
+
     public Long getId() {
         return id;
     }
@@ -80,34 +76,12 @@ public class TblAuctionBoard implements Serializable {
         this.boardRealId = boardRealId;
     }
 
-    /**
-     * @return 拍牌显示名字
-     */
-    public String getBoardRealName() {
-        return boardRealName;
+    public String getBoardName() {
+        return boardName;
     }
 
-    /**
-     * @param boardRealName 
-	 *            拍牌显示名字
-     */
-    public void setBoardRealName(String boardRealName) {
-        this.boardRealName = boardRealName;
-    }
-
-    /**
-     * @return 基站主键id
-     */
-    public Long getBsId() {
-        return bsId;
-    }
-
-    /**
-     * @param bsId 
-	 *            基站主键id
-     */
-    public void setBsId(Long bsId) {
-        this.bsId = bsId;
+    public void setBoardName(String boardName) {
+        this.boardName = boardName;
     }
 
     /**
@@ -211,11 +185,19 @@ public class TblAuctionBoard implements Serializable {
         this.delFlag = delFlag;
     }
 
-    public String getStationRealCode() {
-        return stationRealCode;
+    public String getStationRealIds() {
+        return stationRealIds;
     }
 
-    public void setStationRealCode(String stationRealCode) {
-        this.stationRealCode = stationRealCode;
+    public void setStationRealIds(String stationRealIds) {
+        this.stationRealIds = stationRealIds;
+    }
+
+    public List<TblBoardStation> getBaseStations() {
+        return baseStations;
+    }
+
+    public void setBaseStations(List<TblBoardStation> baseStations) {
+        this.baseStations = baseStations;
     }
 }

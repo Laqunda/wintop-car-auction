@@ -11,12 +11,12 @@ public class TblBaseStation implements Serializable {
     /**
      * 基站物理ID(十六进制)
      */
-    private String stationRealCode;
+    private String stationRealId;
 
     /**
      * 基站代码(系统显示用)
      */
-    private String stationCode;
+    private String stationName;
 
     /**
      * 基站口令
@@ -70,34 +70,20 @@ public class TblBaseStation implements Serializable {
         this.id = id;
     }
 
-    /**
-     * @return 基站物理ID(十六进制)
-     */
-    public String getStationRealCode() {
-        return stationRealCode;
+    public String getStationRealId() {
+        return stationRealId;
     }
 
-    /**
-     * @param stationRealCode 
-	 *            基站物理ID(十六进制)
-     */
-    public void setStationRealCode(String stationRealCode) {
-        this.stationRealCode = stationRealCode;
+    public void setStationRealId(String stationRealId) {
+        this.stationRealId = stationRealId;
     }
 
-    /**
-     * @return 基站代码(系统显示用)
-     */
-    public String getStationCode() {
-        return stationCode;
+    public String getStationName() {
+        return stationName;
     }
 
-    /**
-     * @param stationCode 
-	 *            基站代码(系统显示用)
-     */
-    public void setStationCode(String stationCode) {
-        this.stationCode = stationCode;
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
     }
 
     /**

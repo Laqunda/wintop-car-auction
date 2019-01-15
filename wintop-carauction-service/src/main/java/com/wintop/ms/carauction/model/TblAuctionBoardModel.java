@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.model;
 
 import com.wintop.ms.carauction.entity.TblAuctionBoard;
+import com.wintop.ms.carauction.entity.TblBoardStation;
 import com.wintop.ms.carauction.mapper.read.TblAuctionBoardReadDao;
 import com.wintop.ms.carauction.mapper.write.TblAuctionBoardWriteDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,10 +70,37 @@ public class TblAuctionBoardModel {
 
     /**
      * 根据拍牌物理ID查询
-     * @param realId
+     * @param boardRealId
      * @return
      */
-    public TblAuctionBoard selectByRealId(String realId){
-        return tblAuctionBoardReadDao.selectByRealId(realId);
+    public TblAuctionBoard selectByRealId(String boardRealId){
+        return tblAuctionBoardReadDao.selectByRealId(boardRealId);
+    }
+
+    /**
+     * 删除拍牌基站关联
+     * @param boardRealId
+     * @return
+     */
+    public int deleteBoardStation(String boardRealId){
+        return tblAuctionBoardWriteDao.deleteBoardStation(boardRealId);
+    }
+
+    /**
+     * 保存拍牌基站关联
+     * @param boardStation
+     * @return
+     */
+    public int saveBoardStation(TblBoardStation boardStation){
+        return tblAuctionBoardWriteDao.saveBoardStation(boardStation);
+    }
+
+    /**
+     * 查询拍牌关联的基站
+     * @param boardRealId
+     * @return
+     */
+    public List<TblBoardStation> selectStationListByBoardRealId(String boardRealId){
+        return tblAuctionBoardReadDao.selectStationListByBoardRealId(boardRealId);
     }
 }

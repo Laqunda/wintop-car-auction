@@ -39,7 +39,7 @@ public interface TblBaseStationService {
     /**
      * 根据物理ID查询记录
      */
-    TblBaseStation selectByRealCode(String realCode);
+    TblBaseStation selectByRealId(String stationRealId);
 
     /**
      * 逻辑删除基站

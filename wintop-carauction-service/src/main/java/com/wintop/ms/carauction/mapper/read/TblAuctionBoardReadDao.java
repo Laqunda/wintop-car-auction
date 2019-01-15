@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.wintop.ms.carauction.entity.TblAuctionBoard;
+import com.wintop.ms.carauction.entity.TblBoardStation;
 import org.apache.ibatis.annotations.Param;
 
 public interface TblAuctionBoardReadDao {
@@ -24,9 +25,16 @@ public interface TblAuctionBoardReadDao {
 
     /**
      * 根据拍牌物理ID查询
-     * @param realId
+     * @param boardRealId
      * @return
      */
-    TblAuctionBoard selectByRealId(String realId);
+    TblAuctionBoard selectByRealId(String boardRealId);
+
+    /**
+     * 查询拍牌关联的基站
+     * @param boardRealId
+     * @return
+     */
+    List<TblBoardStation> selectStationListByBoardRealId(String boardRealId);
 
 }

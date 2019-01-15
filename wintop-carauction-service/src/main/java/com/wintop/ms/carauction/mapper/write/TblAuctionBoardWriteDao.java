@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.wintop.ms.carauction.entity.TblAuctionBoard;
+import com.wintop.ms.carauction.entity.TblBoardStation;
 import org.apache.ibatis.annotations.Param;
 
 public interface TblAuctionBoardWriteDao {
@@ -29,5 +30,19 @@ public interface TblAuctionBoardWriteDao {
      * @return
      */
     int updateDeleteFlag(TblAuctionBoard tblAuctionBoard);
+
+    /**
+     * 删除拍牌基站关联
+     * @param boardRealId
+     * @return
+     */
+    int deleteBoardStation(String boardRealId);
+
+    /**
+     * 保存拍牌基站关联
+     * @param boardStation
+     * @return
+     */
+    int saveBoardStation(TblBoardStation boardStation);
 
 }

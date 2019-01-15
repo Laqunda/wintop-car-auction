@@ -13,4 +13,11 @@ public interface TblAuctionLogWriteDao {
      */
     int insert(TblAuctionLog tblAuctionLog);
 
+    /**
+     * 增加价格
+     * @param tblAuctionLog
+     * @return
+     */
+    int updatePriceAdd(TblAuctionLog tblAuctionLog);
+
 }

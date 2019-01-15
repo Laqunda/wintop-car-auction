@@ -61,8 +61,8 @@ public class TblBaseStationModel {
     /**
      * 根据物理ID查询记录
      */
-    public TblBaseStation selectByRealCode(String realCode){
-        return tblBaseStationReadDao.selectByRealCode(realCode);
+    public TblBaseStation selectByRealId(String stationRealId){
+        return tblBaseStationReadDao.selectByRealId(stationRealId);
     }
 
     /**

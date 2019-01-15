@@ -12,7 +12,7 @@ public class TblAuctionLog implements Serializable {
     /**
      * 基站物理ID(十六进制)
      */
-    private String stationRealCode;
+    private String stationRealId;
 
     /**
      * 拍牌物理ID(十六进制)
@@ -25,24 +25,14 @@ public class TblAuctionLog implements Serializable {
     private String token;
 
     /**
-     * 拍卖场次id
-     */
-    private Long auctionTimesId;
-
-    /**
      * 拍卖场次
      */
     private String auctionTimesName;
 
     /**
-     * 基站ID(冗余字段)(基站主键)
-     */
-    private Long bsId;
-
-    /**
      * 拍牌显示名字(冗余字段)
      */
-    private String boardRealName;
+    private String boardName;
 
     /**
      * 竞拍时间(精确到毫秒)
@@ -60,9 +50,24 @@ public class TblAuctionLog implements Serializable {
     private BigDecimal bidFee;
 
     /**
-     * 是否时间切割拍牌（一个拍卖场只能有一个（0：正常拍牌；1：时间切割拍牌））
+     * 0：正常拍牌；1：时间切割拍牌，2网页调价器，3幅度调整
      */
-    private String cuttingSign;
+    private String priceType;
+
+    /**
+     * 0有效，1无效
+     */
+    private String enable;
+
+    private Long parentId;
+
+    private Long createPerson;
+
+    private Date createTime;
+
+    private Long modifyPerson;
+
+    private Date modifyTime;
 
     public Long getId() {
         return id;
@@ -72,19 +77,12 @@ public class TblAuctionLog implements Serializable {
         this.id = id;
     }
 
-    /**
-     * @return 基站物理ID(十六进制)
-     */
-    public String getStationRealCode() {
-        return stationRealCode;
+    public String getStationRealId() {
+        return stationRealId;
     }
 
-    /**
-     * @param stationRealCode 
-	 *            基站物理ID(十六进制)
-     */
-    public void setStationRealCode(String stationRealCode) {
-        this.stationRealCode = stationRealCode;
+    public void setStationRealId(String stationRealId) {
+        this.stationRealId = stationRealId;
     }
 
     /**
@@ -117,21 +115,6 @@ public class TblAuctionLog implements Serializable {
         this.token = token;
     }
 
-    /**
-     * @return 拍卖场次id
-     */
-    public Long getAuctionTimesId() {
-        return auctionTimesId;
-    }
-
-    /**
-     * @param auctionTimesId 
-	 *            拍卖场次id
-     */
-    public void setAuctionTimesId(Long auctionTimesId) {
-        this.auctionTimesId = auctionTimesId;
-    }
-
     public String getAuctionTimesName() {
         return auctionTimesName;
     }
@@ -140,34 +123,12 @@ public class TblAuctionLog implements Serializable {
         this.auctionTimesName = auctionTimesName;
     }
 
-    /**
-     * @return 基站ID(冗余字段)(基站主键)
-     */
-    public Long getBsId() {
-        return bsId;
+    public String getBoardName() {
+        return boardName;
     }
 
-    /**
-     * @param bsId 
-	 *            基站ID(冗余字段)(基站主键)
-     */
-    public void setBsId(Long bsId) {
-        this.bsId = bsId;
-    }
-
-    /**
-     * @return 拍牌显示名字(冗余字段)
-     */
-    public String getBoardRealName() {
-        return boardRealName;
-    }
-
-    /**
-     * @param boardRealName 
-	 *            拍牌显示名字(冗余字段)
-     */
-    public void setBoardRealName(String boardRealName) {
-        this.boardRealName = boardRealName;
+    public void setBoardName(String boardName) {
+        this.boardName = boardName;
     }
 
     /**
@@ -209,12 +170,12 @@ public class TblAuctionLog implements Serializable {
         this.bidFee = bidFee;
     }
 
-    public String getCuttingSign() {
-        return cuttingSign;
+    public String getPriceType() {
+        return priceType;
     }
 
-    public void setCuttingSign(String cuttingSign) {
-        this.cuttingSign = cuttingSign;
+    public void setPriceType(String priceType) {
+        this.priceType = priceType;
     }
 
     public Long getCarId() {
@@ -231,5 +192,53 @@ public class TblAuctionLog implements Serializable {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public String getEnable() {
+        return enable;
+    }
+
+    public void setEnable(String enable) {
+        this.enable = enable;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Long getCreatePerson() {
+        return createPerson;
+    }
+
+    public void setCreatePerson(Long createPerson) {
+        this.createPerson = createPerson;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Long getModifyPerson() {
+        return modifyPerson;
+    }
+
+    public void setModifyPerson(Long modifyPerson) {
+        this.modifyPerson = modifyPerson;
+    }
+
+    public Date getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

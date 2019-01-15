@@ -40,7 +40,6 @@ public class ElectronAuctionApi {
     public ServiceResult<TblAuctionTimes> bidding(@RequestBody Map<String,Object> map) {
         ServiceResult<TblAuctionTimes> result = new ServiceResult<>();
         try {
-            map.put("auctionTime",new Date());
             TblAuctionTimes auctionTimes = tblAuctionTimesService.saveBidding(map);
             if(auctionTimes==null){
                 result.setResult(null);

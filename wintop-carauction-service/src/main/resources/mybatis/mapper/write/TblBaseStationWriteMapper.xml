@@ -7,19 +7,19 @@
     where id = #{id}
   </delete>
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.TblBaseStation" >
-    insert into tbl_base_station (id, station_real_code, station_code, token, auction_name, sys_user, 
+    insert into tbl_base_station (id, station_real_id, station_name, token, auction_name, sys_user,
       phone, enable, remarks,create_person,create_time,del_flag)
-    values (#{id}, #{stationRealCode}, #{stationCode}, #{token}, #{auctionName}, #{sysUser}, 
+    values (#{id}, #{stationRealId}, #{stationName}, #{token}, #{auctionName}, #{sysUser},
       #{phone}, #{enable}, #{remarks}, #{createPerson}, #{createTime}, #{delFlag})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.TblBaseStation" >
     update tbl_base_station
     <set >
-      <if test="stationRealCode != null" >
-        station_real_code = #{stationRealCode},
+      <if test="stationRealId != null" >
+        station_real_id = #{stationRealId},
       </if>
-      <if test="stationCode != null" >
-        station_code = #{stationCode},
+      <if test="stationName != null" >
+        station_name = #{stationName},
       </if>
       <if test="token != null" >
         token = #{token},

@@ -6,9 +6,9 @@
     where id = #{id}
   </delete>
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.TblAuctionBoard" >
-    insert into tbl_auction_board (id, board_real_id, board_real_name, bs_id, station_real_code, cutting_sign, enable,
+    insert into tbl_auction_board (id, board_real_id, board_name, cutting_sign, enable,
       remarks, create_person,create_time,del_flag)
-    values (#{id}, #{boardRealId}, #{boardRealName}, #{bsId}, #{stationRealCode}, #{cuttingSign}, #{enable},
+    values (#{id}, #{boardRealId}, #{boardName}, #{cuttingSign}, #{enable},
       #{remarks},  #{createPerson}, #{createTime}, #{delFlag})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.TblAuctionBoard" >
@@ -17,14 +17,8 @@
       <if test="boardRealId != null" >
         board_real_id = #{boardRealId},
       </if>
-      <if test="boardRealName != null" >
-        board_real_name = #{boardRealName},
-      </if>
-      <if test="bsId != null" >
-        bs_id = #{bsId},
-      </if>
-      <if test="stationRealCode != null" >
-        station_real_code = #{stationRealCode},
+      <if test="boardName != null" >
+        board_name = #{boardName},
       </if>
       <if test="cuttingSign != null" >
         cutting_sign = #{cuttingSign},
@@ -51,4 +45,13 @@
         del_flag = #{delFlag}
     where id = #{id}
   </update>
+
+  <delete id="deleteBoardStation" parameterType="java.lang.String">
+    delete from tbl_board_station where board_real_id=#{boardRealId}
+  </delete>
+
+  <insert id="saveBoardStation" parameterType="com.wintop.ms.carauction.entity.TblBoardStation" >
+    insert into tbl_board_station (id,board_real_id, station_real_id)
+    values (#{id}, #{boardRealId},  #{stationRealId})
+  </insert>
 </mapper>
