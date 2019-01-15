@@ -32,6 +32,8 @@
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="top_bid_price" property="topBidPrice" jdbcType="DECIMAL" />
     <result column="publish_user_mobile" property="publishUserMobile" jdbcType="DECIMAL" />
+    <result column="price_range" property="priceRange" jdbcType="DECIMAL" />
+    <result column="init_price_range" property="initPriceRange" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     t1.id, t1.auction_id,t1.auto_auction_id, t1.car_id,t1.auction_code, t1.auction_status,t1.sort,t1.create_person,t1.create_time

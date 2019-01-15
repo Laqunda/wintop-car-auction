@@ -168,6 +168,34 @@ public class CarLocaleAuctionCar implements Serializable {
      * 车商拍牌号
      * */
     public String auctionPlateNum;
+    /**
+     * 初始加价额度
+     */
+    public BigDecimal initPriceRange;
+    /**
+     * 加价额度
+     */
+    public BigDecimal priceRange;
+
+    public BigDecimal getInitPriceRange() {
+        return initPriceRange;
+    }
+
+    public void setInitPriceRange(BigDecimal initPriceRange) {
+        this.initPriceRange = initPriceRange;
+    }
+
+    public BigDecimal getPriceRange() {
+        if (priceRange!=null){
+            return priceRange;
+        }else {
+            return new BigDecimal(0);
+        }
+    }
+
+    public void setPriceRange(BigDecimal priceRange) {
+        this.priceRange = priceRange;
+    }
 
     /**
      * @return 拍卖活动表

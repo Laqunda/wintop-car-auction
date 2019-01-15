@@ -108,4 +108,19 @@
     where auction_id = #{auctionId} AND sort > #{sort}
   </update>
 
+  <!--导入起拍价时，批量存储加价幅度-->
+  <update id="batchUpdateLocaleAuctionById" parameterType="java.util.List" >
+    <foreach collection="localeAuctionList" item="item" index="index" separator=";">
+      update car_locale_auction_car
+      <set >
+        <if test="item.priceRange != null" >
+          price_range = #{item.priceRange},
+        </if>
+        <if test="item.priceRange != null" >
+          init_price_range = #{item.priceRange},
+        </if>
+      </set>
+      where id = #{item.id}
+    </foreach>
+  </update>
 </mapper>
