@@ -7,8 +7,10 @@ import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.ListEntity;
 import com.wintop.ms.carauction.entity.TblAuctionLog;
 import com.wintop.ms.carauction.entity.TblAuctionTimes;
+import com.wintop.ms.carauction.service.ICarManagerUserService;
 import com.wintop.ms.carauction.service.TblAuctionLogService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ import java.util.Map;
 public class ElectronAuctionApi {
     @Autowired
     private TblAuctionLogService tblAuctionLogService;
+    @Autowired
+    private ICarManagerUserService managerUserService;
 
     private static final Logger logger = LoggerFactory.getLogger(ElectronAuctionApi.class);
 
@@ -66,8 +70,17 @@ public class ElectronAuctionApi {
         try {
             Map<String,Object> paramMap = new HashMap<>();
             PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
+//            用户权限
+            if (obj.get("userId")!=null && StringUtils.isNotBlank(obj.getString("userId"))){
+                    List<Long> storeIds = managerUserService.queryStoreScope(obj.getLong("userId"));
+                    paramMap.put("storeIds",storeIds);
+            }
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
+            paramMap.put("auctionTimesName",obj.get("auctionTimesName"));
+            paramMap.put("boardName",obj.get("boardName"));
+            paramMap.put("carInfo",obj.get("carInfo"));
+            paramMap.put("carId",obj.get("carId"));
             List<TblAuctionLog> logList = tblAuctionLogService.selectByExample(paramMap);
             int count = tblAuctionLogService.countByExample(paramMap);
             ListEntity<TblAuctionLog> listEntity = new ListEntity<>();

@@ -35,8 +35,8 @@
         LEFT JOIN car_auto t4 on t4.id=t1.car_id
         LEFT JOIN car_auto_info_detail t5 on t5.auto_id=t4.id
         where t1.enable='0'
-        <if test="localAuctionId!=null and localAuctionId!=''">
-            AND t1.local_auction_id = #{localAuctionId}
+        <if test="auctionTimesName!=null and auctionTimesName!=''">
+            AND t1.auction_times_name like CONCAT(CONCAT('%', #{auctionTimesName}),'%')
         </if>
         <if test="boardName!=null and boardName!=''">
             AND t1.board_name = #{boardName}
@@ -49,6 +49,13 @@
             OR t5.license_number like CONCAT(CONCAT('%', #{carInfo}),'%')
             )
         </if>
+        <if test="storeIds != null and storeIds.size!=0">
+            and (t4.store_id in
+            <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                #{storeId}
+            </foreach>
+            or a.store_id is null)
+        </if>
         ORDER BY t1.auction_time desc
         <if test="startRowNum != null and endRowNum != null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
@@ -60,8 +67,8 @@
         LEFT JOIN car_auto t4 on t4.id=t1.car_id
         LEFT JOIN car_auto_info_detail t5 on t5.auto_id=t4.id
         where t1.enable='0'
-        <if test="localAuctionId!=null and localAuctionId!=''">
-            AND t1.local_auction_id = #{localAuctionId}
+        <if test="auctionTimesName!=null and auctionTimesName!=''">
+            AND t1.auction_times_name like CONCAT(CONCAT('%', #{auctionTimesName}),'%')
         </if>
         <if test="boardName!=null and boardName!=''">
             AND t1.board_name = #{boardName}
