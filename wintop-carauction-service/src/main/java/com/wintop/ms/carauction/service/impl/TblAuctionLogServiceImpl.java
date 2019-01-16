@@ -54,7 +54,7 @@ public class TblAuctionLogServiceImpl implements TblAuctionLogService {
             //TODO,读取当前拍卖车辆
             auctionLog.setAuctionCarId(auctionTimes.getAuctionCarId());
             auctionLog.setCarId(auctionTimes.getCarId());
-            auctionLog.setBidFee(null);
+            auctionLog.setBidFee(auctionTimes.getPriceRange());
             auctionLog.setAuctionTimesName(auctionTimes.getAuctionTimesName());
             auctionLog.setBoardName(auctionTimes.getBoardName());
             auctionLog.setAuctionTime(new Date());
