@@ -69,57 +69,6 @@ public class TblAuctionLog implements Serializable {
 
     private Date modifyTime;
 
-    /**
-     * 会员名称
-     */
-    private String name;
-
-    /**
-     * 车辆标题
-     */
-    private String  autoInfoName;
-    /**
-     * 车辆编号
-     */
-    private String  carAutoNo;
-
-    /**
-     * 车辆编号
-     */
-    private String  licenseNumber;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAutoInfoName() {
-        return autoInfoName;
-    }
-
-    public void setAutoInfoName(String autoInfoName) {
-        this.autoInfoName = autoInfoName;
-    }
-
-    public String getCarAutoNo() {
-        return carAutoNo;
-    }
-
-    public void setCarAutoNo(String carAutoNo) {
-        this.carAutoNo = carAutoNo;
-    }
-
-    public String getLicenseNumber() {
-        return licenseNumber;
-    }
-
-    public void setLicenseNumber(String licenseNumber) {
-        this.licenseNumber = licenseNumber;
-    }
-
     public Long getId() {
         return id;
     }
