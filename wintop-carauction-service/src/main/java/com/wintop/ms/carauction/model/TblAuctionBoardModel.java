@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.model;
 
 import com.wintop.ms.carauction.entity.TblAuctionBoard;
+import com.wintop.ms.carauction.entity.TblBoardStation;
 import com.wintop.ms.carauction.mapper.read.TblAuctionBoardReadDao;
 import com.wintop.ms.carauction.mapper.write.TblAuctionBoardWriteDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +34,14 @@ public class TblAuctionBoardModel {
     /**
      * 根据主键查询记录
      */
-    public TblAuctionBoard selectByPrimaryKey(Integer id){
+    public TblAuctionBoard selectByPrimaryKey(Long id){
         return tblAuctionBoardReadDao.selectByPrimaryKey(id);
     }
 
     /**
      * 根据主键删除记录
      */
-    public int deleteByPrimaryKey(Integer id){
+    public int deleteByPrimaryKey(Long id){
         return tblAuctionBoardWriteDao.deleteByPrimaryKey(id);
     }
 
@@ -56,5 +57,50 @@ public class TblAuctionBoardModel {
      */
     public int updateByPrimaryKeySelective(TblAuctionBoard tblAuctionBoard){
         return tblAuctionBoardWriteDao.updateByPrimaryKeySelective(tblAuctionBoard);
+    }
+
+    /**
+     * 逻辑删除拍牌
+     * @param tblAuctionBoard
+     * @return
+     */
+    public int updateDeleteFlag(TblAuctionBoard tblAuctionBoard){
+        return tblAuctionBoardWriteDao.updateDeleteFlag(tblAuctionBoard);
+    }
+
+    /**
+     * 根据拍牌物理ID查询
+     * @param boardRealId
+     * @return
+     */
+    public TblAuctionBoard selectByRealId(String boardRealId){
+        return tblAuctionBoardReadDao.selectByRealId(boardRealId);
+    }
+
+    /**
+     * 删除拍牌基站关联
+     * @param boardRealId
+     * @return
+     */
+    public int deleteBoardStation(String boardRealId){
+        return tblAuctionBoardWriteDao.deleteBoardStation(boardRealId);
+    }
+
+    /**
+     * 保存拍牌基站关联
+     * @param boardStation
+     * @return
+     */
+    public int saveBoardStation(TblBoardStation boardStation){
+        return tblAuctionBoardWriteDao.saveBoardStation(boardStation);
+    }
+
+    /**
+     * 查询拍牌关联的基站
+     * @param boardRealId
+     * @return
+     */
+    public List<TblBoardStation> selectStationListByBoardRealId(String boardRealId){
+        return tblAuctionBoardReadDao.selectStationListByBoardRealId(boardRealId);
     }
 }

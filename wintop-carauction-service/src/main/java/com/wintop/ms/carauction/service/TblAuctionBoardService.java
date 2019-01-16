@@ -19,12 +19,12 @@ public interface TblAuctionBoardService {
     /**
      * 根据主键查询记录
      */
-    TblAuctionBoard selectByPrimaryKey(Integer id);
+    TblAuctionBoard selectByPrimaryKey(Long id);
 
     /**
      * 根据主键删除记录
      */
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     /**
      * 保存记录,不管记录里面的属性是否为空
@@ -35,4 +35,26 @@ public interface TblAuctionBoardService {
      * 根据主键更新属性不为空的记录
      */
     int updateByPrimaryKeySelective(TblAuctionBoard tblAuctionBoard);
+
+    /**
+     * 逻辑删除拍牌
+     * @param tblAuctionBoard
+     * @return
+     */
+    int updateDeleteFlag(TblAuctionBoard tblAuctionBoard);
+
+    /**
+     * 根据拍牌物理ID查询
+     * @param realId
+     * @return
+     */
+    TblAuctionBoard selectByRealId(String realId);
+
+    /**
+     * 查询同一个拍卖场是否存在调价器
+     * @param stationRealId
+     * @param cuttingSign
+     * @return
+     */
+    TblAuctionBoard selectCuttingSignByBsId(String stationRealId,String cuttingSign);
 }

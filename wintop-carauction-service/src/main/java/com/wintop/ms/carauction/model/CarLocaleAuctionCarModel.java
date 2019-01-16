@@ -169,4 +169,8 @@ public class CarLocaleAuctionCarModel {
     public Integer updateSortAuctionCar(Map map){
         return writeDao.updateSortAuctionCar(map);
     }
+//      导入起拍价时，批量存储加价幅度
+    public Integer batchUpdateLocaleAuctionById(List<CarLocaleAuctionCar> localeAuctionList){
+        return writeDao.batchUpdateLocaleAuctionById(localeAuctionList);
+    }
 }

@@ -3,37 +3,62 @@
 <mapper namespace="com.wintop.ms.carauction.mapper.read.TblBaseStationReadDao" >
   <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.TblBaseStation" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="station_real_code" property="stationRealCode" jdbcType="VARCHAR" />
-    <result column="station_code" property="stationCode" jdbcType="VARCHAR" />
+    <result column="station_real_id" property="stationRealId" jdbcType="VARCHAR" />
+    <result column="station_name" property="stationName" jdbcType="VARCHAR" />
     <result column="token" property="token" jdbcType="VARCHAR" />
     <result column="auction_name" property="auctionName" jdbcType="VARCHAR" />
     <result column="sys_user" property="sysUser" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="enable" property="enable" jdbcType="VARCHAR" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_person" property="modifyPerson" jdbcType="BIGINT" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="del_person" property="delPerson" jdbcType="BIGINT" />
+    <result column="del_time" property="delTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, station_real_code, station_code, token, auction_name, sys_user, phone, enable, 
-    remarks
+    t1.id, t1.station_real_id, t1.station_name, t1.token, t1.auction_name, t1.sys_user, t1.phone, t1.enable,
+    t1.remarks,t1.create_person,t1.create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
     <include refid="Base_Column_List" />
-    from tbl_base_station
-    order by id desc
+    from tbl_base_station t1
+    where t1.del_flag='1'
+    order by t1.create_time desc
     <if test="startRowNum != null and endRowNum != null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
   </select>
   <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
-    select count(*) from tbl_base_station
+    select count(t1.id)
+    from tbl_base_station t1
+    where t1.del_flag='1'
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from tbl_base_station
-    where id = #{id}
+    from tbl_base_station t1
+    where t1.id = #{id} and t1.del_flag='1'
   </select>
-
+  <select id="selectByRealId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_base_station t1
+    where t1.station_real_id = #{stationRealId} and t1.del_flag='1'
+    order by t1.create_time desc
+    limit 1
+  </select>
+  <select id="selectByRealIdAndToken" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_base_station t1
+    where t1.station_real_id = #{stationRealId} and t1.token=#{token} and t1.del_flag='1'
+    order by t1.create_time desc
+    limit 1
+  </select>
 </mapper>

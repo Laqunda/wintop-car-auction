@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.wintop.ms.carauction.entity.TblBaseStation;
+import org.apache.ibatis.annotations.Param;
 
 public interface TblBaseStationReadDao {
     /**
@@ -19,10 +20,15 @@ public interface TblBaseStationReadDao {
     /**
      * 根据主键查询记录
      */
-    TblBaseStation selectByPrimaryKey(Integer id);
+    TblBaseStation selectByPrimaryKey(Long id);
 
     /**
      * 根据物理ID查询记录
      */
-    TblBaseStation selectByCode(Integer id);
+    TblBaseStation selectByRealId(String stationRealId);
+
+    /**
+     * 根据物理ID和token查询记录
+     */
+    TblBaseStation selectByRealIdAndToken(@Param("stationRealId") String stationRealId, @Param("token")String token);
 }

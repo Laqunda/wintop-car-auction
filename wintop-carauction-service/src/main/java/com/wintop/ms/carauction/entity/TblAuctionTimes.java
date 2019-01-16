@@ -1,234 +1,152 @@
 package com.wintop.ms.carauction.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class TblAuctionTimes implements Serializable {
 
     private static final long serialVersionUID = -3573385811247971118L;
-    private Long id;
 
     /**
-     * 基站主键id
+     * 拍牌物理ID(十六进制)
      */
-    private Long bsId;
+    private String boardRealId;
 
     /**
      * 拍牌显示名字
      */
-    private String boardRealName;
+    private String boardName;
 
     /**
      * 基站物理ID(十六进制)
      */
-    private String stationRealCode;
+    private String stationRealId;
 
     /**
      * 基站代码
      */
-    private String stationCode;
+    private String stationName;
 
     /**
      * 后台拍卖场次ID
      */
-    private Long localAuctionId;
+    private Long localeAuctionId;
+
+    private Long auctionCarId;
+
+    private Long carId;
 
     /**
      * 拍卖场次名字
      */
-    private String auctionTimes;
+    private String auctionTimesName;
 
     /**
-     * 开拍时间
+     * 初始加价幅度
      */
-    private Date startAuctionTime;
+    private BigDecimal initPriceRange;
 
-    /**
-     * 结束时间
-     */
-    private Date endAuctionTime;
+    private BigDecimal priceRange;
 
-    /**
-     * 总拍卖数量
-     */
-    private Integer num;
+    //起拍价
+    private BigDecimal startingPrice;
 
-    /**
-     * 是否有效(0:有效；1:无效)
-     */
-    private String enable;
+    private String cuttingSign;
 
-    /**
-     * 备注
-     */
-    private String remarks;
-
-    private Date createTime;
-
-    public Long getId() {
-        return id;
+    public String getBoardRealId() {
+        return boardRealId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBoardRealId(String boardRealId) {
+        this.boardRealId = boardRealId;
     }
 
-    /**
-     * @return 基站物理ID(十六进制)
-     */
-    public String getStationRealCode() {
-        return stationRealCode;
+    public String getBoardName() {
+        return boardName;
     }
 
-    /**
-     * @param stationRealCode 
-	 *            基站物理ID(十六进制)
-     */
-    public void setStationRealCode(String stationRealCode) {
-        this.stationRealCode = stationRealCode;
+    public void setBoardName(String boardName) {
+        this.boardName = boardName;
     }
 
-    /**
-     * @return 基站代码
-     */
-    public String getStationCode() {
-        return stationCode;
+    public String getStationRealId() {
+        return stationRealId;
     }
 
-    /**
-     * @param stationCode 
-	 *            基站代码
-     */
-    public void setStationCode(String stationCode) {
-        this.stationCode = stationCode;
+    public void setStationRealId(String stationRealId) {
+        this.stationRealId = stationRealId;
     }
 
-    /**
-     * @return 后台拍卖场次ID
-     */
-    public Long getLocalAuctionId() {
-        return localAuctionId;
+    public String getStationName() {
+        return stationName;
     }
 
-    /**
-     * @param localAuctionId 
-	 *            后台拍卖场次ID
-     */
-    public void setLocalAuctionId(Long localAuctionId) {
-        this.localAuctionId = localAuctionId;
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
     }
 
-    /**
-     * @return 拍卖场次名字
-     */
-    public String getAuctionTimes() {
-        return auctionTimes;
+    public Long getLocaleAuctionId() {
+        return localeAuctionId;
     }
 
-    /**
-     * @param auctionTimes 
-	 *            拍卖场次名字
-     */
-    public void setAuctionTimes(String auctionTimes) {
-        this.auctionTimes = auctionTimes;
+    public void setLocaleAuctionId(Long localeAuctionId) {
+        this.localeAuctionId = localeAuctionId;
     }
 
-    /**
-     * @return 开拍时间
-     */
-    public Date getStartAuctionTime() {
-        return startAuctionTime;
+    public String getAuctionTimesName() {
+        return auctionTimesName;
     }
 
-    /**
-     * @param startAuctionTime 
-	 *            开拍时间
-     */
-    public void setStartAuctionTime(Date startAuctionTime) {
-        this.startAuctionTime = startAuctionTime;
+    public void setAuctionTimesName(String auctionTimesName) {
+        this.auctionTimesName = auctionTimesName;
     }
 
-    /**
-     * @return 结束时间
-     */
-    public Date getEndAuctionTime() {
-        return endAuctionTime;
+    public BigDecimal getPriceRange() {
+        return priceRange;
     }
 
-    /**
-     * @param endAuctionTime 
-	 *            结束时间
-     */
-    public void setEndAuctionTime(Date endAuctionTime) {
-        this.endAuctionTime = endAuctionTime;
+    public void setPriceRange(BigDecimal priceRange) {
+        this.priceRange = priceRange;
     }
 
-    /**
-     * @return 总拍卖数量
-     */
-    public Integer getNum() {
-        return num;
+    public BigDecimal getStartingPrice() {
+        return startingPrice;
     }
 
-    /**
-     * @param num 
-	 *            总拍卖数量
-     */
-    public void setNum(Integer num) {
-        this.num = num;
+    public void setStartingPrice(BigDecimal startingPrice) {
+        this.startingPrice = startingPrice;
     }
 
-    /**
-     * @return 是否有效(0:有效；1:无效)
-     */
-    public String getEnable() {
-        return enable;
+    public Long getAuctionCarId() {
+        return auctionCarId;
     }
 
-    /**
-     * @param enable 
-	 *            是否有效(0:有效；1:无效)
-     */
-    public void setEnable(String enable) {
-        this.enable = enable;
+    public void setAuctionCarId(Long auctionCarId) {
+        this.auctionCarId = auctionCarId;
     }
 
-    /**
-     * @return 备注
-     */
-    public String getRemarks() {
-        return remarks;
+    public Long getCarId() {
+        return carId;
     }
 
-    /**
-     * @param remarks 
-	 *            备注
-     */
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setCarId(Long carId) {
+        this.carId = carId;
     }
 
-    public Long getBsId() {
-        return bsId;
+    public String getCuttingSign() {
+        return cuttingSign;
     }
 
-    public void setBsId(Long bsId) {
-        this.bsId = bsId;
+    public void setCuttingSign(String cuttingSign) {
+        this.cuttingSign = cuttingSign;
     }
 
-    public String getBoardRealName() {
-        return boardRealName;
+    public BigDecimal getInitPriceRange() {
+        return initPriceRange;
     }
 
-    public void setBoardRealName(String boardRealName) {
-        this.boardRealName = boardRealName;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setInitPriceRange(BigDecimal initPriceRange) {
+        this.initPriceRange = initPriceRange;
     }
 }

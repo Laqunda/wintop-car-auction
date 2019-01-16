@@ -140,4 +140,13 @@ public class CarLocaleAuctionModel {
     public List<CarLocaleAuction> queryCarLocaleAuctionList(Map<String,Object> map){
         return readDao.queryCarLocaleAuctionList(map);
     }
+
+    /**
+     * 查询基站最后一次完成的竞拍场次
+     * @param stationRealId
+     * @return
+     */
+    public CarLocaleAuction selectByStationRealId(String stationRealId){
+        return readDao.selectByStationRealId(stationRealId);
+    }
 }

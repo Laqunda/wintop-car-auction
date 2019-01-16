@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.CarLocaleBoardRecordReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarLocaleBoardRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="locale_auction_id" property="localeAuctionId" jdbcType="BIGINT" />
+    <result column="station_real_id" property="stationRealId" jdbcType="VARCHAR" />
+    <result column="board_real_id" property="boardRealId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="record_date" property="recordDate" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    t1.id, t1.locale_auction_id, t1.station_real_id, t1.board_real_id, t1.create_time,t1.record_date
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_locale_board_record t1
+    where 1=1
+    <if test="localAuctionId != null">
+      and t1.locale_auction_id=#{localeAuctionId}
+    </if>
+    order by t1.id desc
+    <if test="startRowNum != null and endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    select count(t1.id)
+    from tbl_locale_board_record t1
+    where 1=1
+    <if test="localAuctionId != null">
+      and t1.locale_auction_id=#{localeAuctionId}
+    </if>
+  </select>
+
+</mapper>

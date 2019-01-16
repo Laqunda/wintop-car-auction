@@ -33,15 +33,8 @@ public class TblAuctionLogModel {
     /**
      * 根据主键查询记录
      */
-    public TblAuctionLog selectByPrimaryKey(Integer id){
+    public TblAuctionLog selectByPrimaryKey(Long id){
         return tblAuctionLogReadDao.selectByPrimaryKey(id);
-    }
-
-    /**
-     * 根据主键删除记录
-     */
-    public int deleteByPrimaryKey(Integer id){
-        return tblAuctionLogWriteDao.deleteByPrimaryKey(id);
     }
 
     /**
@@ -51,10 +44,4 @@ public class TblAuctionLogModel {
         return tblAuctionLogWriteDao.insert(tblAuctionLog);
     }
 
-    /**
-     * 根据主键更新属性不为空的记录
-     */
-    public int updateByPrimaryKeySelective(TblAuctionLog tblAuctionLog){
-        return tblAuctionLogWriteDao.updateByPrimaryKeySelective(tblAuctionLog);
-    }
 }

@@ -12,7 +12,7 @@ public class TblAuctionLog implements Serializable {
     /**
      * 基站物理ID(十六进制)
      */
-    private String stationRealCode;
+    private String stationRealId;
 
     /**
      * 拍牌物理ID(十六进制)
@@ -25,40 +25,101 @@ public class TblAuctionLog implements Serializable {
     private String token;
 
     /**
-     * 拍卖场次id
-     */
-    private Long auctionTimesId;
-
-    /**
      * 拍卖场次
      */
-    private String auctionTimes;
-
-    /**
-     * 基站ID(冗余字段)(基站主键)
-     */
-    private Long bsId;
+    private String auctionTimesName;
 
     /**
      * 拍牌显示名字(冗余字段)
      */
-    private String boardRealName;
+    private String boardName;
 
     /**
      * 竞拍时间(精确到毫秒)
      */
     private Date auctionTime;
 
-    /**
-     * 是否有效(0:有效；1:无效)
-     */
-    private String enable;
-
-    private Long localAuctionId;
+    private Long localeAuctionId;
 
     private Long auctionCarId;
 
+    private Long carId;
+
+    private Long customerId;
+
     private BigDecimal bidFee;
+
+    /**
+     * 0：正常拍牌；1：时间切割拍牌，2网页调价器，3幅度调整
+     */
+    private String priceType;
+
+    /**
+     * 0有效，1无效
+     */
+    private String enable;
+
+    private Long parentId;
+
+    private Long createPerson;
+
+    private Date createTime;
+
+    private Long modifyPerson;
+
+    private Date modifyTime;
+
+    /**
+     * 会员名称
+     */
+    private String name;
+
+    /**
+     * 车辆标题
+     */
+    private String  autoInfoName;
+    /**
+     * 车辆编号
+     */
+    private String  carAutoNo;
+
+    /**
+     * 车辆编号
+     */
+    private String  licenseNumber;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAutoInfoName() {
+        return autoInfoName;
+    }
+
+    public void setAutoInfoName(String autoInfoName) {
+        this.autoInfoName = autoInfoName;
+    }
+
+    public String getCarAutoNo() {
+        return carAutoNo;
+    }
+
+    public void setCarAutoNo(String carAutoNo) {
+        this.carAutoNo = carAutoNo;
+    }
+
+    public String getLicenseNumber() {
+        return licenseNumber;
+    }
+
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
+    }
+
 
     public Long getId() {
         return id;
@@ -68,19 +129,12 @@ public class TblAuctionLog implements Serializable {
         this.id = id;
     }
 
-    /**
-     * @return 基站物理ID(十六进制)
-     */
-    public String getStationRealCode() {
-        return stationRealCode;
+    public String getStationRealId() {
+        return stationRealId;
     }
 
-    /**
-     * @param stationRealCode 
-	 *            基站物理ID(十六进制)
-     */
-    public void setStationRealCode(String stationRealCode) {
-        this.stationRealCode = stationRealCode;
+    public void setStationRealId(String stationRealId) {
+        this.stationRealId = stationRealId;
     }
 
     /**
@@ -113,64 +167,20 @@ public class TblAuctionLog implements Serializable {
         this.token = token;
     }
 
-    /**
-     * @return 拍卖场次id
-     */
-    public Long getAuctionTimesId() {
-        return auctionTimesId;
+    public String getAuctionTimesName() {
+        return auctionTimesName;
     }
 
-    /**
-     * @param auctionTimesId 
-	 *            拍卖场次id
-     */
-    public void setAuctionTimesId(Long auctionTimesId) {
-        this.auctionTimesId = auctionTimesId;
+    public void setAuctionTimesName(String auctionTimesName) {
+        this.auctionTimesName = auctionTimesName;
     }
 
-    /**
-     * @return 拍卖场次
-     */
-    public String getAuctionTimes() {
-        return auctionTimes;
+    public String getBoardName() {
+        return boardName;
     }
 
-    /**
-     * @param auctionTimes 
-	 *            拍卖场次
-     */
-    public void setAuctionTimes(String auctionTimes) {
-        this.auctionTimes = auctionTimes;
-    }
-
-    /**
-     * @return 基站ID(冗余字段)(基站主键)
-     */
-    public Long getBsId() {
-        return bsId;
-    }
-
-    /**
-     * @param bsId 
-	 *            基站ID(冗余字段)(基站主键)
-     */
-    public void setBsId(Long bsId) {
-        this.bsId = bsId;
-    }
-
-    /**
-     * @return 拍牌显示名字(冗余字段)
-     */
-    public String getBoardRealName() {
-        return boardRealName;
-    }
-
-    /**
-     * @param boardRealName 
-	 *            拍牌显示名字(冗余字段)
-     */
-    public void setBoardRealName(String boardRealName) {
-        this.boardRealName = boardRealName;
+    public void setBoardName(String boardName) {
+        this.boardName = boardName;
     }
 
     /**
@@ -188,27 +198,12 @@ public class TblAuctionLog implements Serializable {
         this.auctionTime = auctionTime;
     }
 
-    /**
-     * @return 是否有效(0:有效；1:无效)
-     */
-    public String getEnable() {
-        return enable;
+    public Long getLocaleAuctionId() {
+        return localeAuctionId;
     }
 
-    /**
-     * @param enable 
-	 *            是否有效(0:有效；1:无效)
-     */
-    public void setEnable(String enable) {
-        this.enable = enable;
-    }
-
-    public Long getLocalAuctionId() {
-        return localAuctionId;
-    }
-
-    public void setLocalAuctionId(Long localAuctionId) {
-        this.localAuctionId = localAuctionId;
+    public void setLocaleAuctionId(Long localeAuctionId) {
+        this.localeAuctionId = localeAuctionId;
     }
 
     public Long getAuctionCarId() {
@@ -225,5 +220,77 @@ public class TblAuctionLog implements Serializable {
 
     public void setBidFee(BigDecimal bidFee) {
         this.bidFee = bidFee;
+    }
+
+    public String getPriceType() {
+        return priceType;
+    }
+
+    public void setPriceType(String priceType) {
+        this.priceType = priceType;
+    }
+
+    public Long getCarId() {
+        return carId;
+    }
+
+    public void setCarId(Long carId) {
+        this.carId = carId;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getEnable() {
+        return enable;
+    }
+
+    public void setEnable(String enable) {
+        this.enable = enable;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Long getCreatePerson() {
+        return createPerson;
+    }
+
+    public void setCreatePerson(Long createPerson) {
+        this.createPerson = createPerson;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Long getModifyPerson() {
+        return modifyPerson;
+    }
+
+    public void setModifyPerson(Long modifyPerson) {
+        this.modifyPerson = modifyPerson;
+    }
+
+    public Date getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

@@ -593,4 +593,9 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
         result.setResult(model.hasAuctionCarCount(map));
         return result;
     }
+
+    //      导入起拍价时，批量存储加价幅度
+    public Integer batchUpdateLocaleAuctionById(List<CarLocaleAuctionCar> localeAuctionList){
+        return model.batchUpdateLocaleAuctionById(localeAuctionList);
+    }
 }

@@ -1,49 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wintop.ms.carauction.mapper.write.TblAuctionLogWriteDao" >
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from tbl_auction_log
-    where id = #{id}
-  </delete>
 
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
-    insert into tbl_auction_log (id, station_real_code, board_real_id, token, auction_times_id, auction_times, 
-      bs_id, board_real_name, auction_time, enable,local_auction_id,auction_car_id,bid_fee)
-    values (#{id}, #{stationRealCode}, #{boardRealId}, #{token}, #{auctionTimesId}, #{auctionTimes}, 
-      #{bsId}, #{boardRealName}, #{auctionTime}, #{enable},#{localAuctionId},#{auctionCarId},#{bidFee})
+    insert into tbl_auction_log (id, station_real_id, board_real_id, token, auction_times_name,
+      board_name, auction_time, locale_auction_id,auction_car_id,car_id,customer_id,bid_fee,
+      price_type,enable,parent_id,create_person,create_time)
+    values (#{id}, #{stationRealId}, #{boardRealId}, #{token},  #{auctionTimesName},
+       #{boardName}, #{auctionTime}, #{localeAuctionId},#{auctionCarId},#{carId},#{customerId},#{bidFee},
+      #{priceType},#{enable},#{parentId}, #{createPerson}, #{createTime})
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
+  <update id="updatePriceAdd" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
     update tbl_auction_log
-    <set >
-      <if test="stationRealCode != null" >
-        station_real_code = #{stationRealCode},
-      </if>
-      <if test="boardRealId != null" >
-        board_real_id = #{boardRealId},
-      </if>
-      <if test="token != null" >
-        token = #{token},
-      </if>
-      <if test="auctionTimesId != null" >
-        auction_times_id = #{auctionTimesId},
-      </if>
-      <if test="auctionTimes != null" >
-        auction_times = #{auctionTimes},
-      </if>
-      <if test="bsId != null" >
-        bs_id = #{bsId},
-      </if>
-      <if test="boardRealName != null" >
-        board_real_name = #{boardRealName},
-      </if>
-      <if test="auctionTime != null" >
-        auction_time = #{auctionTime},
-      </if>
-      <if test="enable != null" >
-        enable = #{enable},
-      </if>
-    </set>
-    where id = #{id}
+    set bid_fee=#{bidFee},parent_id=#{parentId}
+    where auction_car_id = #{auctionCarId} and bid_fee is null
   </update>
-
 </mapper>

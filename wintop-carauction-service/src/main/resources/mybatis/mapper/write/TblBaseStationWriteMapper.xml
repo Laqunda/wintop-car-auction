@@ -2,24 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wintop.ms.carauction.mapper.write.TblBaseStationWriteDao" >
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from tbl_base_station
     where id = #{id}
   </delete>
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.TblBaseStation" >
-    insert into tbl_base_station (id, station_real_code, station_code, token, auction_name, sys_user, 
-      phone, enable, remarks)
-    values (#{id}, #{stationRealCode}, #{stationCode}, #{token}, #{auctionName}, #{sysUser}, 
-      #{phone}, #{enable}, #{remarks})
+    insert into tbl_base_station (id, station_real_id, station_name, token, auction_name, sys_user,
+      phone, enable, remarks,create_person,create_time,del_flag)
+    values (#{id}, #{stationRealId}, #{stationName}, #{token}, #{auctionName}, #{sysUser},
+      #{phone}, #{enable}, #{remarks}, #{createPerson}, #{createTime}, #{delFlag})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.TblBaseStation" >
     update tbl_base_station
     <set >
-      <if test="stationRealCode != null" >
-        station_real_code = #{stationRealCode},
+      <if test="stationRealId != null" >
+        station_real_id = #{stationRealId},
       </if>
-      <if test="stationCode != null" >
-        station_code = #{stationCode},
+      <if test="stationName != null" >
+        station_name = #{stationName},
       </if>
       <if test="token != null" >
         token = #{token},
@@ -39,8 +39,18 @@
       <if test="remarks != null" >
         remarks = #{remarks},
       </if>
+      <if test="modifyPerson != null" >
+        modify_person = #{modifyPerson},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
     </set>
     where id = #{id}
   </update>
-
+  <update id="updateDeleteFlag" parameterType="com.wintop.ms.carauction.entity.TblBaseStation" >
+    update tbl_base_station
+    set del_person = #{delPerson},del_time = #{delTime},del_flag = #{delFlag}
+    where id = #{id}
+  </update>
 </mapper>

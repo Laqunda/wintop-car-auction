@@ -1,6 +1,8 @@
 package com.wintop.ms.carauction.mapper.write;
 
+import com.wintop.ms.carauction.entity.CarAutoAuction;
 import com.wintop.ms.carauction.entity.CarLocaleAuctionCar;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -38,4 +40,6 @@ public interface ICarLocaleAuctionCarWriteDao {
      * @return
      */
     Integer updateSortAuctionCar(Map map);
+
+    int batchUpdateLocaleAuctionById(@Param(value="localeAuctionList")List<CarLocaleAuctionCar> localeAuctionList);
 }

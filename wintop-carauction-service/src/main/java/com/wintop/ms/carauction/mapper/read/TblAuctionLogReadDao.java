@@ -20,7 +20,7 @@ public interface TblAuctionLogReadDao {
     /**
      * 根据主键查询记录
      */
-    TblAuctionLog selectByPrimaryKey(Integer id);
+    TblAuctionLog selectByPrimaryKey(Long id);
 
-
+    TblAuctionLog selectLastPriceByAdjust(Long auctionCarId);
 }
