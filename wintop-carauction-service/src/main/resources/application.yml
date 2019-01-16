@@ -8,9 +8,9 @@ server:
 
 spring:
   redis:
-    host: 192.168.22.143
+    host: 111.203.134.35
     password: wintop-yth
-    port: 6379
+    port: 6390
     pool:
       max-active: 1000 #--最大活动链接---#
       max-idle: 50      #------最大允许空闲-----#
