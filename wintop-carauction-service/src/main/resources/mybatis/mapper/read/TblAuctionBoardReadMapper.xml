@@ -4,9 +4,7 @@
   <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.TblAuctionBoard" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="board_real_id" property="boardRealId" jdbcType="VARCHAR" />
-    <result column="board_real_name" property="boardRealName" jdbcType="VARCHAR" />
-    <result column="bs_id" property="bsId" jdbcType="BIGINT" />
-    <result column="station_real_code" property="stationRealCode" jdbcType="VARCHAR" />
+    <result column="board_name" property="boardName" jdbcType="VARCHAR" />
     <result column="cutting_sign" property="cuttingSign" jdbcType="VARCHAR" />
     <result column="enable" property="enable" jdbcType="VARCHAR" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
@@ -19,22 +17,31 @@
     <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
   </resultMap>
 
+  <resultMap id="BoardStationMap" type="com.wintop.ms.carauction.entity.TblBoardStation" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="board_real_id" property="boardRealId" jdbcType="VARCHAR" />
+    <result column="station_real_id" property="stationRealId" jdbcType="VARCHAR" />
+    <result column="station_name" property="stationName" jdbcType="VARCHAR" />
+    <result column="checked" property="checked" jdbcType="VARCHAR" />
+  </resultMap>
+
   <sql id="Base_Column_List" >
-    t1.id, t1.board_real_id, t1.board_real_name, t1.bs_id, t1.station_real_code,t1.cutting_sign, t1.enable, t1.remarks, t1.create_time,t1.create_person
+    t1.id, t1.board_real_id, t1.board_name,t1.cutting_sign, t1.enable, t1.remarks, t1.create_time,t1.create_person
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
     <include refid="Base_Column_List" />
     from tbl_auction_board t1
+    inner join tbl_auction_board t2 on t1.board_real_id=t2.board_real_id
     where t1.del_flag='1'
-    <if test="bsId != null">
-      and t1.bs_id=#{bsId}
+    <if test="stationId != null">
+      and t2.station_id=#{stationId}
     </if>
-    <if test="stationRealCode != null">
-      and t1.station_real_code=#{stationRealCode}
+    <if test="stationRealId != null">
+      and t2.station_real_id=#{stationRealId}
     </if>
-    <if test="boardRealName != null">
-      and t1.board_real_name=#{boardRealName}
+    <if test="boardName != null">
+      and t1.board_name=#{boardName}
     </if>
     <if test="cuttingSign != null">
       and t1.cutting_sign=#{cuttingSign}
@@ -51,15 +58,16 @@
   <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
     select count(t1.id)
     from tbl_auction_board t1
+    inner join tbl_auction_board t2 on t1.board_real_id=t2.board_real_id
     where t1.del_flag='1'
-    <if test="bsId != null">
-      and t1.bs_id=#{bsId}
+    <if test="stationId != null">
+      and t2.station_id=#{stationId}
     </if>
-    <if test="stationRealCode != null">
-      and t1.station_real_code=#{stationRealCode}
+    <if test="stationRealId != null">
+      and t2.station_real_id=#{stationRealId}
     </if>
-    <if test="boardRealName != null">
-      and t1.board_real_name=#{boardRealName}
+    <if test="boardName != null">
+      and t1.board_name=#{boardName}
     </if>
     <if test="cuttingSign != null">
       and t1.cutting_sign=#{cuttingSign}
@@ -78,8 +86,16 @@
     select
     <include refid="Base_Column_List" />
     from tbl_auction_board t1
-    where t1.del_flag='1' and t1.board_real_id = #{realId}
+    where t1.del_flag='1' and t1.board_real_id = #{boardBealId}
     limit 1
+  </select>
+
+  <select id="selectStationListByBoardRealId" resultMap="BoardStationMap" parameterType="java.lang.String" >
+    select
+    t1.*,
+    (case when t2.id is null then '0' else '1' end ) as checked
+    from tbl_base_station t1
+    left join tbl_board_station t2 on (t1.station_real_id=t2.station_real_id and t2.board_real_id = #{boardRealId})
   </select>
 
 </mapper>

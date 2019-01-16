@@ -52,9 +52,9 @@ public interface TblAuctionBoardService {
 
     /**
      * 查询同一个拍卖场是否存在调价器
-     * @param bsId
+     * @param stationRealId
      * @param cuttingSign
      * @return
      */
-    TblAuctionBoard selectCuttingSignByBsId(Long bsId,String cuttingSign);
+    TblAuctionBoard selectCuttingSignByBsId(String stationRealId,String cuttingSign);
 }

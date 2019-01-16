@@ -70,21 +70,23 @@ public class ElectronBaseStationApi {
         ServiceResult<TblBaseStation> result = new ServiceResult<>();
         try {
             TblBaseStation baseStation = JSONObject.toJavaObject(obj,TblBaseStation.class);
-            TblBaseStation baseStation1 = tblBaseStationService.selectByRealCode(baseStation.getStationRealCode());
+            TblBaseStation baseStation1 = tblBaseStationService.selectByRealId(baseStation.getStationRealId());
             if(baseStation1!=null){
                 result.setResult(baseStation);
-                result.setSuccess(ResultCode.DUPLICATE_ADD.strValue(),ResultCode.DUPLICATE_ADD.getRemark());
+                result.setError(ResultCode.DUPLICATE_ADD.strValue(),ResultCode.DUPLICATE_ADD.getRemark());
+                return result;
             }else{
                 tblBaseStationService.insert(baseStation);
                 result.setResult(baseStation);
                 result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+                return result;
             }
         }catch (Exception e){
             logger.info("保存基站失败",e);
             result.setResult(null);
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+            return result;
         }
-        return result;
     }
 
     /**
@@ -101,10 +103,10 @@ public class ElectronBaseStationApi {
         try {
             TblBaseStation baseStation = JSONObject.toJavaObject(obj,TblBaseStation.class);
             //更新操作
-            TblBaseStation baseStation1 = tblBaseStationService.selectByRealCode(baseStation.getStationRealCode());
+            TblBaseStation baseStation1 = tblBaseStationService.selectByRealId(baseStation.getStationRealId());
             if(baseStation1!=null && baseStation.getId().compareTo(baseStation1.getId())!=0){
                 result.setResult(baseStation);
-                result.setSuccess(ResultCode.DUPLICATE_ADD.strValue(),ResultCode.DUPLICATE_ADD.getRemark());
+                result.setError(ResultCode.DUPLICATE_ADD.strValue(),ResultCode.DUPLICATE_ADD.getRemark());
                 return result;
             }else{
                 tblBaseStationService.updateByPrimaryKeySelective(baseStation);

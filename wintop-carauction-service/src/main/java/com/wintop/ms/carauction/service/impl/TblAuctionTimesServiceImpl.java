@@ -21,35 +21,6 @@ public class TblAuctionTimesServiceImpl implements TblAuctionTimesService {
     private TblAuctionTimesModel tblAuctionTimesModel;
     @Autowired
     private TblAuctionLogModel tblAuctionLogModel;
-    @Override
-    public int countByExample(Map<String, Object> map) {
-        return tblAuctionTimesModel.countByExample(map);
-    }
-
-    @Override
-    public List<TblAuctionTimes> selectByExample(Map<String, Object> map) {
-        return tblAuctionTimesModel.selectByExample(map);
-    }
-
-    @Override
-    public TblAuctionTimes selectByPrimaryKey(Integer id) {
-        return tblAuctionTimesModel.selectByPrimaryKey(id);
-    }
-
-    @Override
-    public int deleteByPrimaryKey(Integer id) {
-        return tblAuctionTimesModel.deleteByPrimaryKey(id);
-    }
-
-    @Override
-    public int insert(TblAuctionTimes tblAuctionTimes) {
-        return tblAuctionTimesModel.insert(tblAuctionTimes);
-    }
-
-    @Override
-    public int updateByPrimaryKeySelective(TblAuctionTimes tblAuctionTimes) {
-        return tblAuctionTimesModel.updateByPrimaryKeySelective(tblAuctionTimes);
-    }
 
     /**
      * 根据条件查询对象
@@ -57,23 +28,23 @@ public class TblAuctionTimesServiceImpl implements TblAuctionTimesService {
     @Override
     @Transactional
     public TblAuctionTimes saveBidding(Map<String,Object> map){
-        TblAuctionTimes auctionTimes = tblAuctionTimesModel.selectByParam(map);
+        TblAuctionTimes auctionTimes = tblAuctionTimesModel.selectAuctionCar(map);
         if(auctionTimes!=null){
             TblAuctionLog auctionLog = new TblAuctionLog();
             auctionLog.setId(IdWorker.getInstance().nextId());
-            auctionLog.setStationRealCode(auctionTimes.getStationRealCode());
             auctionLog.setBoardRealId((String)map.get("pp"));
             auctionLog.setToken((String)map.get("mm"));
+            auctionLog.setStationRealId(auctionTimes.getStationRealId());
             auctionLog.setLocalAuctionId(auctionTimes.getLocalAuctionId());
             //TODO,读取当前拍卖车辆
-            auctionLog.setAuctionCarId(null);
-            auctionLog.setBidFee(auctionTimes.getInitPrice());
-            auctionLog.setAuctionTimesId(auctionTimes.getId());
+            auctionLog.setAuctionCarId(auctionTimes.getAuctionCarId());
+            auctionLog.setCarId(auctionTimes.getCarId());
+            auctionLog.setBidFee(null);
             auctionLog.setAuctionTimesName(auctionTimes.getAuctionTimesName());
-            auctionLog.setBsId(auctionTimes.getBsId());
-            auctionLog.setBoardRealName(auctionTimes.getBoardRealName());
+            auctionLog.setBoardName(auctionTimes.getBoardName());
             auctionLog.setAuctionTime(new Date());
-            auctionLog.setCuttingSign(auctionTimes.getCuttingSign());
+            auctionLog.setPriceType(auctionTimes.getCuttingSign());
+            auctionLog.setEnable("0");
             tblAuctionLogModel.insert(auctionLog);
         }
         return auctionTimes;

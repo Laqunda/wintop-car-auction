@@ -47,8 +47,8 @@ public class TblBaseStationServiceImpl implements TblBaseStationService {
      * 根据物理ID查询记录
      */
     @Override
-    public TblBaseStation selectByRealCode(String realCode){
-        return tblBaseStationModel.selectByRealCode(realCode);
+    public TblBaseStation selectByRealId(String stationRealId){
+        return tblBaseStationModel.selectByRealId(stationRealId);
     }
 
     /**

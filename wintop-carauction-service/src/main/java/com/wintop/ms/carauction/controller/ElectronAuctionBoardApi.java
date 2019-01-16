@@ -46,7 +46,12 @@ public class ElectronAuctionBoardApi {
             PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
-            paramMap.put("boardRealName",obj.get("boardRealName"));
+            if(obj.get("boardName")!=null){
+                paramMap.put("boardName",obj.get("boardName"));
+            }
+            if(obj.get("stationRealId")!=null){
+                paramMap.put("stationRealId",obj.get("stationRealId"));
+            }
             List<TblAuctionBoard> boardList = tblAuctionBoardService.selectByExample(paramMap);
             int count = tblAuctionBoardService.countByExample(paramMap);
             ListEntity<TblAuctionBoard> listEntity = new ListEntity<>();
@@ -74,21 +79,24 @@ public class ElectronAuctionBoardApi {
         ServiceResult<TblAuctionBoard> result = new ServiceResult<>();
         try {
             TblAuctionBoard auctionBoard = JSONObject.toJavaObject(obj,TblAuctionBoard.class);
-            //,,时间切割车牌只能有一个
-            TblAuctionBoard auctionBoard0 = tblAuctionBoardService.selectCuttingSignByBsId(auctionBoard.getBsId(),auctionBoard.getCuttingSign());
-            if(auctionBoard0 != null){
-                result.setResult(auctionBoard);
-                result.setSuccess(ResultCode.DUPLICATE_ADD.strValue(),"调价器只能有一个");
-                return result;
+            String[] stationRealIds = auctionBoard.getStationRealIds().split(",");
+            for(String stationRealId:stationRealIds){
+                //,,时间切割车牌只能有一个
+                TblAuctionBoard auctionBoard0 = tblAuctionBoardService.selectCuttingSignByBsId(stationRealId,auctionBoard.getCuttingSign());
+                if(auctionBoard0 != null){
+                    result.setResult(auctionBoard);
+                    result.setError(ResultCode.DUPLICATE_ADD.strValue(),"调价器只能有一个");
+                    return result;
+                }
             }
             //物理ID不能重复
             TblAuctionBoard auctionBoard1 = tblAuctionBoardService.selectByRealId(auctionBoard.getBoardRealId());
             if(auctionBoard1!=null){
                 result.setResult(auctionBoard);
-                result.setSuccess(ResultCode.DUPLICATE_ADD.strValue(),ResultCode.DUPLICATE_ADD.getRemark());
+                result.setError(ResultCode.DUPLICATE_ADD.strValue(),ResultCode.DUPLICATE_ADD.getRemark());
                 return result;
             }else{
-                TblBaseStation baseStation = tblBaseStationService.selectByRealCode(auctionBoard.getStationRealCode());
+                /*TblBaseStation baseStation = tblBaseStationService.selectByRealCode(auctionBoard.getStationRealCode());
                 if(baseStation==null){
                     result.setResult(auctionBoard);
                     result.setSuccess(ResultCode.NO_OBJECT.strValue(),"基站不存在");
@@ -99,7 +107,11 @@ public class ElectronAuctionBoardApi {
                     result.setResult(auctionBoard);
                     result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
                     return result;
-                }
+                }*/
+                tblAuctionBoardService.insert(auctionBoard);
+                result.setResult(auctionBoard);
+                result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+                return result;
             }
         }catch (Exception e){
             logger.info("保存拍牌失败",e);
@@ -123,20 +135,24 @@ public class ElectronAuctionBoardApi {
         try {
             TblAuctionBoard auctionBoard = JSONObject.toJavaObject(obj,TblAuctionBoard.class);
             //,,时间切割车牌只能有一个
-            TblAuctionBoard auctionBoard0 = tblAuctionBoardService.selectCuttingSignByBsId(auctionBoard.getBsId(),auctionBoard.getCuttingSign());
-            if(auctionBoard0 != null && auctionBoard.getId().compareTo(auctionBoard0.getId())!=0){
-                result.setResult(auctionBoard);
-                result.setSuccess(ResultCode.DUPLICATE_ADD.strValue(),"调价器只能有一个");
-                return result;
+            String[] stationRealIds = auctionBoard.getStationRealIds().split(",");
+            for(String stationRealId:stationRealIds){
+                //,,时间切割车牌只能有一个
+                TblAuctionBoard auctionBoard0 = tblAuctionBoardService.selectCuttingSignByBsId(stationRealId,auctionBoard.getCuttingSign());
+                if(auctionBoard0 != null){
+                    result.setResult(auctionBoard);
+                    result.setError(ResultCode.DUPLICATE_ADD.strValue(),"调价器只能有一个");
+                    return result;
+                }
             }
             //更新操作
             TblAuctionBoard auctionBoard1 = tblAuctionBoardService.selectByRealId(auctionBoard.getBoardRealId());
             if(auctionBoard1!=null && auctionBoard.getId().compareTo(auctionBoard1.getId())!=0){
                 result.setResult(auctionBoard);
-                result.setSuccess(ResultCode.DUPLICATE_ADD.strValue(),ResultCode.DUPLICATE_ADD.getRemark());
+                result.setError(ResultCode.DUPLICATE_ADD.strValue(),ResultCode.DUPLICATE_ADD.getRemark());
                 return result;
             }else{
-                TblBaseStation baseStation = tblBaseStationService.selectByRealCode(auctionBoard.getStationRealCode());
+                /*TblBaseStation baseStation = tblBaseStationService.selectByRealCode(auctionBoard.getStationRealCode());
                 if(baseStation==null){
                     result.setResult(auctionBoard);
                     result.setSuccess(ResultCode.NO_OBJECT.strValue(),"基站不存在");
@@ -147,7 +163,11 @@ public class ElectronAuctionBoardApi {
                     result.setResult(auctionBoard);
                     result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
                     return result;
-                }
+                }*/
+                tblAuctionBoardService.updateByPrimaryKeySelective(auctionBoard);
+                result.setResult(auctionBoard);
+                result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+                return result;
             }
         }catch (Exception e){
             logger.info("更新拍牌失败",e);

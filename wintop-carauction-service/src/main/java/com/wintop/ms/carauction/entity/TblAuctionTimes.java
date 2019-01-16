@@ -7,32 +7,35 @@ import java.util.Date;
 public class TblAuctionTimes implements Serializable {
 
     private static final long serialVersionUID = -3573385811247971118L;
-    private Long id;
 
     /**
-     * 基站主键id
+     * 拍牌物理ID(十六进制)
      */
-    private Long bsId;
+    private String boardRealId;
 
     /**
      * 拍牌显示名字
      */
-    private String boardRealName;
+    private String boardName;
 
     /**
      * 基站物理ID(十六进制)
      */
-    private String stationRealCode;
+    private String stationRealId;
 
     /**
      * 基站代码
      */
-    private String stationCode;
+    private String stationName;
 
     /**
      * 后台拍卖场次ID
      */
     private Long localAuctionId;
+
+    private Long auctionCarId;
+
+    private Long carId;
 
     /**
      * 拍卖场次名字
@@ -40,83 +43,53 @@ public class TblAuctionTimes implements Serializable {
     private String auctionTimesName;
 
     /**
-     * 开拍时间
-     */
-    private Date startAuctionTime;
-
-    /**
-     * 结束时间
-     */
-    private Date endAuctionTime;
-
-    /**
      * 初始加价幅度
      */
-    private BigDecimal initPrice;
+    private BigDecimal initPriceRange;
 
-    /**
-     * 是否有效(0:有效；1:无效)
-     */
-    private String enable;
+    private BigDecimal priceRange;
 
-    /**
-     * 备注
-     */
-    private String remarks;
-
-    private Date createTime;
+    //起拍价
+    private BigDecimal startingPrice;
 
     private String cuttingSign;
 
-    public Long getId() {
-        return id;
+    public String getBoardRealId() {
+        return boardRealId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBoardRealId(String boardRealId) {
+        this.boardRealId = boardRealId;
     }
 
-    /**
-     * @return 基站物理ID(十六进制)
-     */
-    public String getStationRealCode() {
-        return stationRealCode;
+    public String getBoardName() {
+        return boardName;
     }
 
-    /**
-     * @param stationRealCode 
-	 *            基站物理ID(十六进制)
-     */
-    public void setStationRealCode(String stationRealCode) {
-        this.stationRealCode = stationRealCode;
+    public void setBoardName(String boardName) {
+        this.boardName = boardName;
     }
 
-    /**
-     * @return 基站代码
-     */
-    public String getStationCode() {
-        return stationCode;
+    public String getStationRealId() {
+        return stationRealId;
     }
 
-    /**
-     * @param stationCode 
-	 *            基站代码
-     */
-    public void setStationCode(String stationCode) {
-        this.stationCode = stationCode;
+    public void setStationRealId(String stationRealId) {
+        this.stationRealId = stationRealId;
     }
 
-    /**
-     * @return 后台拍卖场次ID
-     */
+    public String getStationName() {
+        return stationName;
+    }
+
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
+    }
+
     public Long getLocalAuctionId() {
         return localAuctionId;
     }
 
-    /**
-     * @param localAuctionId 
-	 *            后台拍卖场次ID
-     */
     public void setLocalAuctionId(Long localAuctionId) {
         this.localAuctionId = localAuctionId;
     }
@@ -129,96 +102,36 @@ public class TblAuctionTimes implements Serializable {
         this.auctionTimesName = auctionTimesName;
     }
 
-    /**
-     * @return 开拍时间
-     */
-    public Date getStartAuctionTime() {
-        return startAuctionTime;
+    public BigDecimal getPriceRange() {
+        return priceRange;
     }
 
-    /**
-     * @param startAuctionTime 
-	 *            开拍时间
-     */
-    public void setStartAuctionTime(Date startAuctionTime) {
-        this.startAuctionTime = startAuctionTime;
+    public void setPriceRange(BigDecimal priceRange) {
+        this.priceRange = priceRange;
     }
 
-    /**
-     * @return 结束时间
-     */
-    public Date getEndAuctionTime() {
-        return endAuctionTime;
+    public BigDecimal getStartingPrice() {
+        return startingPrice;
     }
 
-    /**
-     * @param endAuctionTime 
-	 *            结束时间
-     */
-    public void setEndAuctionTime(Date endAuctionTime) {
-        this.endAuctionTime = endAuctionTime;
+    public void setStartingPrice(BigDecimal startingPrice) {
+        this.startingPrice = startingPrice;
     }
 
-    public BigDecimal getInitPrice() {
-        return initPrice;
+    public Long getAuctionCarId() {
+        return auctionCarId;
     }
 
-    public void setInitPrice(BigDecimal initPrice) {
-        this.initPrice = initPrice;
+    public void setAuctionCarId(Long auctionCarId) {
+        this.auctionCarId = auctionCarId;
     }
 
-    /**
-     * @return 是否有效(0:有效；1:无效)
-     */
-    public String getEnable() {
-        return enable;
+    public Long getCarId() {
+        return carId;
     }
 
-    /**
-     * @param enable 
-	 *            是否有效(0:有效；1:无效)
-     */
-    public void setEnable(String enable) {
-        this.enable = enable;
-    }
-
-    /**
-     * @return 备注
-     */
-    public String getRemarks() {
-        return remarks;
-    }
-
-    /**
-     * @param remarks 
-	 *            备注
-     */
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    public Long getBsId() {
-        return bsId;
-    }
-
-    public void setBsId(Long bsId) {
-        this.bsId = bsId;
-    }
-
-    public String getBoardRealName() {
-        return boardRealName;
-    }
-
-    public void setBoardRealName(String boardRealName) {
-        this.boardRealName = boardRealName;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setCarId(Long carId) {
+        this.carId = carId;
     }
 
     public String getCuttingSign() {
@@ -227,5 +140,13 @@ public class TblAuctionTimes implements Serializable {
 
     public void setCuttingSign(String cuttingSign) {
         this.cuttingSign = cuttingSign;
+    }
+
+    public BigDecimal getInitPriceRange() {
+        return initPriceRange;
+    }
+
+    public void setInitPriceRange(BigDecimal initPriceRange) {
+        this.initPriceRange = initPriceRange;
     }
 }
