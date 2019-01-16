@@ -81,6 +81,7 @@ public class ElectronAuctionApi {
             paramMap.put("boardName",obj.get("boardName"));
             paramMap.put("carInfo",obj.get("carInfo"));
             paramMap.put("carId",obj.get("carId"));
+            paramMap.put("priceType",obj.get("priceType"));
             List<TblAuctionLog> logList = tblAuctionLogService.selectByExample(paramMap);
             int count = tblAuctionLogService.countByExample(paramMap);
             ListEntity<TblAuctionLog> listEntity = new ListEntity<>();

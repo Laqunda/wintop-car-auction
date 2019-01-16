@@ -36,6 +36,9 @@
         LEFT JOIN car_auto t4 on t4.id=t1.car_id
         LEFT JOIN car_auto_info_detail t5 on t5.auto_id=t4.id
         where t1.enable='0'
+        <if test="priceType!=null and priceType!=''">
+            AND t1.price_type = #{priceType}
+        </if>
         <if test="auctionTimesName!=null and auctionTimesName!=''">
             AND t1.auction_times_name like CONCAT(CONCAT('%', #{auctionTimesName}),'%')
         </if>
@@ -68,6 +71,9 @@
         LEFT JOIN car_auto t4 on t4.id=t1.car_id
         LEFT JOIN car_auto_info_detail t5 on t5.auto_id=t4.id
         where t1.enable='0'
+        <if test="priceType!=null and priceType!=''">
+            AND t1.price_type = #{priceType}
+        </if>
         <if test="auctionTimesName!=null and auctionTimesName!=''">
             AND t1.auction_times_name like CONCAT(CONCAT('%', #{auctionTimesName}),'%')
         </if>
