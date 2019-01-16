@@ -33,7 +33,7 @@ public class TblAuctionLogModel {
     /**
      * 根据主键查询记录
      */
-    public TblAuctionLog selectByPrimaryKey(Integer id){
+    public TblAuctionLog selectByPrimaryKey(Long id){
         return tblAuctionLogReadDao.selectByPrimaryKey(id);
     }
 

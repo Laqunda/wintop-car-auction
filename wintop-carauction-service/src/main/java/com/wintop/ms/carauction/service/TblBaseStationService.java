@@ -42,6 +42,11 @@ public interface TblBaseStationService {
     TblBaseStation selectByRealId(String stationRealId);
 
     /**
+     * 根据物理ID和token查询记录
+     */
+    TblBaseStation selectByRealIdAndToken(String stationRealId,String token);
+
+    /**
      * 逻辑删除基站
      * @param tblBaseStation
      * @return

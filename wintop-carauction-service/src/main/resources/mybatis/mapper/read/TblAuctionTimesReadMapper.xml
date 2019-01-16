@@ -6,7 +6,7 @@
     <result column="station_name" property="stationName" jdbcType="VARCHAR" />
     <result column="board_real_id" property="boardRealId" jdbcType="VARCHAR" />
     <result column="board_name" property="boardName" jdbcType="VARCHAR" />
-    <result column="local_auction_id" property="localAuctionId" jdbcType="BIGINT" />
+    <result column="locale_auction_id" property="localeAuctionId" jdbcType="BIGINT" />
     <result column="auction_car_id" property="auctionCarId" jdbcType="BIGINT" />
     <result column="car_id" property="carId" jdbcType="BIGINT" />
     <result column="auction_times_name" property="auctionTimesName" jdbcType="VARCHAR" />
@@ -18,7 +18,7 @@
 
   <select id="selectAuctionCar" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
-    t3.station_real_id,t3.station_name,t6.board_real_id,t6.board_name,t1.id as local_auction_id,
+    t3.station_real_id,t3.station_name,t6.board_real_id,t6.board_name,t1.id as locale_auction_id,
     t2.id as auction_car_id,t2.car_id,t1.title as auction_times_name,
     t2.init_price_range,t2.price_range,t4.starting_price,t6.cutting_sign
     from car_locale_auction t1

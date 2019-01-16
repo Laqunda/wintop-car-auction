@@ -79,4 +79,11 @@ public interface ICarLocaleAuctionReadDao {
      * 首页开拍场次时间查询
      */
     List<CarLocaleAuction> queryCarLocaleAuctionList(Map<String,Object> map);
+
+    /**
+     * 查询基站最后一次完成的竞拍场次
+     * @param stationRealId
+     * @return
+     */
+    CarLocaleAuction selectByStationRealId(String stationRealId);
 }

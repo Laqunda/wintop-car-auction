@@ -31,7 +31,7 @@ public class TblAuctionTimes implements Serializable {
     /**
      * 后台拍卖场次ID
      */
-    private Long localAuctionId;
+    private Long localeAuctionId;
 
     private Long auctionCarId;
 
@@ -86,12 +86,12 @@ public class TblAuctionTimes implements Serializable {
         this.stationName = stationName;
     }
 
-    public Long getLocalAuctionId() {
-        return localAuctionId;
+    public Long getLocaleAuctionId() {
+        return localeAuctionId;
     }
 
-    public void setLocalAuctionId(Long localAuctionId) {
-        this.localAuctionId = localAuctionId;
+    public void setLocaleAuctionId(Long localeAuctionId) {
+        this.localeAuctionId = localeAuctionId;
     }
 
     public String getAuctionTimesName() {

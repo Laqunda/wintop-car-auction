@@ -66,6 +66,13 @@ public class TblBaseStationModel {
     }
 
     /**
+     * 根据物理ID和token查询记录
+     */
+    public TblBaseStation selectByRealIdAndToken(String stationRealId,String token){
+        return tblBaseStationReadDao.selectByRealIdAndToken(stationRealId, token);
+    }
+
+    /**
      * 逻辑删除基站
      * @param tblBaseStation
      * @return

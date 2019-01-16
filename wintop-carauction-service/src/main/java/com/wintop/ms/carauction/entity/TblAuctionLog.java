@@ -39,7 +39,7 @@ public class TblAuctionLog implements Serializable {
      */
     private Date auctionTime;
 
-    private Long localAuctionId;
+    private Long localeAuctionId;
 
     private Long auctionCarId;
 
@@ -198,12 +198,12 @@ public class TblAuctionLog implements Serializable {
         this.auctionTime = auctionTime;
     }
 
-    public Long getLocalAuctionId() {
-        return localAuctionId;
+    public Long getLocaleAuctionId() {
+        return localeAuctionId;
     }
 
-    public void setLocalAuctionId(Long localAuctionId) {
-        this.localAuctionId = localAuctionId;
+    public void setLocaleAuctionId(Long localeAuctionId) {
+        this.localeAuctionId = localeAuctionId;
     }
 
     public Long getAuctionCarId() {

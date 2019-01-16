@@ -49,7 +49,16 @@
     select
     <include refid="Base_Column_List" />
     from tbl_base_station t1
-    where t1.del_flag='1' and t1.station_real_id = #{stationRealId}
+    where t1.station_real_id = #{stationRealId} and t1.del_flag='1'
+    order by t1.create_time desc
+    limit 1
+  </select>
+  <select id="selectByRealIdAndToken" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_base_station t1
+    where t1.station_real_id = #{stationRealId} and t1.token=#{token} and t1.del_flag='1'
+    order by t1.create_time desc
     limit 1
   </select>
 </mapper>

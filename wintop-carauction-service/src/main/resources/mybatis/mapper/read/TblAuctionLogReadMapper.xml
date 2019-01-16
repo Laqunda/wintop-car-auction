@@ -11,7 +11,7 @@
     <result column="customer_id" property="customerId" jdbcType="BIGINT" />
     <result column="board_name" property="boardName" jdbcType="VARCHAR" />
     <result column="auction_time" property="auctionTime" jdbcType="TIMESTAMP" />
-    <result column="local_auction_id" property="localAuctionId" jdbcType="BIGINT" />
+    <result column="locale_auction_id" property="localeAuctionId" jdbcType="BIGINT" />
     <result column="auction_car_id" property="auctionCarId" jdbcType="BIGINT" />
     <result column="bid_fee" property="bidFee" jdbcType="DECIMAL" />
     <result column="name" property="name" jdbcType="VARCHAR" />
@@ -25,7 +25,7 @@
 
     <sql id="Base_Column_List" >
         t1.id, t1.station_real_id, t1.board_real_id, t1.auction_times_name, t1.car_id,t1.customer_id,
-        t1.board_name, t1.auction_time,t1.local_auction_id,t1.auction_car_id,t1.bid_fee,t1.price_type,t1.enable,t1.parent_id,t1.board_name
+        t1.board_name, t1.auction_time,t1.locale_auction_id,t1.auction_car_id,t1.bid_fee,t1.price_type,t1.enable,t1.parent_id
     </sql>
     <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
         select

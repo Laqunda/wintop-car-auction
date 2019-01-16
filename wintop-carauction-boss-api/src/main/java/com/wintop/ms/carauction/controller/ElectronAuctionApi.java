@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class ElectronAuctionApi {
      */
     @AuthPublic
     @RequestMapping(value = "/bidding",produces="application/json; charset=UTF-8")
-    public Integer bidding(HttpServletRequest request,String jz,String pp,String mm) {
+    public synchronized Integer bidding(HttpServletRequest request,String jz,String pp,String mm) {
         if(StringUtils.isBlank(jz) || StringUtils.isBlank(pp) || StringUtils.isBlank(mm)){
             return 0;
         }
@@ -69,5 +70,32 @@ public class ElectronAuctionApi {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
+
+    /**
+     * 电子拍牌上传访问接口
+     * @return
+     */
+    @AuthPublic
+    @RequestMapping(value = "/tongji",produces="application/json; charset=UTF-8")
+    public synchronized Integer tongji(HttpServletRequest request,String jz,String pps,String mm,String rq) {
+        if(StringUtils.isBlank(jz) || StringUtils.isBlank(pps) || StringUtils.isBlank(mm)){
+            return 3;
+        }
+        Map<String,Object> map = new HashMap();
+        map.put("jz",jz);
+        map.put("pps",pps);
+        map.put("mm",mm);
+        map.put("rq",rq);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/localeBoardRecord/saveLocaleBoard"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        ResultModel model = ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+        if(model.getResultCode()==100){
+            return 2;
+        }
+        return 3;
     }
 }

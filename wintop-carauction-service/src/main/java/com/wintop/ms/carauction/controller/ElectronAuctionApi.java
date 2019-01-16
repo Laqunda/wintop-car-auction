@@ -8,7 +8,6 @@ import com.wintop.ms.carauction.entity.ListEntity;
 import com.wintop.ms.carauction.entity.TblAuctionLog;
 import com.wintop.ms.carauction.entity.TblAuctionTimes;
 import com.wintop.ms.carauction.service.TblAuctionLogService;
-import com.wintop.ms.carauction.service.TblAuctionTimesService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +26,6 @@ import java.util.Map;
 @RequestMapping("/service/electronAuction")
 public class ElectronAuctionApi {
     @Autowired
-    private TblAuctionTimesService tblAuctionTimesService;
-    @Autowired
     private TblAuctionLogService tblAuctionLogService;
 
     private static final Logger logger = LoggerFactory.getLogger(ElectronAuctionApi.class);
@@ -40,10 +37,10 @@ public class ElectronAuctionApi {
     public ServiceResult<TblAuctionTimes> bidding(@RequestBody Map<String,Object> map) {
         ServiceResult<TblAuctionTimes> result = new ServiceResult<>();
         try {
-            TblAuctionTimes auctionTimes = tblAuctionTimesService.saveBidding(map);
+            TblAuctionTimes auctionTimes = tblAuctionLogService.saveBidding(map);
             if(auctionTimes==null){
                 result.setResult(null);
-                result.setSuccess(ResultCode.REQUEST_DISABLED.strValue(),ResultCode.REQUEST_DISABLED.getRemark());
+                result.setError(ResultCode.REQUEST_DISABLED.strValue(),ResultCode.REQUEST_DISABLED.getRemark());
             }else{
                 result.setResult(auctionTimes);
                 result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());

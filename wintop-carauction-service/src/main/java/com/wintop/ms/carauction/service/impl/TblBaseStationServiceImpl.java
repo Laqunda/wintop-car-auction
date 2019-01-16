@@ -52,6 +52,14 @@ public class TblBaseStationServiceImpl implements TblBaseStationService {
     }
 
     /**
+     * 根据物理ID和token查询记录
+     */
+    @Override
+    public TblBaseStation selectByRealIdAndToken(String stationRealId,String token){
+        return tblBaseStationModel.selectByRealIdAndToken(stationRealId, token);
+    }
+
+    /**
      * 逻辑删除基站
      * @param tblBaseStation
      * @return
