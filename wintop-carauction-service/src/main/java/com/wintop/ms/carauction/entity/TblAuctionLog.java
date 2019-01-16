@@ -47,6 +47,9 @@ public class TblAuctionLog implements Serializable {
 
     private Long customerId;
 
+    //加价幅度
+    private BigDecimal priceRange;
+
     private BigDecimal bidFee;
 
     /**
@@ -212,6 +215,14 @@ public class TblAuctionLog implements Serializable {
 
     public void setAuctionCarId(Long auctionCarId) {
         this.auctionCarId = auctionCarId;
+    }
+
+    public BigDecimal getPriceRange() {
+        return priceRange;
+    }
+
+    public void setPriceRange(BigDecimal priceRange) {
+        this.priceRange = priceRange;
     }
 
     public BigDecimal getBidFee() {

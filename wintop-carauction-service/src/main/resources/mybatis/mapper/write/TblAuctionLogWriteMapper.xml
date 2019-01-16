@@ -4,15 +4,15 @@
 
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
     insert into tbl_auction_log (id, station_real_id, board_real_id, token, auction_times_name,
-      board_name, auction_time, locale_auction_id,auction_car_id,car_id,customer_id,bid_fee,
+      board_name, auction_time, locale_auction_id,auction_car_id,car_id,customer_id,price_range,bid_fee,
       price_type,enable,parent_id,create_person,create_time)
     values (#{id}, #{stationRealId}, #{boardRealId}, #{token},  #{auctionTimesName},
-       #{boardName}, #{auctionTime}, #{localeAuctionId},#{auctionCarId},#{carId},#{customerId},#{bidFee},
+       #{boardName}, #{auctionTime}, #{localeAuctionId},#{auctionCarId},#{carId},#{customerId},#{priceRange},#{bidFee},
       #{priceType},#{enable},#{parentId}, #{createPerson}, #{createTime})
   </insert>
   <update id="updatePriceAdd" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
     update tbl_auction_log
-    set bid_fee=#{bidFee},parent_id=#{parentId}
+    set price_range=#{priceRange},bid_fee=#{bidFee},parent_id=#{parentId}
     where auction_car_id = #{auctionCarId} and bid_fee is null
   </update>
 </mapper>

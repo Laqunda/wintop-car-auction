@@ -10,7 +10,7 @@
     id,
     code,
     title,
-    station_real_id
+    station_real_id,
     region_id,
     city_id,
     poster,
@@ -35,7 +35,7 @@
     #{id},
     #{code},
     #{title},
-    #{stationRealId}
+    #{stationRealId},
     #{regionId},
     #{cityId},
     #{poster},

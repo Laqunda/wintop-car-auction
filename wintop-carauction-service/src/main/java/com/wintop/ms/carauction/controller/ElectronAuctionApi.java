@@ -46,7 +46,7 @@ public class ElectronAuctionApi {
                 result.setResult(null);
                 result.setError(ResultCode.REQUEST_DISABLED.strValue(),ResultCode.REQUEST_DISABLED.getRemark());
             }else{
-                result.setResult(auctionTimes);
+                result.setResult(null);
                 result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
             }
         }catch (Exception e){

@@ -387,6 +387,9 @@ public class CarLocaleAuctionApi {
             result.setError("101","场次主题为空！");
             return result;
         }
+        if(obj.getString("stationRealId")!=null){
+            carLocaleAuction.setStationRealId(obj.getString("stationRealId"));
+        }
         if(obj.getString("regionId")!=null){
             carLocaleAuction.setRegionId(obj.getString("regionId"));
         }
