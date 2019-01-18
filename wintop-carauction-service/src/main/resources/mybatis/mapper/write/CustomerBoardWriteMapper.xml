@@ -3,9 +3,9 @@
 <mapper namespace="com.wintop.ms.carauction.mapper.write.CustomerBoardWriteDao" >
 
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CustomerBoard" >
-    insert into car_customer_board (id, customer_id, board_id, board_real_id, bind_status, create_time,
+    insert into car_customer_board (id, customer_id, board_real_id, bind_status, create_time,
       create_person, modify_time, modify_person)
-    values (#{id}, #{customerId}, #{boardId}, #{boardRealId}, #{bindStatus}, #{createTime},
+    values (#{id}, #{customerId}, #{boardRealId}, #{bindStatus}, #{createTime},
       #{createPerson}, #{modifyTime}, #{modifyPerson})
   </insert>
 

@@ -5,7 +5,9 @@ import java.util.Map;
 
 import com.wintop.ms.carauction.entity.TblBaseStation;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TblBaseStationWriteDao {
 
     /**

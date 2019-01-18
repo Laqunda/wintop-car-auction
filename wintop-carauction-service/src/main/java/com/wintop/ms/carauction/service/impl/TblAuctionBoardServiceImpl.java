@@ -1,8 +1,10 @@
 package com.wintop.ms.carauction.service.impl;
 
 import com.wintop.ms.carauction.entity.TblAuctionBoard;
+import com.wintop.ms.carauction.entity.TblBaseStation;
 import com.wintop.ms.carauction.entity.TblBoardStation;
 import com.wintop.ms.carauction.model.TblAuctionBoardModel;
+import com.wintop.ms.carauction.model.TblBaseStationModel;
 import com.wintop.ms.carauction.service.TblAuctionBoardService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,59 +17,74 @@ import java.util.Map;
 @Service
 public class TblAuctionBoardServiceImpl implements TblAuctionBoardService {
     @Autowired
-    private TblAuctionBoardModel tblAuctionBoardModel;
+    private TblAuctionBoardModel auctionBoardModel;
+    @Autowired
+    private TblBaseStationModel baseStationModel;
 
     @Override
     public int countByExample(Map<String, Object> map) {
-        return tblAuctionBoardModel.countByExample(map);
+        return auctionBoardModel.countByExample(map);
     }
 
     @Override
     public List<TblAuctionBoard> selectByExample(Map<String, Object> map) {
-        List<TblAuctionBoard> boards = tblAuctionBoardModel.selectByExample(map);
+        List<TblAuctionBoard> boards = auctionBoardModel.selectByExample(map);
         for(TblAuctionBoard board:boards){
-            List<TblBoardStation> stations = tblAuctionBoardModel.selectStationListByBoardRealId(board.getBoardRealId());
+            String auctionNames = "";
+            List<TblBaseStation> stations = baseStationModel.selectStationListByBoardRealId(board.getBoardRealId());
             board.setBaseStations(stations);
+            for(TblBaseStation station:stations){
+                auctionNames+=station.getAuctionName()+",";
+            }
+            board.setAuctionNames(auctionNames);
         }
         return boards;
     }
 
     @Override
     public TblAuctionBoard selectByPrimaryKey(Long id) {
-        return tblAuctionBoardModel.selectByPrimaryKey(id);
+        TblAuctionBoard board = auctionBoardModel.selectByPrimaryKey(id);
+        String auctionNames = "";
+        List<TblBaseStation> stations = baseStationModel.selectStationListByBoardRealId(board.getBoardRealId());
+        board.setBaseStations(stations);
+        for(TblBaseStation station:stations){
+            auctionNames+=station.getAuctionName()+",";
+        }
+        board.setAuctionNames(auctionNames);
+        return board;
     }
 
     @Override
     public int deleteByPrimaryKey(Long id) {
-        return tblAuctionBoardModel.deleteByPrimaryKey(id);
+        return auctionBoardModel.deleteByPrimaryKey(id);
     }
 
     @Override
     public int insert(TblAuctionBoard tblAuctionBoard) {
         String[] stationRealIds = tblAuctionBoard.getStationRealIds().split(",");
-        tblAuctionBoardModel.deleteBoardStation(tblAuctionBoard.getBoardRealId());
+        auctionBoardModel.deleteBoardStation(tblAuctionBoard.getBoardRealId());
         for(String stationRealId:stationRealIds){
             TblBoardStation boardStation = new TblBoardStation();
             boardStation.setId(IdWorker.getInstance().nextId());
             boardStation.setBoardRealId(tblAuctionBoard.getBoardRealId());
             boardStation.setStationRealId(stationRealId);
-            tblAuctionBoardModel.saveBoardStation(boardStation);
+            auctionBoardModel.saveBoardStation(boardStation);
         }
-        return tblAuctionBoardModel.insert(tblAuctionBoard);
+        return auctionBoardModel.insert(tblAuctionBoard);
     }
 
     @Override
     public int updateByPrimaryKeySelective(TblAuctionBoard tblAuctionBoard) {
         String[] stationRealIds = tblAuctionBoard.getStationRealIds().split(",");
-        tblAuctionBoardModel.deleteBoardStation(tblAuctionBoard.getBoardRealId());
+        auctionBoardModel.deleteBoardStation(tblAuctionBoard.getBoardRealId());
         for(String stationRealId:stationRealIds){
             TblBoardStation boardStation = new TblBoardStation();
             boardStation.setId(IdWorker.getInstance().nextId());
             boardStation.setBoardRealId(tblAuctionBoard.getBoardRealId());
             boardStation.setStationRealId(stationRealId);
-            tblAuctionBoardModel.saveBoardStation(boardStation);
+            auctionBoardModel.saveBoardStation(boardStation);
         }
-        return tblAuctionBoardModel.updateByPrimaryKeySelective(tblAuctionBoard);
+        return auctionBoardModel.updateByPrimaryKeySelective(tblAuctionBoard);
     }
 
     /**
@@ -77,7 +94,7 @@ public class TblAuctionBoardServiceImpl implements TblAuctionBoardService {
      */
     @Override
     public int updateDeleteFlag(TblAuctionBoard tblAuctionBoard){
-        return tblAuctionBoardModel.updateDeleteFlag(tblAuctionBoard);
+        return auctionBoardModel.updateDeleteFlag(tblAuctionBoard);
     }
 
     /**
@@ -87,7 +104,7 @@ public class TblAuctionBoardServiceImpl implements TblAuctionBoardService {
      */
     @Override
     public TblAuctionBoard selectByRealId(String boardRealId){
-        return tblAuctionBoardModel.selectByRealId(boardRealId);
+        return auctionBoardModel.selectByRealId(boardRealId);
     }
 
     /**
@@ -103,7 +120,7 @@ public class TblAuctionBoardServiceImpl implements TblAuctionBoardService {
         Map<String,Object> map = new HashMap<>();
         map.put("stationRealId",stationRealId);
         map.put("cuttingSign","1");
-        List<TblAuctionBoard> boards = tblAuctionBoardModel.selectByExample(map);
+        List<TblAuctionBoard> boards = auctionBoardModel.selectByExample(map);
         return boards.size()>0?boards.get(0):null;
     }
 

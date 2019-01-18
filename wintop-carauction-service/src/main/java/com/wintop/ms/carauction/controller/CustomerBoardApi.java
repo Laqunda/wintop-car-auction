@@ -53,7 +53,6 @@ public class CustomerBoardApi {
                 result.setSuccess(ResultCode.NO_OBJECT.strValue(),"拍牌不存在");
                 return result;
             }else{
-                customerBoard.setBoardId(board.getId());
                 customerBoardService.insert(customerBoard);
                 result.setResult(customerBoard);
                 result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());

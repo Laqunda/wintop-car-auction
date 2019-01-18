@@ -173,4 +173,13 @@ public class CarLocaleAuctionCarModel {
     public Integer batchUpdateLocaleAuctionById(List<CarLocaleAuctionCar> localeAuctionList){
         return writeDao.batchUpdateLocaleAuctionById(localeAuctionList);
     }
+
+    /**
+     * 查询当前场次正在竞拍的车辆
+     * @param localeAuctionId
+     * @return
+     */
+    public CarLocaleAuctionCar selectCurrentAuctionCar(Long localeAuctionId){
+        return readDao.selectCurrentAuctionCar(localeAuctionId);
+    }
 }

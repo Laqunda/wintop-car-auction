@@ -22,6 +22,8 @@ public class TblBoardStation implements Serializable {
 
     private String stationName;
 
+    private String auctionName;
+
     //0为选择，1选择
     private String checked;
 
@@ -66,5 +68,13 @@ public class TblBoardStation implements Serializable {
 
     public void setChecked(String checked) {
         this.checked = checked;
+    }
+
+    public String getAuctionName() {
+        return auctionName;
+    }
+
+    public void setAuctionName(String auctionName) {
+        this.auctionName = auctionName;
     }
 }

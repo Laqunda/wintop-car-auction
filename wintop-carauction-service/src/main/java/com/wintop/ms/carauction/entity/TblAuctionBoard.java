@@ -51,7 +51,10 @@ public class TblAuctionBoard implements Serializable {
     //多个基站物理id
     private String stationRealIds;
 
-    private List<TblBoardStation> baseStations;
+    //所属拍场，多个逗号隔开
+    private String auctionNames;
+
+    private List<TblBaseStation> baseStations;
 
     public Long getId() {
         return id;
@@ -193,11 +196,19 @@ public class TblAuctionBoard implements Serializable {
         this.stationRealIds = stationRealIds;
     }
 
-    public List<TblBoardStation> getBaseStations() {
+    public List<TblBaseStation> getBaseStations() {
         return baseStations;
     }
 
-    public void setBaseStations(List<TblBoardStation> baseStations) {
+    public void setBaseStations(List<TblBaseStation> baseStations) {
         this.baseStations = baseStations;
+    }
+
+    public String getAuctionNames() {
+        return auctionNames;
+    }
+
+    public void setAuctionNames(String auctionNames) {
+        this.auctionNames = auctionNames;
     }
 }

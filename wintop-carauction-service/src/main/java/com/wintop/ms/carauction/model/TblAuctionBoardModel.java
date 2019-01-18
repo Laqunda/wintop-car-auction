@@ -95,12 +95,4 @@ public class TblAuctionBoardModel {
         return tblAuctionBoardWriteDao.saveBoardStation(boardStation);
     }
 
-    /**
-     * 查询拍牌关联的基站
-     * @param boardRealId
-     * @return
-     */
-    public List<TblBoardStation> selectStationListByBoardRealId(String boardRealId){
-        return tblAuctionBoardReadDao.selectStationListByBoardRealId(boardRealId);
-    }
 }

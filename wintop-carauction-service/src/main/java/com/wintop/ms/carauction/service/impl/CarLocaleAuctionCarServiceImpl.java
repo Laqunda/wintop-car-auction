@@ -598,4 +598,14 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
     public Integer batchUpdateLocaleAuctionById(List<CarLocaleAuctionCar> localeAuctionList){
         return model.batchUpdateLocaleAuctionById(localeAuctionList);
     }
+
+    /**
+     * 查询当前场次正在竞拍的车辆
+     * @param localeAuctionId
+     * @return
+     */
+    @Override
+    public CarLocaleAuctionCar selectCurrentAuctionCar(Long localeAuctionId){
+        return model.selectCurrentAuctionCar(localeAuctionId);
+    }
 }

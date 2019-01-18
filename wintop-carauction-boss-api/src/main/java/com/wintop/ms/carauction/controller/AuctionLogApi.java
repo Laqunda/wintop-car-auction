@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AuthPublic;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
+import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
@@ -41,9 +42,9 @@ public class AuctionLogApi {
      *@date 2019/1/15
      *@param:map
      */
-    @ApiOperation(value = "根据参数查询用户信息列表")
+    @ApiOperation(value = "根据参数查询出价记录列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "localAuctionId",value = "场次id",required = false,paramType = "query",dataType = "string"),
+            @ApiImplicitParam(name = "auctionTimesName",value = "场次名称",required = false,paramType = "query",dataType = "string"),
             @ApiImplicitParam(name = "boardName",value = "拍牌号",required = false,paramType = "query",dataType = "string"),
             @ApiImplicitParam(name = "carInfo",value = "车辆编号/车牌号",required = false,paramType = "query",dataType = "long"),
             @ApiImplicitParam(name = "carId",value = "车辆id",required = false,paramType = "query",dataType = "long"),
@@ -52,10 +53,73 @@ public class AuctionLogApi {
     })
     @PostMapping(value = "/getAuctionLogList",produces="application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel getAuctionLogList(@RequestBody Map<String,Object> map) {
+    public ResultModel getAuctionLogList(@CurrentUserId Long userId,@RequestBody Map<String,Object> map) {
         if(map.get("page")==null || map.get("limit")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
+        map.put("userId",userId);
+        map.put("priceType",'0');
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/electronAuction/selectLogList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
+
+
+    /**
+     * 根据参数查询加价记录列表
+     *@Author:zhangzijuan
+     *@date 2019/1/15
+     *@param:map
+     */
+    @ApiOperation(value = "根据参数查询出价记录列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "auctionTimesName",value = "场次名称",required = false,paramType = "query",dataType = "string"),
+            @ApiImplicitParam(name = "carInfo",value = "车辆编号/车牌号",required = false,paramType = "query",dataType = "long"),
+            @ApiImplicitParam(name = "carId",value = "车辆id",required = false,paramType = "query",dataType = "long"),
+            @ApiImplicitParam(name = "page",value = "当前页数",required = true,paramType = "query",dataType = "int"),
+            @ApiImplicitParam(name = "limit",value = "每页显示的条数",required = true,paramType = "query",dataType = "int")
+    })
+    @PostMapping(value = "/getAddLogList",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel getAddLogList(@CurrentUserId Long userId,@RequestBody Map<String,Object> map) {
+        if(map.get("page")==null || map.get("limit")==null){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        map.put("userId",userId);
+        map.put("priceType",'2');
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/electronAuction/selectLogList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
+
+    /**
+     * 根据参数查询加价幅度调整列表
+     *@Author:zhangzijuan
+     *@date 2019/1/15
+     *@param:map
+     */
+    @ApiOperation(value = "根据参数查询加价幅度调整列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "auctionTimesName",value = "场次名称",required = false,paramType = "query",dataType = "string"),
+            @ApiImplicitParam(name = "carInfo",value = "车辆编号/车牌号",required = false,paramType = "query",dataType = "long"),
+            @ApiImplicitParam(name = "carId",value = "车辆id",required = false,paramType = "query",dataType = "long"),
+            @ApiImplicitParam(name = "page",value = "当前页数",required = true,paramType = "query",dataType = "int"),
+            @ApiImplicitParam(name = "limit",value = "每页显示的条数",required = true,paramType = "query",dataType = "int")
+    })
+    @PostMapping(value = "/getRangeLogList",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel getRangeLogList(@CurrentUserId Long userId,@RequestBody Map<String,Object> map) {
+        if(map.get("page")==null || map.get("limit")==null){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        map.put("userId",userId);
+        map.put("priceType","3");
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/electronAuction/selectLogList"))

@@ -5,7 +5,9 @@ import java.util.Map;
 
 import com.wintop.ms.carauction.entity.TblAuctionLog;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TblAuctionLogReadDao {
     /**
      * 根据条件查询记录总数
@@ -22,5 +24,11 @@ public interface TblAuctionLogReadDao {
      */
     TblAuctionLog selectByPrimaryKey(Long id);
 
-    TblAuctionLog selectLastPriceByAdjust(Long auctionCarId);
+    /**
+     * 根据竞拍详情id查询数据
+     * @param auctionCarId
+     * @param priceType
+     * @return
+     */
+    TblAuctionLog selectByAuctionCarId(@Param("auctionCarId") Long auctionCarId,@Param("priceType") String priceType);
 }

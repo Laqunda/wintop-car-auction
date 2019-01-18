@@ -30,7 +30,7 @@ public class ElectronBaseStationApi {
     private static final Logger logger = LoggerFactory.getLogger(ElectronBaseStationApi.class);
 
     /***
-     * 查询所有基站
+     * 查询基站分页数据
      * @return
      */
     @RequestMapping(value = "/selectBaseStationList",
@@ -49,6 +49,26 @@ public class ElectronBaseStationApi {
             listEntity.setList(baseList);
             listEntity.setCount(count);
             result.setResult(listEntity);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+        }catch (Exception e){
+            logger.info("查询基站接分页口失败",e);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /***
+     * 查询所有基站
+     * @return
+     */
+    @RequestMapping(value = "/selectAllStationList",
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<List<TblBaseStation>> selectAllStationList(@RequestBody JSONObject obj) {
+        ServiceResult<List<TblBaseStation>> result = new ServiceResult<>();
+        try {
+            List<TblBaseStation> baseList = tblBaseStationService.selectAllStationList();
+            result.setResult(baseList);
             result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
         }catch (Exception e){
             logger.info("查询所有基站接口失败",e);
@@ -142,6 +162,30 @@ public class ElectronBaseStationApi {
             return result;
         }catch (Exception e){
             logger.info("删除基站失败",e);
+            result.setResult(null);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+            return result;
+        }
+    }
+
+    /**
+     * 查询基站
+     * @param obj
+     * @return
+     */
+    @RequestMapping(value = "/selectBaseStation",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<TblBaseStation> selectBaseStation(@RequestBody JSONObject obj) {
+        ServiceResult<TblBaseStation> result = new ServiceResult<>();
+        try {
+            TblBaseStation baseStation = tblBaseStationService.selectByPrimaryKey(obj.getLong("id"));
+            result.setResult(baseStation);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+            return result;
+        }catch (Exception e){
+            logger.info("查询基站失败",e);
             result.setResult(null);
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
             return result;

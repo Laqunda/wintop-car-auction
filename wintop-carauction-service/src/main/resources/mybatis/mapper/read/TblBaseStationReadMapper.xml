@@ -61,4 +61,19 @@
     order by t1.create_time desc
     limit 1
   </select>
+
+  <select id="selectStationListByBoardRealId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_base_station t1
+    inner join tbl_board_station t2 on t1.station_real_id=t2.station_real_id
+    where t2.board_real_id = #{boardRealId} and t1.enable='0'
+  </select>
+
+  <select id="selectAllStationList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_base_station t1
+    where t1.enable='0'
+  </select>
 </mapper>

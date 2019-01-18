@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.wintop.ms.carauction.entity.TblBaseStation;
+import com.wintop.ms.carauction.entity.TblBoardStation;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TblBaseStationReadDao {
     /**
      * 根据条件查询记录总数
@@ -31,4 +34,17 @@ public interface TblBaseStationReadDao {
      * 根据物理ID和token查询记录
      */
     TblBaseStation selectByRealIdAndToken(@Param("stationRealId") String stationRealId, @Param("token")String token);
+
+    /**
+     * 查询拍牌关联的基站
+     * @param boardRealId
+     * @return
+     */
+    List<TblBaseStation> selectStationListByBoardRealId(String boardRealId);
+
+    /**
+     * 查询所有基站
+     * @return
+     */
+    List<TblBaseStation> selectAllStationList();
 }

@@ -50,6 +50,9 @@
       <if test="sort != null" >
         sort = #{sort},
       </if>
+      <if test="priceRange != null" >
+        price_range = #{priceRange},
+      </if>
       <if test="createPerson != null" >
         create_person = #{createPerson},
       </if>

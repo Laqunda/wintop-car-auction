@@ -152,30 +152,30 @@ public class CarLocaleAuctionCar implements Serializable {
     /**
      * 最高出价
      * */
-    public BigDecimal topBidPrice;
+    private BigDecimal topBidPrice;
 
     /**
      * 发布人
      * */
-    public String publishUserMobile;
+    private String publishUserMobile;
 
     /**
      * 车商编号
      * */
-    public String userNum;
+    private String userNum;
 
     /**
      * 车商拍牌号
      * */
-    public String auctionPlateNum;
+    private String auctionPlateNum;
     /**
      * 初始加价额度
      */
-    public BigDecimal initPriceRange;
+    private BigDecimal initPriceRange;
     /**
      * 加价额度
      */
-    public BigDecimal priceRange;
+    private BigDecimal priceRange;
 
     public BigDecimal getInitPriceRange() {
         return initPriceRange;

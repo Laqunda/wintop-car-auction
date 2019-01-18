@@ -36,7 +36,7 @@ public class ElectronBaseStationApi {
     }
 
     /**
-     * 查询基站列表
+     * 查询基站分页列表
      * @return
      */
     @RequestMapping(value = "/selectBaseStationList",produces="application/json; charset=UTF-8")
@@ -49,6 +49,22 @@ public class ElectronBaseStationApi {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
+    /**
+     * 查询所有基站列表
+     * @return
+     */
+    @RequestMapping(value = "/selectAllStationList",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @RequestAuth(false)
+    public ResultModel selectAllStationList() {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/electronBaseStation/selectAllStationList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(new HashMap()),JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.LIST);
     }
 
     /**
@@ -88,7 +104,7 @@ public class ElectronBaseStationApi {
     @RequestAuth(false)
     public ResultModel updateBaseStation(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
-            return new ResultModel(false, ResultCode.NO_OBJECT.value(),ResultCode.NO_OBJECT.getRemark(),null);
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
         map.put("modifyPerson",managerId);
         map.put("modifyTime",new Date());
@@ -113,7 +129,7 @@ public class ElectronBaseStationApi {
     @RequestAuth(false)
     public ResultModel deleteBaseStation(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
-            return new ResultModel(false, ResultCode.NO_OBJECT.value(),ResultCode.NO_OBJECT.getRemark(),null);
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
         map.put("delPerson",managerId);
         map.put("delTime",new Date());
@@ -121,6 +137,28 @@ public class ElectronBaseStationApi {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/electronBaseStation/deleteBaseStation"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
+
+    /**
+     * 查询基站
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/selectBaseStation",
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @RequestAuth(false)
+    public ResultModel selectBaseStation(@RequestBody Map<String,Object> map) {
+        if(map.get("id")==null){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/electronBaseStation/selectBaseStation"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);

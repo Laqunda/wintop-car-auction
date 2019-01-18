@@ -30,11 +30,5 @@ public interface TblAuctionBoardReadDao {
      */
     TblAuctionBoard selectByRealId(String boardRealId);
 
-    /**
-     * 查询拍牌关联的基站
-     * @param boardRealId
-     * @return
-     */
-    List<TblBoardStation> selectStationListByBoardRealId(String boardRealId);
 
 }

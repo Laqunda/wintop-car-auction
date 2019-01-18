@@ -14,19 +14,21 @@
     <result column="price_range" property="priceRange" jdbcType="DECIMAL" />
     <result column="starting_price" property="startingPrice" jdbcType="DECIMAL" />
     <result column="cutting_sign" property="cuttingSign" jdbcType="VARCHAR" />
+    <result column="customer_id" property="customerId" jdbcType="BIGINT" />
   </resultMap>
 
   <select id="selectAuctionCar" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
     t3.station_real_id,t3.station_name,t6.board_real_id,t6.board_name,t1.id as locale_auction_id,
     t2.id as auction_car_id,t2.car_id,t1.title as auction_times_name,
-    t2.init_price_range,t2.price_range,t4.starting_price,t6.cutting_sign
+    t2.init_price_range,t2.price_range,t4.starting_price,t6.cutting_sign,t7.customer_id
     from car_locale_auction t1
     inner join car_locale_auction_car t2 on t1.id=t2.auction_id
     inner join tbl_base_station t3 on t1.station_real_id=t3.station_real_id
     inner join car_auto_auction t4 on t2.auto_auction_id=t4.id
     inner join tbl_board_station t5 on t3.station_real_id=t5.station_real_id
     inner join tbl_auction_board t6 on t5.board_real_id=t6.board_real_id
+    inner join car_customer_board t7 on t6.board_real_id=t7.board_real_id
     where t2.auction_status='1' and t3.station_real_id=#{jz}
     and t6.board_real_id=#{pp} and t3.token=#{mm}
     <if test="auction_car_id != null">
