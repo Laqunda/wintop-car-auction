@@ -44,4 +44,41 @@ public class TblAuctionLogModel {
         return tblAuctionLogWriteDao.insert(tblAuctionLog);
     }
 
+    /**
+     * 根据竞拍详情id查询数据
+     * @param auctionCarId
+     * @param priceType
+     * @return
+     */
+    public TblAuctionLog selectByAuctionCarId(Long auctionCarId,String priceType){
+        return tblAuctionLogReadDao.selectByAuctionCarId(auctionCarId, priceType);
+    }
+
+    /**
+     * 增加打点
+     * @param tblAuctionLog
+     * @return
+     */
+    public int updatePriceAdd(TblAuctionLog tblAuctionLog){
+        return tblAuctionLogWriteDao.updatePriceAdd(tblAuctionLog);
+    }
+
+    /**
+     * 取消打点
+     * @param id
+     * @return
+     */
+    public int updatePriceSub(Long id,Long managerId){
+        return tblAuctionLogWriteDao.updatePriceSub(id,managerId);
+    }
+
+    /**
+     * 取消出价
+     * @param id
+     * @return
+     */
+    public int updateBidFeeSub(Long id){
+        return tblAuctionLogWriteDao.updateBidFeeSub(id);
+    }
+
 }

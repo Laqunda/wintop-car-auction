@@ -83,7 +83,7 @@ public class ElectronAuctionBoardApi {
     @RequestAuth(false)
     public ResultModel updateAuctionBoard(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
-            return new ResultModel(false, ResultCode.NO_OBJECT.value(),ResultCode.NO_OBJECT.getRemark(),null);
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
         map.put("modifyPerson",managerId);
         map.put("modifyTime",new Date());
@@ -108,7 +108,7 @@ public class ElectronAuctionBoardApi {
     @RequestAuth(false)
     public ResultModel deleteAuctionBoard(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
-            return new ResultModel(false, ResultCode.NO_OBJECT.value(),ResultCode.NO_OBJECT.getRemark(),null);
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
         map.put("delPerson",managerId);
         map.put("delTime",new Date());
@@ -116,6 +116,28 @@ public class ElectronAuctionBoardApi {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/electronAuctionBoard/deleteAuctionBoard"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
+
+    /**
+     * 查询拍牌
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/selectAuctionBoard",
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @RequestAuth(false)
+    public ResultModel selectAuctionBoard(@RequestBody Map<String,Object> map) {
+        if(map.get("id")==null){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/electronAuctionBoard/selectAuctionBoard"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);

@@ -54,6 +54,8 @@ public class TblAuctionTimes implements Serializable {
 
     private String cuttingSign;
 
+    private Long customerId;
+
     public String getBoardRealId() {
         return boardRealId;
     }
@@ -148,5 +150,13 @@ public class TblAuctionTimes implements Serializable {
 
     public void setInitPriceRange(BigDecimal initPriceRange) {
         this.initPriceRange = initPriceRange;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 }

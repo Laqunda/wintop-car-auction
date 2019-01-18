@@ -28,6 +28,7 @@ public enum ResultCode {
     NO_OVER_MAXPRICE(303,"竞价出价未超过最大价"),
     NO_ALLOW_ENTRUST(304,"开拍状态，不允许操作委托价"),
     //***boss-api;
+    NOT_SYNC(400,"数据不同步"),
     PASSWORD_NOT_MATCH(401,"旧密码错误"),
     USERNUM_IS_REPEAT(402,"车商号重复"),
     NO_MANAGER_USER(403,"登录账号不存在"),

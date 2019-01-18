@@ -75,7 +75,7 @@ public class TblAuctionLog implements Serializable {
     /**
      * 会员名称
      */
-    private String name;
+    private String customerName;
 
     /**
      * 车辆标题
@@ -91,12 +91,12 @@ public class TblAuctionLog implements Serializable {
      */
     private String  licenseNumber;
 
-    public String getName() {
-        return name;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public String getAutoInfoName() {

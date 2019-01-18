@@ -12,64 +12,64 @@ import java.util.Map;
 @Repository
 public class TblBaseStationModel {
     @Autowired
-    private TblBaseStationReadDao tblBaseStationReadDao;
+    private TblBaseStationReadDao baseStationReadDao;
     @Autowired
-    private TblBaseStationWriteDao tblBaseStationWriteDao;
+    private TblBaseStationWriteDao baseStationWriteDao;
 
     /**
      * 根据条件查询记录总数
      */
     public int countByExample(Map<String,Object> map){
-        return tblBaseStationReadDao.countByExample(map);
+        return baseStationReadDao.countByExample(map);
     }
 
     /**
      * 根据条件查询记录集
      */
     public List<TblBaseStation> selectByExample(Map<String,Object> map){
-        return tblBaseStationReadDao.selectByExample(map);
+        return baseStationReadDao.selectByExample(map);
     }
 
     /**
      * 根据主键查询记录
      */
     public TblBaseStation selectByPrimaryKey(Long id){
-        return tblBaseStationReadDao.selectByPrimaryKey(id);
+        return baseStationReadDao.selectByPrimaryKey(id);
     }
 
     /**
      * 根据主键删除记录
      */
     public int deleteByPrimaryKey(Long id){
-        return tblBaseStationWriteDao.deleteByPrimaryKey(id);
+        return baseStationWriteDao.deleteByPrimaryKey(id);
     }
 
     /**
      * 保存记录,不管记录里面的属性是否为空
      */
     public int insert(TblBaseStation tblBaseStation){
-        return tblBaseStationWriteDao.insert(tblBaseStation);
+        return baseStationWriteDao.insert(tblBaseStation);
     }
 
     /**
      * 根据主键更新属性不为空的记录
      */
     public int updateByPrimaryKeySelective(TblBaseStation tblBaseStation){
-        return tblBaseStationWriteDao.updateByPrimaryKeySelective(tblBaseStation);
+        return baseStationWriteDao.updateByPrimaryKeySelective(tblBaseStation);
     }
 
     /**
      * 根据物理ID查询记录
      */
     public TblBaseStation selectByRealId(String stationRealId){
-        return tblBaseStationReadDao.selectByRealId(stationRealId);
+        return baseStationReadDao.selectByRealId(stationRealId);
     }
 
     /**
      * 根据物理ID和token查询记录
      */
     public TblBaseStation selectByRealIdAndToken(String stationRealId,String token){
-        return tblBaseStationReadDao.selectByRealIdAndToken(stationRealId, token);
+        return baseStationReadDao.selectByRealIdAndToken(stationRealId, token);
     }
 
     /**
@@ -78,6 +78,23 @@ public class TblBaseStationModel {
      * @return
      */
     public int updateDeleteFlag(TblBaseStation tblBaseStation){
-        return tblBaseStationWriteDao.updateDeleteFlag(tblBaseStation);
+        return baseStationWriteDao.updateDeleteFlag(tblBaseStation);
+    }
+
+    /**
+     * 查询拍牌关联的基站
+     * @param boardRealId
+     * @return
+     */
+    public List<TblBaseStation> selectStationListByBoardRealId(String boardRealId){
+        return baseStationReadDao.selectStationListByBoardRealId(boardRealId);
+    }
+
+    /**
+     * 查询所有基站
+     * @return
+     */
+    public List<TblBaseStation> selectAllStationList(){
+        return baseStationReadDao.selectAllStationList();
     }
 }

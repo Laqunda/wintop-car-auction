@@ -1,11 +1,10 @@
 package com.wintop.ms.carauction.mapper.write;
 
-import java.util.List;
-import java.util.Map;
-
 import com.wintop.ms.carauction.entity.TblAuctionLog;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TblAuctionLogWriteDao {
 
     /**
@@ -14,10 +13,24 @@ public interface TblAuctionLogWriteDao {
     int insert(TblAuctionLog tblAuctionLog);
 
     /**
-     * 增加价格
+     * 增加打点
      * @param tblAuctionLog
      * @return
      */
     int updatePriceAdd(TblAuctionLog tblAuctionLog);
+
+    /**
+     * 取消打点
+     * @param id
+     * @return
+     */
+    int updatePriceSub(@Param("id") Long id, @Param("managerId") Long managerId);
+
+    /**
+     * 取消出价
+     * @param id
+     * @return
+     */
+    int updateBidFeeSub(Long id);
 
 }

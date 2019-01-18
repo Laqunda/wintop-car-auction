@@ -15,7 +15,7 @@
     <result column="auction_car_id" property="auctionCarId" jdbcType="BIGINT" />
     <result column="price_range" property="priceRange" jdbcType="DECIMAL" />
     <result column="bid_fee" property="bidFee" jdbcType="DECIMAL" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="customerName" property="customerName" jdbcType="VARCHAR" />
     <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
     <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
     <result column="license_number" property="licenseNumber" jdbcType="VARCHAR" />
@@ -30,7 +30,7 @@
     </sql>
     <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
         select
-        <include refid="Base_Column_List" />,t2.`name`,t4.auto_info_name,t4.car_auto_no,t5.license_number
+        <include refid="Base_Column_List" />,t2.`name` as customerName,t4.auto_info_name,t4.car_auto_no,t5.license_number
         from tbl_auction_log t1
         LEFT JOIN wt_app_user t2 on t1.customer_id=t2.id
         LEFT JOIN car_auto t4 on t4.id=t1.car_id
@@ -47,6 +47,9 @@
         </if>
         <if test="carId!=null and carId!=''">
             AND t1.car_id = #{carId}
+        </if>
+        <if test="auctionCarId!=null and auctionCarId!=''">
+            AND t1.auction_car_id = #{auctionCarId}
         </if>
         <if test="carInfo != null and carInfo !=''">
             and(t4.car_auto_no like CONCAT(CONCAT('%', #{carInfo}),'%')
@@ -83,6 +86,9 @@
         <if test="carId!=null and carId!=''">
             AND t1.car_id = #{carId}
         </if>
+        <if test="auctionCarId!=null and auctionCarId!=''">
+            AND t1.auction_car_id = #{auctionCarId}
+        </if>
         <if test="carInfo != null and carInfo !=''">
             and(t4.car_auto_no like CONCAT(CONCAT('%', #{carInfo}),'%')
             OR t5.license_number like CONCAT(CONCAT('%', #{carInfo}),'%')
@@ -96,10 +102,12 @@
         where t1.id = #{id}
     </select>
 
-    <select id="selectLastPriceByAdjust" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    <select id="selectByAuctionCarId" resultMap="BaseResultMap" >
         select
         <include refid="Base_Column_List" />
         from tbl_auction_log t1
-        where t1.auction_car_id = #{auctionCarId}
+        where t1.auction_car_id = #{auctionCarId} and t1.price_type=#{priceType}
+        and t1.enable='0'
+        order by t1.id desc limit 1
     </select>
 </mapper>

@@ -1,8 +1,10 @@
 package com.wintop.ms.carauction.service;
 
+import com.wintop.ms.carauction.entity.CarLocaleAuctionCar;
 import com.wintop.ms.carauction.entity.TblAuctionLog;
 import com.wintop.ms.carauction.entity.TblAuctionTimes;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -31,5 +33,21 @@ public interface TblAuctionLogService {
      * 保存电子竞价
      */
     TblAuctionTimes saveBidding(Map<String,Object> map);
+
+    /**
+     * 更新价格幅度调整
+     * @param auctionLog
+     * @return
+     */
+    int updatePriceRange(TblAuctionLog auctionLog);
+
+    /**
+     * 调价器打点
+     * @param localeAuctionCar
+     * @param auctionLog
+     * @param adjustType
+     * @return
+     */
+    int updateBidFeePoint(CarLocaleAuctionCar localeAuctionCar,TblAuctionLog auctionLog,String adjustType);
 
 }

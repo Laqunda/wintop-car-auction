@@ -108,4 +108,11 @@ public interface ICarLocaleAuctionCarService {
 
     //      导入起拍价时，批量存储加价幅度
     Integer batchUpdateLocaleAuctionById(List<CarLocaleAuctionCar> localeAuctionList);
+
+    /**
+     * 查询当前场次正在竞拍的车辆
+     * @param localeAuctionId
+     * @return
+     */
+    CarLocaleAuctionCar selectCurrentAuctionCar(Long localeAuctionId);
 }

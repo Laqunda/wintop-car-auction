@@ -12,35 +12,35 @@ import java.util.Map;
 @Service
 public class TblBaseStationServiceImpl implements TblBaseStationService {
     @Autowired
-    private TblBaseStationModel tblBaseStationModel;
+    private TblBaseStationModel baseStationModel;
     @Override
     public int countByExample(Map<String, Object> map) {
-        return tblBaseStationModel.countByExample(map);
+        return baseStationModel.countByExample(map);
     }
 
     @Override
     public List<TblBaseStation> selectByExample(Map<String, Object> map) {
-        return tblBaseStationModel.selectByExample(map);
+        return baseStationModel.selectByExample(map);
     }
 
     @Override
     public TblBaseStation selectByPrimaryKey(Long id) {
-        return tblBaseStationModel.selectByPrimaryKey(id);
+        return baseStationModel.selectByPrimaryKey(id);
     }
 
     @Override
     public int deleteByPrimaryKey(Long id) {
-        return tblBaseStationModel.deleteByPrimaryKey(id);
+        return baseStationModel.deleteByPrimaryKey(id);
     }
 
     @Override
     public int insert(TblBaseStation tblBaseStation) {
-        return tblBaseStationModel.insert(tblBaseStation);
+        return baseStationModel.insert(tblBaseStation);
     }
 
     @Override
     public int updateByPrimaryKeySelective(TblBaseStation tblBaseStation) {
-        return tblBaseStationModel.updateByPrimaryKeySelective(tblBaseStation);
+        return baseStationModel.updateByPrimaryKeySelective(tblBaseStation);
     }
 
     /**
@@ -48,7 +48,7 @@ public class TblBaseStationServiceImpl implements TblBaseStationService {
      */
     @Override
     public TblBaseStation selectByRealId(String stationRealId){
-        return tblBaseStationModel.selectByRealId(stationRealId);
+        return baseStationModel.selectByRealId(stationRealId);
     }
 
     /**
@@ -56,7 +56,7 @@ public class TblBaseStationServiceImpl implements TblBaseStationService {
      */
     @Override
     public TblBaseStation selectByRealIdAndToken(String stationRealId,String token){
-        return tblBaseStationModel.selectByRealIdAndToken(stationRealId, token);
+        return baseStationModel.selectByRealIdAndToken(stationRealId, token);
     }
 
     /**
@@ -66,6 +66,15 @@ public class TblBaseStationServiceImpl implements TblBaseStationService {
      */
     @Override
     public int updateDeleteFlag(TblBaseStation tblBaseStation){
-        return tblBaseStationModel.updateDeleteFlag(tblBaseStation);
+        return baseStationModel.updateDeleteFlag(tblBaseStation);
+    }
+
+    /**
+     * 查询所有基站
+     * @return
+     */
+    @Override
+    public List<TblBaseStation> selectAllStationList(){
+        return baseStationModel.selectAllStationList();
     }
 }

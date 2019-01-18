@@ -81,4 +81,11 @@ public interface ICarLocaleAuctionCarReadDao {
      * @About 查询参拍车辆梳理
      * */
     Integer hasAuctionCarCount(Map<String,Object> map);
+
+    /**
+     * 查询当前场次正在竞拍的车辆
+     * @param localeAuctionId
+     * @return
+     */
+    CarLocaleAuctionCar selectCurrentAuctionCar(Long localeAuctionId);
 }

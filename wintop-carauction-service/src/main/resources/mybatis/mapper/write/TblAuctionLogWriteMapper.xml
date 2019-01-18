@@ -12,7 +12,15 @@
   </insert>
   <update id="updatePriceAdd" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
     update tbl_auction_log
-    set price_range=#{priceRange},bid_fee=#{bidFee},parent_id=#{parentId}
-    where auction_car_id = #{auctionCarId} and bid_fee is null
+    set price_range=#{priceRange},bid_fee=#{bidFee},parent_id=#{id}
+    where auction_car_id = #{auctionCarId} and price_type='0' and bid_fee is null
+  </update>
+
+  <update id="updatePriceSub" >
+    update tbl_auction_log set enable='1',modify_person=#{managerId},modify_time=now() where id=#{id}
+  </update>
+
+  <update id="updateBidFeeSub" parameterType="java.lang.Long">
+    update tbl_auction_log set price_range=null,bid_fee=null,parent_id=null where parent_id=#{id}
   </update>
 </mapper>

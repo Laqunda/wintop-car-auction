@@ -10,6 +10,7 @@ import com.wintop.ms.carauction.entity.TblBaseStation;
 import com.wintop.ms.carauction.service.TblAuctionBoardService;
 import com.wintop.ms.carauction.service.TblBaseStationService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +47,10 @@ public class ElectronAuctionBoardApi {
             PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
-            if(obj.get("boardName")!=null){
+            if(StringUtils.isNotBlank(obj.getString("boardName"))){
                 paramMap.put("boardName",obj.get("boardName"));
             }
-            if(obj.get("stationRealId")!=null){
+            if(StringUtils.isNotBlank(obj.getString("stationRealId"))){
                 paramMap.put("stationRealId",obj.get("stationRealId"));
             }
             List<TblAuctionBoard> boardList = tblAuctionBoardService.selectByExample(paramMap);
@@ -197,6 +198,30 @@ public class ElectronAuctionBoardApi {
             return result;
         }catch (Exception e){
             logger.info("删除拍牌失败",e);
+            result.setResult(null);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+            return result;
+        }
+    }
+
+    /**
+     * 查询拍牌
+     * @param obj
+     * @return
+     */
+    @RequestMapping(value = "/selectAuctionBoard",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<TblAuctionBoard> selectAuctionBoard(@RequestBody JSONObject obj) {
+        ServiceResult<TblAuctionBoard> result = new ServiceResult<>();
+        try {
+            TblAuctionBoard AuctionBoard = tblAuctionBoardService.selectByPrimaryKey(obj.getLong("id"));
+            result.setResult(AuctionBoard);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+            return result;
+        }catch (Exception e){
+            logger.info("查询拍牌失败",e);
             result.setResult(null);
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
             return result;

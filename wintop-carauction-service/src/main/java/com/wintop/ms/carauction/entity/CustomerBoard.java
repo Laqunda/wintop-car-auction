@@ -14,11 +14,6 @@ public class CustomerBoard implements Serializable {
     private Long customerId;
 
     /**
-     * 拍牌id
-     */
-    private Long boardId;
-
-    /**
      * 拍牌物理ID
      */
     private String boardRealId;
@@ -69,21 +64,6 @@ public class CustomerBoard implements Serializable {
      */
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
-    }
-
-    /**
-     * @return 拍牌id
-     */
-    public Long getBoardId() {
-        return boardId;
-    }
-
-    /**
-     * @param boardId 
-	 *            拍牌id
-     */
-    public void setBoardId(Long boardId) {
-        this.boardId = boardId;
     }
 
     /**

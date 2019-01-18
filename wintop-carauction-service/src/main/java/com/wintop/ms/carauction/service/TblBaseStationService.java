@@ -52,4 +52,10 @@ public interface TblBaseStationService {
      * @return
      */
     int updateDeleteFlag(TblBaseStation tblBaseStation);
+
+    /**
+     * 查询所有基站
+     * @return
+     */
+    List<TblBaseStation> selectAllStationList();
 }
