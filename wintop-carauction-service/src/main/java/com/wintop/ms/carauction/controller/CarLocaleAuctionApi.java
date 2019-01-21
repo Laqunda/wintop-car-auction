@@ -1349,4 +1349,32 @@ public class CarLocaleAuctionApi {
         }
         return result;
     }
+
+    /***
+     * 查询单个竞拍详情
+     * @param obj
+     * @return
+     */
+    @PostMapping(value = "/selectLocaleAuctionCar",
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<CarLocaleAuctionCar> selectLocaleAuctionCar(@RequestBody JSONObject obj) {
+        ServiceResult<CarLocaleAuctionCar> result = new ServiceResult<>();
+        try {
+            Long auctionCarId = obj.getLong("auctionCarId");
+            CarLocaleAuctionCar localeAuctionCar = carLocaleAuctionCarService.selectById(auctionCarId);
+            if(localeAuctionCar!=null){
+                CarAuctionBidRecord bidRecord = carAuctionBidRecordService.selectLastBidInfo(auctionCarId).getResult();
+                if(bidRecord!=null){
+                    localeAuctionCar.setTopBidPrice(bidRecord.getBidFee());
+                }
+            }
+            result.setResult(localeAuctionCar);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+        }catch (Exception e){
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
 }

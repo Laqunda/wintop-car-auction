@@ -70,18 +70,29 @@ public class ElectronAuctionApi {
         try {
             Map<String,Object> paramMap = new HashMap<>();
             PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
-//            用户权限
-            if (obj.get("userId")!=null && StringUtils.isNotBlank(obj.getString("userId"))){
-                    List<Long> storeIds = managerUserService.queryStoreScope(obj.getLong("userId"));
-                    paramMap.put("storeIds",storeIds);
+            //用户权限
+            if (obj.getLong("userId")!=null){
+                List<Long> storeIds = managerUserService.queryStoreScope(obj.getLong("userId"));
+                paramMap.put("storeIds",storeIds);
             }
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
-            paramMap.put("auctionTimesName",obj.get("auctionTimesName"));
-            paramMap.put("boardName",obj.get("boardName"));
-            paramMap.put("carInfo",obj.get("carInfo"));
-            paramMap.put("carId",obj.get("carId"));
-            paramMap.put("priceType",obj.get("priceType"));
+            if(StringUtils.isNotBlank(obj.getString("auctionTimesName"))){
+                paramMap.put("auctionTimesName",obj.getString("auctionTimesName"));
+            }
+            if(StringUtils.isNotBlank(obj.getString("boardName"))){
+                paramMap.put("boardName",obj.getString("boardName"));
+            }
+            if(StringUtils.isNotBlank(obj.getString("carInfo"))){
+                paramMap.put("carInfo",obj.getString("carInfo"));
+            }
+            if(obj.getLong("carId")!=null){
+                paramMap.put("carId",obj.getLong("carId"));
+            }
+            if(obj.getLong("auctionCarId")!=null){
+                paramMap.put("auctionCarId",obj.getLong("auctionCarId"));
+            }
+            paramMap.put("priceType",obj.getString("priceType"));
             List<TblAuctionLog> logList = tblAuctionLogService.selectByExample(paramMap);
             int count = tblAuctionLogService.countByExample(paramMap);
             ListEntity<TblAuctionLog> listEntity = new ListEntity<>();

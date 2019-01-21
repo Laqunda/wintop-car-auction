@@ -36,7 +36,6 @@ public class ElectronAuctionBoardApi {
      */
     @RequestMapping(value = "/selectAuctionBoardList",produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel selectAuctionBoardList(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
@@ -56,7 +55,6 @@ public class ElectronAuctionBoardApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel saveAuctionBoard(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         map.put("createPerson",managerId);
         map.put("createTime",new Date());
@@ -80,7 +78,6 @@ public class ElectronAuctionBoardApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel updateAuctionBoard(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
@@ -105,7 +102,6 @@ public class ElectronAuctionBoardApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel deleteAuctionBoard(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
@@ -130,7 +126,6 @@ public class ElectronAuctionBoardApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel selectAuctionBoard(@RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
