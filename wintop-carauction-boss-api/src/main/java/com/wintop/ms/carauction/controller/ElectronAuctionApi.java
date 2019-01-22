@@ -63,7 +63,7 @@ public class ElectronAuctionApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthPublic
-    public synchronized ResultModel selectOrderList(@RequestBody Map<String,Object> map) {
+    public synchronized ResultModel selectLogList(@RequestBody Map<String,Object> map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/electronAuction/selectLogList"))

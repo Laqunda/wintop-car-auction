@@ -41,7 +41,6 @@ public class ElectronBaseStationApi {
      */
     @RequestMapping(value = "/selectBaseStationList",produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel selectBaseStationList(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
@@ -77,7 +76,6 @@ public class ElectronBaseStationApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel saveBaseStation(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         map.put("createPerson",managerId);
         map.put("createTime",new Date());
@@ -101,7 +99,6 @@ public class ElectronBaseStationApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel updateBaseStation(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
@@ -126,7 +123,6 @@ public class ElectronBaseStationApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel deleteBaseStation(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
@@ -151,7 +147,6 @@ public class ElectronBaseStationApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel selectBaseStation(@RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);

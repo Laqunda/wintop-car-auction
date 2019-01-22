@@ -12,6 +12,12 @@ public class ElectronAuctionCar implements Serializable {
     private String autoInfoName;
     private String licenseNumber;
     private BigDecimal startingPrice;
+    private BigDecimal servicePrice;
+    //,,0等待开拍，1拍卖中，2已成交，3流拍，4已设置二拍
+    private String auctionStatus;
+    private String storeName;
+    //,,最后价格
+    private BigDecimal lastPrice;
 
     public String getAuctionTimesName() {
         return auctionTimesName;
@@ -60,4 +66,37 @@ public class ElectronAuctionCar implements Serializable {
     public void setStartingPrice(BigDecimal startingPrice) {
         this.startingPrice = startingPrice;
     }
+
+    public BigDecimal getServicePrice() {
+        return servicePrice;
+    }
+
+    public void setServicePrice(BigDecimal servicePrice) {
+        this.servicePrice = servicePrice;
+    }
+
+    public String getAuctionStatus() {
+        return auctionStatus;
+    }
+
+    public void setAuctionStatus(String auctionStatus) {
+        this.auctionStatus = auctionStatus;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public BigDecimal getLastPrice() {
+        return lastPrice;
+    }
+
+    public void setLastPrice(BigDecimal lastPrice) {
+        this.lastPrice = lastPrice;
+    }
 }
+

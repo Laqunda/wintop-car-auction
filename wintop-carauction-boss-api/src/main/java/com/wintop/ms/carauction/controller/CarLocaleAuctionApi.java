@@ -781,4 +781,22 @@ public class CarLocaleAuctionApi {
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
+
+    /**
+     * 查询单个竞拍详情
+     * @return
+     */
+    @RequestMapping(value = "/selectLocaleAuctionCar",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel selectLocaleAuctionCar(@RequestBody Map<String,Object> map) {
+        if(map.get("auctionCarId")==null){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carLocaleAuction/selectLocaleAuctionCar"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
 }

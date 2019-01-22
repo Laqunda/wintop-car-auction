@@ -145,4 +145,30 @@ public class ElectronAuctionDetailApi {
         }
     }
 
+    /***
+     * 查询拍卖详情
+     * @return
+     */
+    @RequestMapping(value = "/selectAuctionCarDetail",
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<ElectronAuctionCarDetail> selectAuctionCarDetail(@RequestBody JSONObject obj) {
+        ServiceResult<ElectronAuctionCarDetail> result = new ServiceResult<>();
+        try {
+            Long auctionCarId = obj.getLong("auctionCarId");
+            Map<String,Object> map = new HashMap<>();
+            map.put("auctionCarId",auctionCarId);
+            PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
+            map.put("startRowNum",pageEntity.getStartRowNum());
+            map.put("endRowNum",pageEntity.getEndRowNum());
+            ElectronAuctionCarDetail auctionDetail = auctionDetailService.selectAuctionCarDetail(map);
+            result.setResult(auctionDetail);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+        }catch (Exception e){
+            logger.info("查询拍卖详情接口失败",e);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
 }

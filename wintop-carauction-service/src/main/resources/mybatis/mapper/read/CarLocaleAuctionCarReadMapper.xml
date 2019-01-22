@@ -52,8 +52,26 @@
   </select>
   <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select
-    <include refid="Base_Column_List" />
-    from car_locale_auction_car t1
+      <include refid="Base_Column_List" />,
+      t2.title ,
+      t2.start_time,
+      t3.auto_info_name,
+      t3.main_photo,
+      t3.car_auto_no,
+      t5.begin_register_date,
+      t5.license_number,
+      t5.mileage,
+      t5.use_nature_cn as use_nature,
+      t4.if_agent,
+      t4.starting_price,
+      t4.agent_price,
+      t4.service_price,
+      t3.store_name
+      from car_locale_auction_car t1
+      inner join car_locale_auction t2 on t1.auction_id=t2.id
+      inner join car_auto t3 on t3.id=t1.car_id
+      inner join car_auto_auction t4 on t4.id=t1.auto_auction_id
+      inner join car_auto_info_detail t5 on t5.auto_id=t1.car_id
     where t1.id = #{id}
   </select>
   <select id="selectByCarId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -268,6 +286,7 @@
       select
         <include refid="Base_Column_List" />,
         t2.title ,
+        t2.start_time,
         t3.auto_info_name,
         t3.main_photo,
         t3.car_auto_no,
@@ -285,5 +304,6 @@
         inner join car_auto_auction t4 on t4.id=t1.auto_auction_id
         inner join car_auto_info_detail t5 on t5.auto_id=t1.car_id
         where  t1.auction_id=#{auctionId} and t1.auction_status='1'
+        order by t1.id desc  limit 1
     </select>
 </mapper>

@@ -31,13 +31,12 @@ public class ElectronAuctionDetailApi {
     }
 
     /**
-     * 查询竞拍详情
+     * 查询现场拍详情
      * @return
      */
     @RequestMapping(value = "/selectElectronAuctionDetail",produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
-    public ResultModel selectAuctionBoardList(@RequestBody Map<String,Object> map) {
+    public ResultModel selectElectronAuctionDetail(@RequestBody Map<String,Object> map) {
         if(map.get("localeAuctionId")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
@@ -59,7 +58,6 @@ public class ElectronAuctionDetailApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel updatePriceRange(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("localeAuctionId")==null || map.get("priceRange")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
@@ -83,7 +81,6 @@ public class ElectronAuctionDetailApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel updateBidFeePoint(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("localeAuctionId")==null || map.get("adjustType")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
@@ -95,6 +92,24 @@ public class ElectronAuctionDetailApi {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
+
+    /**
+     * 查询拍卖详情
+     * @return
+     */
+    @RequestMapping(value = "/selectAuctionCarDetail",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel selectAuctionCarDetail(@RequestBody Map<String,Object> map) {
+        if(map.get("auctionCarId")==null){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/electronAuctionDetail/selectAuctionCarDetail"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
 }

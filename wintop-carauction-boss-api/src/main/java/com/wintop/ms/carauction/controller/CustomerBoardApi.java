@@ -40,7 +40,6 @@ public class CustomerBoardApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel saveAuctionBoard(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("customerId")==null && map.get("boardRealId")==null ){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
@@ -58,7 +57,7 @@ public class CustomerBoardApi {
     }
 
     /**
-     * 接触绑定
+     * 解除绑定
      * @param managerId
      * @param map
      * @return
@@ -67,7 +66,6 @@ public class CustomerBoardApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    @RequestAuth(false)
     public ResultModel deleteAuctionBoard(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("customerId")==null && map.get("boardRealId")==null ){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);

@@ -1,7 +1,6 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wintop.ms.carauction.core.annotation.AuthPublic;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.config.Constants;
@@ -74,7 +73,7 @@ public class AuctionLogApi {
      *@date 2019/1/15
      *@param:map
      */
-    @ApiOperation(value = "根据参数查询出价记录列表")
+    @ApiOperation(value = "根据参数查询加价记录列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "auctionTimesName",value = "场次名称",required = false,paramType = "query",dataType = "string"),
             @ApiImplicitParam(name = "carInfo",value = "车辆编号/车牌号",required = false,paramType = "query",dataType = "long"),
