@@ -94,6 +94,13 @@
             OR t5.license_number like CONCAT(CONCAT('%', #{carInfo}),'%')
             )
         </if>
+        <if test="storeIds != null and storeIds.size!=0">
+            and (t4.store_id in
+            <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                #{storeId}
+            </foreach>
+            or a.store_id is null)
+        </if>
     </select>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
         select
