@@ -41,7 +41,7 @@ public class ScheduleJob {
         this.restTemplate = restTemplate;
     }
 
-    //@Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 1000)
     public void redisAutoDataJob() {
         //System.out.println("--------2------");
         this.restTemplate.exchange(

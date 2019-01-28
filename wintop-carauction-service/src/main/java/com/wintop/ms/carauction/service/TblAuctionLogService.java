@@ -3,8 +3,8 @@ package com.wintop.ms.carauction.service;
 import com.wintop.ms.carauction.entity.CarLocaleAuctionCar;
 import com.wintop.ms.carauction.entity.TblAuctionLog;
 import com.wintop.ms.carauction.entity.TblAuctionTimes;
+import com.wintop.ms.carauction.entity.TblDataLog;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -50,4 +50,9 @@ public interface TblAuctionLogService {
      */
     int updateBidFeePoint(CarLocaleAuctionCar localeAuctionCar,TblAuctionLog auctionLog,String adjustType);
 
+    /**
+     * 保存记录
+     * @return
+     */
+    int insertDataLog(String dateType,String dataContent);
 }

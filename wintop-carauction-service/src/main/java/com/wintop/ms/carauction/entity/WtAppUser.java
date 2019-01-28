@@ -49,6 +49,8 @@ public class WtAppUser implements Serializable {
     private String manualAdd; //0 注册 1导入，2添加',
 
     private String type;
+    //,,拍牌物理id
+    private String boardRealId;
 
     public String getType() {
         return type;
@@ -464,5 +466,13 @@ public class WtAppUser implements Serializable {
 
     public void setLevelName(String levelName) {
         this.levelName = levelName;
+    }
+
+    public String getBoardRealId() {
+        return boardRealId;
+    }
+
+    public void setBoardRealId(String boardRealId) {
+        this.boardRealId = boardRealId;
     }
 }

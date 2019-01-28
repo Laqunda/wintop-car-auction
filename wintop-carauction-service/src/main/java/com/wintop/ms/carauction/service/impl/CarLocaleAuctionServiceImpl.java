@@ -399,6 +399,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
             resultMap.put("seeCarMan",carLocaleAuction.getSeeCarMan());
             resultMap.put("seeCarPhone",carLocaleAuction.getSeeCarPhone());
             resultMap.put("seeCarTime",carLocaleAuction.getSeeCarTime());
+            resultMap.put("stationRealId",carLocaleAuction.getStationRealId());
         }
         result.setResult(resultMap);
         return result;

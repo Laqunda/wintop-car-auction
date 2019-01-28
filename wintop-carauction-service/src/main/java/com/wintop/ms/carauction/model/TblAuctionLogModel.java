@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.model;
 
 import com.wintop.ms.carauction.entity.TblAuctionLog;
+import com.wintop.ms.carauction.entity.TblDataLog;
 import com.wintop.ms.carauction.mapper.read.TblAuctionLogReadDao;
 import com.wintop.ms.carauction.mapper.write.TblAuctionLogWriteDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,15 @@ public class TblAuctionLogModel {
      */
     public int updateBidFeeSub(Long id){
         return tblAuctionLogWriteDao.updateBidFeeSub(id);
+    }
+
+    /**
+     * 保存记录
+     * @param dataLog
+     * @return
+     */
+    public int insertDataLog(TblDataLog dataLog){
+        return tblAuctionLogWriteDao.insertDataLog(dataLog);
     }
 
 }

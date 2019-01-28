@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.mapper.write;
 
 import com.wintop.ms.carauction.entity.TblAuctionLog;
+import com.wintop.ms.carauction.entity.TblDataLog;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -32,5 +33,12 @@ public interface TblAuctionLogWriteDao {
      * @return
      */
     int updateBidFeeSub(Long id);
+
+    /**
+     * 保存记录
+     * @param dataLog
+     * @return
+     */
+    int insertDataLog(TblDataLog dataLog);
 
 }

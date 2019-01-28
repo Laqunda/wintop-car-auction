@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.service.impl;
 import com.wintop.ms.carauction.entity.CarLocaleAuctionCar;
 import com.wintop.ms.carauction.entity.TblAuctionLog;
 import com.wintop.ms.carauction.entity.TblAuctionTimes;
+import com.wintop.ms.carauction.entity.TblDataLog;
 import com.wintop.ms.carauction.model.CarLocaleAuctionCarModel;
 import com.wintop.ms.carauction.model.TblAuctionLogModel;
 import com.wintop.ms.carauction.model.TblAuctionTimesModel;
@@ -115,6 +116,24 @@ public class TblAuctionLogServiceImpl implements TblAuctionLogService {
             }
         }
         return 1;
+    }
+
+    /**
+     * 保存记录
+     * @return
+     */
+    @Override
+    public int insertDataLog(String dataType,String dataContent){
+        try{
+            TblDataLog dataLog = new TblDataLog();
+            dataLog.setId(IdWorker.getInstance().nextId());
+            dataLog.setDataType(dataType);
+            dataLog.setDataContent(dataContent);
+            dataLog.setCreateTime(new Date());
+            return auctionLogModel.insertDataLog(dataLog);
+        }catch (Exception e){
+            return 0;
+        }
     }
 
 }

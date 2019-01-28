@@ -10,6 +10,10 @@
        #{boardName}, #{auctionTime}, #{localeAuctionId},#{auctionCarId},#{carId},#{customerId},#{priceRange},#{bidFee},
       #{priceType},#{enable},#{parentId}, #{createPerson}, #{createTime})
   </insert>
+  <insert id="insertDataLog" parameterType="com.wintop.ms.carauction.entity.TblDataLog" >
+    insert into tbl_data_log (id, data_type, data_content,create_time)
+    values (#{id}, #{dataType}, #{dataContent}, #{createTime})
+  </insert>
   <update id="updatePriceAdd" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
     update tbl_auction_log
     set price_range=#{priceRange},bid_fee=#{bidFee},parent_id=#{id}

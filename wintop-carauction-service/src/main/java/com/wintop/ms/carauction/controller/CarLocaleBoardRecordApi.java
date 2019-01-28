@@ -7,6 +7,7 @@ import com.wintop.ms.carauction.entity.CarLocaleAuction;
 import com.wintop.ms.carauction.entity.TblBaseStation;
 import com.wintop.ms.carauction.service.CarLocaleBoardRecordService;
 import com.wintop.ms.carauction.service.ICarLocaleAuctionService;
+import com.wintop.ms.carauction.service.TblAuctionLogService;
 import com.wintop.ms.carauction.service.TblBaseStationService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import org.slf4j.Logger;
@@ -28,6 +29,8 @@ public class CarLocaleBoardRecordApi {
     private CarLocaleBoardRecordService recordService;
     @Autowired
     private ICarLocaleAuctionService localeAuctionService;
+    @Autowired
+    private TblAuctionLogService tblAuctionLogService;
 
     private static final Logger logger = LoggerFactory.getLogger(CarLocaleBoardRecordApi.class);
 
@@ -38,6 +41,7 @@ public class CarLocaleBoardRecordApi {
     public ServiceResult<CarLocaleBoardRecord> saveLocaleBoard(@RequestBody Map<String,Object> map) {
         ServiceResult<CarLocaleBoardRecord> result = new ServiceResult<>();
         try {
+            tblAuctionLogService.insertDataLog("2",map.toString());
             String jz = (String)map.get("jz");
             String mm = (String)map.get("mm");
             TblBaseStation baseStation = baseStationService.selectByRealIdAndToken(jz,mm);
