@@ -18,7 +18,7 @@
     <include refid="Base_Column_List" />
     from tbl_locale_board_record t1
     where 1=1
-    <if test="localAuctionId != null">
+    <if test="localeAuctionId != null">
       and t1.locale_auction_id=#{localeAuctionId}
     </if>
     order by t1.id desc

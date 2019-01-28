@@ -341,11 +341,12 @@
     ORDER BY t1.start_time DESC
   </select>
 
-  <select id="selectByStationRealId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByStationRealId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from car_locale_auction t1
-    where t1.station_real_id = #{stationRealId} and t1.status='4'
+    where t1.station_real_id = #{stationRealId}
+    and DATE_FORMAT(t1.start_time,'%Y%m%d')=#{auctionDate}
     order by t1.start_time desc limit 1
   </select>
 </mapper>

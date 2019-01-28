@@ -117,4 +117,13 @@
         and t1.enable='0'
         order by t1.id desc limit 1
     </select>
+
+    <select id="selectBidByAuctionCarId" resultMap="BaseResultMap" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog">
+        select
+        <include refid="Base_Column_List" />
+        from tbl_auction_log t1
+        where t1.station_real_id=#{stationRealId} and t1.board_real_id=#{boardRealId} and t1.token=#{token}
+        and t1.auction_car_id = #{auctionCarId} and t1.price_type=#{priceType}
+        and t1.enable='0' and t1.bid_fee is null
+    </select>
 </mapper>

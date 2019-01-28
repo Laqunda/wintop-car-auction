@@ -8,6 +8,7 @@ public class TblDataLog implements Serializable {
     private Long id;
     private String dataType;
     private String dataContent;
+    private String resultContent;
     private Date createTime;
 
     public Long getId() {
@@ -40,5 +41,13 @@ public class TblDataLog implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getResultContent() {
+        return resultContent;
+    }
+
+    public void setResultContent(String resultContent) {
+        this.resultContent = resultContent;
     }
 }

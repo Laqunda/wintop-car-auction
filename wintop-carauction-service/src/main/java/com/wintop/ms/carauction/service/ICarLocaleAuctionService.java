@@ -176,9 +176,9 @@ public interface ICarLocaleAuctionService {
     ServiceResult<List<CarLocaleAuction>> queryCarLocaleAuctionList(Map<String,Object> map);
 
     /**
-     * 查询基站最后一次完成的竞拍场次
+     * 根据日期查询基站的竞拍场次
      * @param stationRealId
      * @return
      */
-    CarLocaleAuction selectByStationRealId(String stationRealId);
+    CarLocaleAuction selectByStationRealId(String stationRealId,String auctionDate);
 }

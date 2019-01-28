@@ -41,7 +41,7 @@ public class ElectronAuctionApi {
     @RequestMapping(value = "/bidding",produces="application/json; charset=UTF-8")
     public synchronized Integer bidding(HttpServletRequest request,String jz,String pp,String mm) {
         if(StringUtils.isBlank(jz) || StringUtils.isBlank(pp) || StringUtils.isBlank(mm)){
-            return 0;
+            return 1;
         }
         Map<String,Object> map = new HashMap();
         map.put("jz",jz);
@@ -54,9 +54,9 @@ public class ElectronAuctionApi {
                         .body(map),JSONObject.class);
         ResultModel model = ApiUtil.getResultModel(response, ApiUtil.OBJECT);
         if(model.getResultCode()==100){
-            return 1;
+            return 0;
         }
-        return 0;
+        return 1;
     }
 
     @RequestMapping(value = "/selectLogList",

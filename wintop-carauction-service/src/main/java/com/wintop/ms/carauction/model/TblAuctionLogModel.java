@@ -91,4 +91,13 @@ public class TblAuctionLogModel {
         return tblAuctionLogWriteDao.insertDataLog(dataLog);
     }
 
+    /**
+     * 查询出价次数
+     * @param auctionLog
+     * @return
+     */
+    public List<TblAuctionLog> selectBidByAuctionCarId(TblAuctionLog auctionLog){
+        return tblAuctionLogReadDao.selectBidByAuctionCarId(auctionLog);
+    }
+
 }

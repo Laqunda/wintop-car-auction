@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.regexp.internal.RE;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -41,7 +42,6 @@ public class ElectronAuctionApi {
     public ServiceResult<TblAuctionTimes> bidding(@RequestBody Map<String,Object> map) {
         ServiceResult<TblAuctionTimes> result = new ServiceResult<>();
         try {
-            tblAuctionLogService.insertDataLog("1",map.toString());
             TblAuctionTimes auctionTimes = tblAuctionLogService.saveBidding(map);
             if(auctionTimes==null){
                 result.setResult(null);
@@ -54,6 +54,11 @@ public class ElectronAuctionApi {
             logger.info("提交电子竞价失败",e);
             result.setResult(null);
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        try{
+            tblAuctionLogService.insertDataLog("1",map.toString(),JSONObject.toJSONString(result));
+        } catch (Exception e){
+            logger.info("保存数据失败",e);
         }
         return result;
     }

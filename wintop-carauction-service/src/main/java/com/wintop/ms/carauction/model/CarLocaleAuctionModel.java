@@ -142,11 +142,11 @@ public class CarLocaleAuctionModel {
     }
 
     /**
-     * 查询基站最后一次完成的竞拍场次
+     * 根据日期查询基站竞拍场次
      * @param stationRealId
      * @return
      */
-    public CarLocaleAuction selectByStationRealId(String stationRealId){
-        return readDao.selectByStationRealId(stationRealId);
+    public CarLocaleAuction selectByStationRealId(String stationRealId,String auctionDate){
+        return readDao.selectByStationRealId(stationRealId, auctionDate);
     }
 }
