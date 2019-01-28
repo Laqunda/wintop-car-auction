@@ -26,6 +26,7 @@
         <result column="user_status" property="userStatus" jdbcType="VARCHAR"/>
         <result column="status_name" property="statusName" jdbcType="VARCHAR" />
         <result column="auction_plate_num" property="auctionPlateNum" jdbcType="VARCHAR" />
+        <result column="board_real_id" property="boardRealId" jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.WtAppUser">
@@ -110,15 +111,17 @@
                 ca.real_name,ca.address,ca.city_name,ca.id as authId,
                 if(GROUP_CONCAT(DISTINCT cg.group_name) is null,'默认分组',GROUP_CONCAT(DISTINCT cg.group_name)) group_name,a.regist_time,a.status,
                 a.regist_time,a.status,
-                us.status_name,a.auction_plate_num
+                us.status_name,a.auction_plate_num,
+                ccb.board_real_id
             FROM
                 wt_app_user a
             LEFT JOIN car_customer_level cl ON cl.id = a.user_level_id
             LEFT JOIN car_store sn ON sn.id = a.store_id
             LEFT JOIN car_customer_group_detail cgd on cgd.customer_id=a.id
             LEFT JOIN car_customer_group cg ON cg.id = cgd.group_id
-            LEFT JOIN car_customer_auth ca on ca.user_id=a.id
-            LEFT JOIN car_relate_status us on (us.status=a.status and us.type='1')
+            LEFT JOIN car_customer_auth ca ON ca.user_id=a.id
+            LEFT JOIN car_relate_status us ON (us.status=a.status and us.type='1')
+            LEFT JOIN car_customer_board ccb ON (a.id=ccb.customer_id AND bind_status='1')
             WHERE 1=1
             <if test="searchName != null and searchName !=''">
                 and(a.name like CONCAT(CONCAT('%', #{searchName}),'%')
