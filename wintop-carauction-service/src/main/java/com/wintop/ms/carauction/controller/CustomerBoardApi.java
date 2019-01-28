@@ -50,7 +50,7 @@ public class CustomerBoardApi {
             TblAuctionBoard board = boardService.selectByRealId(customerBoard.getBoardRealId());
             if(board==null){
                 result.setResult(customerBoard);
-                result.setSuccess(ResultCode.NO_OBJECT.strValue(),"拍牌不存在");
+                result.setError(ResultCode.NO_OBJECT.strValue(),"拍牌不存在");
                 return result;
             }else{
                 customerBoardService.insert(customerBoard);
