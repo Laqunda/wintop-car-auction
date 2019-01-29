@@ -41,7 +41,7 @@ public class CustomerBoardApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     public ResultModel saveAuctionBoard(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
-        if(map.get("customerId")==null && map.get("boardRealId")==null ){
+        if(map.get("customerId")==null || map.get("boardRealId")==null ){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
         map.put("createPerson",managerId);
@@ -67,7 +67,7 @@ public class CustomerBoardApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     public ResultModel deleteAuctionBoard(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
-        if(map.get("customerId")==null && map.get("boardRealId")==null ){
+        if(map.get("customerId")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
         map.put("modifyPerson",managerId);
