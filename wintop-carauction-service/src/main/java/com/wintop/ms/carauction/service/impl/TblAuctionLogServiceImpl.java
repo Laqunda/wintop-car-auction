@@ -68,6 +68,8 @@ public class TblAuctionLogServiceImpl implements TblAuctionLogService {
             List<TblAuctionLog> auctionLogs = auctionLogModel.selectBidByAuctionCarId(auctionLog);
             if(auctionLogs.size()==0){
                 auctionLogModel.insert(auctionLog);
+            }else{
+                return null;
             }
         }
         return auctionTimes;
