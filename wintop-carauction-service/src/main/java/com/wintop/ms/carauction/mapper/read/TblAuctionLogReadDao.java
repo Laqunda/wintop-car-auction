@@ -31,4 +31,11 @@ public interface TblAuctionLogReadDao {
      * @return
      */
     TblAuctionLog selectByAuctionCarId(@Param("auctionCarId") Long auctionCarId,@Param("priceType") String priceType);
+
+    /**
+     * 查询出价次数
+     * @param auctionLog
+     * @return
+     */
+    List<TblAuctionLog> selectBidByAuctionCarId(TblAuctionLog auctionLog);
 }

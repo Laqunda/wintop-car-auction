@@ -40,20 +40,22 @@ public class ImportCarPriceInfoApi {
             String noPrice="";
             if (localeAuctionCars!=null && localeAuctionCars.size()>0){
                 for (int i=0;i<localeAuctionCars.size();i++){
+                    CarLocaleAuctionCar auctionCar = localeAuctionCars.get(i);
                     CarAutoAuction auction=new CarAutoAuction();
                     boolean flag = true;
                         for (int j=0;j<carPriceExcels.size();j++){
-                            if (localeAuctionCars.get(i).getAuctionCode()!=null&&localeAuctionCars.get(i).getAuctionCode().equals(carPriceExcels.get(j).getCode())){
+                            CarPriceExcel priceExcel = carPriceExcels.get(j);
+                            if (auctionCar.getAuctionCode()!=null&&auctionCar.getAuctionCode().equals(priceExcel.getCode())){
                                 auction.setId(localeAuctionCars.get(j).getAutoAuctionId());
-                                if (StringUtils.isNotBlank(carPriceExcels.get(j).getStartPrice())){
+                                if (StringUtils.isNotBlank(priceExcel.getStartPrice())){
                                     flag = false;
-                                    BigDecimal startPrice=transformToBig(carPriceExcels.get(j).getStartPrice());
+                                    BigDecimal startPrice=transformToBig(priceExcel.getStartPrice());
                                     auction.setStartingPrice(startPrice);
                                     //初始化加价幅度存储
-                                    localeAuctionCars.get(i).setPriceRange(queryPriceRange(startPrice));
+                                    auctionCar.setPriceRange(queryPriceRange(startPrice));
                                 }
-                                if (StringUtils.isNotBlank(carPriceExcels.get(j).getReservePrice())){
-                                    auction.setReservePrice(transformToBig(carPriceExcels.get(j).getReservePrice()));
+                                if (StringUtils.isNotBlank(priceExcel.getReservePrice())){
+                                    auction.setReservePrice(transformToBig(priceExcel.getReservePrice()));
                                     flag = false;
                                 }
                                 auction.setModifyTime(new Date());
@@ -61,7 +63,7 @@ public class ImportCarPriceInfoApi {
                             }
                         }
                         if(flag){
-                            noPrice+=localeAuctionCars.get(i).getAuctionCode()+",";
+                            noPrice+=auctionCar.getAuctionCode()+",";
                         }else {
                             updateList.add(auction);
                         }

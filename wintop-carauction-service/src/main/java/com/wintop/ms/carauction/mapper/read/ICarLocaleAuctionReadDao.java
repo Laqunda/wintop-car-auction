@@ -2,6 +2,7 @@ package com.wintop.ms.carauction.mapper.read;
 
 import com.wintop.ms.carauction.entity.CarLocaleAuction;
 import com.wintop.ms.carauction.entity.CommonNameVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -81,9 +82,9 @@ public interface ICarLocaleAuctionReadDao {
     List<CarLocaleAuction> queryCarLocaleAuctionList(Map<String,Object> map);
 
     /**
-     * 查询基站最后一次完成的竞拍场次
+     * 根据日期查询基站的竞拍场次
      * @param stationRealId
      * @return
      */
-    CarLocaleAuction selectByStationRealId(String stationRealId);
+    CarLocaleAuction selectByStationRealId(@Param("stationRealId") String stationRealId, @Param("auctionDate") String auctionDate);
 }

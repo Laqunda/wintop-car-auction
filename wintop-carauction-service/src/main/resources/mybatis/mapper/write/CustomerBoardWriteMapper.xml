@@ -14,7 +14,13 @@
     set bind_status = #{bindStatus},
       modify_time = #{modifyTime},
       modify_person = #{modifyPerson}
-    where board_real_id = #{boardRealId} and bind_status='1'
+    where bind_status='1'
+    <if test="boardRealId != null">
+      and board_real_id = #{boardRealId}
+    </if>
+    <if test="customerId != null">
+      and customer_id = #{customerId}
+    </if>
   </update>
 
   <update id="deleteCustomerBoard" parameterType="com.wintop.ms.carauction.entity.CustomerBoard" >
@@ -22,6 +28,10 @@
     set bind_status = '2',
       modify_time = #{modifyTime},
       modify_person = #{modifyPerson}
-    where customer_id = #{customerId} and board_real_id = #{boardRealId} and bind_status='1'
+    where customer_id = #{customerId}
+    <if test="boardRealId != null">
+      and board_real_id = #{boardRealId}
+    </if>
+     and bind_status='1'
   </update>
 </mapper>

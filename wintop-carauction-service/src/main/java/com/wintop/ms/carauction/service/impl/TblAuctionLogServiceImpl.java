@@ -65,7 +65,10 @@ public class TblAuctionLogServiceImpl implements TblAuctionLogService {
             auctionLog.setAuctionTime(new Date());
             auctionLog.setPriceType(auctionTimes.getCuttingSign());
             auctionLog.setEnable("0");
-            auctionLogModel.insert(auctionLog);
+            List<TblAuctionLog> auctionLogs = auctionLogModel.selectBidByAuctionCarId(auctionLog);
+            if(auctionLogs.size()==0){
+                auctionLogModel.insert(auctionLog);
+            }
         }
         return auctionTimes;
     }
@@ -123,12 +126,13 @@ public class TblAuctionLogServiceImpl implements TblAuctionLogService {
      * @return
      */
     @Override
-    public int insertDataLog(String dataType,String dataContent){
+    public int insertDataLog(String dataType,String dataContent,String resultContent){
         try{
             TblDataLog dataLog = new TblDataLog();
             dataLog.setId(IdWorker.getInstance().nextId());
             dataLog.setDataType(dataType);
             dataLog.setDataContent(dataContent);
+            dataLog.setResultContent(resultContent);
             dataLog.setCreateTime(new Date());
             return auctionLogModel.insertDataLog(dataLog);
         }catch (Exception e){

@@ -54,5 +54,5 @@ public interface TblAuctionLogService {
      * 保存记录
      * @return
      */
-    int insertDataLog(String dateType,String dataContent);
+    int insertDataLog(String dateType,String dataContent,String resultContent);
 }

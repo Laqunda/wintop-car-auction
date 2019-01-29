@@ -34,6 +34,6 @@
     <if test="auction_car_id != null">
       and t2.id=#{auctionCarId}
     </if>
-    limit 1
+    order by t1.start_time desc limit 1
   </select>
 </mapper>

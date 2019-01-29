@@ -40,6 +40,12 @@ public class CustomerBoardServiceImpl implements CustomerBoardService {
         board.setModifyPerson(customerBoard.getCreatePerson());
         board.setModifyTime(customerBoard.getCreateTime());
         customerBoardModel.updateBindStatus(board);
+        CustomerBoard board1 = new CustomerBoard();
+        board1.setCustomerId(customerBoard.getCustomerId());
+        board1.setBindStatus("2");
+        board1.setModifyPerson(customerBoard.getCreatePerson());
+        board1.setModifyTime(customerBoard.getCreateTime());
+        customerBoardModel.updateBindStatus(board1);
         return customerBoardModel.insert(customerBoard);
     }
 

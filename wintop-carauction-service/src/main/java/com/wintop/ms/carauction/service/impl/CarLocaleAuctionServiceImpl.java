@@ -870,12 +870,12 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
     }
 
     /**
-     * 查询基站最后一次完成的竞拍场次
+     * 根据日期询基站的竞拍场次
      * @param stationRealId
      * @return
      */
     @Override
-    public CarLocaleAuction selectByStationRealId(String stationRealId){
-        return model.selectByStationRealId(stationRealId);
+    public CarLocaleAuction selectByStationRealId(String stationRealId,String auctionDate){
+        return model.selectByStationRealId(stationRealId,auctionDate);
     }
 }
