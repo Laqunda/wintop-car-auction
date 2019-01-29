@@ -57,7 +57,6 @@ public class CarLocaleBoardRecordApi {
                     result.setResult(null);
                     result.setSuccess(ResultCode.REQUEST_DISABLED.strValue(),ResultCode.REQUEST_DISABLED.getRemark());
                 }else{
-                    System.out.println("---localeAuctionId---"+localeAuction.getId());
                     Map<String,Object> map1 = new HashMap<>();
                     map1.put("localeAuctionId",localeAuction.getId());
                     List<CarLocaleBoardRecord> records =  recordService.selectByExample(map1);
