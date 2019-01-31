@@ -148,7 +148,7 @@
         </if>
         <if test="auctionCarId != null">
             AND t1.auction_car_id=#{auctionCarId}
-            AND t1.bid_time = (select MAX(bid_time) FROM car_auction_bid_record where add_fee=t1.add_fee AND auction_car_id=#{auctionCarId})
+            AND t1.id = (select MAX(id) FROM car_auction_bid_record where add_fee=t1.add_fee AND auction_car_id=#{auctionCarId})
         </if>
         order by t1.bid_time DESC
     </select>
@@ -165,7 +165,7 @@
         t1.bid_time
         FROM car_auction_bid_record t1
         where t1.auction_car_id=#{auctionCarId}
-        order by bid_fee DESC limit 1
+        order by bid_fee desc,id desc limit 1
     </select>
     <select id="selectBidCountForLocale" resultType="java.lang.Integer" parameterType="java.lang.Long">
         SELECT

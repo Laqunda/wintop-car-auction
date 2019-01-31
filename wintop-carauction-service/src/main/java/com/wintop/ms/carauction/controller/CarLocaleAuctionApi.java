@@ -807,14 +807,14 @@ public class CarLocaleAuctionApi {
         }
 
         if(obj.getLong("lastAmount")==null){
-            return new ServiceResult<>(false,"车辆关联表id为空！","101");
+            return new ServiceResult<>(false,"最高出价不能为空！","101");
         }
         CarLocaleAuctionCar carLocaleAuctionCar = carLocaleAuctionCarService.selectById(obj.getLong("auctionCarId"));
         if(carLocaleAuctionCar==null||!"1".equals(carLocaleAuctionCar.getAuctionStatus())){
             return new ServiceResult<>(false,"只有拍卖中的车辆才可以出价","101");
         }
-        carAuctionBidRecord.setBidFee(new BigDecimal(obj.getLong("lastAmount")));
-        carAuctionBidRecord.setAddFee(new BigDecimal(obj.getLong("lastAmount")));
+        carAuctionBidRecord.setBidFee(obj.getBigDecimal("lastAmount"));
+        carAuctionBidRecord.setAddFee(obj.getBigDecimal("lastAmount"));
         carAuctionBidRecord.setBidTime(new Date());
         return carAuctionBidRecordService.saveCarAuctionBidRecord(carAuctionBidRecord);
     }
@@ -849,10 +849,10 @@ public class CarLocaleAuctionApi {
             return new ServiceResult<>(false,"车商编号为空！","101");
         }
         if(obj.getLong("lastAmount")==null){
-            return new ServiceResult<>(false,"车辆关联表id为空！","101");
+            return new ServiceResult<>(false,"最高出价不能为空！","101");
         }
-        carAuctionBidRecord.setBidFee(new BigDecimal(obj.getLong("lastAmount")));
-        carAuctionBidRecord.setAddFee(new BigDecimal(obj.getLong("lastAmount")));
+        carAuctionBidRecord.setBidFee(obj.getBigDecimal("lastAmount"));
+        carAuctionBidRecord.setAddFee(obj.getBigDecimal("lastAmount"));
         carAuctionBidRecord.setBidTime(new Date());
         return carAuctionBidRecordService.saveBiddenInfoByCode(carAuctionBidRecord,obj.getString("customerCode"));
     }
