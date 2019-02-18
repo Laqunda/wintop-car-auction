@@ -1,4 +1,4 @@
-FROM java:openjdk-8-alpine
+FROM java:openjdk-8-jre-alpine
 MAINTAINER ligongzhaoyang@163.com
 ARG JAR_FILE
 WORKDIR /home
