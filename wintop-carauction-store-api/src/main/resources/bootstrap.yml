@@ -1,4 +1,3 @@
-server.port: 8082
 spring:
   cloud:
     config:
@@ -11,10 +10,10 @@ spring:
     name: carauctionstoreapi     # 对应service-config-server所获取的配置文件的{application}
     index: ${random.long} #解决 多实例相同端口的话，就只刷新一个端口，用index区分下
   rabbitmq:
-   host: rabbitmq
-   port: 5672
-   username: guest
-   password: guest
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
   redis:
     host: redis
     port: 6379
@@ -32,3 +31,4 @@ eureka:
     eureka-service-url-poll-interval-seconds: 5
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}
+
