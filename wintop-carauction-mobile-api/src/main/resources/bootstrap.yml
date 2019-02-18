@@ -1,4 +1,8 @@
 server.port: 8080
+#服务名称
+spring.application.name: carauctionmobileapi
+spring.application.instance_id: carauctionmobileapi
+#spring.profiles.active: pro
 spring:
   cloud:
     config:
@@ -8,7 +12,6 @@ spring:
       profile: ${spring.profiles.active}
       label: master
   application:
-    name: carauctionmobileapi     # 对应service-config-server所获取的配置文件的{application}
     index: ${random.long}
   rabbitmq:
     host: rabbitmq

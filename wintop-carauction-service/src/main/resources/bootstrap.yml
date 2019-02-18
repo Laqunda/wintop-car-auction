@@ -1,4 +1,8 @@
 server.port: 8185
+#服务名称
+spring.application.name: carauctionservice #对应config-server所获取的配置文件的{application}
+spring.application.instance_id: carauctionservice
+#spring.profiles.active: test
 spring:
   cloud:
     config:
@@ -8,7 +12,6 @@ spring:
       profile: ${spring.profiles.active}
       label: master
   application:
-    name: carauctionservice     # 对应service-config-server所获取的配置文件的{application}
     index: ${random.long} #解决 多实例相同端口的话，就只刷新一个端口，用index区分下
 #服务注册中心的地址
 eureka:
