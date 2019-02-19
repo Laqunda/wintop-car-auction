@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.CustomerBoardReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CustomerBoard" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="customer_id" property="customerId" jdbcType="BIGINT" />
+    <result column="board_real_id" property="boardRealId" jdbcType="VARCHAR" />
+    <result column="bind_status" property="bindStatus" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="modify_person" property="modifyPerson" jdbcType="BIGINT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    t1.id, t1.customer_id, t1.board_real_id, t1.bind_status, t1.create_time, t1.create_person,t1. modify_time,
+    t1.modify_person
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_customer_board t1
+    order by t1.create_time desc
+    <if test="startRowNum != null and endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    select count(t1.id)
+    from car_customer_board t1
+  </select>
+
+  <select id="selectByBoardRealId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from car_customer_board t1
+    where t1.board_real_id = #{boardRealId} and t1.bind_status='1'
+  </select>
+</mapper>

@@ -1,6 +1,11 @@
 package com.wintop.ms.carauction.mapper.write;
 
+import com.wintop.ms.carauction.entity.CarAutoAuction;
 import com.wintop.ms.carauction.entity.CarLocaleAuctionCar;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 public interface ICarLocaleAuctionCarWriteDao {
 
@@ -23,4 +28,18 @@ public interface ICarLocaleAuctionCarWriteDao {
      * 根据主键更新记录
      */
     int updateById(CarLocaleAuctionCar carAuctionCar);
+
+    /**
+     * 批量插入竞拍车辆信息
+     */
+    Integer insertCarLocaleAuctionCarList(List<CarLocaleAuctionCar> list);
+
+    /***
+     * 修改某场次内的指定顺序号的车 顺延序号
+     * @param map
+     * @return
+     */
+    Integer updateSortAuctionCar(Map map);
+
+    int batchUpdateLocaleAuctionById(@Param(value="localeAuctionList")List<CarLocaleAuctionCar> localeAuctionList);
 }

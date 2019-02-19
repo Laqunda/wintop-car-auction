@@ -571,8 +571,8 @@
     LEFT JOIN car_store cs on cs.id=a.store_id
     LEFT JOIN car_relate_status cas on (cas.status=a.status AND cas.type='2')
     LEFT JOIN car_manager_user mu on mu.id=a.create_user
-    LEFT JOIN car_order  co on co.auto_auction_id=a.auto_auction_id
-    LEFT JOIN wt_app_user ar on ar.id=co.customer_id
+    LEFT JOIN car_order  co on (co.auto_auction_id=a.auto_auction_id and co.status!='8')
+    LEFT JOIN wt_app_user ar on ar.id=aa.top_pricer_id
     WHERE a.status != '0' AND ((a.status='1' AND a.create_user=#{managerId}) OR a.status>'1')
     <if test="storeId!=null and storeId!=''">
       AND a.store_id=#{storeId}
@@ -593,7 +593,7 @@
       AND a.create_time &gt;= #{startTime}
     </if>
     <if test="endTime!=null and endTime!=''">
-      AND a.create_time &lt;= #{endTime}
+      AND  date_format(a.create_time, '%Y-%m-%d') &lt;= #{endTime}
     </if>
     <if test="carAutoNo!=null and carAutoNo!=''">
       AND a.car_auto_no = #{carAutoNo}
@@ -623,6 +623,7 @@
       </foreach>
       or a.store_id is null)
     </if>
+    GROUP BY a.id
     ORDER BY a.update_time DESC,a.create_time DESC
     <if test="startRowNum!=null and startRowNum!=null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
@@ -655,7 +656,7 @@
       AND a.create_time &gt;= #{startTime}
     </if>
     <if test="endTime!=null and endTime!=''">
-      AND a.create_time &lt;= #{endTime}
+      AND  date_format(a.create_time, '%Y-%m-%d')&lt;= #{endTime}
     </if>
     <if test="carAutoNo!=null and carAutoNo!=''">
       AND a.car_auto_no = #{carAutoNo}

@@ -28,6 +28,7 @@ public enum ResultCode {
     NO_OVER_MAXPRICE(303,"竞价出价未超过最大价"),
     NO_ALLOW_ENTRUST(304,"开拍状态，不允许操作委托价"),
     //***boss-api;
+    NOT_SYNC(400,"数据不同步"),
     PASSWORD_NOT_MATCH(401,"旧密码错误"),
     USERNUM_IS_REPEAT(402,"车商号重复"),
     NO_MANAGER_USER(403,"登录账号不存在"),
@@ -50,7 +51,13 @@ public enum ResultCode {
     NO_ALLOW_UPDATE(421,"只允许操作自己的发拍的车辆"),
     AMOUNT_ERROR(422,"金额填写错误"),
     DELETE_LEVEL_DEFAUIT(423,"该级别为默认级别，不能删除"),
-    PARAM_ERROR(424,"参数错误");
+    PARAM_ERROR(424,"参数错误"),
+    NO_UPDATE_BREACH(425,"修改车价必须是争议之前订单状态为待付款"),
+
+    JZ_INVALID(501,"基站无效"),
+    PP_INVALID(502,"拍牌无效"),
+    MM_INVALID(503,"密码无效"),
+    DUPLICATE_ADD(504,"不可重复添加");
     private final int value;
     private final String remark;
 

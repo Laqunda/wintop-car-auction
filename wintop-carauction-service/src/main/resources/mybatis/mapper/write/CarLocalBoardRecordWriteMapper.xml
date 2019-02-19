@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.CarLocaleBoardRecordWriteDao" >
+
+  <delete id="deleteByAuctionId" parameterType="java.lang.Long" >
+    delete from tbl_locale_board_record
+    where locale_auction_id = #{localeAuctionId}
+  </delete>
+  <insert id="saveLocaleBoardRecord" parameterType="com.wintop.ms.carauction.entity.CarLocaleBoardRecord" >
+    insert into tbl_local_board_record (id, locale_auction_id, station_real_id, board_real_id, create_time,record_date
+      )
+    values (#{id}, #{localeAuctionId}, #{stationRealId}, #{boardRealId}, #{createTime},#{recordDate}
+      )
+  </insert>
+
+  <insert id="saveBatchLocaleBoardRecord" parameterType="com.wintop.ms.carauction.entity.CarLocaleBoardRecord">
+    insert into tbl_locale_board_record (id, locale_auction_id, station_real_id, board_real_id, create_time,record_date
+      )
+    values
+    <foreach collection="localeBoardRecords" item="item" index="index" separator=",">
+      (
+      #{item.id}, #{item.localeAuctionId}, #{item.stationRealId}, #{item.boardRealId}, #{item.createTime},#{item.recordDate}
+      )
+    </foreach>
+  </insert>
+
+</mapper>

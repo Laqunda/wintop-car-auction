@@ -387,6 +387,9 @@ public class CarLocaleAuctionApi {
             result.setError("101","场次主题为空！");
             return result;
         }
+        if(obj.getString("stationRealId")!=null){
+            carLocaleAuction.setStationRealId(obj.getString("stationRealId"));
+        }
         if(obj.getString("regionId")!=null){
             carLocaleAuction.setRegionId(obj.getString("regionId"));
         }
@@ -804,14 +807,14 @@ public class CarLocaleAuctionApi {
         }
 
         if(obj.getLong("lastAmount")==null){
-            return new ServiceResult<>(false,"车辆关联表id为空！","101");
+            return new ServiceResult<>(false,"最高出价不能为空！","101");
         }
         CarLocaleAuctionCar carLocaleAuctionCar = carLocaleAuctionCarService.selectById(obj.getLong("auctionCarId"));
         if(carLocaleAuctionCar==null||!"1".equals(carLocaleAuctionCar.getAuctionStatus())){
             return new ServiceResult<>(false,"只有拍卖中的车辆才可以出价","101");
         }
-        carAuctionBidRecord.setBidFee(new BigDecimal(obj.getLong("lastAmount")));
-        carAuctionBidRecord.setAddFee(new BigDecimal(obj.getLong("lastAmount")));
+        carAuctionBidRecord.setBidFee(obj.getBigDecimal("lastAmount"));
+        carAuctionBidRecord.setAddFee(obj.getBigDecimal("lastAmount"));
         carAuctionBidRecord.setBidTime(new Date());
         return carAuctionBidRecordService.saveCarAuctionBidRecord(carAuctionBidRecord);
     }
@@ -846,10 +849,10 @@ public class CarLocaleAuctionApi {
             return new ServiceResult<>(false,"车商编号为空！","101");
         }
         if(obj.getLong("lastAmount")==null){
-            return new ServiceResult<>(false,"车辆关联表id为空！","101");
+            return new ServiceResult<>(false,"最高出价不能为空！","101");
         }
-        carAuctionBidRecord.setBidFee(new BigDecimal(obj.getLong("lastAmount")));
-        carAuctionBidRecord.setAddFee(new BigDecimal(obj.getLong("lastAmount")));
+        carAuctionBidRecord.setBidFee(obj.getBigDecimal("lastAmount"));
+        carAuctionBidRecord.setAddFee(obj.getBigDecimal("lastAmount"));
         carAuctionBidRecord.setBidTime(new Date());
         return carAuctionBidRecordService.saveBiddenInfoByCode(carAuctionBidRecord,obj.getString("customerCode"));
     }
@@ -1238,15 +1241,21 @@ public class CarLocaleAuctionApi {
             paramMap.put("beginTime",obj.getString("beginTime"));
         }
         if(obj.getString("endTime")!=null&&!"".equals(obj.getString("endTime"))){
-            paramMap.put("endTime",obj.getString("endTime"));
+            paramMap.put("endTime",obj.getString("endTime")+"23:59:59");
         }
         if(obj.getLong("cityId")!=null&&!"".equals(obj.getLong("cityId"))){
             paramMap.put("cityId",obj.getLong("cityId"));
         }
-        int count = carLocaleAuctionCarService.hasAuctionCarCount(paramMap).getResult();
-        PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
-        paramMap.put("startRowNum",pageEntity.getStartRowNum());
-        paramMap.put("endRowNum",pageEntity.getEndRowNum());
+        if(obj.get("status")!=null&&!"".equals(obj.getString("status"))){
+            paramMap.put("status",obj.getLong("status"));
+        }
+        int count=0;
+        if(obj.get("page")!=null && obj.get("limit")!=null){
+            count = carLocaleAuctionCarService.hasAuctionCarCount(paramMap).getResult();
+            PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
+            paramMap.put("startRowNum",pageEntity.getStartRowNum());
+            paramMap.put("endRowNum",pageEntity.getEndRowNum());
+        }
         List<CarLocaleAuctionCar> carLocaleAuctionCars =  carLocaleAuctionCarService.hasAuctionCarList(paramMap).getResult();
         List<Map<String,Object>> list = new ArrayList<>();
         for(CarLocaleAuctionCar carLocaleAuctionCar:carLocaleAuctionCars){
@@ -1333,6 +1342,34 @@ public class CarLocaleAuctionApi {
             auctionListEntity.setDataList(list);
             auctionListEntity.setCount(count);
             result.setResult(auctionListEntity);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+        }catch (Exception e){
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /***
+     * 查询单个竞拍详情
+     * @param obj
+     * @return
+     */
+    @PostMapping(value = "/selectLocaleAuctionCar",
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<CarLocaleAuctionCar> selectLocaleAuctionCar(@RequestBody JSONObject obj) {
+        ServiceResult<CarLocaleAuctionCar> result = new ServiceResult<>();
+        try {
+            Long auctionCarId = obj.getLong("auctionCarId");
+            CarLocaleAuctionCar localeAuctionCar = carLocaleAuctionCarService.selectById(auctionCarId);
+            if(localeAuctionCar!=null){
+                CarAuctionBidRecord bidRecord = carAuctionBidRecordService.selectLastBidInfo(auctionCarId).getResult();
+                if(bidRecord!=null){
+                    localeAuctionCar.setTopBidPrice(bidRecord.getBidFee());
+                }
+            }
+            result.setResult(localeAuctionCar);
             result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
         }catch (Exception e){
             e.printStackTrace();

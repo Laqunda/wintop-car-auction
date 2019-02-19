@@ -174,4 +174,11 @@ public interface ICarLocaleAuctionService {
      * 首页开拍场次时间查询
      */
     ServiceResult<List<CarLocaleAuction>> queryCarLocaleAuctionList(Map<String,Object> map);
+
+    /**
+     * 根据日期查询基站的竞拍场次
+     * @param stationRealId
+     * @return
+     */
+    CarLocaleAuction selectByStationRealId(String stationRealId,String auctionDate);
 }

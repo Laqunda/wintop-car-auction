@@ -4,21 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ¹«ÓÃÌõ¼ş²éÑ¯Àà
+ * å…¬ç”¨æ¡ä»¶æŸ¥è¯¢ç±»
  */
 public class Criteria {
     /**
-     * ´æ·ÅÌõ¼ş²éÑ¯Öµ
+     * å­˜æ”¾æ¡ä»¶æŸ¥è¯¢å€¼
      */
     private Map<String, Object> condition;
 
     /**
-     * ÊÇ·ñÏàÒì
+     * æ˜¯å¦ç›¸å¼‚
      */
     protected boolean distinct;
 
     /**
-     * ÅÅĞò×Ö¶Î
+     * æ’åºå­—æ®µ
      */
     protected String orderByClause;
 
@@ -48,9 +48,9 @@ public class Criteria {
 
     /**
      * @param condition 
-	 *            ²éÑ¯µÄÌõ¼şÃû³Æ
+	 *            æŸ¥è¯¢çš„æ¡ä»¶åç§°
 	 * @param value
-	 *            ²éÑ¯µÄÖµ
+	 *            æŸ¥è¯¢çš„å€¼
      */
     public Criteria put(String condition, Object value) {
         this.condition.put(condition, value);
@@ -59,7 +59,7 @@ public class Criteria {
 
     /**
      * @param orderByClause 
-	 *            ÅÅĞò×Ö¶Î
+	 *            æ’åºå­—æ®µ
      */
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
@@ -67,7 +67,7 @@ public class Criteria {
 
     /**
      * @param distinct 
-	 *            ÊÇ·ñÏàÒì
+	 *            æ˜¯å¦ç›¸å¼‚
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
@@ -83,8 +83,8 @@ public class Criteria {
 
     /**
      * @param mysqlOffset 
-	 *            Ö¸¶¨·µ»Ø¼ÇÂ¼ĞĞµÄÆ«ÒÆÁ¿<br>
-	 *            mysqlOffset= 5,mysqlLength=10;  // ¼ìË÷¼ÇÂ¼ĞĞ 6-15
+	 *            æŒ‡å®šè¿”å›è®°å½•è¡Œçš„åç§»é‡<br>
+	 *            mysqlOffset= 5,mysqlLength=10;  // æ£€ç´¢è®°å½•è¡Œ 6-15
      */
     public void setMysqlOffset(Integer mysqlOffset) {
         this.mysqlOffset = mysqlOffset;
@@ -92,8 +92,8 @@ public class Criteria {
 
     /**
      * @param mysqlLength 
-	 *            Ö¸¶¨·µ»Ø¼ÇÂ¼ĞĞµÄ×î´óÊıÄ¿<br>
-	 *            mysqlOffset= 5,mysqlLength=10;  // ¼ìË÷¼ÇÂ¼ĞĞ 6-15
+	 *            æŒ‡å®šè¿”å›è®°å½•è¡Œçš„æœ€å¤§æ•°ç›®<br>
+	 *            mysqlOffset= 5,mysqlLength=10;  // æ£€ç´¢è®°å½•è¡Œ 6-15
      */
     public void setMysqlLength(Integer mysqlLength) {
         this.mysqlLength = mysqlLength;

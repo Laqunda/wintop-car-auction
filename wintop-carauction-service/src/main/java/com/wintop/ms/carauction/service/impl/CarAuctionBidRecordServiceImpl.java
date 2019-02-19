@@ -28,6 +28,8 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
     @Autowired
     private RedisAutoManager redisAutoManager;
     @Autowired
+    private CarLocaleAuctionCarModel carLocaleAuctionCarModel;
+    @Autowired
     private CarCustomerEntrustCarModel entrustCarModel;
     @Autowired
     private CarAuctionFareSettingModel fareSettingModel;
@@ -184,11 +186,16 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
     }
 
     public ServiceResult<Map<String,Object>> saveCarAuctionBidRecord(CarAuctionBidRecord carAuctionBidRecord){
-        CarAuto auto = autoModel.selectByPrimaryKey(carAuctionBidRecord.getCarId());
-        carAuctionBidRecord.setAuctionId(auto.getAutoAuctionId());
+        //最高出价
+        CarAuctionBidRecord bidRecord = model.selectLastBidRecord(carAuctionBidRecord.getAuctionCarId());
         ServiceResult<Map<String,Object>> result =new ServiceResult<>();
         Map resultMap =new HashMap();
-        Integer count =model.insert(carAuctionBidRecord);
+        Integer count = 1;
+        if(bidRecord==null || carAuctionBidRecord.getBidFee().compareTo(bidRecord.getBidFee())>0){
+            CarAuto auto = autoModel.selectByPrimaryKey(carAuctionBidRecord.getCarId());
+            carAuctionBidRecord.setAuctionId(auto.getAutoAuctionId());
+            count = model.insert(carAuctionBidRecord);
+        }
         resultMap.put("count",count);
         result.setSuccess(true);
         result.setResult(resultMap);
@@ -201,9 +208,16 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
         if(commonNameVo!=null){
             carAuctionBidRecord.setCustomerId(commonNameVo.getId());
         }
+        //最高出价
+        CarAuctionBidRecord bidRecord = model.selectLastBidRecord(carAuctionBidRecord.getAuctionCarId());
         Map resultMap =new HashMap();
         carAuctionBidRecord.setId(idWorker.nextId());
-        Integer count =model.insert(carAuctionBidRecord);
+        Integer count = 1;
+        if(bidRecord==null || carAuctionBidRecord.getBidFee().compareTo(bidRecord.getBidFee())>0){
+            CarAuto auto = autoModel.selectByPrimaryKey(carAuctionBidRecord.getCarId());
+            carAuctionBidRecord.setAuctionId(auto.getAutoAuctionId());
+            count = model.insert(carAuctionBidRecord);
+        }
         resultMap.put("count",count);
         result.setSuccess(true);
         result.setResult(resultMap);
@@ -276,9 +290,10 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
                 //最高出价
                 CarAuctionBidRecord carAuctionBidRecord =model.selectLastBidRecord(updateAuctionBidRecord.getAuctionCarId());
                 if(carAuctionBidRecord!=null&&carAuctionBidRecord.getId().equals(updateAuctionBidRecord.getId())){
+                    CarLocaleAuctionCar carLocaleAuctionCar=carLocaleAuctionCarModel.selectById(carAuctionBidRecord.getAuctionCarId());
                     Map<String,Object> paramMap=new HashMap<>();
                     paramMap.put("carId",carAuctionBidRecord.getCarId());
-                    paramMap.put("auctionId",carAuctionBidRecord.getAuctionId());
+                    paramMap.put("auctionId",carLocaleAuctionCar.getAuctionId());
                     CarOrder carOrder = carOrderModel.selectOrderByCarId(paramMap);
                     if(carOrder!=null){
                         CarOrder updateCarOrder =new CarOrder();

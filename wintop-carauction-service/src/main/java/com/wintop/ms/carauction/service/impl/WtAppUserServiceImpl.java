@@ -235,55 +235,30 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
                 //设置会员状态为未实名认证
                 user.setStatus("1");
                 user.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+//                拍牌号置空
+                user.setAuctionPlateNum(null);
                 Map<String,Object> map=new HashMap<>();
                 map.put("userId",userId);
                 map.put("status",'2');
                 //查询会员的可用保证金
                 CarCustomerDeposit deposit=depositModel.selectDepositByUserId(map);
-                if(deposit!=null &&  appUserModel.updateUserStatus(user)>0){
+                if(appUserModel.updateUserInfo(user)>0){
+
                     //将会员的认证状态更改 1==不可用
                     CarCustomerAuth auth=authModel.getAuthInfoByUserId(userId);
-                    auth.setIsAvailable("1");
-                    authModel.updateByPrimaryKeySelective(auth);
+                    if (auth!=null){
+                        auth.setIsAvailable("1");
+                        authModel.updateByPrimaryKeySelective(auth);
+                    }
 
                     //将会员的签约状态更改为删除 1==已删除
                     CarCustomerSign sign=signModel.querySignByUserId(userId);
-                    sign.setIsDelete("1");
-                    signModel.updateByPrimaryKeySelective(sign);
-
+                    if (sign!=null){
+                        sign.setIsDelete("1");
+                        signModel.updateByPrimaryKeySelective(sign);
+                    }
                     tokenManager.deleteCusAppUserToken(user.getId()+"");
                     appUserManager.cleanAppUser(user.getId()+"");
-                    //将保证金金额设置为0
-                    deposit.setDepositAmount(new BigDecimal(0));
-                    //将保证金状态设置为 1：不可用
-                    deposit.setUseStatus("1");
-                    deposit.setUserId(userId);
-                    depositModel.updateByPrimaryKeySelective(deposit);
-
-                    //保存资金流水日志
-                    CarFinancePayLog financePayLog=new CarFinancePayLog();
-                    financePayLog.setId(idWorker.nextId());
-                    financePayLog.setLogNo(RandCodeUtil.getOrderNumber());
-//                支付类型 1保证金
-                    financePayLog.setType("1");
-                    financePayLog.setPayFee(deposit.getDepositAmount());
-                    financePayLog.setPayTime(new Date());
-                    financePayLog.setOrderId(deposit.getId());
-                    financePayLog.setOrderNo(deposit.getDepositNo());
-                    financePayLog.setUserId(userId);
-//                支付状态 3退款
-                    financePayLog.setStatus("3");
-//                支付途径 2线下
-                    financePayLog.setPayType("2");
-                    financePayLog.setPayEvidence(object.getString("file"));
-                    financePayLog.setRemark(object.getString("msg"));
-                    financePayLog.setCreatePerson(managerId);
-                    financePayLog.setCreatePersonType("2");
-                    financePayLog.setCreateTime(new Date());
-//                支付方式 5其他
-                    financePayLog.setPayWay("5");
-                    payLogModel.insert(financePayLog);
-
 
                     //保存客户操作日志
                     CarCustomerLog log=new CarCustomerLog();
@@ -294,8 +269,42 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
                     log.setMsg(object.getString("msg"));
                     log.setEditType("2");
                     log.setEditTime(new Date());
-                    log.setLogId(financePayLog.getId());
+
                     log.setEditUserId(managerId);
+                    if (deposit!=null){
+                        //将保证金金额设置为0
+                        deposit.setDepositAmount(new BigDecimal(0));
+                        //将保证金状态设置为 1：不可用
+                        deposit.setUseStatus("1");
+                        deposit.setUserId(userId);
+                        depositModel.updateByPrimaryKeySelective(deposit);
+
+                        //保存资金流水日志
+                        CarFinancePayLog financePayLog=new CarFinancePayLog();
+                        financePayLog.setId(idWorker.nextId());
+                        financePayLog.setLogNo(RandCodeUtil.getOrderNumber());
+//                支付类型 1保证金
+                        financePayLog.setType("1");
+                        financePayLog.setPayFee(deposit.getDepositAmount());
+                        financePayLog.setPayTime(new Date());
+                        financePayLog.setOrderId(deposit.getId());
+                        financePayLog.setOrderNo(deposit.getDepositNo());
+                        financePayLog.setUserId(userId);
+//                支付状态 3退款
+                        financePayLog.setStatus("3");
+//                支付途径 2线下
+                        financePayLog.setPayType("2");
+                        financePayLog.setPayEvidence(object.getString("file"));
+                        financePayLog.setRemark(object.getString("msg"));
+                        financePayLog.setCreatePerson(managerId);
+                        financePayLog.setCreatePersonType("2");
+                        financePayLog.setCreateTime(new Date());
+//                支付方式 5其他
+                        financePayLog.setPayWay("5");
+                        payLogModel.insert(financePayLog);
+
+                        log.setLogId(financePayLog.getId());
+                    }
                     i=logModel.insertSelective(log);
 
 
@@ -834,6 +843,7 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
             WtAppUser appUser=new WtAppUser();
             appUser.setId(idWorker.nextId());
             appUser.setRegistTime(new Timestamp(System.currentTimeMillis()));
+            appUser.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 //        7签约审核通过
             appUser.setStatus("7");
             appUser.setMobile(object.getString("mobile"));

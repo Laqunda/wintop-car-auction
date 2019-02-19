@@ -50,6 +50,9 @@
       <if test="sort != null" >
         sort = #{sort},
       </if>
+      <if test="priceRange != null" >
+        price_range = #{priceRange},
+      </if>
       <if test="createPerson != null" >
         create_person = #{createPerson},
       </if>
@@ -70,5 +73,57 @@
       create_person = #{createPerson},
       create_time = #{createTime}
     where id = #{id}
+  </update>
+  <!--批量插入车辆竞拍信息-->
+  <insert id="insertCarLocaleAuctionCarList" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuctionCar" >
+    insert into car_locale_auction_car (
+    id,
+    auction_id,
+    auto_auction_id,
+    car_id,
+    auction_code,
+    auction_status,
+    sort,
+    create_person,
+    create_time
+    )
+
+    values
+    <foreach collection="list" item="carLocaleAuctionCar" index="index" separator=",">
+      (
+        #{carLocaleAuctionCar.id,jdbcType=BIGINT},
+        #{carLocaleAuctionCar.auctionId,jdbcType=BIGINT},
+        #{carLocaleAuctionCar.autoAuctionId,jdbcType=BIGINT},
+        #{carLocaleAuctionCar.carId,jdbcType=BIGINT},
+        #{carLocaleAuctionCar.auctionCode,jdbcType=VARCHAR},
+        #{carLocaleAuctionCar.auctionStatus,jdbcType=VARCHAR},
+        #{carLocaleAuctionCar.sort,jdbcType=INTEGER},
+        #{carLocaleAuctionCar.createPerson,jdbcType=BIGINT},
+        now()
+    )
+    </foreach>
+  </insert>
+
+  <!-- 修改某场次内的指定顺序号的车 顺延序号 -->
+  <update id="updateSortAuctionCar" parameterType="java.util.Map" >
+    update car_locale_auction_car
+    set sort = sort+1
+    where auction_id = #{auctionId} AND sort > #{sort}
+  </update>
+
+  <!--导入起拍价时，批量存储加价幅度-->
+  <update id="batchUpdateLocaleAuctionById" parameterType="java.util.List" >
+    <foreach collection="localeAuctionList" item="item" index="index" separator=";">
+      update car_locale_auction_car
+      <set >
+        <if test="item.priceRange != null" >
+          price_range = #{item.priceRange},
+        </if>
+        <if test="item.priceRange != null" >
+          init_price_range = #{item.priceRange},
+        </if>
+      </set>
+      where id = #{item.id}
+    </foreach>
   </update>
 </mapper>

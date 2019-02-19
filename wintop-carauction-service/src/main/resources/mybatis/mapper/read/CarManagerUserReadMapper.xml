@@ -106,10 +106,10 @@
     SELECT
     <include refid="Base_Column_List" />,t1.user_password,
     t2.type_name AS role_type_name,t3.role_name
-    FROM car_manager_user t1
+    from car_manager_user t1
     inner join car_manager_role_type t2 on t1.role_type_id=t2.id
     inner join car_manager_role t3 on t1.role_id=t3.id
-    WHERE t1.user_key=#{userKey}
+    where t1.user_key=#{userKey} and t1.user_status <![CDATA[ <> ]]> '3'
   </select>
 
   <select id="selectAllManagerUser" parameterType="java.lang.Long" resultMap="UserResultMap">

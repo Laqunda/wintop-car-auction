@@ -176,6 +176,25 @@ public class CarOrder implements Serializable {
     //**8拍牌号
     private String auctionPlateNum;
 
+    private String customerName;
+
+    //现场拍场次内号码
+    private String auctionCode;
+    //现场拍场次名称
+    private String auctionName;
+    //成交人车上号
+    private String userNum;
+    //车辆初次上牌日期
+    private Date beginRegisterDate;
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
     public String getServiceTel() {
         return serviceTel;
     }
@@ -928,5 +947,37 @@ public class CarOrder implements Serializable {
 
     public void setAuctionPlateNum(String auctionPlateNum) {
         this.auctionPlateNum = auctionPlateNum;
+    }
+
+    public String getAuctionCode() {
+        return auctionCode;
+    }
+
+    public void setAuctionCode(String auctionCode) {
+        this.auctionCode = auctionCode;
+    }
+
+    public String getAuctionName() {
+        return auctionName;
+    }
+
+    public void setAuctionName(String auctionName) {
+        this.auctionName = auctionName;
+    }
+
+    public String getUserNum() {
+        return userNum;
+    }
+
+    public void setUserNum(String userNum) {
+        this.userNum = userNum;
+    }
+
+    public Date getBeginRegisterDate() {
+        return beginRegisterDate;
+    }
+
+    public void setBeginRegisterDate(Date beginRegisterDate) {
+        this.beginRegisterDate = beginRegisterDate;
     }
 }

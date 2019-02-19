@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="code" property="code" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="station_real_id" property="stationRealId" jdbcType="VARCHAR" />
     <result column="region_id" property="regionId" jdbcType="BIGINT" />
     <result column="city_id" property="cityId" jdbcType="BIGINT" />
     <result column="poster" property="poster" jdbcType="VARCHAR" />
@@ -46,6 +47,7 @@
     t1.id,
     t1.code,
     t1.title,
+    t1.station_real_id,
     t1.region_id,
     t1.city_id,
     t1.poster,
@@ -339,4 +341,12 @@
     ORDER BY t1.start_time DESC
   </select>
 
+  <select id="selectByStationRealId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from car_locale_auction t1
+    where t1.station_real_id = #{stationRealId}
+    and DATE_FORMAT(t1.start_time,'%Y%m%d')=#{auctionDate}
+    order by t1.start_time desc limit 1
+  </select>
 </mapper>

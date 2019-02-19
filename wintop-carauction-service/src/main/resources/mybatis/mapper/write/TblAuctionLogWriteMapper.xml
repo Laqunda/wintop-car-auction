@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.TblAuctionLogWriteDao" >
+
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
+    insert into tbl_auction_log (id, station_real_id, board_real_id, token, auction_times_name,
+      board_name, auction_time, locale_auction_id,auction_car_id,car_id,customer_id,price_range,bid_fee,
+      price_type,enable,parent_id,create_person,create_time)
+    values (#{id}, #{stationRealId}, #{boardRealId}, #{token},  #{auctionTimesName},
+       #{boardName}, #{auctionTime}, #{localeAuctionId},#{auctionCarId},#{carId},#{customerId},#{priceRange},#{bidFee},
+      #{priceType},#{enable},#{parentId}, #{createPerson}, #{createTime})
+  </insert>
+  <insert id="insertDataLog" parameterType="com.wintop.ms.carauction.entity.TblDataLog" >
+    insert into tbl_data_log (id, data_type, data_content,result_content,create_time)
+    values (#{id}, #{dataType}, #{dataContent},#{resultContent}, #{createTime})
+  </insert>
+  <update id="updatePriceAdd" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog" >
+    update tbl_auction_log
+    set price_range=#{priceRange},bid_fee=#{bidFee},parent_id=#{id}
+    where auction_car_id = #{auctionCarId} and price_type='0' and bid_fee is null
+  </update>
+
+  <update id="updatePriceSub" >
+    update tbl_auction_log set enable='1',modify_person=#{managerId},modify_time=now() where id=#{id}
+  </update>
+
+  <update id="updateBidFeeSub" parameterType="java.lang.Long">
+    update tbl_auction_log set price_range=null,bid_fee=null,parent_id=null where parent_id=#{id}
+  </update>
+</mapper>

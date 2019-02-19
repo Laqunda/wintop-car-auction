@@ -28,6 +28,11 @@ public class CarLocaleAuction implements Serializable {
     private String title;
 
     /**
+     * 关联基站物理ID
+     */
+    private String stationRealId;
+
+    /**
      * 现场拍--拍卖场次--可见范围，该场次的车在那些用户组中可见,多选，用字符串进行拼接
      * */
     private String  regionId;
@@ -499,5 +504,13 @@ public class CarLocaleAuction implements Serializable {
 
     public void setCreatePersonName(String createPersonName) {
         this.createPersonName = createPersonName;
+    }
+
+    public String getStationRealId() {
+        return stationRealId;
+    }
+
+    public void setStationRealId(String stationRealId) {
+        this.stationRealId = stationRealId;
     }
 }

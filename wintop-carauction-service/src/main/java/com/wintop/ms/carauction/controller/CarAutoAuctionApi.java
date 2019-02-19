@@ -142,6 +142,7 @@ public class CarAutoAuctionApi {
             RedisAutoData autoData = redisAutoManager.getAutoByKey(Constants.CAR_AUTO_AUCTION+"_"+carId);
             if(autoData==null){
                 autoData = carAutoAuctionService.getRedisAutoData(carId);
+                redisAutoManager.createAuto(autoData);
             }
             Date date = new Date();
             long currentTime=date.getTime();
@@ -177,6 +178,7 @@ public class CarAutoAuctionApi {
             CarAuctionSetting carAuctionSetting = CarAuctionRedis.getAuctionSetting(json);
             if(carAuctionSetting==null){
                 carAuctionSetting = auctionSettingService.selectByRegionId(autoData.getRegionId());
+                redisManagerTemplate.add(CarAuctionRedis.getAuctionKey(autoData.getRegionId()),CarAuctionRedis.getAuctionSettingJson(carAuctionSetting));
             }
             long time1 = autoData.getAuctionEndTime()-currentTime;
             if(time1<carAuctionSetting.getDelayedTime().longValue()*1000l){

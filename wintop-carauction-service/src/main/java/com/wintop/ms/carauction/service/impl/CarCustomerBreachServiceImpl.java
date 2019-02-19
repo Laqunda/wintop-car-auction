@@ -224,7 +224,8 @@ public class CarCustomerBreachServiceImpl implements ICarCustomerBreachService {
         orderLog.setUserName(managerUser.getUserName());
         orderLog.setUserMobile(managerUser.getUserPhone());
         orderLog.setLogMsg(breach.getInitiatAuthMsg());
-        if("2".equals(breach.getStatus())){
+//        平退 、买家违约--不需要支付违约金、卖家赔付
+        if("2".equals(breach.getStatus()) || "4".equals(breach.getStatus()) || "6".equals(breach.getStatus())){
             //**2.平退（退车款、车辆状态更改为流拍，订单状态更改为交易关闭）
             CarAuto carAuto = new CarAuto(newBreach.getAutoId(),CarStatusEnum.ABORTIVE_AUCTION.value(),date);
             carAutoModel.updateByPrimaryKeySelective(carAuto);
@@ -240,33 +241,46 @@ public class CarCustomerBreachServiceImpl implements ICarCustomerBreachService {
             CarOrder carOrder = new CarOrder(newBreach.getOrderId(),OrderStatusEnum.BREAK_FEE_AUDITOR.value());
             carOrderModel.updateByIdSelective(carOrder);
             orderLog.setStatus(OrderStatusEnum.BREAK_FEE_AUDITOR.value());
-        } else if("4".equals(breach.getStatus())){
-            //***4,买家违约--不需要支付违约金（车辆继续成交）
-            CarAuto carAuto = new CarAuto(newBreach.getAutoId(),newBreach.getBreachAutoStatus(),date);
-            carAutoModel.updateByPrimaryKeySelective(carAuto);
-            autoLog.setStatus(newBreach.getBreachAutoStatus());
-            CarOrder carOrder = new CarOrder(newBreach.getOrderId(),newBreach.getBreachOrderStatus());
-            carOrderModel.updateByIdSelective(carOrder);
-            orderLog.setStatus(newBreach.getBreachOrderStatus());
-        } else if("5".equals(breach.getStatus())){
-            //***5争议议价--修改待付车款（订单状态变为等待支付，车辆状态变为成交-等待付款）
-            CarAuto carAuto = new CarAuto(newBreach.getAutoId(),CarStatusEnum.WAITING_PAY.value(),date);
-            carAutoModel.updateByPrimaryKeySelective(carAuto);
-            autoLog.setStatus(CarStatusEnum.WAITING_PAY.value());
-            CarOrder carOrder = new CarOrder(newBreach.getOrderId(),OrderStatusEnum.WAITING_PAY.value());
-            carOrder.setBargainFee(amount);
-            carOrderModel.updateByIdSelective(carOrder);
-            orderLog.setStatus(OrderStatusEnum.WAITING_PAY.value());
-        } else if("6".equals(breach.getStatus())){
-            //***6,卖家赔付（车辆继续成交）
-            CarAuto carAuto = new CarAuto(newBreach.getAutoId(),newBreach.getBreachAutoStatus(),new Date());
-            carAutoModel.updateByPrimaryKeySelective(carAuto);
-            autoLog.setStatus(newBreach.getBreachAutoStatus());
-            //***订单状态改为违约待支付
-            CarOrder carOrder = new CarOrder(newBreach.getOrderId(),OrderStatusEnum.BREAK_FEE_AUDITOR.value());
-            carOrderModel.updateByIdSelective(carOrder);
-            orderLog.setStatus(newBreach.getBreachOrderStatus());
         }
+//        else if("4".equals(breach.getStatus())){
+//            //***4,买家违约--不需要支付违约金（车辆继续成交）
+//            CarAuto carAuto = new CarAuto(newBreach.getAutoId(),newBreach.getBreachAutoStatus(),date);
+//            carAutoModel.updateByPrimaryKeySelective(carAuto);
+//            autoLog.setStatus(newBreach.getBreachAutoStatus());
+//            CarOrder carOrder = new CarOrder(newBreach.getOrderId(),newBreach.getBreachOrderStatus());
+//            carOrderModel.updateByIdSelective(carOrder);
+//            orderLog.setStatus(newBreach.getBreachOrderStatus());
+//        }
+        else if("5".equals(breach.getStatus())){
+            //修改车款的只能在待付款之前,1==订单申请争议之前的订单状态是待付款
+            if ("1".equals(newBreach.getBreachOrderStatus())){
+                //***5争议议价--修改待付车款（订单状态变为等待支付，车辆状态变为成交-等待付款）
+                CarAuto carAuto = new CarAuto(newBreach.getAutoId(),CarStatusEnum.WAITING_PAY.value(),date);
+                carAutoModel.updateByPrimaryKeySelective(carAuto);
+                autoLog.setStatus(CarStatusEnum.WAITING_PAY.value());
+//            CarOrder carOrder = new CarOrder(newBreach.getOrderId(),OrderStatusEnum.WAITING_PAY.value());
+                CarOrder carOrder=carOrderModel.queryOrderBaseInfo(newBreach.getOrderId());
+                carOrder.setBargainFee(carOrder.getTransactionFee());
+                carOrder.setTransactionFee(amount);
+                carOrder.setAmountFee(carOrder.getTransactionFee().add(carOrder.getServiceFee()).add(carOrder.getAgentFee()));
+                carOrder.setStatus(OrderStatusEnum.WAITING_PAY.value());
+                carOrderModel.updateByIdSelective(carOrder);
+                orderLog.setStatus(OrderStatusEnum.WAITING_PAY.value());
+            }else {
+                return -2;
+            }
+
+        }
+//        else if("6".equals(breach.getStatus())){
+//            //***6,卖家赔付（车辆继续成交）
+//            CarAuto carAuto = new CarAuto(newBreach.getAutoId(),newBreach.getBreachAutoStatus(),new Date());
+//            carAutoModel.updateByPrimaryKeySelective(carAuto);
+//            autoLog.setStatus(newBreach.getBreachAutoStatus());
+//            //***订单状态改为违约待支付
+//            CarOrder carOrder = new CarOrder(newBreach.getOrderId(),OrderStatusEnum.BREAK_FEE_AUDITOR.value());
+//            carOrderModel.updateByIdSelective(carOrder);
+//            orderLog.setStatus(newBreach.getBreachOrderStatus());
+//        }
         autoLogModel.insert(autoLog);
         orderLogModel.insert(orderLog);
         breach.setInitiatAuthTime(date);

@@ -101,6 +101,15 @@ public class CarLocaleAuctionCarModel {
     }
 
     /**
+     * 查询场次内最近正在竞拍的车辆序号
+     * @param auctionId
+     * @return
+     */
+    public Integer getMinSortForActionCar(Long auctionId){
+        return readDao.getMinSortForActionCar(auctionId);
+    }
+
+    /**
      * @Autor 付陈林
      * @Date 2018-3-24
      * @About 根据车辆关联ID，查询车辆的基本信息
@@ -142,5 +151,35 @@ public class CarLocaleAuctionCarModel {
      * */
     public Integer hasAuctionCarCount(Map<String,Object> map){
         return readDao.hasAuctionCarCount(map);
+    }
+
+
+    /**
+     * 批量插入竞拍车辆信息
+     */
+    public Integer insertCarLocaleAuctionCarList(List<CarLocaleAuctionCar> list){
+        return writeDao.insertCarLocaleAuctionCarList(list);
+    }
+
+    /***
+     * 修改某场次内的指定顺序号的车 顺延序号
+     * @param map
+     * @return
+     */
+    public Integer updateSortAuctionCar(Map map){
+        return writeDao.updateSortAuctionCar(map);
+    }
+//      导入起拍价时，批量存储加价幅度
+    public Integer batchUpdateLocaleAuctionById(List<CarLocaleAuctionCar> localeAuctionList){
+        return writeDao.batchUpdateLocaleAuctionById(localeAuctionList);
+    }
+
+    /**
+     * 查询当前场次正在竞拍的车辆
+     * @param localeAuctionId
+     * @return
+     */
+    public CarLocaleAuctionCar selectCurrentAuctionCar(Long localeAuctionId){
+        return readDao.selectCurrentAuctionCar(localeAuctionId);
     }
 }

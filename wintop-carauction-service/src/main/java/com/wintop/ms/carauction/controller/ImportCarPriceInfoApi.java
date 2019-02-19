@@ -40,17 +40,22 @@ public class ImportCarPriceInfoApi {
             String noPrice="";
             if (localeAuctionCars!=null && localeAuctionCars.size()>0){
                 for (int i=0;i<localeAuctionCars.size();i++){
+                    CarLocaleAuctionCar auctionCar = localeAuctionCars.get(i);
                     CarAutoAuction auction=new CarAutoAuction();
                     boolean flag = true;
                         for (int j=0;j<carPriceExcels.size();j++){
-                            if (localeAuctionCars.get(i).getAuctionCode()!=null&&localeAuctionCars.get(i).getAuctionCode().equals(carPriceExcels.get(j).getCode())){
+                            CarPriceExcel priceExcel = carPriceExcels.get(j);
+                            if (auctionCar.getAuctionCode()!=null&&auctionCar.getAuctionCode().equals(priceExcel.getCode())){
                                 auction.setId(localeAuctionCars.get(j).getAutoAuctionId());
-                                if (StringUtils.isNotBlank(carPriceExcels.get(j).getStartPrice())){
+                                if (StringUtils.isNotBlank(priceExcel.getStartPrice())){
                                     flag = false;
-                                    auction.setStartingPrice(transformToBig(carPriceExcels.get(j).getStartPrice()));
+                                    BigDecimal startPrice=transformToBig(priceExcel.getStartPrice());
+                                    auction.setStartingPrice(startPrice);
+                                    //初始化加价幅度存储
+                                    auctionCar.setPriceRange(queryPriceRange(startPrice));
                                 }
-                                if (StringUtils.isNotBlank(carPriceExcels.get(j).getReservePrice())){
-                                    auction.setReservePrice(transformToBig(carPriceExcels.get(j).getReservePrice()));
+                                if (StringUtils.isNotBlank(priceExcel.getReservePrice())){
+                                    auction.setReservePrice(transformToBig(priceExcel.getReservePrice()));
                                     flag = false;
                                 }
                                 auction.setModifyTime(new Date());
@@ -58,7 +63,7 @@ public class ImportCarPriceInfoApi {
                             }
                         }
                         if(flag){
-                            noPrice+=localeAuctionCars.get(i).getAuctionCode()+",";
+                            noPrice+=auctionCar.getAuctionCode()+",";
                         }else {
                             updateList.add(auction);
                         }
@@ -70,6 +75,7 @@ public class ImportCarPriceInfoApi {
             Map<String,Object> resultMap=new HashMap<>();
             resultMap.put("noPrice",noPrice);
             if (updateList.size()>0){
+                localeAuctionCarService.batchUpdateLocaleAuctionById(localeAuctionCars);
                 a=autoAuctionService.batchUpdateById(updateList);
             }else {
                 result.setResult(resultMap);
@@ -96,4 +102,45 @@ public class ImportCarPriceInfoApi {
             return new BigDecimal(0);
         }
     }
+
+    /**
+     * 加价幅度规则
+     *
+     * 0≤起拍价＜1000元之间加价幅度100元
+     *
+     * 1000≤起拍价＜10000元之间加价幅度500元
+     *
+     * 1万≤起拍价＜10万之间加价幅度1000元
+     *
+     * 10万≤起拍价＜20万之间加价幅度5000元
+     *
+     * 20万≤起拍价＜100万之间加价幅度1万元
+     *
+     * 100万≤起拍价＜200万之间加价幅度5万元
+     *
+     * 起拍价≥200万以上加价幅度10万元
+     * @param startPrice
+     * @return
+     */
+    public BigDecimal queryPriceRange(BigDecimal startPrice){
+        double price=startPrice.doubleValue();
+        double priceRange=0;
+        if (price>=0 && price<1000){
+            priceRange=100;
+        }else if (price>=1000 && price<10000){
+            priceRange=500;
+        }else if (price>=10000 && price<100000){
+            priceRange=1000;
+        }else if (price>=100000 && price<200000){
+            priceRange=5000;
+        }else if (price>=200000 && price<1000000){
+            priceRange=10000;
+        }else if (price>=1000000 && price<2000000){
+            priceRange=50000;
+        }else if (price>=2000000){
+            priceRange=100000;
+        }
+        return BigDecimal.valueOf(priceRange);
+    }
+
 }

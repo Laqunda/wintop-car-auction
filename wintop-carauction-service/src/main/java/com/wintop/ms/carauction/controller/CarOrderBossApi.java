@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,9 +151,16 @@ public class CarOrderBossApi {
                 map.put("payWay",carOrder.getPayWay());
                 map.put("createTime",carOrder.getCreateTime());
                 map.put("mainPhoto",carOrder.getMainPhoto());
-                map.put("carAutoNo",carOrder.getCarAutoNo());
+                if (StringUtils.isNotBlank(carOrder.getAuctionCode())){
+                    map.put("carAutoNo",carOrder.getAuctionCode());
+                }else {
+                    map.put("carAutoNo",carOrder.getCarAutoNo());
+                }
                 map.put("userName",carOrder.getUserName());
                 map.put("mobile",carOrder.getMobile());
+                map.put("auctionName",carOrder.getAuctionName());
+                map.put("auctionPlateNum",carOrder.getAuctionPlateNum());
+                map.put("userNum",carOrder.getUserNum());
                 list.add(map);
             }
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();
@@ -237,6 +245,7 @@ public class CarOrderBossApi {
                 if(breach==null){
                     breach = new CarCustomerBreach();
                 }
+                map.put("breachOrderStatus",breach.getBreachOrderStatus());
                 map.put("breachId",breach.getId());
                 map.put("initiatCn",breach.getInitiatCn());
                 map.put("initiatTime",breach.getInitiatTime());
@@ -685,15 +694,28 @@ public class CarOrderBossApi {
                 return result;
             }
             Map<String,Object> map = new HashMap<>();
-            map.put("carAutoNo",order.getCarAutoNo());
+            if (StringUtils.isNotBlank(order.getAuctionCode())){
+                map.put("carAutoNo",order.getAuctionCode());
+            }else {
+                map.put("carAutoNo",order.getCarAutoNo());
+            }
             map.put("licenseNumber",order.getLicenseNumber());
-            map.put("autoInfoName",order.getAutoInfoName());
+            String name="";
+            if (StringUtils.isNotBlank(order.getAutoInfoName())){
+                String [] autoName=order.getAutoInfoName().split(" ");
+                if (autoName!=null && autoName.length>3){
+                    name=autoName[1]+autoName[2];
+                }
+            }
+            map.put("autoInfoName",StringUtils.isNotBlank(name)?name:order.getAutoInfoName());
             map.put("vin",order.getVin());
             map.put("auctionPlateNum",order.getAuctionPlateNum());
             map.put("serviceFee",order.getServiceFee());
             map.put("transactionFee",order.getTransactionFee());
             map.put("agentFee",order.getAgentFee());
             map.put("amountFee",order.getAmountFee());
+            map.put("customerName",order.getCustomerName());
+            map.put("auctionName",order.getAuctionName());
             result.setResult(map);
             result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
         }catch (Exception e){

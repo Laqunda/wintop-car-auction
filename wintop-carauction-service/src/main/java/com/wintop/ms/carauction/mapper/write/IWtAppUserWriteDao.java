@@ -36,4 +36,7 @@ public interface IWtAppUserWriteDao {
          *@param:
          */
     Integer batchUpdateUserLevel(Map<String,Object> map);
+
+    Integer updateUserInfo(WtAppUser appUser);
+
 }

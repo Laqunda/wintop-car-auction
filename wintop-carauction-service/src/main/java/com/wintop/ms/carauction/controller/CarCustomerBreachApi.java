@@ -85,6 +85,9 @@ public class CarCustomerBreachApi {
             if(count==-1){
                 result.setError(ResultCode.FORBID_CONFIRM.strValue(),ResultCode.FORBID_CONFIRM.getRemark());
                 return result;
+            }else if (count==-2){
+                result.setError(ResultCode.NO_UPDATE_BREACH.strValue(),ResultCode.NO_UPDATE_BREACH.getRemark());
+                return result;
             }
             Map<String,Object> map = new HashMap<>();
             map.put("count",count);

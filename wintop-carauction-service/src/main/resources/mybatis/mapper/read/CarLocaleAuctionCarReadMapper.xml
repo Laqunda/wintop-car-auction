@@ -32,9 +32,12 @@
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="top_bid_price" property="topBidPrice" jdbcType="DECIMAL" />
     <result column="publish_user_mobile" property="publishUserMobile" jdbcType="DECIMAL" />
+    <result column="price_range" property="priceRange" jdbcType="DECIMAL" />
+    <result column="init_price_range" property="initPriceRange" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    t1.id, t1.auction_id,t1.auto_auction_id, t1.car_id,t1.auction_code, t1.auction_status,t1.sort,t1.create_person,t1.create_time
+    t1.id, t1.auction_id,t1.auto_auction_id, t1.car_id,t1.auction_code, t1.auction_status,t1.sort,t1.price_range,t1.init_price_range,
+    t1.create_person,t1.create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
@@ -49,8 +52,26 @@
   </select>
   <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select
-    <include refid="Base_Column_List" />
-    from car_locale_auction_car t1
+      <include refid="Base_Column_List" />,
+      t2.title ,
+      t2.start_time,
+      t3.auto_info_name,
+      t3.main_photo,
+      t3.car_auto_no,
+      t5.begin_register_date,
+      t5.license_number,
+      t5.mileage,
+      t5.use_nature_cn as use_nature,
+      t4.if_agent,
+      t4.starting_price,
+      t4.agent_price,
+      t4.service_price,
+      t3.store_name
+      from car_locale_auction_car t1
+      inner join car_locale_auction t2 on t1.auction_id=t2.id
+      inner join car_auto t3 on t3.id=t1.car_id
+      inner join car_auto_auction t4 on t4.id=t1.auto_auction_id
+      inner join car_auto_info_detail t5 on t5.auto_id=t1.car_id
     where t1.id = #{id}
   </select>
   <select id="selectByCarId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -108,6 +129,14 @@
         max(t1.sort)
         from car_locale_auction_car t1
         where t1.auction_id = #{auction_id}
+    </select>
+
+    <!--查询某个场次最近的正在竞拍的车辆的排序号-->
+    <select id="getMinSortForActionCar" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+        select
+        MIN(t1.sort)
+        from car_locale_auction_car t1
+        where t1.auction_id = #{auction_id} AND t1.auction_status='1'
     </select>
 
     <select id="getCarLocaleAuctionCar" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -205,13 +234,21 @@
         <if test="title != null">
             AND t2.title like CONCAT(CONCAT('%', #{title}),'%')
         </if>
+        <if test="status != null">
+            <if test="status==2">
+              AND t1.auction_status in ('2','3')
+            </if>
+            <if test="status!=2">
+                AND t1.auction_status = #{status}
+            </if>
+        </if>
         <if test="beginTime != null">
             AND t2.start_time <![CDATA[ >= ]]> #{beginTime}
         </if>
         <if test="endTime != null">
             AND t2.start_time <![CDATA[ <= ]]> #{endTime}
         </if>
-        ORDER BY t2.start_time DESC
+        ORDER BY t2.start_time DESC,t1.auction_code asc
         <if test="startRowNum!=null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
         </if>
@@ -235,5 +272,38 @@
         <if test="endTime != null">
             AND t2.start_time <![CDATA[ <= ]]> #{endTime}
         </if>
+        <if test="status != null">
+            <if test="status==2">
+                AND t1.auction_status in ('2','3')
+            </if>
+            <if test="status!=2">
+                AND t1.auction_status = #{status}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectCurrentAuctionCar" parameterType="java.lang.Long" resultMap="BaseResultMap">
+      select
+        <include refid="Base_Column_List" />,
+        t2.title ,
+        t2.start_time,
+        t3.auto_info_name,
+        t3.main_photo,
+        t3.car_auto_no,
+        t5.begin_register_date,
+        t5.license_number,
+        t5.mileage,
+        t5.use_nature_cn as use_nature,
+        t4.if_agent,
+        t4.starting_price,
+        t4.agent_price,
+        t4.service_price
+        from car_locale_auction_car t1
+        inner join car_locale_auction t2 on t1.auction_id=t2.id
+        inner join car_auto t3 on t3.id=t1.car_id
+        inner join car_auto_auction t4 on t4.id=t1.auto_auction_id
+        inner join car_auto_info_detail t5 on t5.auto_id=t1.car_id
+        where  t1.auction_id=#{auctionId} and t1.auction_status='1'
+        order by t1.id desc  limit 1
     </select>
 </mapper>

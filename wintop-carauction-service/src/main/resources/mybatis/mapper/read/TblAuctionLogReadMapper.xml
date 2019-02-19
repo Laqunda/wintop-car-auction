@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.TblAuctionLogReadDao" >
+<resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.TblAuctionLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="station_real_id" property="stationRealId" jdbcType="VARCHAR" />
+    <result column="board_real_id" property="boardRealId" jdbcType="VARCHAR" />
+    <result column="token" property="token" jdbcType="VARCHAR" />
+    <result column="auction_times_name" property="auctionTimesName" jdbcType="VARCHAR" />
+    <result column="car_id" property="carId" jdbcType="BIGINT" />
+    <result column="customer_id" property="customerId" jdbcType="BIGINT" />
+    <result column="board_name" property="boardName" jdbcType="VARCHAR" />
+    <result column="auction_time" property="auctionTime" jdbcType="TIMESTAMP" />
+    <result column="locale_auction_id" property="localeAuctionId" jdbcType="BIGINT" />
+    <result column="auction_car_id" property="auctionCarId" jdbcType="BIGINT" />
+    <result column="price_range" property="priceRange" jdbcType="DECIMAL" />
+    <result column="bid_fee" property="bidFee" jdbcType="DECIMAL" />
+    <result column="customerName" property="customerName" jdbcType="VARCHAR" />
+    <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
+    <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
+    <result column="license_number" property="licenseNumber" jdbcType="VARCHAR" />
+    <result column="price_type" property="priceType" jdbcType="VARCHAR" />
+    <result column="enable" property="enable" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+</resultMap>
+
+    <sql id="Base_Column_List" >
+        t1.id, t1.station_real_id, t1.board_real_id, t1.auction_times_name, t1.car_id,t1.customer_id,
+        t1.board_name, t1.auction_time,t1.locale_auction_id,t1.auction_car_id,t1.price_range,t1.bid_fee,t1.price_type,t1.enable,t1.parent_id
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List" />,t2.`name` as customerName,t4.auto_info_name,t4.car_auto_no,t5.license_number
+        from tbl_auction_log t1
+        LEFT JOIN wt_app_user t2 on t1.customer_id=t2.id
+        LEFT JOIN car_auto t4 on t4.id=t1.car_id
+        LEFT JOIN car_auto_info_detail t5 on t5.auto_id=t4.id
+        where t1.enable='0'
+        <if test="priceType!=null and priceType!=''">
+            AND t1.price_type = #{priceType}
+        </if>
+        <if test="auctionTimesName!=null and auctionTimesName!=''">
+            AND t1.auction_times_name like CONCAT(CONCAT('%', #{auctionTimesName}),'%')
+        </if>
+        <if test="boardName!=null and boardName!=''">
+            AND t1.board_name = #{boardName}
+        </if>
+        <if test="carId!=null and carId!=''">
+            AND t1.car_id = #{carId}
+        </if>
+        <if test="auctionCarId!=null and auctionCarId!=''">
+            AND t1.auction_car_id = #{auctionCarId}
+        </if>
+        <if test="carInfo != null and carInfo !=''">
+            and(t4.car_auto_no like CONCAT(CONCAT('%', #{carInfo}),'%')
+            OR t5.license_number like CONCAT(CONCAT('%', #{carInfo}),'%')
+            )
+        </if>
+        <if test="storeIds != null and storeIds.size!=0">
+            and (t4.store_id in
+            <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                #{storeId}
+            </foreach>
+            or a.store_id is null)
+        </if>
+        ORDER BY t1.auction_time desc
+        <if test="startRowNum != null and endRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+    <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+        select count(t1.id)
+        from tbl_auction_log t1
+        LEFT JOIN car_auto t4 on t4.id=t1.car_id
+        LEFT JOIN car_auto_info_detail t5 on t5.auto_id=t4.id
+        where t1.enable='0'
+        <if test="priceType!=null and priceType!=''">
+            AND t1.price_type = #{priceType}
+        </if>
+        <if test="auctionTimesName!=null and auctionTimesName!=''">
+            AND t1.auction_times_name like CONCAT(CONCAT('%', #{auctionTimesName}),'%')
+        </if>
+        <if test="boardName!=null and boardName!=''">
+            AND t1.board_name = #{boardName}
+        </if>
+        <if test="carId!=null and carId!=''">
+            AND t1.car_id = #{carId}
+        </if>
+        <if test="auctionCarId!=null and auctionCarId!=''">
+            AND t1.auction_car_id = #{auctionCarId}
+        </if>
+        <if test="carInfo != null and carInfo !=''">
+            and(t4.car_auto_no like CONCAT(CONCAT('%', #{carInfo}),'%')
+            OR t5.license_number like CONCAT(CONCAT('%', #{carInfo}),'%')
+            )
+        </if>
+        <if test="storeIds != null and storeIds.size!=0">
+            and (t4.store_id in
+            <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                #{storeId}
+            </foreach>
+            or a.store_id is null)
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from tbl_auction_log t1
+        where t1.id = #{id}
+    </select>
+
+    <select id="selectByAuctionCarId" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from tbl_auction_log t1
+        where t1.auction_car_id = #{auctionCarId} and t1.price_type=#{priceType}
+        and t1.enable='0'
+        order by t1.id desc limit 1
+    </select>
+
+    <select id="selectBidByAuctionCarId" resultMap="BaseResultMap" parameterType="com.wintop.ms.carauction.entity.TblAuctionLog">
+        select
+        <include refid="Base_Column_List" />
+        from tbl_auction_log t1
+        where t1.station_real_id=#{stationRealId} and t1.board_real_id=#{boardRealId} and t1.token=#{token}
+        and t1.auction_car_id = #{auctionCarId} and t1.price_type=#{priceType}
+        and t1.enable='0' and t1.bid_fee is null
+    </select>
+</mapper>

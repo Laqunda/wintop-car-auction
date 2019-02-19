@@ -200,7 +200,7 @@ public class CarManagerUserApi {
             user.setId(idWorker.nextId());
             if(StringUtils.isBlank(user.getUserPassword())){
                 if(StringUtils.isNotBlank(user.getUserPhone())){
-                    user.setUserPassword(user.getUserPhone().substring(user.getUserPhone().length()-6,user.getUserPhone().length()));
+                    user.setUserPassword(DigestUtils.md5Hex(user.getUserPhone().substring(user.getUserPhone().length()-6)));
                 }else{
                     user.setUserPassword(DigestUtils.md5Hex("123456"));
                 }
@@ -342,7 +342,8 @@ public class CarManagerUserApi {
         ServiceResult<Map<String,Object>> result = new ServiceResult<>();
         try{
             CarManagerUser user = new CarManagerUser();
-            String newPwd = CarAutoUtils.getRandomCode();
+            //String newPwd = CarAutoUtils.getRandomCode();
+            String newPwd = "123456";
             user.setUserPassword(DigestUtils.md5Hex(newPwd).toUpperCase());
             user.setId(obj.getLong("userId"));
             int count = managerUserService.updateByPrimaryKey(user);
