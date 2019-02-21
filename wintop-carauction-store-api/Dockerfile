@@ -27,6 +27,9 @@ ENV JAVA_OPTS="\
 -XX:GCLogFileSize=10M"
 ENV SPRING_OPTS=""
 ENV LANG C.UTF-8
+#安装时区软件
+RUN apk add -U tzdata
+
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ  /etc/localtime && echo $TZ > /etc/timezone
 ENTRYPOINT java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar apps/app.jar $SPRING_OPTS
