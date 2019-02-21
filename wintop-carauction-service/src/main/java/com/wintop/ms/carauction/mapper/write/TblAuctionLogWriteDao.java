@@ -41,4 +41,9 @@ public interface TblAuctionLogWriteDao {
      */
     int insertDataLog(TblDataLog dataLog);
 
+    /**
+     * 删除历史无效数据
+     * @return
+     */
+    int deleteHisDataLog();
 }
