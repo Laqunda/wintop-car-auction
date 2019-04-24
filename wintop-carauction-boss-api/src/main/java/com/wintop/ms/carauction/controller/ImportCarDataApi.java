@@ -1,9 +1,7 @@
 package com.wintop.ms.carauction.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AuthPublic;
-import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.annotation.RequestAuth;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
@@ -12,7 +10,6 @@ import com.wintop.ms.carauction.entity.CarDataExcel;
 import com.wintop.ms.carauction.entity.CarPhotoTemp;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.ExcelUtil;
-import jdk.nashorn.internal.ir.TernaryNode;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -25,7 +22,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +39,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -56,6 +51,13 @@ import java.util.*;
 @Controller
 @RequestMapping("/importCarData")
 public class ImportCarDataApi {
+
+
+    @Value("${huaweiUploadFile.url}")
+    private String huaweiUploadImgURL;
+    @Value("${huaweiUploadFile.token}")
+    private String huaweiUploadImgToken;
+
     private final RestTemplate restTemplate;
     public static final Long IMG_MAX_SIZE=100L;
     ImportCarDataApi(RestTemplate restTemplate) {
@@ -211,8 +213,9 @@ public class ImportCarDataApi {
         }
         String fileName=null;
         Map<String,Object> map=new HashMap<>();
-        HttpPost httpPost=new HttpPost("http://test-api.wintopclub.com/file/uploadImageForQuality");
-        httpPost.setHeader("appId","1234567_boss");
+        HttpPost httpPost = new HttpPost(huaweiUploadImgURL);
+        httpPost.setHeader("Authorization",huaweiUploadImgToken);
+        httpPost.setHeader("Content-Type","application/x-www-form-urlencoded");
         CloseableHttpClient httpclient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
         ResponseEntity<JSONObject> responseEntity=null;
