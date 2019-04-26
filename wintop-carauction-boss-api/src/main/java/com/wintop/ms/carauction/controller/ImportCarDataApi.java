@@ -211,7 +211,7 @@ public class ImportCarDataApi {
         }
         String fileName=null;
         Map<String,Object> map=new HashMap<>();
-        HttpPost httpPost=new HttpPost("http://fileuploadserver/file/uploadImageForQuality");
+        HttpPost httpPost=new HttpPost("http://fileuploadserver:2003/file/uploadImageForQuality");
         httpPost.setHeader("appId","1234567_boss");
         CloseableHttpClient httpclient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
