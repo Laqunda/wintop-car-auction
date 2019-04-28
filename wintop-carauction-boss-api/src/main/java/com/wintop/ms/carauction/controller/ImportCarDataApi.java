@@ -259,6 +259,7 @@ public class ImportCarDataApi {
                 response = httpclient.execute(httpPost);
                 HttpEntity entity2 = response.getEntity();
                 String result = EntityUtils.toString(entity2,"UTF-8");
+                System.out.println("图片上传response = "+result);
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 CarPhotoTemp carPhotoTemp=new CarPhotoTemp();
                 carPhotoTemp.setId(id);
