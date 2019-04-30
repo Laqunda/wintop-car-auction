@@ -59,8 +59,12 @@ public class Constants {
      * 存放appId的header字段
      */
     public static final String HEADER_APPID = "appid";
+    /**
+     * 存放version的header字段
+     */
+    public static final String APP_VERSION = "version";
 
-    public static final String ROOT = "http://localhost:8185" ;
+    public static final String ROOT = "http://127.0.0.1:8185" ;
 
     /**在线签约微服务地址*/
     public static final String COMMON_MODULE_ROOT = "http://test.yuntongauto.com" ;
