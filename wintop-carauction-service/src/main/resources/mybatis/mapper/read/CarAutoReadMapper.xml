@@ -85,12 +85,13 @@
     <result column="storeLatitude" property="storeLatitude" jdbcType="VARCHAR" />
     <result column="storeLongitude" property="storeLongitude" jdbcType="VARCHAR" />
     <result column="transfer_fee" property="transferFee" jdbcType="VARCHAR" />
+    <result column="transfer_flag" property="transferFlag" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     t1.id, t1.publish_user_id, t1.publish_user_name, t1.publish_user_mobile, t1.auto_info_name, t1.store_id,t1.store_name,
     t1.source_type, t1.views, t1.publish_time, t1.report_score, t1.report_colligation_ranks,t1.report_servicing_ranks, t1.report_time, t1.`status`,
     t1.car_auto_no, t1.main_photo, t1.if_new, t1.create_user, t1.create_time, t1.update_user, t1.update_time,
-    t1.auction_num, t1.region_id,t1.auto_auction_id
+    t1.auction_num, t1.region_id,t1.auto_auction_id,t2.transfer_flag
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
@@ -129,7 +130,8 @@
     t5.latitude AS storeLatitude,t5.longitude AS storeLongitude,
     t3.move_to_where,t6.transfer_fee,t6.cost_price,t6.illegal_price,t6.illegal_score,t6.illegal_who,
     (CASE WHEN t7.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow,t3.if_agent,t3.link_man_mobile,
-    t9.start_time
+    t9.start_time,
+    t3.transfer_flag
     FROM car_auto t1
     INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
     LEFT JOIN car_auto_auction t3 on t1.auto_auction_id=t3.id
@@ -558,7 +560,8 @@
     ar.mobile,
     ar.`name`,
     aa.expected_feedback_time,
-    aa.auction_start_time
+    aa.auction_start_time,
+    aa.transfer_flag
     FROM car_auto a
     LEFT JOIN car_auto_info_detail d ON d.auto_id=a.id
     LEFT JOIN car_auto_auction aa on aa.id=a.auto_auction_id

@@ -336,6 +336,9 @@
       <if test="auctionEndDefaultTime != null" >
         auction_end_default_time = #{auctionEndDefaultTime},
       </if>
+      <if test="transferFlag != null" >
+        transfer_flag = #{transferFlag},
+      </if>
     </set>
     where id = #{id}
   </update>

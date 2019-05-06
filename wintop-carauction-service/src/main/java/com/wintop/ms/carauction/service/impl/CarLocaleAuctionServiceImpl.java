@@ -12,6 +12,7 @@ import com.wintop.ms.carauction.service.ICarLocaleAuctionService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -47,6 +48,9 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
     private CarOrderLogModel carOrderLogModel;
     @Autowired
     private CarManagerUserModel carManagerUserModel;
+
+    @Value( "${share_uri}" )
+    private String shareUri;
 
 
     private IdWorker idWorker = new IdWorker(10);
@@ -375,6 +379,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
             carMap.put("publishUserName",carLocaleAuctionCar.getPublishUserName());
             entriesList.add(carMap);
         }
+        resultMap.put("shareUri", shareUri);
         resultMap.put("entries",entriesList);
         result.setResult(resultMap);
         return result;
