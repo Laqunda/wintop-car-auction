@@ -72,6 +72,8 @@ public class CarAssess extends BaseEntity
 	/** 车辆编码 */
 	private Long carAutoNo;
 
+	private CarAssessOrder order;
+
 	public void setId(Long id) 
 	{
 		this.id = id;
@@ -334,5 +336,11 @@ public class CarAssess extends BaseEntity
 		return carAutoNo;
 	}
 
+	public CarAssessOrder getOrder() {
+		return order;
+	}
 
+	public void setOrder(CarAssessOrder order) {
+		this.order = order;
+	}
 }

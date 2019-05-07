@@ -12,31 +12,34 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.Map;
 
 /**
- * 评估采购日志 信息操作处理
+ * 评估日志 信息操作处理
  *
  * @author ruoyi
  * @date 2019-05-05
  */
 @RestController
-@RequestMapping(value = "carAssessOrderLog")
-public class CarAssessOrderLogApi {
-    private static final Logger logger = LoggerFactory.getLogger(CarAssessOrderLogApi.class);
+@RequestMapping(value = "carAssessLog")
+public class CarAssessLogApi {
+    private static final Logger logger = LoggerFactory.getLogger(CarAssessLogApi.class);
     private final RestTemplate restTemplate;
 
-    CarAssessOrderLogApi(RestTemplate restTemplate) {
+    CarAssessLogApi(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
 
     /**
-     * 查询评估采购日志列表
+     * 查询评估日志列表
      */
     @RequestMapping(value = "/list",
             method= RequestMethod.POST,
@@ -51,7 +54,7 @@ public class CarAssessOrderLogApi {
 //        map.put("managerId",managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT + "/service/carAssessOrderLog/list"))
+                        .post(URI.create(Constants.ROOT + "/service/carAssessLog/list"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map), JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
@@ -59,7 +62,7 @@ public class CarAssessOrderLogApi {
 
 
     /**
-     * 新增保存评估采购日志
+     * 新增保存评估日志
      */
     @RequestMapping(value = "/add",
             method= RequestMethod.POST,
@@ -70,7 +73,7 @@ public class CarAssessOrderLogApi {
     public ResultModel addSave(@RequestBody Map map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT + "/service/carAssessOrderLog/add"))
+                        .post(URI.create(Constants.ROOT + "/service/carAssessLog/add"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map), JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
@@ -78,7 +81,7 @@ public class CarAssessOrderLogApi {
 
 
     /**
-     * 修改保存评估采购日志
+     * 修改保存评估日志
      */
     @RequestMapping(value = "/edit",
             method= RequestMethod.POST,
@@ -90,14 +93,14 @@ public class CarAssessOrderLogApi {
 
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT + "/service/carAssessOrderLog/edit"))
+                        .post(URI.create(Constants.ROOT + "/service/carAssessLog/edit"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map), JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
     /**
-     * 删除评估采购日志
+     * 删除评估日志
      */
     @RequestMapping(value = "/remove",
             method= RequestMethod.POST,
@@ -108,7 +111,7 @@ public class CarAssessOrderLogApi {
     public ResultModel remove(@RequestBody Map map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT + "/service/carAssessOrderLog/remove"))
+                        .post(URI.create(Constants.ROOT + "/service/carAssessLog/remove"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map), JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);

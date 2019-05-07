@@ -2,8 +2,6 @@ package com.wintop.ms.carauction.mapper.write;
 
 import com.wintop.ms.carauction.entity.CarAssessOrderLog;
 
-import java.util.List;
-
 /**
  * 评估采购日志 数据层
  * 
@@ -12,21 +10,6 @@ import java.util.List;
  */
 public interface CarAssessOrderLogWriteDao
 {
-	/**
-     * 查询评估采购日志信息
-     * 
-     * @param id 评估采购日志ID
-     * @return 评估采购日志信息
-     */
-	public CarAssessOrderLog selectCarAssessOrderLogById(Long id);
-	
-	/**
-     * 查询评估采购日志列表
-     * 
-     * @param carAssessOrderLog 评估采购日志信息
-     * @return 评估采购日志集合
-     */
-	public List<CarAssessOrderLog> selectCarAssessOrderLogList(CarAssessOrderLog carAssessOrderLog);
 
 	/**
      * 新增评估采购日志

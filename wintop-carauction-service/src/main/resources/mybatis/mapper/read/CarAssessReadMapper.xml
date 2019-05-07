@@ -35,7 +35,41 @@
         <result property="autoSeriesCn" column="auto_series_cn"/>
         <result property="editTime" column="edit_time"/>
         <result property="carAutoNo" column="car_auto_no"/>
+        <association property="order" javaType="com.wintop.ms.carauction.entity.CarAssessOrder">
+            <id property="id" column="order_id"/>
+            <result property="assessId" column="assess_id"/>
+            <result property="followId" column="follow_id"/>
+            <result property="remark" column="remark"/>
+            <result property="status" column="order_status"/>
+            <result property="procurementType" column="procurement_type"/>
+            <result property="price" column="price"/>
+            <result property="procurementDate" column="procurement_date"/>
+            <result property="storeId" column="store_id"/>
+            <result property="ifOldNew" column="if_old_new"/>
+            <result property="entiretyPrice" column="entirety_price"/>
+            <result property="newCarPrice" column="new_car_price"/>
+            <result property="carAddress" column="car_address"/>
+            <result property="purchaseTax" column="purchase_tax"/>
+            <result property="drivingLicense" column="driving_license"/>
+            <result property="registrationCertificate" column="registration_certificate"/>
+            <result property="ifAdd" column="if_add"/>
+            <result property="carKeys" column="car_keys"/>
+            <result property="newCarInvoice" column="new_car_invoice"/>
+            <result property="qualityGuarantee" column="quality_guarantee"/>
+            <result property="maintenanceManual" column="maintenance_manual"/>
+            <result property="sali" column="sali"/>
+            <result property="saliEndDate" column="sali_end_date"/>
+            <result property="commercialInsurance" column="commercial_insurance"/>
+            <result property="commercialInsuranceEndDate" column="commercial_insurance_end_date"/>
+            <result property="commercialInsurancePrice" column="commercial_insurance_price"/>
+            <result property="transportTax" column="transport_tax"/>
+            <result property="transportTaxEndDate" column="transport_tax_end_date"/>
+            <result property="customerName" column="customer_name"/>
+            <result property="customerTel" column="customer_tel"/>
+            <result property="customerSource" column="customer_source"/>
+        </association>
     </resultMap>
+
 
     <sql id="selectCarAssessVo">
         select id, vin, mileage, name, begin_register_date, color, engine_capacity, function, engine_number, manufacture_date, year_insurance, plate_num, transfer_number, auto_nature, create_time, create_user, status, car_photo, certificate_photo, other_photo, color_cn, region_id, auto_brand, auto_brand_cn, auto_style, auto_style_cn, auto_series, auto_series_cn, edit_time, car_auto_no from car_assess
@@ -43,9 +77,47 @@
 
     <select id="selectCarAssessList" parameterType="com.wintop.ms.carauction.entity.CarAssess"
             resultMap="CarAssessResult">
-        <include refid="selectCarAssessVo"/>
+        SELECT
+        a.id,
+        vin,
+        mileage,
+        NAME,
+        begin_register_date,
+        color,
+        engine_capacity,
+        FUNCTION,
+        engine_number,
+        manufacture_date,
+        year_insurance,
+        plate_num,
+        transfer_number,
+        auto_nature,
+        create_time,
+        create_user,
+        a.STATUS,
+        car_photo,
+        certificate_photo,
+        other_photo,
+        color_cn,
+        region_id,
+        auto_brand,
+        auto_brand_cn,
+        auto_style,
+        auto_style_cn,
+        auto_series,
+        auto_series_cn,
+        edit_time,
+        car_auto_no,
+        o.id AS order_id,
+        o.price,
+        o.status as order_status,
+        o.remark,
+        o.assess_id
+        FROM
+        car_assess a
+        LEFT JOIN car_assess_order o on o.assess_id = a.id
         <where>
-            <if test="id != null ">and id = #{id}</if>
+            <if test="id != null ">and a.id = #{id}</if>
             <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
             <if test="mileage != null ">and mileage = #{mileage}</if>
             <if test="name != null  and name != '' ">and name = #{name}</if>
@@ -59,9 +131,9 @@
             <if test="plateNum != null  and plateNum != '' ">and plate_num = #{plateNum}</if>
             <if test="transferNumber != null ">and transfer_number = #{transferNumber}</if>
             <if test="autoNature != null  and autoNature != '' ">and auto_nature = #{autoNature}</if>
-            <if test="createTime != null ">and create_time = #{createTime}</if>
-            <if test="createUser != null ">and create_user = #{createUser}</if>
-            <if test="status != null  and status != '' ">and status = #{status}</if>
+            <if test="createTime != null ">and a.create_time = #{createTime}</if>
+            <if test="createUser != null ">and a.create_user = #{createUser}</if>
+            <if test="status != null  and status != '' ">and a.status = #{status}</if>
             <if test="carPhoto != null  and carPhoto != '' ">and car_photo = #{carPhoto}</if>
             <if test="certificatePhoto != null  and certificatePhoto != '' ">and certificate_photo =
                 #{certificatePhoto}
@@ -79,7 +151,7 @@
             <if test="carAutoNo != null ">and car_auto_no = #{carAutoNo}</if>
         </where>
 
-        order by id desc
+        order by a.id desc
         <if test="endRowNum != null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
         </if>
@@ -125,124 +197,73 @@
     </select>
 
     <select id="selectCarAssessById" parameterType="Long" resultMap="CarAssessResult">
-        <include refid="selectCarAssessVo"/>
-        where id = #{id}
+        SELECT
+            a.id,
+            vin,
+            mileage,
+            NAME,
+            begin_register_date,
+            color,
+            engine_capacity,
+            FUNCTION,
+            engine_number,
+            manufacture_date,
+            year_insurance,
+            plate_num,
+            transfer_number,
+            auto_nature,
+            create_time,
+            create_user,
+            a.STATUS,
+            car_photo,
+            certificate_photo,
+            other_photo,
+            color_cn,
+            region_id,
+            auto_brand,
+            auto_brand_cn,
+            auto_style,
+            auto_style_cn,
+            auto_series,
+            auto_series_cn,
+            edit_time,
+            car_auto_no,
+            o.id AS order_id,
+            o.price,
+            o.STATUS AS order_status,
+            o.remark,
+            o.assess_id,
+            o.follow_id,
+            o.procurement_type,
+            o.procurement_date,
+            o.store_id,
+            o.if_old_new,
+            o.entirety_price,
+            o.new_car_price,
+            o.car_address,
+            o.purchase_tax,
+            o.driving_license,
+            o.registration_certificate,
+            o.if_add,
+            o.car_keys,
+            o.new_car_invoice,
+            o.quality_guarantee,
+            o.maintenance_manual,
+            o.sali,
+            o.sali_end_date,
+            o.commercial_insurance,
+            o.commercial_insurance_end_date,
+            o.commercial_insurance_price,
+            o.transport_tax,
+            o.transport_tax_end_date,
+            o.customer_name,
+            o.customer_tel,
+            o.customer_source
+         FROM car_assess a
+        LEFT JOIN car_assess_order o on o.assess_id = a.id
+        where a.id = #{id}
     </select>
 
-    <insert id="insertCarAssess" parameterType="com.wintop.ms.carauction.entity.CarAssess">
-        insert into car_assess
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null  ">id,</if>
-            <if test="vin != null  and vin != ''  ">vin,</if>
-            <if test="mileage != null  ">mileage,</if>
-            <if test="name != null  and name != ''  ">name,</if>
-            <if test="beginRegisterDate != null  ">begin_register_date,</if>
-            <if test="color != null  and color != ''  ">color,</if>
-            <if test="engineCapacity != null  ">engine_capacity,</if>
-            <if test="function != null  and function != ''  ">function,</if>
-            <if test="engineNumber != null  and engineNumber != ''  ">engine_number,</if>
-            <if test="manufactureDate != null  ">manufacture_date,</if>
-            <if test="yearInsurance != null  ">year_insurance,</if>
-            <if test="plateNum != null  and plateNum != ''  ">plate_num,</if>
-            <if test="transferNumber != null  ">transfer_number,</if>
-            <if test="autoNature != null  and autoNature != ''  ">auto_nature,</if>
-            <if test="createTime != null  ">create_time,</if>
-            <if test="createUser != null  ">create_user,</if>
-            <if test="status != null  and status != ''  ">status,</if>
-            <if test="carPhoto != null  and carPhoto != ''  ">car_photo,</if>
-            <if test="certificatePhoto != null  and certificatePhoto != ''  ">certificate_photo,</if>
-            <if test="otherPhoto != null  and otherPhoto != ''  ">other_photo,</if>
-            <if test="colorCn != null  and colorCn != ''  ">color_cn,</if>
-            <if test="regionId != null  and regionId != ''  ">region_id,</if>
-            <if test="autoBrand != null  and autoBrand != ''  ">auto_brand,</if>
-            <if test="autoBrandCn != null  and autoBrandCn != ''  ">auto_brand_cn,</if>
-            <if test="autoStyle != null  and autoStyle != ''  ">auto_style,</if>
-            <if test="autoStyleCn != null  and autoStyleCn != ''  ">auto_style_cn,</if>
-            <if test="autoSeries != null  and autoSeries != ''  ">auto_series,</if>
-            <if test="autoSeriesCn != null  and autoSeriesCn != ''  ">auto_series_cn,</if>
-            <if test="editTime != null  ">edit_time,</if>
-            <if test="carAutoNo != null  ">car_auto_no,</if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null  ">#{id},</if>
-            <if test="vin != null  and vin != ''  ">#{vin},</if>
-            <if test="mileage != null  ">#{mileage},</if>
-            <if test="name != null  and name != ''  ">#{name},</if>
-            <if test="beginRegisterDate != null  ">#{beginRegisterDate},</if>
-            <if test="color != null  and color != ''  ">#{color},</if>
-            <if test="engineCapacity != null  ">#{engineCapacity},</if>
-            <if test="function != null  and function != ''  ">#{function},</if>
-            <if test="engineNumber != null  and engineNumber != ''  ">#{engineNumber},</if>
-            <if test="manufactureDate != null  ">#{manufactureDate},</if>
-            <if test="yearInsurance != null  ">#{yearInsurance},</if>
-            <if test="plateNum != null  and plateNum != ''  ">#{plateNum},</if>
-            <if test="transferNumber != null  ">#{transferNumber},</if>
-            <if test="autoNature != null  and autoNature != ''  ">#{autoNature},</if>
-            <if test="createTime != null  ">#{createTime},</if>
-            <if test="createUser != null  ">#{createUser},</if>
-            <if test="status != null  and status != ''  ">#{status},</if>
-            <if test="carPhoto != null  and carPhoto != ''  ">#{carPhoto},</if>
-            <if test="certificatePhoto != null  and certificatePhoto != ''  ">#{certificatePhoto},</if>
-            <if test="otherPhoto != null  and otherPhoto != ''  ">#{otherPhoto},</if>
-            <if test="colorCn != null  and colorCn != ''  ">#{colorCn},</if>
-            <if test="regionId != null  and regionId != ''  ">#{regionId},</if>
-            <if test="autoBrand != null  and autoBrand != ''  ">#{autoBrand},</if>
-            <if test="autoBrandCn != null  and autoBrandCn != ''  ">#{autoBrandCn},</if>
-            <if test="autoStyle != null  and autoStyle != ''  ">#{autoStyle},</if>
-            <if test="autoStyleCn != null  and autoStyleCn != ''  ">#{autoStyleCn},</if>
-            <if test="autoSeries != null  and autoSeries != ''  ">#{autoSeries},</if>
-            <if test="autoSeriesCn != null  and autoSeriesCn != ''  ">#{autoSeriesCn},</if>
-            <if test="editTime != null  ">#{editTime},</if>
-            <if test="carAutoNo != null  ">#{carAutoNo},</if>
-        </trim>
-    </insert>
 
-    <update id="updateCarAssess" parameterType="com.wintop.ms.carauction.entity.CarAssess">
-        update car_assess
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="vin != null  and vin != ''  ">vin = #{vin},</if>
-            <if test="mileage != null  ">mileage = #{mileage},</if>
-            <if test="name != null  and name != ''  ">name = #{name},</if>
-            <if test="beginRegisterDate != null  ">begin_register_date = #{beginRegisterDate},</if>
-            <if test="color != null  and color != ''  ">color = #{color},</if>
-            <if test="engineCapacity != null  ">engine_capacity = #{engineCapacity},</if>
-            <if test="function != null  and function != ''  ">function = #{function},</if>
-            <if test="engineNumber != null  and engineNumber != ''  ">engine_number = #{engineNumber},</if>
-            <if test="manufactureDate != null  ">manufacture_date = #{manufactureDate},</if>
-            <if test="yearInsurance != null  ">year_insurance = #{yearInsurance},</if>
-            <if test="plateNum != null  and plateNum != ''  ">plate_num = #{plateNum},</if>
-            <if test="transferNumber != null  ">transfer_number = #{transferNumber},</if>
-            <if test="autoNature != null  and autoNature != ''  ">auto_nature = #{autoNature},</if>
-            <if test="createTime != null  ">create_time = #{createTime},</if>
-            <if test="createUser != null  ">create_user = #{createUser},</if>
-            <if test="status != null  and status != ''  ">status = #{status},</if>
-            <if test="carPhoto != null  and carPhoto != ''  ">car_photo = #{carPhoto},</if>
-            <if test="certificatePhoto != null  and certificatePhoto != ''  ">certificate_photo = #{certificatePhoto},
-            </if>
-            <if test="otherPhoto != null  and otherPhoto != ''  ">other_photo = #{otherPhoto},</if>
-            <if test="colorCn != null  and colorCn != ''  ">color_cn = #{colorCn},</if>
-            <if test="regionId != null  and regionId != ''  ">region_id = #{regionId},</if>
-            <if test="autoBrand != null  and autoBrand != ''  ">auto_brand = #{autoBrand},</if>
-            <if test="autoBrandCn != null  and autoBrandCn != ''  ">auto_brand_cn = #{autoBrandCn},</if>
-            <if test="autoStyle != null  and autoStyle != ''  ">auto_style = #{autoStyle},</if>
-            <if test="autoStyleCn != null  and autoStyleCn != ''  ">auto_style_cn = #{autoStyleCn},</if>
-            <if test="autoSeries != null  and autoSeries != ''  ">auto_series = #{autoSeries},</if>
-            <if test="autoSeriesCn != null  and autoSeriesCn != ''  ">auto_series_cn = #{autoSeriesCn},</if>
-            <if test="editTime != null  ">edit_time = #{editTime},</if>
-            <if test="carAutoNo != null  ">car_auto_no = #{carAutoNo},</if>
-        </trim>
-        where id = #{id}
-    </update>
-
-    <delete id="deleteCarAssessById" parameterType="Long">
-        delete from car_assess where id = #{id}
-    </delete>
-
-    <delete id="deleteCarAssessByIds" parameterType="String">
-        delete from car_assess where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
 
 </mapper>

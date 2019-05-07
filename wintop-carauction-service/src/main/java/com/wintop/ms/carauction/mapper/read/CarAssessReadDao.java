@@ -28,38 +28,6 @@ public interface CarAssessReadDao {
     public List<CarAssess> selectCarAssessList(CarAssess carAssess);
 
     /**
-     * 新增车辆评估
-     *
-     * @param carAssess 车辆评估信息
-     * @return 结果
-     */
-    public int insertCarAssess(CarAssess carAssess);
-
-    /**
-     * 修改车辆评估
-     *
-     * @param carAssess 车辆评估信息
-     * @return 结果
-     */
-    public int updateCarAssess(CarAssess carAssess);
-
-    /**
-     * 删除车辆评估
-     *
-     * @param id 车辆评估ID
-     * @return 结果
-     */
-    public int deleteCarAssessById(Long id);
-
-    /**
-     * 批量删除车辆评估
-     *
-     * @param ids 需要删除的数据ID
-     * @return 结果
-     */
-    public int deleteCarAssessByIds(String[] ids);
-
-    /**
      * 根据条件查找数量
      *
      * @param carAssess

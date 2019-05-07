@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </if>
     </select>
 
-    <select id="selectAssessFollowDataCount" parameterType="com.wintop.ms.carauction.entity.CarAssessFollowData" resultMap="java.lang.Integer">
+    <select id="selectAssessFollowDataCount" parameterType="com.wintop.ms.carauction.entity.CarAssessFollowData" resultType="java.lang.Integer">
        select count(*) from car_assess_follow_data
         <where>
             <if test="id != null "> and id = #{id}</if>
@@ -49,48 +49,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCarAssessFollowDataVo"/>
         where id = #{id}
     </select>
-        
-    <insert id="insertCarAssessFollowData" parameterType="com.wintop.ms.carauction.entity.CarAssessFollowData">
-        insert into car_assess_follow_data
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="assessId != null  ">assess_id,</if>
-			<if test="content != null  and content != ''  ">content,</if>
-			<if test="followResult != null  and followResult != ''  ">follow_result,</if>
-			<if test="createTime != null  ">create_time,</if>
-			<if test="followUser != null  ">follow_user,</if>
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="assessId != null  ">#{assessId},</if>
-			<if test="content != null  and content != ''  ">#{content},</if>
-			<if test="followResult != null  and followResult != ''  ">#{followResult},</if>
-			<if test="createTime != null  ">#{createTime},</if>
-			<if test="followUser != null  ">#{followUser},</if>
-         </trim>
-    </insert>
-	 
-    <update id="updateCarAssessFollowData" parameterType="com.wintop.ms.carauction.entity.CarAssessFollowData">
-        update car_assess_follow_data
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="assessId != null  ">assess_id = #{assessId},</if>
-            <if test="content != null  and content != ''  ">content = #{content},</if>
-            <if test="followResult != null  and followResult != ''  ">follow_result = #{followResult},</if>
-            <if test="createTime != null  ">create_time = #{createTime},</if>
-            <if test="followUser != null  ">follow_user = #{followUser},</if>
-        </trim>
-        where id = #{id}
-    </update>
-
-	<delete id="deleteCarAssessFollowDataById" parameterType="Long">
-        delete from car_assess_follow_data where id = #{id}
-    </delete>
-	
-    <delete id="deleteCarAssessFollowDataByIds" parameterType="String">
-        delete from car_assess_follow_data where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
     
 </mapper>

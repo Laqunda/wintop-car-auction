@@ -3,43 +3,6 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wintop.ms.carauction.mapper.write.CarAssessOrderLogWriteDao">
-    
-    <resultMap type="com.wintop.ms.carauction.entity.CarAssessOrderLog" id="CarAssessOrderLogResult">
-        <result property="id"    column="id"    />
-        <result property="assessOrderId"    column="assess_order_id"    />
-        <result property="status"    column="status"    />
-        <result property="statusCn"    column="status_cn"    />
-        <result property="logMsg"    column="log_msg"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="createPerson"    column="create_person"    />
-        <result property="userMobile"    column="user_mobile"    />
-        <result property="userName"    column="user_name"    />
-    </resultMap>
-	
-	<sql id="selectCarAssessOrderLogVo">
-        select id, assess_order_id, status, status_cn, log_msg, create_time, create_person, user_mobile, user_name from car_assess_order_log
-    </sql>
-	
-    <select id="selectCarAssessOrderLogList" parameterType="com.wintop.ms.carauction.entity.CarAssessOrderLog" resultMap="CarAssessOrderLogResult">
-        <include refid="selectCarAssessOrderLogVo"/>
-        <where>  
-            <if test="id != null "> and id = #{id}</if>
-             <if test="assessOrderId != null "> and assess_order_id = #{assessOrderId}</if>
-             <if test="status != null  and status != '' "> and status = #{status}</if>
-             <if test="statusCn != null  and statusCn != '' "> and status_cn = #{statusCn}</if>
-             <if test="logMsg != null  and logMsg != '' "> and log_msg = #{logMsg}</if>
-             <if test="createTime != null "> and create_time = #{createTime}</if>
-             <if test="createPerson != null "> and create_person = #{createPerson}</if>
-             <if test="userMobile != null  and userMobile != '' "> and user_mobile = #{userMobile}</if>
-             <if test="userName != null  and userName != '' "> and user_name = #{userName}</if>
-         </where>
-    </select>
-    
-    <select id="selectCarAssessOrderLogById" parameterType="Long" resultMap="CarAssessOrderLogResult">
-        <include refid="selectCarAssessOrderLogVo"/>
-        where id = #{id}
-    </select>
-        
     <insert id="insertCarAssessOrderLog" parameterType="com.wintop.ms.carauction.entity.CarAssessOrderLog">
         insert into car_assess_order_log
 		<trim prefix="(" suffix=")" suffixOverrides=",">

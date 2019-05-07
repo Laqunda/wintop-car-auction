@@ -28,37 +28,5 @@ public interface CarAssessOrderReadDao
      */
 	public List<CarAssessOrder> selectCarAssessOrderList(CarAssessOrder carAssessOrder);
 
-	/**
-     * 新增评估采购单
-     *
-     * @param carAssessOrder 评估采购单信息
-     * @return 结果
-     */
-	public int insertCarAssessOrder(CarAssessOrder carAssessOrder);
-
-	/**
-     * 修改评估采购单
-     *
-     * @param carAssessOrder 评估采购单信息
-     * @return 结果
-     */
-	public int updateCarAssessOrder(CarAssessOrder carAssessOrder);
-	
-	/**
-     * 删除评估采购单
-     * 
-     * @param id 评估采购单ID
-     * @return 结果
-     */
-	public int deleteCarAssessOrderById(Long id);
-	
-	/**
-     * 批量删除评估采购单
-     * 
-     * @param ids 需要删除的数据ID
-     * @return 结果
-     */
-	public int deleteCarAssessOrderByIds(String[] ids);
-
     int selectAssessOrderCount(CarAssessOrder carAssessOrder);
 }

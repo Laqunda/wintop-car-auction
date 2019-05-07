@@ -3,7 +3,9 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AppApiVersion;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
+import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.config.Constants;
+import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import io.swagger.annotations.ApiOperation;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -44,9 +47,28 @@ public class CarAssessApi {
     @AuthUserToken
     @AppApiVersion(value = "2.0")
     public ResultModel list(@RequestBody Map<String,Object> map) {
+        if(map.get("page")==null || map.get("limit")==null){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carAssess/list"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
+    /**
+     * 查询车辆评估列表
+     */
+    @ApiOperation(value = "查询车辆评估详情")
+    @PostMapping(value = "/detail",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResultModel detail(@RequestBody Map<String,Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAssess/detail"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
@@ -62,7 +84,9 @@ public class CarAssessApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResultModel addSave(@RequestBody Map<String,Object> map) {
+    public ResultModel addSave(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
+
+        map.put("managerId",managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carAssess/add"))
@@ -82,12 +106,36 @@ public class CarAssessApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResultModel editSave(@RequestBody Map<String,Object> map) {
+    public ResultModel editSave(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
+        map.put("managerId",managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carAssess/edit"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
+
+    /**
+     * 撤销申请收购
+     */
+    @ApiOperation(value = "撤销申请收购")
+    @RequestMapping(value = "/cancel",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResultModel cancelCarAssess(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
+        Map params = new HashMap();
+        params.put("id",map.get("id"));
+        params.put("status","1");
+        params.put("managerId",managerId);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAssess/cancel"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(params),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 
@@ -101,7 +149,8 @@ public class CarAssessApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResultModel remove(@RequestBody Map<String,Object> map) {
+    public ResultModel remove(@CurrentUserId Long managerId,@RequestBody Map<String,Object> map) {
+        map.put("managerId",managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carAssess/remove"))

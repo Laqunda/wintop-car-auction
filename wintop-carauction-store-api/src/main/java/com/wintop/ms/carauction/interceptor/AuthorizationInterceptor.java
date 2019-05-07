@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wintop.ms.carauction.core.annotation.AppApiVersion;
 import com.wintop.ms.carauction.core.annotation.AuthPublic;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.config.Constants;
@@ -67,6 +68,21 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         if (method.getAnnotation(AuthPublic.class)!=null){
             return true;
         }
+        if (method.getAnnotation(AppApiVersion.class) != null) {/**当接口方法用到了AppApiVersion注解时需要验证version*/
+            //从header中得到version
+            String v = request.getHeader(Constants.APP_VERSION);
+            AppApiVersion version = handlerMethod.getMethodAnnotation(AppApiVersion.class);
+            if (version.value() != null && !version.value().equals(v)) {
+                ResultModel resultModel =
+                        new ResultModel(false, HttpResponseStatus.API_VERSION_MISMATCH, "接口版本不匹配,接口版本："+version.value(), null);
+                String obj = JSONObject.toJSONString(resultModel);
+                pw.print(obj);
+                pw.flush();
+                pw.close();
+                return false;
+            }
+        }
+
         //从header中得到appId
         String appId = request.getHeader(Constants.HEADER_APPID);
         //从header中得到token

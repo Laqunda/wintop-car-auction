@@ -3,8 +3,6 @@ package com.wintop.ms.carauction.mapper.write;
 
 import com.wintop.ms.carauction.entity.CarAssessFollowData;
 
-import java.util.List;
-
 /**
  * 车辆评估跟进 数据层
  * 
@@ -13,22 +11,7 @@ import java.util.List;
  */
 public interface CarAssessFollowDataWriteDao
 {
-	/**
-     * 查询车辆评估跟进信息
-     * 
-     * @param id 车辆评估跟进ID
-     * @return 车辆评估跟进信息
-     */
-	public CarAssessFollowData selectCarAssessFollowDataById(Long id);
-	
-	/**
-     * 查询车辆评估跟进列表
-     * 
-     * @param carAssessFollowData 车辆评估跟进信息
-     * @return 车辆评估跟进集合
-     */
-	public List<CarAssessFollowData> selectCarAssessFollowDataList(CarAssessFollowData carAssessFollowData);
-	
+
 	/**
      * 新增车辆评估跟进
      * 

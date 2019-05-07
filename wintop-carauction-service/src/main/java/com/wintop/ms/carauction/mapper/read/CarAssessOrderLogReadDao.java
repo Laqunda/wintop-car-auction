@@ -28,37 +28,5 @@ public interface CarAssessOrderLogReadDao
      */
 	public List<CarAssessOrderLog> selectCarAssessOrderLogList(CarAssessOrderLog carAssessOrderLog);
 
-	/**
-     * 新增评估采购日志
-     *
-     * @param carAssessOrderLog 评估采购日志信息
-     * @return 结果
-     */
-	public int insertCarAssessOrderLog(CarAssessOrderLog carAssessOrderLog);
-
-	/**
-     * 修改评估采购日志
-     *
-     * @param carAssessOrderLog 评估采购日志信息
-     * @return 结果
-     */
-	public int updateCarAssessOrderLog(CarAssessOrderLog carAssessOrderLog);
-	
-	/**
-     * 删除评估采购日志
-     * 
-     * @param id 评估采购日志ID
-     * @return 结果
-     */
-	public int deleteCarAssessOrderLogById(Long id);
-	
-	/**
-     * 批量删除评估采购日志
-     * 
-     * @param ids 需要删除的数据ID
-     * @return 结果
-     */
-	public int deleteCarAssessOrderLogByIds(String[] ids);
-
 	int selectAssessOrderCount(CarAssessOrderLog carAssessOrderLog);
 }

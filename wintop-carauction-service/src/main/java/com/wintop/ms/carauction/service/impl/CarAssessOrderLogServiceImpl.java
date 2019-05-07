@@ -1,11 +1,13 @@
 package com.wintop.ms.carauction.service.impl;
 
 import com.wintop.ms.carauction.entity.CarAssessOrderLog;
+import com.wintop.ms.carauction.entity.CarManagerUser;
 import com.wintop.ms.carauction.model.CarAssessOrderLogModel;
 import com.wintop.ms.carauction.service.ICarAssessOrderLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -77,6 +79,22 @@ public class CarAssessOrderLogServiceImpl implements ICarAssessOrderLogService {
     @Override
     public int selectAssessOrderCount(CarAssessOrderLog carAssessOrderLog) {
         return model.selectAssessOrderCount(carAssessOrderLog);
+    }
+
+    @Override
+    public void saveOrderLog(CarManagerUser managerUser, String msg, String status,long orderlog_id,long orderId) {
+        CarAssessOrderLog log = new CarAssessOrderLog();
+        log.setId(orderlog_id);
+        log.setAssessOrderId(orderId);
+        log.setCreatePerson(managerUser.getId());
+        log.setLogMsg(msg);
+        //状态 1提交申请，2审核通过，-1审核不通过 3审核撤销
+        log.setStatus(status);
+        log.setCreateTime(new Date());
+        log.setUserMobile(managerUser.getUserPhone());
+        log.setUserName(managerUser.getUserName());
+
+        insertCarAssessOrderLog(log);
     }
 
 }

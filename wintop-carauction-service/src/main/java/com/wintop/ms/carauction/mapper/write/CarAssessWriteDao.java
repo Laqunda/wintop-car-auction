@@ -2,8 +2,6 @@ package com.wintop.ms.carauction.mapper.write;
 
 import com.wintop.ms.carauction.entity.CarAssess;
 
-import java.util.List;
-
 /**
  * 车辆评估 数据层
  * 
@@ -12,21 +10,6 @@ import java.util.List;
  */
 public interface CarAssessWriteDao
 {
-	/**
-     * 查询车辆评估信息
-     * 
-     * @param id 车辆评估ID
-     * @return 车辆评估信息
-     */
-	public CarAssess selectCarAssessById(Long id);
-	
-	/**
-     * 查询车辆评估列表
-     * 
-     * @param carAssess 车辆评估信息
-     * @return 车辆评估集合
-     */
-	public List<CarAssess> selectCarAssessList(CarAssess carAssess);
 
 	/**
      * 新增车辆评估
