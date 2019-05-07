@@ -130,6 +130,7 @@ public class CarAutoApi {
             map.put("status",carAuto.getStatus());
             map.put("maxPriceUserId",carAuto.getMaxPriceUserId());
             map.put("serviceTel",null);
+            map.put("transferFlag",carAuto.getTransferFlag());
             //判断当前车辆 状态和 登录人，获取登陆人应该显示的状态
             //1、未登录 + 待开拍 = 即将开始
             //2、未登录 + 正在竞拍 = 正在竞拍
