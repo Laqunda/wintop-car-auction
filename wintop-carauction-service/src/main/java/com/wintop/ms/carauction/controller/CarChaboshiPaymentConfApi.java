@@ -46,7 +46,6 @@ public class CarChaboshiPaymentConfApi {
     public ServiceResult<ListEntity<CarChaboshiPaymentConf>> list(@RequestBody JSONObject obj) {
         ServiceResult<ListEntity<CarChaboshiPaymentConf>> result = null;
         try {
-            //TODO 赋值参数
             CarChaboshiPaymentConf bean = JSONObject.toJavaObject(obj, CarChaboshiPaymentConf.class);
             if (bean == null) {
                 bean = new CarChaboshiPaymentConf();
@@ -117,7 +116,6 @@ public class CarChaboshiPaymentConfApi {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
 
         try {
-            //TODO 赋值参数
             CarChaboshiPaymentConf bean = JSONObject.toJavaObject(obj, CarChaboshiPaymentConf.class);
             if (bean == null) {
                 bean = new CarChaboshiPaymentConf();
@@ -149,7 +147,6 @@ public class CarChaboshiPaymentConfApi {
     public ServiceResult<Map<String, Object>> editSave(@RequestBody JSONObject obj) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-            //TODO 赋值参数
             CarChaboshiPaymentConf bean = JSONObject.toJavaObject(obj, CarChaboshiPaymentConf.class);
             if (bean == null) {
                 bean = new CarChaboshiPaymentConf();

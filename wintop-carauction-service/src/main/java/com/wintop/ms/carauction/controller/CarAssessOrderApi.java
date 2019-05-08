@@ -55,7 +55,6 @@ public class CarAssessOrderApi {
     public ServiceResult<ListEntity<CarAssessOrder>> list(@RequestBody JSONObject obj) {
         ServiceResult<ListEntity<CarAssessOrder>> result = null;
         try {
-            //TODO 赋值参数
             CarAssessOrder carAssessOrder = JSONObject.toJavaObject(obj, CarAssessOrder.class);
             if (carAssessOrder == null) {
                 carAssessOrder = new CarAssessOrder();
@@ -99,7 +98,6 @@ public class CarAssessOrderApi {
 
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-            //TODO 赋值参数
             CarAssessOrder carAssessOrder = JSONObject.toJavaObject(obj, CarAssessOrder.class);
             if (carAssessOrder == null) {
                 carAssessOrder = new CarAssessOrder();
@@ -166,7 +164,6 @@ public class CarAssessOrderApi {
     public ServiceResult<Map<String, Object>> editSave(@RequestBody JSONObject obj) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-            //TODO 赋值参数
             CarAssessOrder carAssessOrder = JSONObject.toJavaObject(obj, CarAssessOrder.class);
             if (carAssessOrder == null) {
                 carAssessOrder = new CarAssessOrder();
@@ -200,7 +197,6 @@ public class CarAssessOrderApi {
         try {
             CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
 
-            //TODO 赋值参数
             CarAssessOrder carAssessOrder = JSONObject.toJavaObject(obj, CarAssessOrder.class);
             CarAssessOrder  old = carAssessOrderService.selectCarAssessOrderById(carAssessOrder.getId());
             if (carAssessOrder == null) {

@@ -68,7 +68,6 @@ public class CarChaboshiLogAPi {
     public ServiceResult<ListEntity<CarChaboshiLog>> list(@RequestBody JSONObject obj) {
         ServiceResult<ListEntity<CarChaboshiLog>> result = null;
         try {
-            //TODO 赋值参数
             CarChaboshiLog carChaboshiLog = JSONObject.toJavaObject(obj, CarChaboshiLog.class);
             if (carChaboshiLog == null) {
                 carChaboshiLog = new CarChaboshiLog();
@@ -109,7 +108,6 @@ public class CarChaboshiLogAPi {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
 
         try {
-            //TODO 赋值参数
             CarChaboshiLog carChaboshiLog = JSONObject.toJavaObject(obj, CarChaboshiLog.class);
             if (carChaboshiLog == null) {
                 carChaboshiLog = new CarChaboshiLog();
@@ -141,7 +139,6 @@ public class CarChaboshiLogAPi {
     public ServiceResult<Map<String, Object>> editSave(@RequestBody JSONObject obj) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-            //TODO 赋值参数
             CarChaboshiLog carChaboshiLog = JSONObject.toJavaObject(obj, CarChaboshiLog.class);
             if (carChaboshiLog == null) {
                 carChaboshiLog = new CarChaboshiLog();
@@ -208,13 +205,19 @@ public class CarChaboshiLogAPi {
             Long userId = obj.getLong("userId");
             //1:普通用户 2：店铺人员
             String userType = obj.getString("userType");
-            //1:老订单查询 2：新的查询
+            //1:历史单查询 2：新的查询
             String searchType = obj.getString("searchType");
             //查询版本 1维修版 2综合版
             String edition = obj.getString("edition");
 
-            //新建查询订单
-            if ("2".equals(searchType)) {
+            //历史订单查询
+            if ("1".equals(searchType)) {
+                CarChaboshiLog log = carChaboshiLogService.selectCarChaboshiLogById(obj.getLong("logId"));
+                //TODO 查询 写入查询日志
+
+
+                //新建查询订单
+            } else if ("2".equals(searchType)) {
                 //个人查询
                 if ("1".equals(userType)) {
                     Long logId = obj.getLong("logId");
@@ -382,6 +385,9 @@ public class CarChaboshiLogAPi {
                 log.setStoreId(obj.getLong("storeId"));
                 log.setResponseResult("3");//查询中
                 carChaboshiLogService.insertCarChaboshiLog(log);
+                //TODO 查博士查询
+
+
                 resultMap.put("logId", logId);
                 result.setSuccess("0", "查博士支付成功");
                 result.setResult(resultMap);

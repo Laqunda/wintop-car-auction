@@ -50,7 +50,6 @@ public class CarChaboshiStoreAccountApi
 	public ServiceResult<ListEntity<CarChaboshiStoreAccount>> list(@RequestBody JSONObject obj) {
 		ServiceResult<ListEntity<CarChaboshiStoreAccount>> result = null;
 		try {
-			//TODO 赋值参数
 			CarChaboshiStoreAccount bean = JSONObject.toJavaObject(obj, CarChaboshiStoreAccount.class);
 			if (bean == null) {
 				bean = new CarChaboshiStoreAccount();
@@ -94,7 +93,6 @@ public class CarChaboshiStoreAccountApi
 		ServiceResult<Map<String, Object>> result = new ServiceResult<>();
 
 		try {
-			//TODO 赋值参数
 			CarChaboshiStoreAccount bean = JSONObject.toJavaObject(obj, CarChaboshiStoreAccount.class);
 			if (bean == null) {
 				bean = new CarChaboshiStoreAccount();
@@ -126,7 +124,6 @@ public class CarChaboshiStoreAccountApi
 	public ServiceResult<Map<String, Object>> editSave(@RequestBody JSONObject obj) {
 		ServiceResult<Map<String, Object>> result = new ServiceResult<>();
 		try {
-			//TODO 赋值参数
 			CarChaboshiStoreAccount bean = JSONObject.toJavaObject(obj, CarChaboshiStoreAccount.class);
 			if (bean == null) {
 				bean = new CarChaboshiStoreAccount();

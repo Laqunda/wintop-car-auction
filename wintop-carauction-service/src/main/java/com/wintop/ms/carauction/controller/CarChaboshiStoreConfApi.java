@@ -52,7 +52,6 @@ public class CarChaboshiStoreConfApi {
     public ServiceResult<ListEntity<CarChaboshiStoreConf>> list(@RequestBody JSONObject obj) {
         ServiceResult<ListEntity<CarChaboshiStoreConf>> result = null;
         try {
-            //TODO 赋值参数
             CarChaboshiStoreConf bean = JSONObject.toJavaObject(obj, CarChaboshiStoreConf.class);
             if (bean == null) {
                 bean = new CarChaboshiStoreConf();
@@ -93,7 +92,6 @@ public class CarChaboshiStoreConfApi {
     public ServiceResult<CarChaboshiStoreConf> detail(@RequestBody JSONObject obj) {
         ServiceResult<CarChaboshiStoreConf> result = null;
         try {
-            //TODO 赋值参数
             CarChaboshiStoreConf bean = JSONObject.toJavaObject(obj, CarChaboshiStoreConf.class);
             if (bean == null) {
                 bean = new CarChaboshiStoreConf();
@@ -126,7 +124,6 @@ public class CarChaboshiStoreConfApi {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
 
         try {
-            //TODO 赋值参数
             CarChaboshiStoreConf bean = JSONObject.toJavaObject(obj, CarChaboshiStoreConf.class);
             if (bean == null) {
                 bean = new CarChaboshiStoreConf();
@@ -158,7 +155,6 @@ public class CarChaboshiStoreConfApi {
     public ServiceResult<Map<String, Object>> editSave(@RequestBody JSONObject obj) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-            //TODO 赋值参数
             CarChaboshiStoreConf bean = JSONObject.toJavaObject(obj, CarChaboshiStoreConf.class);
             if (bean == null) {
                 bean = new CarChaboshiStoreConf();

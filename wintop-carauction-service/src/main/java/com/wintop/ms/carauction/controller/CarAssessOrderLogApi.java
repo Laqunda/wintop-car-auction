@@ -44,7 +44,6 @@ public class CarAssessOrderLogApi {
     public ServiceResult<ListEntity<CarAssessOrderLog>> list(@RequestBody JSONObject obj) {
         ServiceResult<ListEntity<CarAssessOrderLog>> result = null;
         try {
-            //TODO 赋值参数
             CarAssessOrderLog carAssessOrderLog = JSONObject.toJavaObject(obj, CarAssessOrderLog.class);
             if (carAssessOrderLog == null) {
                 carAssessOrderLog = new CarAssessOrderLog();
@@ -88,7 +87,6 @@ public class CarAssessOrderLogApi {
     public ServiceResult<Map<String, Object>> addSave(@RequestBody JSONObject obj) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-            //TODO 赋值参数
             CarAssessOrderLog carAssessOrderLog = JSONObject.toJavaObject(obj, CarAssessOrderLog.class);
             if (carAssessOrderLog == null) {
                 carAssessOrderLog = new CarAssessOrderLog();
@@ -122,7 +120,6 @@ public class CarAssessOrderLogApi {
     public ServiceResult<Map<String, Object>> editSave(@RequestBody JSONObject obj) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-            //TODO 赋值参数
             CarAssessOrderLog carAssessOrderLog = JSONObject.toJavaObject(obj, CarAssessOrderLog.class);
             if (carAssessOrderLog == null) {
                 carAssessOrderLog = new CarAssessOrderLog();

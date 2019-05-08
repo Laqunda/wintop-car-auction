@@ -54,7 +54,6 @@ public class CarAssessFollowDataApi {
     public ServiceResult<ListEntity<CarAssessFollowData>> list(@RequestBody JSONObject obj) {
         ServiceResult<ListEntity<CarAssessFollowData>> result = null;
         try {
-            //TODO 赋值参数
             CarAssessFollowData carAssessFollowData = JSONObject.toJavaObject(obj, CarAssessFollowData.class);
             if (carAssessFollowData == null) {
                 carAssessFollowData = new CarAssessFollowData();
@@ -101,7 +100,6 @@ public class CarAssessFollowDataApi {
         try {
             CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
 
-            //TODO 赋值参数
             CarAssessFollowData carAssessFollowData = JSONObject.toJavaObject(obj, CarAssessFollowData.class);
             if (carAssessFollowData == null) {
                 carAssessFollowData = new CarAssessFollowData();
@@ -161,7 +159,6 @@ public class CarAssessFollowDataApi {
 
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-            //TODO 赋值参数
             CarAssessFollowData carAssessFollowData = JSONObject.toJavaObject(obj, CarAssessFollowData.class);
             if (carAssessFollowData == null) {
                 carAssessFollowData = new CarAssessFollowData();
