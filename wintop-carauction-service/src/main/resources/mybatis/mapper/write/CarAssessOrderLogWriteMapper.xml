@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.write.CarAssessOrderLogWriteDao">
+    <insert id="insertCarAssessOrderLog" parameterType="com.wintop.ms.carauction.entity.CarAssessOrderLog">
+        insert into car_assess_order_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="assessOrderId != null  ">assess_order_id,</if>
+			<if test="status != null  and status != ''  ">status,</if>
+			<if test="statusCn != null  and statusCn != ''  ">status_cn,</if>
+			<if test="logMsg != null  and logMsg != ''  ">log_msg,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="createPerson != null  ">create_person,</if>
+			<if test="userMobile != null  and userMobile != ''  ">user_mobile,</if>
+			<if test="userName != null  and userName != ''  ">user_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="assessOrderId != null  ">#{assessOrderId},</if>
+			<if test="status != null  and status != ''  ">#{status},</if>
+			<if test="statusCn != null  and statusCn != ''  ">#{statusCn},</if>
+			<if test="logMsg != null  and logMsg != ''  ">#{logMsg},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createPerson != null  ">#{createPerson},</if>
+			<if test="userMobile != null  and userMobile != ''  ">#{userMobile},</if>
+			<if test="userName != null  and userName != ''  ">#{userName},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCarAssessOrderLog" parameterType="com.wintop.ms.carauction.entity.CarAssessOrderLog">
+        update car_assess_order_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assessOrderId != null  ">assess_order_id = #{assessOrderId},</if>
+            <if test="status != null  and status != ''  ">status = #{status},</if>
+            <if test="statusCn != null  and statusCn != ''  ">status_cn = #{statusCn},</if>
+            <if test="logMsg != null  and logMsg != ''  ">log_msg = #{logMsg},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="createPerson != null  ">create_person = #{createPerson},</if>
+            <if test="userMobile != null  and userMobile != ''  ">user_mobile = #{userMobile},</if>
+            <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCarAssessOrderLogById" parameterType="Long">
+        delete from car_assess_order_log where id = #{id}
+    </delete>
+	
+    <delete id="deleteCarAssessOrderLogByIds" parameterType="String">
+        delete from car_assess_order_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

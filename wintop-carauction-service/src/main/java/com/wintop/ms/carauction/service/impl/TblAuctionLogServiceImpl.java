@@ -142,4 +142,13 @@ public class TblAuctionLogServiceImpl implements TblAuctionLogService {
         }
     }
 
+    /**
+     * 删除历史无效数据
+     * @return
+     */
+    @Override
+    public int deleteHisDataLog(){
+        return auctionLogModel.deleteHisDataLog();
+    }
+
 }

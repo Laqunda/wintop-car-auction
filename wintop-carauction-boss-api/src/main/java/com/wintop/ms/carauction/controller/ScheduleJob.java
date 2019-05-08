@@ -51,4 +51,12 @@ public class ScheduleJob {
                         .body(new HashMap()),Integer.class);
     }
 
+    @Scheduled(cron = "0 0 5 * * ?")
+    public void deleteHisDataLog() {
+        this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAutoSchedule/deleteHisDataLog"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(new HashMap()),Integer.class);
+    }
 }

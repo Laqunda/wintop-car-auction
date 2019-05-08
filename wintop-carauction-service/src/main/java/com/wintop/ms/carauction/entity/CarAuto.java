@@ -194,6 +194,7 @@ public class CarAuto implements Serializable {
 
     private String auctionCode;
     private String maxPriceUserId;
+    private String transferFlag;
 
     public String getMaxPriceUserId() {
         return maxPriceUserId;
@@ -1073,5 +1074,13 @@ public class CarAuto implements Serializable {
 
     public void setTransferFee(String transferFee) {
         this.transferFee = transferFee;
+    }
+
+    public String getTransferFlag() {
+        return transferFlag;
+    }
+
+    public void setTransferFlag(String transferFlag) {
+        this.transferFlag = transferFlag;
     }
 }

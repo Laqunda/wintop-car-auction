@@ -186,11 +186,7 @@ public class CarLocaleAuctionCar implements Serializable {
     }
 
     public BigDecimal getPriceRange() {
-        if (priceRange!=null){
-            return priceRange;
-        }else {
-            return new BigDecimal(0);
-        }
+        return priceRange;
     }
 
     public void setPriceRange(BigDecimal priceRange) {

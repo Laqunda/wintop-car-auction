@@ -186,11 +186,16 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
     }
 
     public ServiceResult<Map<String,Object>> saveCarAuctionBidRecord(CarAuctionBidRecord carAuctionBidRecord){
-        CarAuto auto = autoModel.selectByPrimaryKey(carAuctionBidRecord.getCarId());
-        carAuctionBidRecord.setAuctionId(auto.getAutoAuctionId());
+        //最高出价
+        CarAuctionBidRecord bidRecord = model.selectLastBidRecord(carAuctionBidRecord.getAuctionCarId());
         ServiceResult<Map<String,Object>> result =new ServiceResult<>();
         Map resultMap =new HashMap();
-        Integer count =model.insert(carAuctionBidRecord);
+        Integer count = 1;
+        if(bidRecord==null || carAuctionBidRecord.getBidFee().compareTo(bidRecord.getBidFee())>0){
+            CarAuto auto = autoModel.selectByPrimaryKey(carAuctionBidRecord.getCarId());
+            carAuctionBidRecord.setAuctionId(auto.getAutoAuctionId());
+            count = model.insert(carAuctionBidRecord);
+        }
         resultMap.put("count",count);
         result.setSuccess(true);
         result.setResult(resultMap);
@@ -203,9 +208,16 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
         if(commonNameVo!=null){
             carAuctionBidRecord.setCustomerId(commonNameVo.getId());
         }
+        //最高出价
+        CarAuctionBidRecord bidRecord = model.selectLastBidRecord(carAuctionBidRecord.getAuctionCarId());
         Map resultMap =new HashMap();
         carAuctionBidRecord.setId(idWorker.nextId());
-        Integer count =model.insert(carAuctionBidRecord);
+        Integer count = 1;
+        if(bidRecord==null || carAuctionBidRecord.getBidFee().compareTo(bidRecord.getBidFee())>0){
+            CarAuto auto = autoModel.selectByPrimaryKey(carAuctionBidRecord.getCarId());
+            carAuctionBidRecord.setAuctionId(auto.getAutoAuctionId());
+            count = model.insert(carAuctionBidRecord);
+        }
         resultMap.put("count",count);
         result.setSuccess(true);
         result.setResult(resultMap);

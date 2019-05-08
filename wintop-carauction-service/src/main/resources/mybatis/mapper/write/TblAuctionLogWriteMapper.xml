@@ -27,4 +27,8 @@
   <update id="updateBidFeeSub" parameterType="java.lang.Long">
     update tbl_auction_log set price_range=null,bid_fee=null,parent_id=null where parent_id=#{id}
   </update>
+
+  <delete id="deleteHisDataLog">
+    delete from tbl_data_log where TIMESTAMPDIFF(HOUR,create_time,now()) <![CDATA[ > ]]> 120
+  </delete>
 </mapper>

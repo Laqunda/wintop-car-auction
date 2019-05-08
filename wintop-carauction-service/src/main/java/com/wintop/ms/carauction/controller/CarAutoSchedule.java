@@ -8,7 +8,10 @@ import com.wintop.ms.carauction.entity.CarAuto;
 import com.wintop.ms.carauction.entity.CarAutoAuction;
 import com.wintop.ms.carauction.service.ICarAutoAuctionService;
 import com.wintop.ms.carauction.service.ICarAutoService;
+import com.wintop.ms.carauction.service.TblAuctionLogService;
 import com.wintop.ms.carauction.util.utils.RedisAutoManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
@@ -30,7 +33,9 @@ public class CarAutoSchedule {
     private ICarAutoAuctionService auctionService;
     @Autowired
     private ICarAutoService carAutoService;
-
+    @Autowired
+    private TblAuctionLogService auctionLogService;
+    private static final Logger logger = LoggerFactory.getLogger(CarAutoSchedule.class);
     /***
      * 开发环境请将@Scheduled   注释掉
      * 每1000毫秒执行一次job方法
@@ -114,6 +119,21 @@ public class CarAutoSchedule {
             //System.out.println("1=="+JSONObject.toJSONString(autoData));
         }
         //System.out.println(LocalDateTime.now());
+        return 1;
+    }
+
+    /**
+     * 删除无效历史拍牌数据
+     * @return
+     */
+    @RequestMapping("/deleteHisDataLog")
+    @ResponseBody
+    public int deleteHisDataLog(){
+        try{
+            auctionLogService.deleteHisDataLog();
+        } catch (Exception e){
+            logger.error("删除无效历史拍牌数据日志失败",e);
+        }
         return 1;
     }
 

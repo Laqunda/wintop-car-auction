@@ -55,4 +55,10 @@ public interface TblAuctionLogService {
      * @return
      */
     int insertDataLog(String dateType,String dataContent,String resultContent);
+
+    /**
+     * 删除历史无效数据
+     * @return
+     */
+    int deleteHisDataLog();
 }
