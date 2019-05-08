@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.read.CarChaboshiStoreConfReadDao">
+
+    <resultMap type="com.wintop.ms.carauction.entity.CarChaboshiStoreConf" id="CarChaboshiStoreConfResult">
+        <result property="id" column="id"/>
+        <result property="storeId" column="store_id"/>
+        <result property="ifOpen" column="if_open"/>
+        <result property="balance" column="balance"/>
+        <result property="payment" column="payment"/>
+        <result property="paymentComposite" column="payment_composite"/>
+    </resultMap>
+
+    <sql id="selectCarChaboshiStoreConfVo">
+        select id, store_id, if_open, balance, payment, payment_composite from car_chaboshi_store_conf
+    </sql>
+
+    <select id="selectCarChaboshiStoreConfList" parameterType="com.wintop.ms.carauction.entity.CarChaboshiStoreConf"
+            resultMap="CarChaboshiStoreConfResult">
+        <include refid="selectCarChaboshiStoreConfVo"/>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="storeId != null ">and store_id = #{storeId}</if>
+            <if test="ifOpen != null  and ifOpen != '' ">and if_open = #{ifOpen}</if>
+            <if test="balance != null ">and balance = #{balance}</if>
+            <if test="payment != null ">and payment = #{payment}</if>
+            <if test="paymentComposite != null ">and payment_composite = #{paymentComposite}</if>
+        </where>
+    </select>
+    <select id="selectCount" parameterType="com.wintop.ms.carauction.entity.CarChaboshiStoreConf"
+            resultType="java.lang.Integer">
+        select count(*) from car_chaboshi_store_conf
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="storeId != null ">and store_id = #{storeId}</if>
+            <if test="ifOpen != null  and ifOpen != '' ">and if_open = #{ifOpen}</if>
+            <if test="balance != null ">and balance = #{balance}</if>
+            <if test="payment != null ">and payment = #{payment}</if>
+            <if test="paymentComposite != null ">and payment_composite = #{paymentComposite}</if>
+        </where>
+    </select>
+
+    <select id="selectCarChaboshiStoreConfById" parameterType="Long" resultMap="CarChaboshiStoreConfResult">
+        <include refid="selectCarChaboshiStoreConfVo"/>
+        where id = #{id}
+    </select>
+</mapper>
