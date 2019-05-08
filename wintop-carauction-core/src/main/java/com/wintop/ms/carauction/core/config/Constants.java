@@ -59,6 +59,10 @@ public class Constants {
      * 存放appId的header字段
      */
     public static final String HEADER_APPID = "appid";
+    /**
+     * 存放version的header字段
+     */
+    public static final String APP_VERSION = "version";
 
     public static final String ROOT = "http://carauctionservice" ;
 
