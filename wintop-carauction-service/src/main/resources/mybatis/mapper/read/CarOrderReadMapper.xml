@@ -286,7 +286,8 @@
         count(1) as orderNum,
         sum(case when `status`='1' then 1 else 0 end) as unPay,
         sum(case when (`status`='2' or `status`='3' or `status`='4' or `status`='5' or `status`='6') then 1 else 0 end) as dealing,
-        sum(case when `status`='7' then 1 else 0 end) as finish
+        sum(case when `status`='7' then 1 else 0 end) as unEvaluated,
+        sum(case when `status`='9' then 1 else 0 end) as finish
     from car_order
     where customer_id = #{customerId}
   </select>

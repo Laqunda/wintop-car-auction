@@ -59,12 +59,12 @@ public class FollowBidScanApi {
                 map3.put("unPay",carOrder.getUnPay());
                 map3.put("dealing",carOrder.getDealing());
                 map3.put("finish",carOrder.getFinish());
-                map3.put("unEvaluated",0);
+                map3.put("unEvaluated",carOrder.getUnEvaluated());
                 list.add(map3);
             }
-            Map<String,Object> map2 = new HashMap<>();
+           Map<String,Object> map2 = new HashMap<>();
            map2.put("attentionNum",attentionNum);
-            map2.put("bidNum",bidNum);
+           map2.put("bidNum",bidNum);
            map2.put("browseNum",browseNum);
            if(list != null && list.size() > 0){
                map2.put("order",list);
