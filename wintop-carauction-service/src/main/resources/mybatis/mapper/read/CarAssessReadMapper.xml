@@ -264,6 +264,40 @@
         where a.id = #{id}
     </select>
 
-
+    <select id="selectCarAssessDetailById" parameterType="Long" resultMap="CarAssessResult">
+        SELECT
+--         "storeName":"mock",                //类型：String  必有字段  备注：所属公司
+--         "procurementDate":"mock",                //类型：String  必有字段  备注：采购时间
+--         "status":"mock",                //类型：String  必有字段  备注：状态：确认采购
+          a.car_photo,
+          a.certificate_photo,
+          a.other_photo,
+          a.name,
+          a.manufacture_date,
+          a.mileage,
+          a.vin,
+          a.plate_num,
+          o.price,
+          o.procurement_date,
+          o.purchase_tax,
+          o.driving_license,
+          o.registration_certificate,
+          e.store_name,
+          o.purchase_tax,
+          o.driving_license,
+          o.registration_certificate,
+          d.status,
+          tr.status as "transfer_status",
+          au.report_colligation_ranks,
+          o.customer_name,
+          o.customer_tel,
+          o.customer_source
+        FROM car_assess a
+        LEFT JOIN car_assess_order o on o.assess_id = a.id
+        LEFT JOIN car_assess_follow_data d on d.assess_id = a.id
+        LEFT JOIN car_store e on e.id = o.store_id
+        LEFT JOIN car_auto au on au.id = a.auto_id
+        LEFT JOIN car_auto_transfer on tr.auto_id = au.id
+    </select>
 
 </mapper>

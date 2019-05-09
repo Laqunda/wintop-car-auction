@@ -36,6 +36,7 @@
     <result column="transaction_fee" property="transactionFee" jdbcType="DECIMAL" />
     <result column="publish_user_name" property="publishUserName" jdbcType="VARCHAR" />
     <result column="auction_end_time" property="auctionEndTime" jdbcType="TIMESTAMP" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR"/>
   </resultMap>
   <resultMap id="AuctionResultMap" type="com.wintop.ms.carauction.entity.CommonNameVo">
     <result column="id" property="id" jdbcType="BIGINT" />
@@ -89,12 +90,19 @@
 
   <select id="selectAuctionList" resultMap="BaseResultMap" parameterType="java.util.Map">
     SELECT
-    <include refid="Base_Column_List" />,t2.user_name as create_person_name
+    <include refid="Base_Column_List" />,t2.user_name as create_person_name,t3.city_name
     FROM car_locale_auction t1
     left join car_manager_user t2 on t1.create_person=t2.id
+    left join wt_city t3 on t1.city_id = t3.city_id
     WHERE 1=1
     <if test="regionId != null">
       AND t1.city_id=#{regionId}
+    </if>
+    <if test="regionIds != null">
+      AND t1.city_id in
+      <foreach collection="regionIds" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
     <if test="title != null">
       AND t1.title like CONCAT(CONCAT('%', #{title}),'%')
@@ -311,6 +319,12 @@
     <if test="cityId != null">
       AND t1.city_id=#{cityId}
     </if>
+    <if test="cityIds != null">
+      AND t1.city_id in
+      <foreach collection="cityIds" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
   </select>
 
   <!--首页获取场次数量-->
@@ -324,7 +338,12 @@
     <if test="cityId != null">
       AND t1.city_id=#{cityId}
     </if>
-
+    <if test="cityIds != null">
+      AND t1.city_id in
+      <foreach collection="cityIds" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
   </select>
   <!--首页开拍场次时间查询-->
   <select id="queryCarLocaleAuctionList" resultMap="BaseResultMap" parameterType="java.util.Map">
@@ -337,6 +356,12 @@
     </if>
     <if test="cityId != null">
       AND t1.city_id=#{cityId}
+    </if>
+    <if test="cityIds != null">
+      AND t1.city_id in
+      <foreach collection="cityIds" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
     ORDER BY t1.start_time DESC
   </select>

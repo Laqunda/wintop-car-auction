@@ -1,9 +1,12 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wintop.ms.carauction.core.annotation.AppApiVersion;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,6 +58,15 @@ public class CarLocaleAuctionApi {
             produces="application/json; charset=UTF-8")
     public ResponseEntity<ResultModel> selectAuctionTotalList(@RequestBody Map<String,Object> map) {
         map.put("clientType","app");
+        Object version = map.get("version");
+        if ("2.0".equals(version + "")) {
+            ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                    RequestEntity
+                            .post(URI.create(Constants.ROOT+"/service/carLocaleAuction/selectAuctionTotalList2"))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(map),JSONObject.class);
+            return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
+        }
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carLocaleAuction/selectAuctionTotalList"))

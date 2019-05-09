@@ -1,6 +1,9 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -13,14 +16,19 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.*;
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: 付陈林.
@@ -174,7 +182,80 @@ public class CarLocaleAuctionApi {
         }
         return result;
     }
+    /***
+     * 获取场次汇总列表
+     * @param obj
+     * @return
+     */
+    @RequestMapping(value = "/selectAuctionTotalList2",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<ListEntity<AuctionListEntity<Map<String,Object>>>> selectAuctionTotalList2(@RequestBody JSONObject obj) {
+        ServiceResult<ListEntity<AuctionListEntity<Map<String,Object>>>> result = new ServiceResult<>();
+        try {
 
+            Map<String,Object> paramMap = new HashMap<>();
+            if (StringUtils.isNotEmpty(obj.getString("regionId"))) {
+                String regionIds = obj.getString("regionId");
+                paramMap.put("regionIds",Splitter.on(",").splitToList(regionIds).stream().map(a-> Longs.tryParse(a)).collect(Collectors.toList()));
+            }
+            if ("app".equals(obj.get("clientType"))){
+                paramMap.put("all","1");
+            } else {
+                paramMap.put("all", "0");
+            }
+            List<AuctionListEntity<Map<String,Object>>> list = new ArrayList<>();
+            for(int i=0;i<7;i++){
+                AuctionListEntity<Map<String,Object>> auctionListEntity = new AuctionListEntity<>();
+                List<Map<String,Object>> dataList = new ArrayList<>();
+                if(i==0){
+                    Date[] dates = CarAutoUtils.getCurrentAfterDays(0);
+                    auctionListEntity.setTitle(String.format("今日场(%s%s)",CarAutoUtils.getMonthAndDay(dates[0]),CarAutoUtils.getDayOfWeek(dates[0])));
+
+                }else if(i==1){
+                    Date[] dates = CarAutoUtils.getCurrentAfterDays(1);
+                    auctionListEntity.setTitle(String.format("明日场(%s%s)",CarAutoUtils.getMonthAndDay(dates[0]),CarAutoUtils.getDayOfWeek(dates[0])));
+                    paramMap.put("beginTime",dates[0]);
+                    paramMap.put("endTime",dates[1]);
+                }else if(i>=2){
+                    Date[] dates = CarAutoUtils.getCurrentAfterDays(1);
+                    auctionListEntity.setTitle(String.format("%s(%s)",CarAutoUtils.getMonthAndDay(dates[0]),CarAutoUtils.getDayOfWeek(dates[0])));
+                    paramMap.put("beginTime",dates[0]);
+                    paramMap.put("endTime",dates[1]);
+                }
+                List<CarLocaleAuction> carAuctions =  carLocaleAuctionService.selectAuctionListForApp(paramMap).getResult();
+                auctionListEntity.setDesc("共"+carAuctions.size()+"场");
+                for(CarLocaleAuction carAuction:carAuctions){
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("id",carAuction.getId());
+                    map.put("title",carAuction.getTitle());
+                    map.put("address",carAuction.getAddress());
+                    map.put("startTime",carAuction.getStartTime());
+                    map.put("carNum",carAuction.getCarNum());
+                    map.put("gpsLongitude",carAuction.getGpsLongitude());
+                    map.put("gpsLatitude",carAuction.getGpsLatitude());
+                    map.put("poster",carAuction.getPoster());
+                    map.put("cityName", carAuction.getCityName());
+                    map.put("status", carAuction.getStatus());
+                    dataList.add(map);
+                }
+                auctionListEntity.setDataList(dataList);
+                auctionListEntity.setCount(dataList.size());
+                list.add(auctionListEntity);
+            }
+            ListEntity<AuctionListEntity<Map<String,Object>>> listEntity = new ListEntity<>();
+            listEntity.setList(list);
+            listEntity.setCount(list.size());
+            result.setResult(listEntity);
+            result.setSuccess("0","成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("获取场次汇总列表失败",e);
+            result.setError("-1","异常");
+        }
+        return result;
+    }
     /***
      * 获取场次车辆列表
      * @param obj

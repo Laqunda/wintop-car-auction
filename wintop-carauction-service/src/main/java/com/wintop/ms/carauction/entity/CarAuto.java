@@ -120,6 +120,11 @@ public class CarAuto implements Serializable {
     //***区域ID
     private Long regionId;
 
+    // 代办费
+    private BigDecimal agentPrice;
+
+    // 销售状态 0拍卖,1零售
+    private String saleFlag;
     /**
      * VO字段
      */
@@ -1082,5 +1087,21 @@ public class CarAuto implements Serializable {
 
     public void setTransferFlag(String transferFlag) {
         this.transferFlag = transferFlag;
+    }
+
+    public BigDecimal getAgentPrice() {
+        return agentPrice;
+    }
+
+    public void setAgentPrice(BigDecimal agentPrice) {
+        this.agentPrice = agentPrice;
+    }
+
+    public String getSaleFlag() {
+        return saleFlag;
+    }
+
+    public void setSaleFlag(String saleFlag) {
+        this.saleFlag = saleFlag;
     }
 }

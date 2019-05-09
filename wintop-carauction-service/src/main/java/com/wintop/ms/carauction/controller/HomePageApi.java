@@ -1,6 +1,8 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Splitter;
+import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarLocaleAuction;
 import com.wintop.ms.carauction.service.ICarAutoService;
@@ -17,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by 12991 on 2018/4/4.
@@ -55,6 +58,9 @@ public class HomePageApi {
             Map<String,Object> map = new HashMap<>();
             param.put("curDateType","month");
            // param.put("cityId",obj.getLong("cityId"));
+            if (obj.getString("cityIds") != null) {
+                param.put("cityIds", Splitter.on(",").splitToList(obj.getString("cityIds")).stream().map(a -> Longs.tryParse(a)).collect(Collectors.toList()));
+            }
             //竞拍场次
             Integer auctionCount =  iCarLocaleAuctionService.queryAuctionCount(param).getResult();
             //新上车辆
