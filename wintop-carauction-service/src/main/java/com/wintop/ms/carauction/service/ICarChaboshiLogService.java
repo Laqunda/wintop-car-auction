@@ -1,8 +1,11 @@
 package com.wintop.ms.carauction.service;
 
+import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarChaboshiLog;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 查博士日志 服务层
@@ -53,4 +56,10 @@ public interface ICarChaboshiLogService
 	public int deleteCarChaboshiLogByIds(String ids);
 
 	int selectCount(CarChaboshiLog carChaboshiLog);
+
+    ServiceResult<Map<String, Object>> chaboshi(Long userId,String userName, String edition, Long logId, String vin);
+
+	ServiceResult<Map<String, Object>> chaboshiStore(Long userId, String userName, Long storeId, String edition, BigDecimal payment, String vin);
+
+	ServiceResult<Map<String, Object>> chaboshiOrder(CarChaboshiLog log,Long userId, String userName);
 }

@@ -70,7 +70,7 @@ public class CarAssess extends BaseEntity
 	/** 编辑时间 */
 	private Date editTime;
 	/** 车辆编码 */
-	private Long carAutoNo;
+	private Long autoId;
 
 	private CarAssessOrder order;
 
@@ -326,14 +326,13 @@ public class CarAssess extends BaseEntity
 	{
 		return editTime;
 	}
-	public void setCarAutoNo(Long carAutoNo) 
-	{
-		this.carAutoNo = carAutoNo;
+
+	public Long getAutoId() {
+		return autoId;
 	}
 
-	public Long getCarAutoNo() 
-	{
-		return carAutoNo;
+	public void setAutoId(Long autoId) {
+		this.autoId = autoId;
 	}
 
 	public CarAssessOrder getOrder() {

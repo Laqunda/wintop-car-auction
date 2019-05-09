@@ -43,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="userName != null  and userName != '' "> and user_name = #{userName}</if>
              <if test="storeId != null  and storeId != '' "> and store_id = #{storeId}</if>
          </where>
-        order by createTime desc
+        order by create_time desc
     </select>
 
 

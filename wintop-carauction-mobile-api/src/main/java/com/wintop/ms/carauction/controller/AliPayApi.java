@@ -187,6 +187,9 @@ public class AliPayApi {
                 response.getBody().getJSONObject("result").getBigDecimal("payment");
             } else if ("2".equals(map.get("edition"))) {
                 response.getBody().getJSONObject("result").getBigDecimal("paymentComposite");
+            } else {
+                resultModel = ResultModel.error(ResultStatus.PARAMETERS_ERROR);
+                return new ResponseEntity<>(resultModel, HttpStatus.OK);
             }
 
             //TODO count 金额校验
@@ -202,9 +205,9 @@ public class AliPayApi {
 //            alipayRequestModel.setTotalAmount("0.01");//付款金额
             //3、将支付对象放入redis，用于通知回调时 取出 做对应业务处理
             JSONObject jo = JSONObject.parseObject(JSONObject.toJSONString(alipayRequestModel));
-            jo.put("edition",map.get("edition"));
-            jo.put("vin",map.get("vin"));
-            jo.put("userName",user.getUserName());
+            jo.put("edition", map.get("edition"));
+            jo.put("vin", map.get("vin"));
+            jo.put("userName", user.getUserName());
             redisManager.setKeyValue(alipayRequestModel.getOutTradeNo(), jo.toJSONString(), Constants.PAY_EXPIRES_HOUR, TimeUnit.HOURS);
             //4、初始化封装好的支付宝sdk---调用创建订单方法
             AlipayConfig alipayConfig = new AlipayConfig();
@@ -254,11 +257,11 @@ public class AliPayApi {
                 jsonObject.put("userId", requestModel.getString("passbackParams"));//支付人-通过附加字段回传
                 jsonObject.put("passbackParams", requestModel.getString("passbackParams"));//附加字段
 
-                jsonObject.put("edition",requestModel.getString("edition"));
-                jsonObject.put("vin",requestModel.getString("vin"));
-                jsonObject.put("userName",requestModel.getString("userName"));
-                jsonObject.put("edition",requestModel.getString("edition"));
-                jsonObject.put("userType","1");//个人
+                jsonObject.put("edition", requestModel.getString("edition"));
+                jsonObject.put("vin", requestModel.getString("vin"));
+                jsonObject.put("userName", requestModel.getString("userName"));
+                jsonObject.put("edition", requestModel.getString("edition"));
+                jsonObject.put("userType", "1");//个人
 
                 ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                         RequestEntity

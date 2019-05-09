@@ -3,9 +3,11 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AppApiVersion;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
+import com.wintop.ms.carauction.core.annotation.CurrentUser;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
+import com.wintop.ms.carauction.core.entity.CarManagerUser;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import io.swagger.annotations.ApiOperation;
@@ -145,8 +147,10 @@ public class CarChaboshiLogApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResultModel vinSearch(@CurrentUserId Long managerId,@RequestBody Map<String,Object> map) {
-        map.put("userId",managerId);
+    public ResultModel vinSearch(@CurrentUser CarManagerUser managerUser, @RequestBody Map<String,Object> map) {
+        map.put("userId",managerUser.getId());
+        map.put("userName",managerUser.getUserName());
+//        map.put("storeId",managerUser.getDepartmentId());
         map.put("userType","2");//店铺人员
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity

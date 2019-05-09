@@ -34,7 +34,7 @@
         <result property="autoSeries" column="auto_series"/>
         <result property="autoSeriesCn" column="auto_series_cn"/>
         <result property="editTime" column="edit_time"/>
-        <result property="carAutoNo" column="car_auto_no"/>
+        <result property="autoId" column="auto_id"/>
         <association property="order" javaType="com.wintop.ms.carauction.entity.CarAssessOrder">
             <id property="id" column="order_id"/>
             <result property="assessId" column="assess_id"/>
@@ -72,7 +72,7 @@
 
 
     <sql id="selectCarAssessVo">
-        select id, vin, mileage, name, begin_register_date, color, engine_capacity, function, engine_number, manufacture_date, year_insurance, plate_num, transfer_number, auto_nature, create_time, create_user, status, car_photo, certificate_photo, other_photo, color_cn, region_id, auto_brand, auto_brand_cn, auto_style, auto_style_cn, auto_series, auto_series_cn, edit_time, car_auto_no from car_assess
+        select id, vin, mileage, name, begin_register_date, color, engine_capacity, function, engine_number, manufacture_date, year_insurance, plate_num, transfer_number, auto_nature, create_time, create_user, status, car_photo, certificate_photo, other_photo, color_cn, region_id, auto_brand, auto_brand_cn, auto_style, auto_style_cn, auto_series, auto_series_cn, edit_time, auto_id from car_assess
     </sql>
 
     <select id="selectCarAssessList" parameterType="com.wintop.ms.carauction.entity.CarAssess"
@@ -107,7 +107,7 @@
         auto_series,
         auto_series_cn,
         edit_time,
-        car_auto_no,
+        auto_id,
         o.id AS order_id,
         o.price,
         o.status as order_status,
@@ -148,7 +148,7 @@
             <if test="autoSeries != null  and autoSeries != '' ">and auto_series = #{autoSeries}</if>
             <if test="autoSeriesCn != null  and autoSeriesCn != '' ">and auto_series_cn = #{autoSeriesCn}</if>
             <if test="editTime != null ">and edit_time = #{editTime}</if>
-            <if test="carAutoNo != null ">and car_auto_no = #{carAutoNo}</if>
+            <if test="autoId != null ">and auto_id = #{autoId}</if>
         </where>
 
         order by a.id desc
@@ -192,7 +192,7 @@
             <if test="autoSeries != null  and autoSeries != '' ">and auto_series = #{autoSeries}</if>
             <if test="autoSeriesCn != null  and autoSeriesCn != '' ">and auto_series_cn = #{autoSeriesCn}</if>
             <if test="editTime != null ">and edit_time = #{editTime}</if>
-            <if test="carAutoNo != null ">and car_auto_no = #{carAutoNo}</if>
+            <if test="autoId != null ">and auto_id = #{autoId}</if>
         </where>
     </select>
 
@@ -227,7 +227,7 @@
             auto_series,
             auto_series_cn,
             edit_time,
-            car_auto_no,
+            auto_id,
             o.id AS order_id,
             o.price,
             o.STATUS AS order_status,

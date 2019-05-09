@@ -61,8 +61,19 @@ public class AliPayApi {
     public ResponseEntity<ResultModel> payChaBoShi(@CurrentUser CarManagerUser user, @RequestBody Map<String, Object> map) {
         logger.info("创建支付宝订单--店铺查博士充值");
         try {
-            //TODO count 金额校验
-            //2、封装支付所需对象
+
+            try {
+                if (map.get("count") == null || Double.parseDouble(map.get("count") + "") <= 0) {
+                    resultModel = ResultModel.error(ResultStatus.UNSUCCESS);
+                    return new ResponseEntity<>(resultModel, HttpStatus.OK);
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                resultModel = ResultModel.error(ResultStatus.UNSUCCESS);
+                return new ResponseEntity<>(resultModel, HttpStatus.OK);
+            }
+
+            /*1、封装支付所需对象*/
             AlipayRequestModel alipayRequestModel = new AlipayRequestModel();
             alipayRequestModel.setBody("充值");//描述
             alipayRequestModel.setPassbackParams(user.getId() + "");//附加字段
@@ -70,14 +81,14 @@ public class AliPayApi {
             alipayRequestModel.setPayNotifyUrl(Constants.ALIPAY_NOTIFY_URL);//回调通知地址
             alipayRequestModel.setSubject("充值");//标题
             alipayRequestModel.setTimeoutExpress("30m");//支付有效期30分钟
-            alipayRequestModel.setTotalAmount(""+map.get("count"));//付款金额
+            alipayRequestModel.setTotalAmount("" + map.get("count"));//付款金额
 //            alipayRequestModel.setTotalAmount("0.01");//付款金额
-            //3、将支付对象放入redis，用于通知回调时 取出 做对应业务处理
+            /*2、将支付对象放入redis，用于通知回调时 取出 做对应业务处理*/
             JSONObject jo = JSONObject.parseObject(JSONObject.toJSONString(alipayRequestModel));
-            jo.put("userName",user.getUserName());
-            jo.put("storeId",user.getDepartmentId());
+            jo.put("userName", user.getUserName());
+            jo.put("storeId", user.getDepartmentId());
             redisManager.setKeyValue(alipayRequestModel.getOutTradeNo(), jo.toJSONString(), Constants.PAY_EXPIRES_HOUR, TimeUnit.HOURS);
-            //4、初始化封装好的支付宝sdk---调用创建订单方法
+            /*3、初始化封装好的支付宝sdk---调用创建订单方法*/
             AlipayConfig alipayConfig = new AlipayConfig();
             String orderString = AlipayUtil.createPayOrder(alipayConfig, alipayRequestModel);
             if (orderString != null && orderString != "") {
@@ -116,9 +127,9 @@ public class AliPayApi {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("money", alipayResponseModel.getAmount());//支付金额
                 jsonObject.put("userId", requestModel.getString("passbackParams"));//支付人-通过附加字段回传
-                jsonObject.put("userName",requestModel.getString("userName"));
-                jsonObject.put("storeId",requestModel.getString("storeId"));
-                jsonObject.put("userType","2");//卖家
+                jsonObject.put("userName", requestModel.getString("userName"));
+                jsonObject.put("storeId", requestModel.getString("storeId"));
+                jsonObject.put("userType", "2");//卖家
 
                 ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                         RequestEntity
