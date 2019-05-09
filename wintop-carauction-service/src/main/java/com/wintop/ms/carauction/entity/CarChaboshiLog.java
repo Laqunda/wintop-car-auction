@@ -43,6 +43,9 @@ public class CarChaboshiLog extends BaseEntity
 	/** 店铺id */
 	private Long storeId;
 
+	/*支付流水id*/
+	private Long payLogId;
+
 	public void setId(Long id) 
 	{
 		this.id = id;
@@ -158,6 +161,14 @@ public class CarChaboshiLog extends BaseEntity
 
 	public void setStoreId(Long storeId) {
 		this.storeId = storeId;
+	}
+
+	public Long getPayLogId() {
+		return payLogId;
+	}
+
+	public void setPayLogId(Long payLogId) {
+		this.payLogId = payLogId;
 	}
 
 	public String toString() {

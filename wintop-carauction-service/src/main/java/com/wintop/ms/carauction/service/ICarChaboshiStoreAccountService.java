@@ -53,4 +53,6 @@ public interface ICarChaboshiStoreAccountService
 	public int deleteCarChaboshiStoreAccountByIds(String ids);
 
 	int selectCount(CarChaboshiStoreAccount bean);
+
+    CarChaboshiStoreAccount selectCarChaboshiStoreAccount(CarChaboshiStoreAccount tmp);
 }

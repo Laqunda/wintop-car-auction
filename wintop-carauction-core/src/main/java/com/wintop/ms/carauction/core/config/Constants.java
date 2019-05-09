@@ -66,6 +66,9 @@ public class Constants {
 
     public static final String ROOT = "http://127.0.0.1:8185" ;
 
+    /*查博士回调地址*/
+    public static final String CALLBACK_CHABOSHI = ROOT+"/service/carChaboshiLog/cbsCallback" ;
+
     /**在线签约微服务地址*/
     public static final String COMMON_MODULE_ROOT = "http://test.yuntongauto.com" ;
 

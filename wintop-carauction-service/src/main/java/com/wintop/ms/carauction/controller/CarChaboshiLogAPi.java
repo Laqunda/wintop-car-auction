@@ -7,6 +7,7 @@ import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.model.CarFinancePayLogModel;
 import com.wintop.ms.carauction.service.*;
+import com.wintop.ms.carauction.util.AlipayUtil;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import com.wintop.ms.carauction.util.utils.RandCodeUtil;
@@ -56,6 +57,7 @@ public class CarChaboshiLogAPi {
 
     @Autowired
     private ICarChaboshiStoreAccountService accountService;
+
 
     /**
      * 查询查博士日志列表
@@ -215,7 +217,7 @@ public class CarChaboshiLogAPi {
             if ("1".equals(searchType)) {
                 /*历史订单查询*/
                 CarChaboshiLog log = carChaboshiLogService.selectCarChaboshiLogById(obj.getLong("logId"));
-                result = searChForOrder(log,userId, userName);
+                result = searChForOrder(log, userId, userName);
             } else if ("2".equals(searchType)) {
                 /*新建查询订单 此处只允许店铺用户*/
                 if ("2".equals(userType)) {
@@ -325,8 +327,8 @@ public class CarChaboshiLogAPi {
      * @param log
      * @return
      */
-    private ServiceResult<Map<String, Object>> searChForOrder(CarChaboshiLog log,Long userId, String userName) {
-        return carChaboshiLogService.chaboshiOrder(log,userId, userName);
+    private ServiceResult<Map<String, Object>> searChForOrder(CarChaboshiLog log, Long userId, String userName) {
+        return carChaboshiLogService.chaboshiOrder(log, userId, userName);
     }
 
     /**
@@ -334,7 +336,6 @@ public class CarChaboshiLogAPi {
      *
      * @param obj
      * @return
-     * @Autor 付陈林
      * @Time 2018-3-13
      */
     @PostMapping(value = "payChaboshiAmountCallback")
@@ -347,7 +348,10 @@ public class CarChaboshiLogAPi {
         try {
             //写入支付日志表
             CarFinancePayLog payLog = new CarFinancePayLog();
-            payLog.setId(idWorker.nextId());
+
+            Long payLogId = idWorker.nextId();
+            payLog.setId(payLogId);
+
             payLog.setCreatePersonType(obj.getString("userType"));
             payLog.setCreatePerson(obj.getLong("userId"));
             payLog.setCreateTime(new Date());
@@ -370,6 +374,7 @@ public class CarChaboshiLogAPi {
                 CarChaboshiLog log = new CarChaboshiLog();
 
                 log.setId(logId);
+                log.setPayLogId(payLogId);
                 log.setUserId(obj.getLong("userId"));
                 log.setEdition(obj.getString("edition"));
                 log.setUserType(obj.getString("userType"));
@@ -417,16 +422,17 @@ public class CarChaboshiLogAPi {
             //获取最低顶层的一条记录--获取余额
             CarChaboshiStoreAccount tmp = new CarChaboshiStoreAccount();
             tmp.setStoreId(obj.getLong("storeId"));
-            List<CarChaboshiStoreAccount> accounts = accountService.selectCarChaboshiStoreAccountList(tmp);
+            CarChaboshiStoreAccount account_old = accountService.selectCarChaboshiStoreAccount(tmp);
 
             BigDecimal b = new BigDecimal(0);
-            if (accounts != null && accounts.size() > 0) {
-                b = accounts.get(0).getBalance() == null ? new BigDecimal(0) : accounts.get(0).getBalance();
+            if (account_old != null) {
+                b = account_old.getBalance() == null ? new BigDecimal(0) : account_old.getBalance();
             }
             b = b.add(obj.getBigDecimal("money"));
 
             //写入查博士资金流水表
             CarChaboshiStoreAccount account = new CarChaboshiStoreAccount();
+            account.setId(idWorker.nextId());
             account.setStoreId(obj.getLong("storeId"));
             account.setType("1");//进出帐类型：1进账，2出账
             account.setBalance(b);
@@ -447,6 +453,100 @@ public class CarChaboshiLogAPi {
             return result;
         }
 
+    }
+
+
+    /**
+     * 查博生成报告回掉
+     *
+     * @return
+     * @Time 2018-3-13
+     */
+    @PostMapping(value = "cbsCallback")
+    @ApiOperation(value = "查博生成报告回掉，回调保存成功")
+    @ResponseBody
+    public Map chaboshiCallback(@RequestParam String result, @RequestParam String message, @RequestParam String orderId) {
+        logger.info("查博生成报告回掉，回调成功");
+        Map resultMap = new HashMap();
+        resultMap.put("code", "0");
+        resultMap.put("message", "success");
+        try {
+
+            /*根据orderId获取log数据 */
+            CarChaboshiLog log = new CarChaboshiLog();
+            log.setResponseResult("3");
+            log.setSourceType("1");
+            log.setOrderId(orderId);
+            log = carChaboshiLogService.selectCarChaboshiLog(log);
+
+            if ("1".equals(result)) {
+                /*并更新状态*/
+                if (log != null) {
+                    log.setResponseResult("1");
+                    log.setOrderMsg(message);
+                    carChaboshiLogService.updateCarChaboshiLog(log);
+                }
+            } else {
+
+                if (log != null) {
+                    log.setResponseResult("2");//失败
+                    log.setOrderMsg(message);
+                    carChaboshiLogService.updateCarChaboshiLog(log);
+
+                    /*退款*/
+                    if ("1".equals(log.getUserType())) {
+                        /*退款到个人支付宝*/
+                        CarFinancePayLog payLog = financePayLogModel.selectById(log.getPayLogId());
+                        Map map = AlipayUtil.refundOrder(payLog);
+                        if ("0".equals(map.get("code"))) {
+                            /*退款成功*/
+                            int c = carChaboshiLogService.savePayLog(payLog);
+                        } else {
+                            /*退款失败*/
+                        }
+                        //TODO 买家退款失败 --  状态提醒
+                    } else if ("2".equals(log.getUserType())) {
+                        /*退款到店铺资金流水表*/
+                        saveStoreAccountLog(log);
+                    }
+
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultMap;
+
+    }
+
+    /**
+     * 店铺资金流水表
+     *
+     * @param log
+     */
+    private int saveStoreAccountLog(CarChaboshiLog log) {
+        //获取最低顶层的一条记录--获取余额
+        CarChaboshiStoreAccount tmp = new CarChaboshiStoreAccount();
+        tmp.setStoreId(log.getStoreId());
+        CarChaboshiStoreAccount account_old = accountService.selectCarChaboshiStoreAccount(tmp);
+        BigDecimal balance = new BigDecimal(0);
+        if (account_old != null) {
+            balance = account_old.getBalance() == null ? new BigDecimal(0) : account_old.getBalance();
+        }
+
+        CarChaboshiStoreAccount c = new CarChaboshiStoreAccount();
+        c.setId(idWorker.nextId());
+        c.setPayment(log.getMoney());
+        c.setBalance(balance.add(log.getMoney()));
+        c.setUserName(log.getUserName());
+        c.setUserId(log.getUserId());
+        c.setStoreId(log.getStoreId());
+        c.setCreateTime(new Date());
+        c.setServiceType("3");//退款
+        c.setType("1");//入账
+        /*插入流水记录*/
+        return accountService.insertCarChaboshiStoreAccount(c);
     }
 
 

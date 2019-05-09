@@ -25,7 +25,7 @@ public class CarChaboshiStoreAccount extends BaseEntity
 	private BigDecimal balance;
 	/** 支付金额 */
 	private BigDecimal payment;
-	/** 业务类型：1充值，2查询报告 */
+	/** 业务类型：1充值，2查询报告 ,3退款 */
 	private String serviceType;
 	/**
 	 * 创建人ID

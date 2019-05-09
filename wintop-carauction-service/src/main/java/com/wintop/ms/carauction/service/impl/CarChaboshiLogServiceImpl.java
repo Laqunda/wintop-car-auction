@@ -5,9 +5,12 @@ import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarChaboshiLog;
 import com.wintop.ms.carauction.entity.CarChaboshiStoreAccount;
+import com.wintop.ms.carauction.entity.CarFinancePayLog;
 import com.wintop.ms.carauction.model.CarChaboshiLogModel;
 import com.wintop.ms.carauction.model.CarChaboshiStoreAccountModel;
+import com.wintop.ms.carauction.model.CarFinancePayLogModel;
 import com.wintop.ms.carauction.service.ICarChaboshiLogService;
+import com.wintop.ms.carauction.util.AlipayUtil;
 import com.wintop.ms.carauction.util.ChaboshiUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +34,11 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     private CarChaboshiLogModel model;
     @Autowired
     private CarChaboshiStoreAccountModel storeAccountModel;
+    @Autowired
+    private CarFinancePayLogModel financePayLogModel;
 
     private IdWorker idWorker = new IdWorker(10);
+
 
     /**
      * 查询查博士日志信息
@@ -95,6 +101,33 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     }
 
     /**
+     * 根据查博士订单id获取查询日志
+     *
+     * @param log
+     * @return
+     */
+    @Override
+    public CarChaboshiLog selectCarChaboshiLog(CarChaboshiLog log) {
+        List<CarChaboshiLog> logs = selectCarChaboshiLogList(log);
+        if (logs != null && logs.size() > 0) {
+            return logs.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 个人资金流水
+     *
+     * @param payLog
+     */
+    public int savePayLog(CarFinancePayLog payLog) {
+        payLog.setId(idWorker.nextId());
+        payLog.setStatus("3");//退款
+        payLog.setCreateTime(new Date());
+        return financePayLogModel.insert(payLog);
+    }
+
+    /**
      * 买家查询
      *
      * @param userId
@@ -138,7 +171,17 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
         /*更新日志*/
         int code = updateCarChaboshiLog(log);
         if (!isSuccess) {
-            //TODO 退款
+            /*退款到个人支付宝*/
+            CarFinancePayLog payLog = financePayLogModel.selectById(log.getPayLogId());
+            Map map = AlipayUtil.refundOrder(payLog);
+            if ("0".equals(map.get("code"))) {
+                /*退款成功*/
+                int c = savePayLog(payLog);
+            } else {
+
+                /*退款失败*/
+            }
+            //TODO 买家退款失败 --  状态提醒
         }
         return result;
     }

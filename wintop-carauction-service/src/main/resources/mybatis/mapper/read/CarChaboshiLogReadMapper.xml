@@ -19,10 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="orderMsg"    column="order_msg"    />
         <result property="userName"    column="user_name"    />
         <result property="storeId"    column="store_id"    />
+        <result property="payLogId"    column="paylog_id"    />
     </resultMap>
 
 	<sql id="selectCarChaboshiLogVo">
-        select id,store_id, create_time, user_type, user_id, vin, response_msg, source_type, response_result, money, edition, order_id, order_msg, user_name from car_chaboshi_log
+        select id,paylog_id,store_id, create_time, user_type, user_id, vin, response_msg, source_type, response_result, money, edition, order_id, order_msg, user_name from car_chaboshi_log
     </sql>
 
     <select id="selectCarChaboshiLogList" parameterType="com.wintop.ms.carauction.entity.CarChaboshiLog" resultMap="CarChaboshiLogResult">
@@ -42,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="orderMsg != null  and orderMsg != '' "> and order_msg = #{orderMsg}</if>
              <if test="userName != null  and userName != '' "> and user_name = #{userName}</if>
              <if test="storeId != null  and storeId != '' "> and store_id = #{storeId}</if>
+             <if test="payLogId != null  and payLogId != '' "> and paylog_id = #{payLogId}</if>
          </where>
         order by create_time desc
     </select>
@@ -64,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="orderMsg != null  and orderMsg != '' "> and order_msg = #{orderMsg}</if>
              <if test="userName != null  and userName != '' "> and user_name = #{userName}</if>
             <if test="storeId != null  and storeId != '' "> and store_id = #{storeId}</if>
+            <if test="payLogId != null  and payLogId != '' "> and paylog_id = #{payLogId}</if>
 
         </where>
     </select>

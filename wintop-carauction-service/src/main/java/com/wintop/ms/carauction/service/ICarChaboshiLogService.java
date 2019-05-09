@@ -2,6 +2,7 @@ package com.wintop.ms.carauction.service;
 
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarChaboshiLog;
+import com.wintop.ms.carauction.entity.CarFinancePayLog;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -62,4 +63,8 @@ public interface ICarChaboshiLogService
 	ServiceResult<Map<String, Object>> chaboshiStore(Long userId, String userName, Long storeId, String edition, BigDecimal payment, String vin);
 
 	ServiceResult<Map<String, Object>> chaboshiOrder(CarChaboshiLog log,Long userId, String userName);
+
+	CarChaboshiLog selectCarChaboshiLog(CarChaboshiLog log);
+
+	int savePayLog(CarFinancePayLog payLog);
 }

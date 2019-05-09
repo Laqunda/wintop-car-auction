@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.chaboshi.builder.CBSBuilder;
 import com.chaboshi.util.CBS;
 import com.wintop.ms.carauction.core.config.ChaBoShiConfig;
+import com.wintop.ms.carauction.core.config.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChaboshiUtils {
+
     /**
      * 购买报告接口
      *
@@ -17,9 +19,8 @@ public class ChaboshiUtils {
     public static JSONObject report(String vin) {
         String engino = "";//发动机号
         String licenseplate = "";//车牌号
-        String callbackurl = null;
 
-        String buyReport = CBS.getInstance(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret).getBuyReport(vin, engino, licenseplate, callbackurl);
+        String buyReport = CBS.getInstance(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret).getBuyReport(vin, engino, licenseplate, Constants.CALLBACK_CHABOSHI);
 
         JSONObject o = JSONObject.parseObject(buyReport);
 
@@ -89,7 +90,7 @@ public class ChaboshiUtils {
         CBSBuilder cbs = CBSBuilder.newCBSBuilder(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret, false);
         HashMap param = new HashMap();
         param.put("vin", vin);
-        param.put("callbackurl", null);
+        param.put("callbackurl", Constants.CALLBACK_CHABOSHI);
         String str = cbs.sendPost("/new_report/buy", param);
         return JSONObject.parseObject(str);
     }

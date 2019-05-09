@@ -20,6 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="orderMsg != null  and orderMsg != ''  ">order_msg,</if>
 			<if test="userName != null  and userName != ''  ">user_name,</if>
 			<if test="storeId != null  and storeId != ''  ">store_id,</if>
+			<if test="payLogId != null  and payLogId != ''  ">paylog_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
@@ -36,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="orderMsg != null  and orderMsg != ''  ">#{orderMsg},</if>
 			<if test="userName != null  and userName != ''  ">#{userName},</if>
             <if test="storeId != null  and storeId != ''  ">#{storeId},</if>
+            <if test="payLogId != null  and payLogId != ''  ">#{payLogId},</if>
          </trim>
     </insert>
 	 
@@ -54,7 +56,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="orderId != null  and orderId != ''  ">order_id = #{orderId},</if>
             <if test="orderMsg != null  and orderMsg != ''  ">order_msg = #{orderMsg},</if>
             <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
-            <if test="storeId != null  and storeId != ''  ">store_id=#{storeId},</if>
+            <if test="storeId != null  and storeId != ''  ">store_id = #{storeId},</if>
+            <if test="payLogId != null  and payLogId != ''  ">paylog_id = #{payLogId},</if>
         </trim>
         where id = #{id}
     </update>
