@@ -1,6 +1,8 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Splitter;
+import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -20,7 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 车辆信息接口类
@@ -131,6 +135,8 @@ public class CarAutoApi {
             map.put("maxPriceUserId",carAuto.getMaxPriceUserId());
             map.put("serviceTel",null);
             map.put("transferFlag",carAuto.getTransferFlag());
+            map.put("agentFee", carAuto.getAgentFee());
+            map.put("title", carAuto.getTitle());
             //判断当前车辆 状态和 登录人，获取登陆人应该显示的状态
             //1、未登录 + 待开拍 = 即将开始
             //2、未登录 + 正在竞拍 = 正在竞拍
@@ -323,6 +329,10 @@ public class CarAutoApi {
             String status = obj.getString("status");
             String carName = obj.getString("carName");
             String cityId = obj.getString("cityId");
+            if (StringUtils.isNotEmpty(obj.getString("cityIds"))) {
+                String cityIds = obj.getString("cityIds");
+                paramMap.put("regionIds", Splitter.on(",").splitToList(cityIds).stream().map(a -> Longs.tryParse(a)).collect(Collectors.toList()));
+            }
             paramMap.put("brandId",brandId);
             paramMap.put("grade",grade);
             paramMap.put("status",status);
@@ -357,6 +367,7 @@ public class CarAutoApi {
                 map.put("beginRegisterDate",carAuto.getBeginRegisterDate());
                 map.put("status",carAuto.getStatus());
                 map.put("auctionId",carAuto.getAutoAuctionId());
+                map.put("transferFlag",carAuto.getTransferFlag());
                 list.add(map);
             }
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();

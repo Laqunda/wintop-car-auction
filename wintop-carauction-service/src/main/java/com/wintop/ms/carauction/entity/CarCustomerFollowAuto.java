@@ -88,7 +88,7 @@ public class CarCustomerFollowAuto implements Serializable {
     private String auctionCode;
 
     private Long autoAuctionId;
-
+    private String transferFlag;
     public String getVehicleAttributionCityCn() {
         return vehicleAttributionCityCn;
     }
@@ -338,5 +338,13 @@ public class CarCustomerFollowAuto implements Serializable {
 
     public void setAutoAuctionId(Long autoAuctionId) {
         this.autoAuctionId = autoAuctionId;
+    }
+
+    public String getTransferFlag() {
+        return transferFlag;
+    }
+
+    public void setTransferFlag(String transferFlag) {
+        this.transferFlag = transferFlag;
     }
 }

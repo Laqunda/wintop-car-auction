@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarEvaluateDataWriteDao">
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarEvaluateData">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="obj_id" jdbcType="BIGINT" property="objId" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="type" jdbcType="BIGINT" property="type" />
+    <result column="star_level" jdbcType="DECIMAL" property="starLevel" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_person" jdbcType="BIGINT" property="createPerson" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
+    <result column="tags" jdbcType="VARCHAR" property="tags" />
+    <result column="tag_ids" jdbcType="VARCHAR" property="tagIds" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, obj_id, content, type, star_level, create_time, create_person, role, tags, tag_ids
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from car_evaluate_data
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from car_evaluate_data
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarEvaluateData">
+    insert into car_evaluate_data (id, obj_id, content,
+      type, star_level, create_time,
+      create_person, role, tags,
+      tag_ids)
+    values (#{id,jdbcType=BIGINT}, #{objId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR},
+      #{type,jdbcType=BIGINT}, #{starLevel,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
+      #{createPerson,jdbcType=BIGINT}, #{role,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR},
+      #{tagIds,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarEvaluateData">
+    insert into car_evaluate_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="objId != null">
+        obj_id,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="starLevel != null">
+        star_level,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createPerson != null">
+        create_person,
+      </if>
+      <if test="role != null">
+        role,
+      </if>
+      <if test="tags != null">
+        tags,
+      </if>
+      <if test="tagIds != null">
+        tag_ids,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="objId != null">
+        #{objId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=BIGINT},
+      </if>
+      <if test="starLevel != null">
+        #{starLevel,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createPerson != null">
+        #{createPerson,jdbcType=BIGINT},
+      </if>
+      <if test="role != null">
+        #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null">
+        #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="tagIds != null">
+        #{tagIds,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarEvaluateData">
+    update car_evaluate_data
+    <set>
+      <if test="objId != null">
+        obj_id = #{objId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=BIGINT},
+      </if>
+      <if test="starLevel != null">
+        star_level = #{starLevel,jdbcType=DECIMAL},
+      </if>
+      <!--<if test="createTime != null">-->
+        create_time = now(),
+      <!--</if>-->
+      <if test="createPerson != null">
+        create_person = #{createPerson,jdbcType=BIGINT},
+      </if>
+      <if test="role != null">
+        role = #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null">
+        tags = #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="tagIds != null">
+        tag_ids = #{tagIds,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarEvaluateData">
+    update car_evaluate_data
+    set obj_id = #{objId,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      type = #{type,jdbcType=BIGINT},
+      star_level = #{starLevel,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_person = #{createPerson,jdbcType=BIGINT},
+      role = #{role,jdbcType=VARCHAR},
+      tags = #{tags,jdbcType=VARCHAR},
+      tag_ids = #{tagIds,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

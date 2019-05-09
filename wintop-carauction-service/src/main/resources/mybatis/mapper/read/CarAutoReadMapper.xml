@@ -86,6 +86,8 @@
     <result column="storeLongitude" property="storeLongitude" jdbcType="VARCHAR" />
     <result column="transfer_fee" property="transferFee" jdbcType="VARCHAR" />
     <result column="transfer_flag" property="transferFlag" jdbcType="VARCHAR" />
+    <result column="agent_price" property="agentPrice" jdbcType="DECIMAL"/>
+    <result column="sale_flag" property="saleFlag" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Base_Column_List" >
     t1.id, t1.publish_user_id, t1.publish_user_name, t1.publish_user_mobile, t1.auto_info_name, t1.store_id,t1.store_name,
@@ -131,7 +133,9 @@
     t3.move_to_where,t6.transfer_fee,t6.cost_price,t6.illegal_price,t6.illegal_score,t6.illegal_who,
     (CASE WHEN t7.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow,t3.if_agent,t3.link_man_mobile,
     t9.start_time,
-    t3.transfer_flag
+    t3.transfer_flag,
+    t3.agent_price,
+    t9.title
     FROM car_auto t1
     INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
     LEFT JOIN car_auto_auction t3 on t1.auto_auction_id=t3.id
@@ -149,6 +153,28 @@
     </if>
     limit 1
   </select>
+  
+  <select id="selectCarAutoForSaleCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select count(t1.id) from car_auto t1
+    left join car_auto_auction t2 on t1.id = t2.auto_id
+    <if test='saleFalg == "1"'>
+      inner join car_order_retail t3 on t3.car_id = t1.id and t3.sales_type = '1'
+    </if>
+    <where>
+      <if test="saleFlag != null and saleFlag !=''">
+        AND t1.sale_flag = #{saleFlag}
+      </if>
+      <if test="auctionType != null and auctionType !=''">
+        AND t2.auction_type = #{auctionType}
+      </if>
+      <if test="status != null">
+        AND t1.status in
+        <foreach collection="status" item="item" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
+    </where>
+  </select>
 
   <select id="selectCarAutoAuctionList" resultMap="BaseResultMap" parameterType="java.util.Map">
     SELECT t1.id FROM car_auto t1
@@ -158,6 +184,8 @@
   <select id="selectAuctionCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
     SELECT t3.id,t3.main_photo,t3.auto_info_name,t3.car_auto_no,t3.status,
     t4.vehicle_attribution_city_cn,t4.mileage,t4.engine_capacity,t4.engine_capacity_unit,
+    t3.report_colligation_ranks,t3.report_servicing_ranks,t8.up_time as "submit_time",t8.auth_time as "auth_time",t8.auth_msg,
+    t5.auction_start_time,
     t4.environment_cn,t4.begin_register_date,t5.starting_price,t2.auction_code,
     t1.address,t1.start_time,(CASE WHEN t6.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow,
     t3.auto_auction_id
@@ -167,6 +195,8 @@
     LEFT JOIN car_auto_info_detail t4 on t3.id=t4.auto_id
     LEFT JOIN car_auto_auction t5 ON t3.auto_auction_id=t5.id
     LEFT JOIN car_customer_follow_auto t6 ON (t2.car_id=t6.auto_id AND t6.user_id=#{customerId} AND t6.status='1')
+    LEFT JOIN car_agent t7 on t7.car_id = t2.car_id
+    LEFT JOIN car_agent_log t8 on t8.agent_id = t7.id
     WHERE t2.auction_id = #{auctionId} AND t1.status != '0'
     <if test="actionStatusArr != null">
       AND t2.auction_status IN (${actionStatusArr})
@@ -250,7 +280,7 @@
     t3.auction_start_time,t3.auction_end_time,t2.environment_cn,t2.begin_register_date
     ,(CASE WHEN t4.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow
     ,(CASE WHEN t5.entrust_fee IS NOT NULL THEN '1' ELSE '2' END ) AS isEntrust
-    ,t1.auto_auction_id
+    ,t1.auto_auction_id,t3.transfer_flag
     FROM car_auto t1
     INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
     INNER JOIN car_auto_auction t3 ON t1.auto_auction_id=t3.id
@@ -272,6 +302,12 @@
     </if>
     <if test="regionId!=null and regionId!=''">
       AND t1.region_id=#{regionId}
+    </if>
+    <if test="regionIds!=null">
+      AND t1.region_id in
+      <foreach collection="regionIds" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
     <if test="grade!=null">
       AND concat(t1.report_colligation_ranks,t1.report_servicing_ranks)=#{grade}
@@ -324,6 +360,12 @@
     </if>
     <if test="regionId!=null and regionId!=''">
       AND t1.region_id=#{regionId}
+    </if>
+    <if test="regionIds!=null">
+      AND t1.region_id in 
+      <foreach collection="regionIds" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
     <if test="grade!=null">
       AND concat(t1.report_colligation_ranks,t1.report_servicing_ranks)=#{grade}
@@ -700,6 +742,12 @@
     AND date_format(NOW(), '%Y-%m-%d') = date_format(t1.publish_time, '%Y-%m-%d')
     <if test="cityId !=null">
       AND t1.region_id = #{cityId}
+    </if>
+    <if test="cityIds !=null">
+      AND t1.region_id in
+      <foreach collection="cityIds" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
   </select>
 

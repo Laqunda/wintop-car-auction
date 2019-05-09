@@ -149,6 +149,10 @@ public class CarLocaleAuction implements Serializable {
     private BigDecimal transactionFee;
     private String publishUserName;
     private Date auctionEndTime;
+    /**
+     * 城市名称
+     * */
+    private String cityName;
 
     public BigDecimal getTransactionFee() {
         return transactionFee;
@@ -512,5 +516,13 @@ public class CarLocaleAuction implements Serializable {
 
     public void setStationRealId(String stationRealId) {
         this.stationRealId = stationRealId;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 }
