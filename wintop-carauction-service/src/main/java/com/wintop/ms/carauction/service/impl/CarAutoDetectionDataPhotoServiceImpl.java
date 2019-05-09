@@ -62,6 +62,26 @@ public class CarAutoDetectionDataPhotoServiceImpl implements ICarAutoDetectionDa
         }
     }
 
+    /**
+     * 根据车辆id 查询图片
+     * @param carId
+     * @return
+     */
+    @Override
+    public ServiceResult<List<CarAutoDetectionDataPhoto>> selectByAutoId(Long carId) {
+        ServiceResult<List<CarAutoDetectionDataPhoto>> result = new ServiceResult<>();
+        try {
+            List<CarAutoDetectionDataPhoto> list = this.carAutoDetectionDataPhotoModel.selectByAutoId(carId);
+            result.setResult(list);
+            result.setSuccess("0", "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setError("-1","异常");
+        } finally {
+            return result;
+        }
+    }
+
     @Transactional
     public ServiceResult<Integer> deleteByPrimaryKey(Long id) {
         ServiceResult<Integer> result = new ServiceResult<>();

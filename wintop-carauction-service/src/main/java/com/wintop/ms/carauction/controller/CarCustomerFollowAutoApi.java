@@ -159,6 +159,7 @@ public class CarCustomerFollowAutoApi {
                 map.put("beginRegisterDate",carFollow.getBeginRegisterDate());
                 map.put("isFollow","1");
                 map.put("auctionId",carFollow.getAutoAuctionId());
+                map.put("transferFlag", carFollow.getTransferFlag());
                 list.add(map);
             }
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();

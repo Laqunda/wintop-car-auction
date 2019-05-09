@@ -93,4 +93,9 @@ public interface ICarAutoReadDao {
      * 查询当日上新车辆数
      */
     Integer selectDayCarCount(Map<String,Object> map);
+
+    /**
+     * 库存管理--（零售[已售]、线上拍[车辆库存、审批状态、竞价状态、竞价结果]、现场拍[车辆库存、审批状态、竞价状态、竞价结果]）
+     */
+    Integer selectCarAutoForSaleCount(Map<String, Object> map);
 }

@@ -1,6 +1,8 @@
 package com.wintop.ms.carauction.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.RedisAutoData;
@@ -58,6 +60,16 @@ public class CarAutoServiceImpl implements ICarAutoService {
     @Autowired
     private CarLocaleAuctionCarModel carLocaleAuctionCarModel;
 
+    private static Map<String,  List<Integer>> auctionTypeMap = getAuctionTypeMap();
+
+    private static Map<String, List<Integer>> getAuctionTypeMap() {
+        return new HashMap<String, List<Integer>>(){{
+            put("stock", Lists.newArrayList(1));
+            put("approve", Lists.newArrayList(2,3,4));
+            put("auction_status", Lists.newArrayList(5, 6, 7));
+            put("auction_result", Lists.newArrayList(8,9,10,11,12,13,14,15,16,17,18,19));
+        }};
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(CarAutoServiceImpl.class);
     IdWorker idWorker=new IdWorker(10);
@@ -646,6 +658,71 @@ public class CarAutoServiceImpl implements ICarAutoService {
         }finally {
             return result;
         }
+    }
+
+    @Override
+    /**
+     * 库存管理--（零售[已售]、线上拍[车辆库存、审批状态、竞价状态、竞价结果]、现场拍[车辆库存、审批状态、竞价状态、竞价结果]）
+     */
+    public List<Map<String,Object>> selectCarAutoForSaleCount(Map<String, Object> map){
+        List<Map<String, Object>> mapArrayList = Lists.newArrayList();
+        Map<String, Object> paramMap = Maps.newHashMap();
+        Map<String, Object> resultMap = Maps.newHashMap();
+        List<String> paramStatusList = new ArrayList<String>(){{
+            add("stock");
+            add("approve");
+            add("auction_status");
+            add("auction_result");
+        }};
+        List<String> titleList = new ArrayList<String>(){{
+            add("车辆库存");
+            add("审批状态");
+            add("竞价状态");
+            add("竞价结果");
+        }};
+        try {
+            String type = map.get("type").toString();
+            if ("retail".equals(type)) {
+                // 零售
+                paramMap.put("saleFalg", "1");
+                Integer num = carAutoModel.selectCarAutoForSaleCount(paramMap);
+                resultMap.put("title", "已售");
+                resultMap.put("num", num);
+                mapArrayList.add(resultMap);
+            } else if ("online".equals(type)) {
+                //竞拍
+                paramMap.put("saleFalg", "0");
+                // 线上
+                paramMap.put("auctionType", "1");
+                // 车辆库存
+                for (int i = 0; i < paramStatusList.size(); i++) {
+                    getStockNumResultList(mapArrayList, paramMap, paramStatusList, titleList, i);
+                }
+            } else if ("onsite".equals(type)) {
+                // 竞拍
+                paramMap.put("saleFalg", "0");
+                // 现场
+                paramMap.put("auctionType", "2");
+                // 车辆库存
+                for (int i = 0; i < paramStatusList.size(); i++) {
+                    getStockNumResultList(mapArrayList, paramMap, paramStatusList, titleList, i);
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mapArrayList;
+    }
+
+    private void getStockNumResultList(List<Map<String, Object>> mapArrayList, Map<String, Object> paramMap, List<String> paramStatusList, List<String> titleList, int i) {
+        Map<String, Object> resultMap;
+        resultMap = Maps.newHashMap();
+        paramMap.put("status", auctionTypeMap.get(paramStatusList.get(i)));
+        Integer num = carAutoModel.selectCarAutoForSaleCount(paramMap);
+        resultMap.put("title", titleList.get(i));
+        resultMap.put("num", num);
+        mapArrayList.add(resultMap);
     }
 
     public CarAuto selectById(Long id) {

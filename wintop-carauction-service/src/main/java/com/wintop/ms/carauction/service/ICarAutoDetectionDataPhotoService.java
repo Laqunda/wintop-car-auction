@@ -12,6 +12,8 @@ public interface ICarAutoDetectionDataPhotoService {
 
     ServiceResult<List<CarAutoDetectionDataPhoto>> selectByExample(Criteria example);
 
+    ServiceResult<List<CarAutoDetectionDataPhoto>> selectByAutoId(Long carId);
+
     ServiceResult<Integer> deleteByPrimaryKey(Long id);
 
     ServiceResult<Integer> updateByPrimaryKeySelective(CarAutoDetectionDataPhoto record);

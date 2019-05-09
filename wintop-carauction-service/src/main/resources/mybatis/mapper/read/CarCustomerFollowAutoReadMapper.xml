@@ -27,6 +27,7 @@
     <result column="auction_type" property="auctionType" jdbcType="VARCHAR"/>
     <result column="auction_code" property="auctionCode" jdbcType="VARCHAR"/>
     <result column="vehicle_attribution_city_cn" property="vehicleAttributionCityCn" jdbcType="VARCHAR"/>
+    <result column="transfer_flag" property="transferFlag" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Base_Column_List" >
     id, auto_id, user_id, create_time, status
@@ -57,7 +58,8 @@
     t2.status AS carStatus,t3.environment,t3.begin_register_date,
     cs.simple_name as carStoreName,t6.auction_code,
     (CASE WHEN t5.entrust_fee IS NOT NULL THEN '1' ELSE '2' END ) AS isEntrust,
-    t2.auto_auction_id
+    t2.auto_auction_id,
+    t4.transfer_flag
     FROM car_customer_follow_auto t1
     INNER join car_auto t2 on t1.auto_id = t2.id
     INNER join car_auto_info_detail t3 on t3.auto_id = t2.id
