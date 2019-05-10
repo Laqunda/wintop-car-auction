@@ -75,6 +75,22 @@ public class CarAssessApi {
     }
 
     /**
+     * 库存管理-线上车辆详情
+     */
+    @ApiOperation(value = "库存管理-线上车辆详情")
+    @PostMapping(value = "/onlineDetail",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResultModel onlineDetail(@RequestBody Map<String,Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAssess/onlineDetail"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
+    /**
      * 新增保存车辆评估
      */
     @ApiOperation(value = "新增保存车辆评估")

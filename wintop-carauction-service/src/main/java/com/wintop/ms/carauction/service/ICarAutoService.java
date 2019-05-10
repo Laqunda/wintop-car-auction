@@ -88,6 +88,10 @@ public interface ICarAutoService {
      */
     ServiceResult<List<CarAuto>> getAllCarAutoList(Map<String,Object> map);
     /**
+     * 查询线上车辆管理列表
+     */
+    List<CarAuto> selectCarList(Map<String, Object> map);
+    /**
      *查询所有的车辆数目
      * @Author zhangzijiuan
      * @param map

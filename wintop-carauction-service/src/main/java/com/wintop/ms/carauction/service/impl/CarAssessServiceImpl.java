@@ -83,4 +83,15 @@ public class CarAssessServiceImpl implements ICarAssessService {
     public int selectAssessCount(CarAssess carAssess) {
         return carAssessModel.selectCarAssessCount(carAssess);
     }
+
+    /**
+     * 根据车辆id查询车辆详情
+     *
+     * @param autoId
+     * @return
+     */
+    @Override
+    public CarAssess selectCarAssessDetailById(Long autoId) {
+        return carAssessModel.selectCarAssessDetailById(autoId);
+    }
 }

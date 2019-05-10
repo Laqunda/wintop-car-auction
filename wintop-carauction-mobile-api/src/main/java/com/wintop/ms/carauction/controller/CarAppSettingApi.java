@@ -1,6 +1,8 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wintop.ms.carauction.core.annotation.AppApiVersion;
+import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
@@ -31,6 +33,8 @@ public class CarAppSettingApi {
     @PostMapping( value = "/getSettingsByCode",
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8" )
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
     public ResponseEntity<ResultModel> getSettingsByCode(@RequestBody Map<String, Object> map) {
         if (map.get("code") == null) {
             return new ResponseEntity<>(new ResultModel(false, 101, "缺少参数", null), HttpStatus.OK);

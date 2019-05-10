@@ -2,6 +2,8 @@ package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
@@ -379,6 +381,50 @@ public class CarAutoApi {
             e.printStackTrace();
             logger.info("获取线上拍的车辆列表",e);
             result.setError("-1","异常");
+        }
+        return result;
+    }
+
+
+    @PostMapping(value = "/selectCarList",
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<List<Map<String,Object>>> selectCarList(@RequestBody JSONObject obj) {
+        ServiceResult<List<Map<String, Object>>> result = new ServiceResult<List<Map<String, Object>>>();
+        List<Map<String, Object>> list = Lists.newArrayList();
+        Map<String, Object> paramMap = Maps.newHashMap();
+        try {
+            if (obj.getString("autoInfoName") != null) {
+                paramMap.put("autoInfoName", obj.getString("autoInfoName"));
+            }
+            paramMap.put("status", obj.getString("status"));
+            paramMap.put("auction_type",obj.getString("type"));
+            List<CarAuto> recordList = carAutoService.selectCarList(paramMap);
+            Map<String, Object> map = Maps.newHashMap();
+            for (CarAuto record : recordList) {
+                map = Maps.newHashMap();
+                map.put("id", record.getId());
+                map.put("mainPhoto", record.getMainPhoto());
+                map.put("autoInfoName", record.getAutoInfoName());
+                map.put("vehicleAttributionCity", record.getVehicleAttributionCity());
+                map.put("mileage", record.getMileage());
+                map.put("reportColligationRanks", record.getReportColligationRanks());
+                map.put("reportServicingRanks", record.getReportServicingRanks());
+                map.put("status", record.getStatus());
+                map.put("submitTime", record.getSubmitTime());
+                map.put("authTime", record.getAuthTime());
+                map.put("authMsg", record.getAuthMsg());
+                map.put("auctionStartTime", record.getAuctionStarTime());
+                map.put("dealTime", record.getDealTime());
+                map.put("passInTime", record.getDealTime());
+                list.add(map);
+            }
+            result.setResult(list);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("线上车辆管理列表查询失败",e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
         }
         return result;
     }

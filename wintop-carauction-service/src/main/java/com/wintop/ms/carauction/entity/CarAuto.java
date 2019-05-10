@@ -201,6 +201,13 @@ public class CarAuto implements Serializable {
     private String maxPriceUserId;
     private String transferFlag;
 
+    private Date submitTime;
+    private Date authTime;
+    private String authMsg;
+    private Date auctionStarTime;
+    private Date dealTime;
+    private Date passInTime;
+
     public String getMaxPriceUserId() {
         return maxPriceUserId;
     }
@@ -1103,5 +1110,53 @@ public class CarAuto implements Serializable {
 
     public void setSaleFlag(String saleFlag) {
         this.saleFlag = saleFlag;
+    }
+
+    public Date getSubmitTime() {
+        return submitTime;
+    }
+
+    public void setSubmitTime(Date submitTime) {
+        this.submitTime = submitTime;
+    }
+
+    public Date getAuthTime() {
+        return authTime;
+    }
+
+    public void setAuthTime(Date authTime) {
+        this.authTime = authTime;
+    }
+
+    public String getAuthMsg() {
+        return authMsg;
+    }
+
+    public void setAuthMsg(String authMsg) {
+        this.authMsg = authMsg;
+    }
+
+    public Date getAuctionStarTime() {
+        return auctionStarTime;
+    }
+
+    public void setAuctionStarTime(Date auctionStarTime) {
+        this.auctionStarTime = auctionStarTime;
+    }
+
+    public Date getDealTime() {
+        return dealTime;
+    }
+
+    public void setDealTime(Date dealTime) {
+        this.dealTime = dealTime;
+    }
+
+    public Date getPassInTime() {
+        return passInTime;
+    }
+
+    public void setPassInTime(Date passInTime) {
+        this.passInTime = passInTime;
     }
 }

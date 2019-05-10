@@ -3,6 +3,8 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.wintop.ms.carauction.core.annotation.AppApiVersion;
+import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.config.ResultStatus;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -39,6 +41,8 @@ public class CarEvaluateLevelConfApi {
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8" )
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
     public ServiceResult<List<Map<String, Object>>> queryCarEvaluateLevelConfList(@RequestBody JSONObject obj) {
         logger.info("查询星级评价配置列表");
         ServiceResult<List<Map<String,Object>>> result = new ServiceResult<>();

@@ -2,6 +2,8 @@ package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.wintop.ms.carauction.core.annotation.AppApiVersion;
+import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarEvaluateTagConf;
@@ -36,6 +38,8 @@ public class CarEvaluateTagConfApi {
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
     public ServiceResult<Map<String,Object>> selectEvaluateTemplateList( @RequestBody JSONObject obj) {
         ServiceResult<Map<String,Object>> result = new ServiceResult<>();
         Map<String,Object> paramMap = new HashMap<>();

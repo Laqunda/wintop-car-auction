@@ -348,6 +348,11 @@ public class CarAutoServiceImpl implements ICarAutoService {
         return carAutoModel.selectAuctionCarList(map);
     }
 
+    @Override
+    public List<CarAuto> selectCarList(Map<String, Object> map) {
+        return carAutoModel.selectCarList(map);
+    }
+
     /**
      * 查询总数量
      * @param map

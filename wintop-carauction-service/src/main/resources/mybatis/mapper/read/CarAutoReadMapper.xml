@@ -88,6 +88,12 @@
     <result column="transfer_flag" property="transferFlag" jdbcType="VARCHAR" />
     <result column="agent_price" property="agentPrice" jdbcType="DECIMAL"/>
     <result column="sale_flag" property="saleFlag" jdbcType="VARCHAR"/>
+    <result column="submit_time" property="submitTime" jdbcType="TIMESTAMP"/>
+    <result column="auth_time" property="authTime" jdbcType="TIMESTAMP"/>
+    <result column="auth_msg" property="authMsg" jdbcType="VARCHAR"/>
+    <result column="auction_start_time" property="auctionStarTime" jdbcType="TIMESTAMP"/>
+    <result column="deal_time" property="dealTime" jdbcType="TIMESTAMP"/>
+    <result column="pass_in_time" property="passInTime" jdbcType="TIMESTAMP"/>
   </resultMap>
   <sql id="Base_Column_List" >
     t1.id, t1.publish_user_id, t1.publish_user_name, t1.publish_user_mobile, t1.auto_info_name, t1.store_id,t1.store_name,
@@ -184,8 +190,6 @@
   <select id="selectAuctionCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
     SELECT t3.id,t3.main_photo,t3.auto_info_name,t3.car_auto_no,t3.status,
     t4.vehicle_attribution_city_cn,t4.mileage,t4.engine_capacity,t4.engine_capacity_unit,
-    t3.report_colligation_ranks,t3.report_servicing_ranks,t8.up_time as "submit_time",t8.auth_time as "auth_time",t8.auth_msg,
-    t5.auction_start_time,
     t4.environment_cn,t4.begin_register_date,t5.starting_price,t2.auction_code,
     t1.address,t1.start_time,(CASE WHEN t6.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow,
     t3.auto_auction_id
@@ -242,6 +246,31 @@
     <if test="startRowNum!=null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
+  </select>
+  <select id="selectCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+      t1.id,t1.main_photo,t1.auto_info_name,t8.vehicle_attribution_city_cn,t8.mileage,
+      t1.report_colligation_ranks,t1.report_servicing_ranks,t7.up_time as "submit_time",t7.auth_time as "auth_time",t7.auth_msg,
+      t2.auction_start_time,t4.auth_time as "deal_time",t5.time as "pass_in_time"
+    FROM car_auto t1
+    LEFT JOIN car_auto_auction t2 ON t1.auto_auction_id=t2.id
+    LEFT JOIN car_order t3 on t1.auto_auction_id = t3.auto_auction_id
+    LEFT JOIN car_auto_transfer t4 on t4.order_id = t3.id
+    LEFT JOIN car_auto_log t5 on t5.auto_id = t1.id AND t5.status = '19'
+    LEFT JOIN car_agent t6 on t6.car_id = t2.id
+    LEFT JOIN car_agent_log t7 on t7.agent_id = t6.id
+    LEFT JOIN car_auto_info_detail t8 on t8.id=t4.auto_id
+    <where>
+      <if test="status != null and status != ''">
+        t1.status = #{status}
+      </if>
+      <if test="autoInfoName != null and autoInfoName != ''">
+        t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%')
+      </if>
+      <if test="auctionType != null and auction_type != ''">
+        t2.auction_type = #{auctionType}
+      </if>
+    </where>
   </select>
 
   <select id="selectAuctionCarCount" resultType="java.lang.Integer">

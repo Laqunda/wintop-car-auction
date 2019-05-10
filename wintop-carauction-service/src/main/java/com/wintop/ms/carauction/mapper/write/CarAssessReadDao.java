@@ -1,6 +1,7 @@
-package com.wintop.ms.carauction.mapper.read;
+package com.wintop.ms.carauction.mapper.write;
 
 import com.wintop.ms.carauction.entity.CarAssess;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -33,4 +34,12 @@ public interface CarAssessReadDao {
      * @param carAssess
      */
     Integer selectCarAssessCount(CarAssess carAssess);
+
+    /**
+     * 根据车辆id查询车辆详情
+     *
+     * @param autoId
+     * @return
+     */
+    CarAssess selectCarAssessDetailById(@Param("autoId") Long autoId);
 }

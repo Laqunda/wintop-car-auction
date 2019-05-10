@@ -58,4 +58,12 @@ public interface ICarAssessService
 	 * @return
 	 */
 	int selectAssessCount(CarAssess carAssess);
+
+	/**
+	 * 根据车辆id查询车辆详情
+	 *
+	 * @param autoId
+	 * @return
+	 */
+	public CarAssess selectCarAssessDetailById(Long autoId);
 }

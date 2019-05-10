@@ -3,6 +3,8 @@ package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.primitives.Longs;
+import com.wintop.ms.carauction.core.annotation.AppApiVersion;
+import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarEvaluateData;
 import com.wintop.ms.carauction.service.ICarEvaluateDataService;
@@ -42,6 +44,8 @@ public class CarEvaluateDataApi {
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
     public ServiceResult<Map<String,Object>> insertCarEvaluateData(@RequestBody JSONObject obj){
         logger.info("保存评估数据");
         CarEvaluateData carEvaluateData = new CarEvaluateData();

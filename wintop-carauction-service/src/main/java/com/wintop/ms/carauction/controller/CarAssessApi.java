@@ -1,13 +1,11 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
-import com.wintop.ms.carauction.entity.CarAssess;
-import com.wintop.ms.carauction.entity.CarAssessOrder;
-import com.wintop.ms.carauction.entity.CarManagerUser;
-import com.wintop.ms.carauction.entity.ListEntity;
+import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.service.*;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
@@ -15,13 +13,16 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 车辆评估 信息操作处理
@@ -50,6 +51,9 @@ public class CarAssessApi {
 
     @Autowired
     private ICarAssessLogService logService;
+
+    @Autowired
+    private ICarAutoConfDetailService carAutoConfDetailService;
 
     /**
      * 查询车辆评估列表
@@ -111,6 +115,45 @@ public class CarAssessApi {
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {
             logger.info("查询车辆评估详情", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /**
+     * 库存管理-线上车辆详情
+     */
+    @ApiOperation( value = "库存管理-线上车辆详情" )
+    @RequestMapping( value = "/onlineDetail",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8" )
+    public ServiceResult<CarAssess> onlineDetail(@RequestBody JSONObject obj) {
+        ServiceResult<CarAssess> result = null;
+        try {
+            CarAssess carAssess = JSONObject.toJavaObject(obj, CarAssess.class);
+            if (carAssess == null) {
+                carAssess = new CarAssess();
+            }
+            result = new ServiceResult<>();
+            carAssess = carAssessService.selectCarAssessDetailById(carAssess.getAutoId());
+            List<CarAutoConfDetail> confDetailList = carAutoConfDetailService.selectConfigsByCarId(carAssess.getAutoId());
+            Map<String, Object> map = Maps.newHashMap();
+            if (CollectionUtils.isEmpty(confDetailList)) {
+                map.put("title", "安全气囊");
+                map.put("val", "无");
+                carAssess.setParamConf(map);
+            } else {
+                String val = confDetailList.stream().filter(conf -> conf.getConfTitleId().equals(new Long(1))).map(conf -> conf.getConfTitleName()).findFirst().orElse("无");
+                map.put("title", "安全气囊");
+                map.put("val", val);
+                carAssess.setParamConf(map);
+            }
+            result.setResult(carAssess);
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("库存管理-线上车辆详情失败", e);
             e.printStackTrace();
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
         }

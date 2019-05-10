@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.wintop.ms.carauction.mapper.read.CarAssessReadDao">
+<mapper namespace="com.wintop.ms.carauction.mapper.write.CarAssessReadDao">
 
     <resultMap type="com.wintop.ms.carauction.entity.CarAssess" id="CarAssessResult">
         <result property="id" column="id"/>
@@ -35,6 +35,11 @@
         <result property="autoSeriesCn" column="auto_series_cn"/>
         <result property="editTime" column="edit_time"/>
         <result property="autoId" column="auto_id"/>
+        <result property="storeName" column="store_name"/>
+        <result property="followResult" column="follow_result"/>
+        <result property="transferStatus" column="transfer_status"/>
+        <result property="reportColligationRanks" column="report_colligation_ranks"/>
+        <result property="ownerName" column="owner_name"/>
         <association property="order" javaType="com.wintop.ms.carauction.entity.CarAssessOrder">
             <id property="id" column="order_id"/>
             <result property="assessId" column="assess_id"/>
@@ -266,9 +271,6 @@
 
     <select id="selectCarAssessDetailById" parameterType="Long" resultMap="CarAssessResult">
         SELECT
---         "storeName":"mock",                //类型：String  必有字段  备注：所属公司
---         "procurementDate":"mock",                //类型：String  必有字段  备注：采购时间
---         "status":"mock",                //类型：String  必有字段  备注：状态：确认采购
           a.car_photo,
           a.certificate_photo,
           a.other_photo,
@@ -282,22 +284,26 @@
           o.purchase_tax,
           o.driving_license,
           o.registration_certificate,
-          e.store_name,
-          o.purchase_tax,
-          o.driving_license,
-          o.registration_certificate,
-          d.status,
+          e.name as "store_name",
+          d.follow_result,
           tr.status as "transfer_status",
           au.report_colligation_ranks,
           o.customer_name,
           o.customer_tel,
-          o.customer_source
+          o.customer_source,
+          aa.owner_name
         FROM car_assess a
         LEFT JOIN car_assess_order o on o.assess_id = a.id
         LEFT JOIN car_assess_follow_data d on d.assess_id = a.id
-        LEFT JOIN car_store e on e.id = o.store_id
         LEFT JOIN car_auto au on au.id = a.auto_id
-        LEFT JOIN car_auto_transfer on tr.auto_id = au.id
+        LEFT JOIN car_auto_transfer tr on tr.auto_id = au.id
+        LEFT JOIN car_store e on e.id = o.store_id
+        LEFT JOIN car_auto_auction aa on aa.auto_id = a.auto_id
+        <where>
+            <if test="autoId != null">
+                a.auto_id = #{autoId}
+            </if>
+        </where>
     </select>
 
 </mapper>

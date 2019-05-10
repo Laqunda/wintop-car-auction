@@ -1,5 +1,6 @@
 package com.wintop.ms.carauction.model;
 
+import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarAuto;
 import com.wintop.ms.carauction.mapper.read.ICarAutoReadDao;
 import com.wintop.ms.carauction.mapper.write.ICarAutoWriteDao;
@@ -69,6 +70,12 @@ public class CarAutoModel {
         return readDao.selectAuctionCarList(map);
     }
 
+    /**
+     * 查询线上车辆管理列表
+     */
+    public List<CarAuto> selectCarList(Map<String, Object> map){
+        return readDao.selectCarList(map);
+    }
     /**
      * 查询总数量
      * @param map

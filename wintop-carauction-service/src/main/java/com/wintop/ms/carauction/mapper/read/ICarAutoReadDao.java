@@ -27,6 +27,11 @@ public interface ICarAutoReadDao {
     List<CarAuto> selectAuctionCarList(Map<String,Object> map);
 
     /**
+     * 查询线上车辆管理列表
+     */
+    List<CarAuto> selectCarList(Map<String, Object> map);
+
+    /**
      * 查询总数量
      * @param map
      * @return

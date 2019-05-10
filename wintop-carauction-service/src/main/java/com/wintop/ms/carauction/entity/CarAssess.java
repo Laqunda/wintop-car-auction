@@ -2,6 +2,7 @@ package com.wintop.ms.carauction.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 车辆评估表 car_assess
@@ -71,7 +72,19 @@ public class CarAssess extends BaseEntity
 	private Date editTime;
 	/** 车辆编码 */
 	private Long autoId;
-
+	/******************************* 关联字段 *******************************/
+	/** 店铺名称 */
+	private String storeName;
+	/** 评估结果：1评估中，2采购前科，3战败，4确认采购 */
+	private String followResult;
+	/** 代办状态：1过户事宜确定中、2出牌确认中、3交档确认中、4提档确认中、5手续上传中、6手续回传确认中、7手续回传不通过、8代办完结、9争议处理中、10.交易关闭 */
+	private String transferStatus;
+	/** 质检报告综合等级：A,B,C.. */
+	private String reportColligationRanks;
+	/** 参数配置 */
+	private Map<String,Object> ParamConf;
+	/** 车主 */
+	private String ownerName;
 	private CarAssessOrder order;
 
 	public void setId(Long id) 
@@ -341,5 +354,53 @@ public class CarAssess extends BaseEntity
 
 	public void setOrder(CarAssessOrder order) {
 		this.order = order;
+	}
+
+	public String getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
+
+	public String getFollowResult() {
+		return followResult;
+	}
+
+	public void setFollowResult(String followResult) {
+		this.followResult = followResult;
+	}
+
+	public String getTransferStatus() {
+		return transferStatus;
+	}
+
+	public void setTransferStatus(String transferStatus) {
+		this.transferStatus = transferStatus;
+	}
+
+	public String getReportColligationRanks() {
+		return reportColligationRanks;
+	}
+
+	public void setReportColligationRanks(String reportColligationRanks) {
+		this.reportColligationRanks = reportColligationRanks;
+	}
+
+	public Map<String, Object> getParamConf() {
+		return ParamConf;
+	}
+
+	public void setParamConf(Map<String, Object> paramConf) {
+		ParamConf = paramConf;
+	}
+
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
 	}
 }

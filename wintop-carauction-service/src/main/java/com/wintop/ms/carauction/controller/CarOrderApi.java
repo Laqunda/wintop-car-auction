@@ -270,11 +270,11 @@ public class CarOrderApi {
                 }else{
                     map.put("dealTime","");
                     map.put("submitTime","");
-                    map.put("approveTime","");
                     map.put("payTime","");
                 }
             }
             result.setResult(map);
+            map.put("approveTime","");
             result.setSuccess("0","成功");
         }catch (Exception e){
             e.printStackTrace();
