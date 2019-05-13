@@ -12,8 +12,12 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +46,18 @@ public class CarAssessOrderApi {
     private ICarAssessLogService logService;
     @Autowired
     private ICarManagerUserService managerUserService;
+
+    @Autowired
+    private ICarAutoService carAutoService;
+
+    @Autowired
+    private ICarAutoAuctionService auctionService;
+
+    @Autowired
+    private ICarAutoInfoDetailService autoInfoDetailService;
+
+    @Autowired
+    private ICarAutoLogService autoLogService;
 
 
     /**
@@ -198,7 +214,7 @@ public class CarAssessOrderApi {
             CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
 
             CarAssessOrder carAssessOrder = JSONObject.toJavaObject(obj, CarAssessOrder.class);
-            CarAssessOrder  old = carAssessOrderService.selectCarAssessOrderById(carAssessOrder.getId());
+            CarAssessOrder old = carAssessOrderService.selectCarAssessOrderById(carAssessOrder.getId());
             if (carAssessOrder == null) {
                 carAssessOrder = new CarAssessOrder();
             }
@@ -228,6 +244,12 @@ public class CarAssessOrderApi {
             if (code > 0) {
                 //写入订单记录表
                 orderLogService.saveOrderLog(managerUser, logMsg, carAssessOrder.getStatus(), idWorker.nextId(), carAssessOrder.getId());
+                if ("2".equals(carAssessOrder.getStatus())) {
+                    /*写入库存 car_auto car_auto_auction ...*/
+                    int backCode = writeAuto(old.getId(), carAssessOrder.getId(), idWorker.nextId(), managerUser);
+
+
+                }
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
             } else {
                 result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());
@@ -240,6 +262,7 @@ public class CarAssessOrderApi {
         }
         return result;
     }
+
 
     /**
      * 删除评估采购单
@@ -267,6 +290,114 @@ public class CarAssessOrderApi {
 
         }
         return result;
+    }
+
+
+    /**
+     * 写入汽车相关表
+     *
+     * @param assessId
+     * @param orderId
+     * @return
+     */
+    private int writeAuto(Long assessId, Long orderId, Long autoId, CarManagerUser managerUser) {
+
+
+        /*更新评估表*/
+        CarAssess t = new CarAssess();
+        t.setId(assessId);
+        t.setAutoId(autoId);
+        assessService.updateCarAssess(t);
+
+
+        CarAssess a = assessService.selectCarAssessById(assessId);
+        CarAssessOrder oreder = carAssessOrderService.selectCarAssessOrderById(orderId);
+        CarManagerUser user = managerUserService.selectByPrimaryKey(a.getCreateUser(), true);
+
+        /*写入car_auto*/
+        CarAuto auto = new CarAuto();
+        auto.setId(autoId);
+        auto.setPublishUserId(a.getCreateUser());
+        auto.setPublishUserName(user.getUserName());
+        auto.setPublishUserMobile(user.getUserPhone());
+        auto.setAutoInfoName(a.getAutoBrandCn() + " " + a.getAutoSeriesCn() + " " + a.getAutoStyleCn());//车辆名称=品牌+车系+车型
+        auto.setStoreId(oreder.getStoreId());
+        auto.getStoreName();
+        auto.setReportColligationRanks(a.getReportColligationRanks());
+        auto.setPublishTime(new Date());
+        auto.setCreateUser(a.getCreateUser());
+        auto.setCreateTime(new Date());
+        auto.setAuctionNum(0);
+        if (a.getRegionId() != null)
+            auto.setRegionId(Long.parseLong(a.getRegionId()));
+
+        auto.setMainPhoto(a.getCarPhoto());
+        auto.setStatus("5");//等待上拍
+        carAutoService.insert(auto);
+
+        /*写入car_auto_auction*/
+        CarAutoAuction auction = new CarAutoAuction();
+        auction.setId(idWorker.nextId());
+        auction.setAutoId(autoId);
+        auction.setCreatePerson(a.getCreateUser());
+        auction.setCreateTime(new Date());
+
+        Long roleTypeId = user.getRoleTypeId();
+
+        if (roleTypeId == 2) {
+            auction.setAuctionType("2");//线下
+        }
+        if (roleTypeId == 3) {
+            auction.setAuctionType("1");//线上
+        }
+        auction.setRemark(a.getRemark());
+        auctionService.insert(auction);
+
+        /*car_auto_info_detail*/
+
+        CarAutoInfoDetail detail = new CarAutoInfoDetail();
+        detail.setId(idWorker.nextId());
+        detail.setAutoId(autoId);
+        detail.setVin(a.getVin());
+        detail.setAutoBrand(a.getAutoBrand());
+        detail.setAutoBrandCn(a.getAutoBrandCn());
+        detail.setAutoSeries(a.getAutoSeries());
+        detail.setAutoStyle(a.getAutoStyle());
+        detail.setAutoStyleCn(a.getAutoStyleCn());
+        detail.setEngineCapacity(a.getEngineCapacity() + "");
+        detail.setEngineCapacityUnit("L");
+        detail.setMileage(a.getMileage());
+        detail.setColor(a.getColor());
+        detail.setColorCn(a.getColorCn());
+
+        detail.setManufactureDate(a.getManufactureDate());
+        detail.setBeginRegisterDate(a.getBeginRegisterDate());
+
+        detail.setLicenseNumber(a.getPlateNum());
+        detail.setCarNature(a.getAutoNature());//Nature CN
+        detail.setUseNature(a.getFunction());//Function CN
+        detail.setIsModification(oreder.getIfAdd());
+        detail.setOriginalPrice(oreder.getNewCarPrice());
+        detail.setRemark(a.getRemark());
+        detail.setRemarkPhoto(a.getOtherPhoto());
+        detail.setCreateTime(new Date());
+        detail.setCreateUser(a.getCreateUser() + "");
+        autoInfoDetailService.insert(detail);
+        /* car auto log*/
+
+        CarAutoLog log = new CarAutoLog();
+        log.setId(idWorker.nextId());
+        log.setAutoId(autoId);
+        log.setMsg("评估车辆审核通过，入库操作");
+        log.setStatus("5");//等待上架
+        log.setTime(new Date());
+        log.setUserType("2");//TODO '操作人类型  1买家 2管理员 3代办'???,
+        log.setUserId(managerUser.getId());
+        log.setUserMobile(managerUser.getUserPhone());
+        log.setUserName(managerUser.getUserName());
+        autoLogService.insert(log);
+
+        return 1;
     }
 
 }

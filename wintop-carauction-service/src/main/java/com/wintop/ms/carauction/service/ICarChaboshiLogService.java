@@ -1,5 +1,6 @@
 package com.wintop.ms.carauction.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarChaboshiLog;
 import com.wintop.ms.carauction.entity.CarFinancePayLog;
@@ -60,7 +61,7 @@ public interface ICarChaboshiLogService
 
     ServiceResult<Map<String, Object>> chaboshi(Long userId,String userName, String edition, Long logId, String vin);
 
-	ServiceResult<Map<String, Object>> chaboshiStore(Long userId, String userName, Long storeId, String edition, BigDecimal payment, String vin);
+	ServiceResult<Map<String, Object>> chaboshiStore(BigDecimal payment, JSONObject obj);
 
 	ServiceResult<Map<String, Object>> chaboshiOrder(CarChaboshiLog log,Long userId, String userName);
 

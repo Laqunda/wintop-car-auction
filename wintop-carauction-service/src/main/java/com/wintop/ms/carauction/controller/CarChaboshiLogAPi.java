@@ -221,7 +221,7 @@ public class CarChaboshiLogAPi {
             } else if ("2".equals(searchType)) {
                 /*新建查询订单 此处只允许店铺用户*/
                 if ("2".equals(userType)) {
-                    result = searchForStore(userId, userName, storeId, edition, vin);
+                    result = searchForStore(obj);
                 } else {
                     result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_PARAM.getRemark());
                 }
@@ -241,15 +241,13 @@ public class CarChaboshiLogAPi {
     /**
      * 店铺用户查询 其中需要验证 查博士支付的金额配置 以及余额是否足够
      *
-     * @param userId
-     * @param edition
      * @return
      */
-    private ServiceResult<Map<String, Object>> searchForStore(Long userId, String userName, Long storeId, String edition, String vin) {
+    private ServiceResult<Map<String, Object>> searchForStore(JSONObject obj) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         //查找store信息
         CarChaboshiStoreConf storeConf = new CarChaboshiStoreConf();
-        storeConf.setStoreId(storeId);
+        storeConf.setStoreId(obj.getLong("storeId"));
         List<CarChaboshiStoreConf> storeConfs = storeConfService.selectCarChaboshiStoreConfList(storeConf);
 
         if (storeConfs != null && storeConfs.size() > 0) {
@@ -265,24 +263,24 @@ public class CarChaboshiLogAPi {
                 return result;
             }
 
-            if ("1".equals(edition)) {
+            if ("1".equals(obj.get("edition"))) {
                 /*维修版本*/
 
                 if (balance == null || balance.compareTo(payment) == -1) {
                     result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.LOW_BALANCE.getRemark());
                 } else {
                     /* 查询--支付--生成查询记录*/
-                    result = carChaboshiLogService.chaboshiStore(userId, userName, storeId, edition, payment, vin);
+                    result = carChaboshiLogService.chaboshiStore(payment, obj);
                 }
 
-            } else if ("2".equals(edition)) {
+            } else if ("2".equals(obj.get("edition"))) {
                 /*综合版本*/
 
                 if (balance == null || balance.compareTo(paymentComposite) == -1) {
                     result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.LOW_BALANCE.getRemark());
                 } else {
                     /* 查询--支付--生成查询记录*/
-                    result = carChaboshiLogService.chaboshiStore(userId, userName, storeId, edition, payment, vin);
+                    result = carChaboshiLogService.chaboshiStore(payment, obj);
                 }
             } else {
                 result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_PARAM.getRemark());
@@ -385,6 +383,13 @@ public class CarChaboshiLogAPi {
                 log.setUserName(obj.getString("userName"));
                 log.setStoreId(obj.getLong("storeId"));
                 log.setResponseResult("3");//查询中
+
+                /*车型信息*/
+                log.setVehicleId(obj.getLong("vehicleId"));
+                log.setVehicleType(obj.getString("vehicleType"));
+                log.setPhoto(obj.getString("photo"));
+                log.setEngineNum(obj.getString("engineNum"));
+
                 carChaboshiLogService.insertCarChaboshiLog(log);
 
                 /*去查询 并更新查博士日志*/
@@ -484,6 +489,7 @@ public class CarChaboshiLogAPi {
                 if (log != null) {
                     log.setResponseResult("1");
                     log.setOrderMsg(message);
+                    //TODO 无车型信息情况下 获取车型信息
                     carChaboshiLogService.updateCarChaboshiLog(log);
                 }
             } else {

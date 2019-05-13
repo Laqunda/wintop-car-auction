@@ -19,7 +19,7 @@ public class CarAssess extends BaseEntity
 	/** 车辆VIN码 */
 	private String vin;
 	/** 表现里程单位KM */
-	private Integer mileage;
+	private Long mileage;
 	/** 车辆品牌车型车系名称 */
 	private String name;
 	/** 初次上牌日期 */
@@ -105,12 +105,12 @@ public class CarAssess extends BaseEntity
 	{
 		return vin;
 	}
-	public void setMileage(Integer mileage) 
+	public void setMileage(Long mileage)
 	{
 		this.mileage = mileage;
 	}
 
-	public Integer getMileage() 
+	public Long getMileage()
 	{
 		return mileage;
 	}

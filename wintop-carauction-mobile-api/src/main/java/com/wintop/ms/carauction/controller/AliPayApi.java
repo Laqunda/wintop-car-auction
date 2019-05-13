@@ -208,6 +208,12 @@ public class AliPayApi {
             jo.put("edition", map.get("edition"));
             jo.put("vin", map.get("vin"));
             jo.put("userName", user.getUserName());
+            /*车型信息*/
+            jo.put("vehicleId", map.get("vehicleId"));
+            jo.put("vehicleType", map.get("vehicleType"));
+            jo.put("photo", map.get("photo"));
+            jo.put("engineNum", map.get("engineNum"));
+
             redisManager.setKeyValue(alipayRequestModel.getOutTradeNo(), jo.toJSONString(), Constants.PAY_EXPIRES_HOUR, TimeUnit.HOURS);
             //4、初始化封装好的支付宝sdk---调用创建订单方法
             AlipayConfig alipayConfig = new AlipayConfig();
@@ -262,6 +268,12 @@ public class AliPayApi {
                 jsonObject.put("userName", requestModel.getString("userName"));
                 jsonObject.put("edition", requestModel.getString("edition"));
                 jsonObject.put("userType", "1");//个人
+
+                /*车型信息*/
+                jsonObject.put("vehicleId", requestModel.get("vehicleId"));
+                jsonObject.put("vehicleType", requestModel.get("vehicleType"));
+                jsonObject.put("photo", requestModel.get("photo"));
+                jsonObject.put("engineNum", requestModel.get("engineNum"));
 
                 ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                         RequestEntity

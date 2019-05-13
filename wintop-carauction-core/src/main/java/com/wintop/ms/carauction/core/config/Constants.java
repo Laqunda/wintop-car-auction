@@ -141,7 +141,7 @@ public class Constants {
      * */
     public static final String GET_VEHICLE_URL = COMMON_MODULE_ROOT+"/carmodel/vehicle";
 
-    /***
+    /***getVehicleListByVin
      * 根据vin码匹配车型列表
      */
 //    public static final String VIN_GET_VEHICLELIST_URL = COMMON_MODULE_ROOT+"/carmodel/vehiclelist";
