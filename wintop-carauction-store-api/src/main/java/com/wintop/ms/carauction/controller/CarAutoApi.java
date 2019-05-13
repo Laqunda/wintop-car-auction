@@ -74,6 +74,20 @@ public class CarAutoApi {
         return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.LIST);
     }
 
+    @RequestMapping(value = "/retailOrderList",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResponseEntity<ResultModel> retailOrderlist(@RequestBody Map<String,Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAuto/retailOrderList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
+    }
     /**
      * 查询车辆基本信息
      * @param map

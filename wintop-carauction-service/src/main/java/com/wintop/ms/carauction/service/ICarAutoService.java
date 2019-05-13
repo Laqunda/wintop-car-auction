@@ -69,6 +69,16 @@ public interface ICarAutoService {
     List<CarAuto> selectHairShotCarList(Map<String,Object> map);
 
     /**
+     * 零售订单列表总数量
+     */
+    Integer selectRetailForCount(Map<String, Object> map);
+
+    /**
+     * 零售订单列表
+     */
+    public List<Map<String,Object>> selectRetailForExample(Map<String, Object> map);
+
+    /**
      * 根据条件查询线发拍的车辆数量
      * @param map
      * @return

@@ -101,6 +101,19 @@ public class CarAutoModel {
         return readDao.selectOnlineCarCount(map);
     }
 
+    /**
+     * 零售订单列表
+     */
+    public List<CarAuto> selectRetailForExample(Map<String, Object> map) {
+        return readDao.selectRetailForExample(map);
+    }
+
+    /**
+     * 零售订单列表总数量
+     */
+    public Integer selectRetailForCount(Map<String, Object> map) {
+        return readDao.selectRetailForCount(map);
+    }
 
     /**
      * 根据条件查询发拍的车辆列表

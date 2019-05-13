@@ -458,6 +458,40 @@ public class CarAutoApi {
 
     }
 
+    /**
+     * 查询零售订单列表
+     */
+    @ApiOperation(value = "查询零售订单列表")
+    @RequestMapping(value = "/retailOrderList",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<ListEntity<Map<String,Object>>> list(@RequestBody JSONObject obj) {
+        ServiceResult<ListEntity<Map<String,Object>>> result = new ServiceResult<>();
+        Map<String, Object> map = Maps.newHashMap();
+        try {
+            map.put("autoInfoName", obj.getString("query"));
+            Integer count = carAutoService.selectRetailForCount(map);
+
+            PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
+            map.put("startRowNum",pageEntity.getStartRowNum());
+            map.put("endRowNum",pageEntity.getEndRowNum());
+
+            List<Map<String, Object>> list = carAutoService.selectRetailForExample(map);
+            ListEntity<Map<String, Object>> listEntity = new ListEntity<>();
+            listEntity.setList(list);
+            listEntity.setCount(count);
+
+            result.setResult(listEntity);
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询车辆评估列表", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
     /***
      * 保存草稿
      * @param carAuto

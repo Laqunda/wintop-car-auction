@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wintop.ms.carauction.core.annotation.AppApiVersion;
 import com.wintop.ms.carauction.core.annotation.AppUserRequestAuth;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -71,6 +73,27 @@ public class CarAutoAuctionApi {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(saveInfo_URL))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(object),JSONObject.class);
+        return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
+    }
+
+    @ApiOperation(value = "保存车辆转渠道")
+    @RequestMapping(value = "/saveTransferFlag",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResponseEntity<ResultModel> saveTransferFlag(@RequestBody JSONObject object,@CurrentUserId Long managerId) {
+        if (object.getString("carId") == null) {
+            return new ResponseEntity<>(new ResultModel(false, 101, "缺少参数", null), HttpStatus.OK);
+        }
+        object.put("managerId", managerId);
+        logger.info("保存车辆转渠道");
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAutoAuction/saveTransferFlag"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(object),JSONObject.class);
         return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);

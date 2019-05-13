@@ -3,7 +3,9 @@ package com.wintop.ms.carauction.controller;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
+import com.wintop.ms.carauction.entity.CarAssess;
 import com.wintop.ms.carauction.entity.CarAuctionBidRecord;
+import com.wintop.ms.carauction.entity.CarBidRecord;
 import com.wintop.ms.carauction.entity.ListEntity;
 import com.wintop.ms.carauction.service.ICarAuctionBidRecordService;
 import com.alibaba.fastjson.JSONObject;
@@ -169,6 +171,27 @@ public class CarAuctionBidRecordApi {
             e.printStackTrace();
             logger.info("获取出价车辆列表异常",e);
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/getBidPriceList",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<List<Map<String,Object>>> getBidPriceList(@RequestBody JSONObject obj) {
+        ServiceResult<List<Map<String, Object>>> result = new ServiceResult<>();
+        CarAuctionBidRecord carAuctionBidRecord = JSONObject.toJavaObject(obj, CarAuctionBidRecord.class);
+        if (carAuctionBidRecord == null) {
+            carAuctionBidRecord = new CarAuctionBidRecord();
+        }
+        try {
+            List<Map<String, Object>> list = iCarAuctionBidRecordService.getBidPriceList(carAuctionBidRecord.getCarId());
+            result.setResult(list);
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());
         }
         return result;
     }

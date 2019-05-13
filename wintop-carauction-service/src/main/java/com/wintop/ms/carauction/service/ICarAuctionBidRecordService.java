@@ -110,4 +110,11 @@ public interface ICarAuctionBidRecordService {
      * 竞拍开始，自动出价最高委托价
      */
     int insertAuto(Long carId);
+
+    /**
+     * 根据车辆id 查询出价列表
+     * @param autoId
+     * @return
+     */
+    public List<Map<String,Object>> getBidPriceList(Long autoId);
 }

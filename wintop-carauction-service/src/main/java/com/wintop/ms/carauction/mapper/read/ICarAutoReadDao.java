@@ -103,4 +103,14 @@ public interface ICarAutoReadDao {
      * 库存管理--（零售[已售]、线上拍[车辆库存、审批状态、竞价状态、竞价结果]、现场拍[车辆库存、审批状态、竞价状态、竞价结果]）
      */
     Integer selectCarAutoForSaleCount(Map<String, Object> map);
+
+    /**
+     * 零售订单列表
+     */
+    List<CarAuto> selectRetailForExample(Map<String, Object> map);
+
+    /**
+     * 零售订单列表总数量
+     */
+    Integer selectRetailForCount(Map<String, Object> map);
 }

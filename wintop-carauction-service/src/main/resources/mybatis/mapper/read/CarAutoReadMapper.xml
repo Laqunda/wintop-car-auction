@@ -779,5 +779,34 @@
       </foreach>
     </if>
   </select>
+  <select id="selectRetailForExample" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    t1.id,
+    t1.main_photo,
+    t1.auto_info_name,
+    t2.create_date as "create_time"
+    from car_auto t1
+    inner join car_order_retail t2 on t1.id = t2.car_id
+    <where>
+      <if test="autoInfoName != null and autoInfoName != ''">
+        t1.auto_info_name = #{autoInfoName}
+      </if>
+    </where>
+    order by t1.id desc
+    <!--<if test="endRowNum != null">-->
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    <!--</if>-->
+  </select>
+  <select id="selectRetailForCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select
+      count(t1.id)
+    from car_auto t1
+    inner join car_order_retail t2 on t1.id = t2.car_id
+    <where>
+      <if test="autoInfoName != null and autoInfoName != ''">
+        t1.auto_info_name = #{autoInfoName}
+      </if>
+    </where>
+  </select>
 
 </mapper>

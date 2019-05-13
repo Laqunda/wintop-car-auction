@@ -80,7 +80,7 @@
   </select>
 
   <select id="selectAutoAuction"  resultMap="BaseResultMap" parameterType="java.lang.Long">
-    SELECT t1.*,t2.status AS car_status,t2.source_type,t2.store_id,t2.store_name,t2.region_id
+    SELECT t1.*,t2.status AS car_status,t2.source_type,t2.store_id,t2.store_name,t2.region_id,t1.transfer_flag
     FROM car_auto_auction t1
     INNER JOIN car_auto t2 ON t1.id=t2.auto_auction_id
     WHERE t2.id=#{carId}

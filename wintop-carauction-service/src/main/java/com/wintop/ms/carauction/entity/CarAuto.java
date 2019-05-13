@@ -161,7 +161,7 @@ public class CarAuto implements Serializable {
     private String buyerBear;
     private String costPrice;
     private BigDecimal illegalPrice;
-    private int illegalScore;
+    private Integer illegalScore;
     private String illegalWho;
 
     /**
@@ -1007,11 +1007,11 @@ public class CarAuto implements Serializable {
         this.illegalPrice = illegalPrice;
     }
 
-    public int getIllegalScore() {
+    public Integer getIllegalScore() {
         return illegalScore;
     }
 
-    public void setIllegalScore(int illegalScore) {
+    public void setIllegalScore(Integer illegalScore) {
         this.illegalScore = illegalScore;
     }
 
