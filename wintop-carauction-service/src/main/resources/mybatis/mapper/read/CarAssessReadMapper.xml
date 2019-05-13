@@ -117,7 +117,15 @@
         o.price,
         o.status as order_status,
         o.remark,
-        o.assess_id
+        o.assess_id,
+        o.procurement_type,
+        o.procurement_date,
+        o.if_old_new,
+        o.entirety_price,
+        o.customer_Name,
+        o.customer_tel,
+        o.customer_source,
+        o.store_id
         FROM
         car_assess a
         LEFT JOIN car_assess_order o on o.assess_id = a.id

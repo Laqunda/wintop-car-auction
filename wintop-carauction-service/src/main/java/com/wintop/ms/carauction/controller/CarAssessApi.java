@@ -122,6 +122,34 @@ public class CarAssessApi {
     }
 
     /**
+     * 查询采购审批详情
+     */
+    @ApiOperation(value = "查询采购审批详情")
+    @RequestMapping(value = "/purchaseAuditDetail",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> purchaseAuditDetail(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String,Object>> result = null;
+
+        try {
+            CarAssess carAssess = JSONObject.toJavaObject(obj, CarAssess.class);
+            if (carAssess == null) {
+                carAssess = new CarAssess();
+            }
+            result = new ServiceResult<>();
+            Map<String, Object> resultMap = carAssessService.selectAccessAuditDetail(carAssess.getAutoId());
+            result.setResult(resultMap);
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询采购审批详情", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /**
      * 库存管理-线上车辆详情
      */
     @ApiOperation( value = "库存管理-线上车辆详情" )
@@ -153,7 +181,7 @@ public class CarAssessApi {
             result.setResult(carAssess);
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {
-            logger.info("库存管理-线上车辆详情失败", e);
+            logger.info("库存管理-线上车辆详情", e);
             e.printStackTrace();
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
         }
