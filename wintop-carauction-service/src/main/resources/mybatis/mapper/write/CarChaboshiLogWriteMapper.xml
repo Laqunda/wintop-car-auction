@@ -21,6 +21,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="userName != null  and userName != ''  ">user_name,</if>
 			<if test="storeId != null  and storeId != ''  ">store_id,</if>
 			<if test="payLogId != null  and payLogId != ''  ">paylog_id,</if>
+
+			<if test="vehicleId != null  and vehicleId != ''  ">vehicle_id,</if>
+			<if test="vehicleType != null  and vehicleType != ''  ">vehicle_type,</if>
+			<if test="photo != null  and photo != ''  ">photo,</if>
+			<if test="engineNum != null  and engineNum != ''  ">engine_num,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
@@ -38,6 +43,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="userName != null  and userName != ''  ">#{userName},</if>
             <if test="storeId != null  and storeId != ''  ">#{storeId},</if>
             <if test="payLogId != null  and payLogId != ''  ">#{payLogId},</if>
+
+            <if test="vehicleId != null  and vehicleId != ''  ">#{vehicleId},</if>
+            <if test="vehicleType != null  and vehicleType != ''  ">#{vehicleType},</if>
+            <if test="photo != null  and photo != ''  ">#{photo},</if>
+            <if test="engineNum != null  and engineNum != ''  ">#{engineNum},</if>
          </trim>
     </insert>
 	 
@@ -58,6 +68,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
             <if test="storeId != null  and storeId != ''  ">store_id = #{storeId},</if>
             <if test="payLogId != null  and payLogId != ''  ">paylog_id = #{payLogId},</if>
+            <if test="vehicleId != null  and vehicleId != ''  ">vehicle_id = #{vehicleId},</if>
+            <if test="vehicleType != null  and vehicleType != ''  ">vehicle_type = #{vehicleType},</if>
+            <if test="photo != null  and photo != ''  ">photo = #{photo},</if>
+            <if test="engineNum != null  and engineNum != ''  ">engine_num = #{engineNum},</if>
         </trim>
         where id = #{id}
     </update>

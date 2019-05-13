@@ -189,16 +189,18 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     /**
      * 店铺的查博士查询
      *
-     * @param userId
-     * @param userName
-     * @param storeId
-     * @param edition
      * @param payment
-     * @param vin
      * @return
      */
     @Override
-    public ServiceResult<Map<String, Object>> chaboshiStore(Long userId, String userName, Long storeId, String edition, BigDecimal payment, String vin) {
+    public ServiceResult<Map<String, Object>> chaboshiStore(BigDecimal payment, JSONObject obj) {
+
+        String edition = obj.getString("edition");
+        String vin = obj.getString("vin");
+        Long storeId = obj.getLong("storeId");
+        Long userId = obj.getLong("userId");
+        String userName = obj.getString("userName");
+
         ServiceResult result = new ServiceResult();
         Map data = new HashMap();
         JSONObject object = null;
@@ -217,6 +219,13 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
         log.setVin(vin);
         log.setUserType("2");
         log.setCreateTime(new Date());
+
+        /*车型信息*/
+        log.setVehicleId(obj.getLong("vehicleId"));
+        log.setVehicleType(obj.getString("vehicleType"));
+        log.setPhoto(obj.getString("photo"));
+        log.setEngineNum(obj.getString("engineNum"));
+
 
         if (object != null) {
             if ("0".equals(object.get("code"))) {

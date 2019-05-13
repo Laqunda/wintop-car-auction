@@ -46,6 +46,16 @@ public class CarChaboshiLog extends BaseEntity
 	/*支付流水id*/
 	private Long payLogId;
 
+	/**车型id*/
+	private Long vehicleId;
+
+	/**车型*/
+	private String vehicleType;
+	/*图片*/
+	private String photo;
+	/*发动机号*/
+	private String engineNum;
+
 	public void setId(Long id) 
 	{
 		this.id = id;
@@ -169,6 +179,38 @@ public class CarChaboshiLog extends BaseEntity
 
 	public void setPayLogId(Long payLogId) {
 		this.payLogId = payLogId;
+	}
+
+	public Long getVehicleId() {
+		return vehicleId;
+	}
+
+	public void setVehicleId(Long vehicleId) {
+		this.vehicleId = vehicleId;
+	}
+
+	public String getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(String vehicleType) {
+		this.vehicleType = vehicleType;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
+	public String getEngineNum() {
+		return engineNum;
+	}
+
+	public void setEngineNum(String engineNum) {
+		this.engineNum = engineNum;
 	}
 
 	public String toString() {
