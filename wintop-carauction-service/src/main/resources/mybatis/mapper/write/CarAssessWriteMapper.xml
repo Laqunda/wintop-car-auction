@@ -100,6 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="autoSeries != null  and autoSeries != ''  ">auto_series = #{autoSeries},</if>
             <if test="autoSeriesCn != null  and autoSeriesCn != ''  ">auto_series_cn = #{autoSeriesCn},</if>
             <if test="editTime != null  ">edit_time = #{editTime},</if>
+            <if test="autoId != null  ">auto_id = #{autoId},</if>
         </trim>
         where id = #{id}
     </update>
