@@ -11,6 +11,7 @@ import com.wintop.ms.carauction.util.utils.ApiUtil;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -74,6 +75,26 @@ public class CarAssessApi {
         return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
+
+    /**
+     * 库存管理-线上车辆详情
+     */
+    @ApiOperation(value = "查询采购审批详情")
+    @PostMapping(value = "/purchaseAuditDetail",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResultModel purchaseAuditDetail(@RequestBody Map<String,Object> map) {
+        if (map.get("autoId") == null) {
+            return new ResultModel(false, 101, "缺少参数", null);
+        }
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAssess/purchaseAuditDetail"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
     /**
      * 库存管理-线上车辆详情
      */
@@ -82,6 +103,9 @@ public class CarAssessApi {
     @AuthUserToken
     @AppApiVersion(value = "2.0")
     public ResultModel onlineDetail(@RequestBody Map<String,Object> map) {
+        if (map.get("autoId") == null) {
+            return new ResultModel(false, 101, "缺少参数", null);
+        }
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carAssess/onlineDetail"))
