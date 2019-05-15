@@ -28,7 +28,7 @@
             <if test="createPerson != null ">and create_person = #{createPerson}</if>
             <if test="userName != null  and userName != '' ">and user_name = #{userName}</if>
         </where>
-        order by create_time desc
+        order by create_time
         <if test="endRowNum != null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
         </if>
