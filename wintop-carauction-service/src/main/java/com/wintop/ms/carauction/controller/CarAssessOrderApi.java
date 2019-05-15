@@ -135,6 +135,7 @@ public class CarAssessOrderApi {
 
                 //存储采购订单
                 carAssessOrder.setId(order_id);
+                carAssessOrder.setCreateTime(new Date());
                 carAssessOrder.setFollowId(followId);
                 carAssessOrder.setStatus("1");//待审核
                 code = carAssessOrderService.insertCarAssessOrder(carAssessOrder);
