@@ -72,6 +72,8 @@ public class CarAssess extends BaseEntity
 	private Date editTime;
 	/** 车辆编码 */
 	private Long autoId;
+	/*审核不通过原因*/
+	private String rejectReason;
 	/******************************* 关联字段 *******************************/
 	/** 店铺名称 */
 	private String storeName;
@@ -402,5 +404,13 @@ public class CarAssess extends BaseEntity
 
 	public void setOwnerName(String ownerName) {
 		this.ownerName = ownerName;
+	}
+
+	public String getRejectReason() {
+		return rejectReason;
+	}
+
+	public void setRejectReason(String rejectReason) {
+		this.rejectReason = rejectReason;
 	}
 }

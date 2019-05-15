@@ -40,6 +40,7 @@
         <result property="transferStatus" column="transfer_status"/>
         <result property="reportColligationRanks" column="report_colligation_ranks"/>
         <result property="ownerName" column="owner_name"/>
+        <result property="rejectReason" column="reject_reason"/>
         <association property="order" javaType="com.wintop.ms.carauction.entity.CarAssessOrder">
             <id property="id" column="order_id"/>
             <result property="assessId" column="assess_id"/>
@@ -77,7 +78,7 @@
 
 
     <sql id="selectCarAssessVo">
-        select id, vin, mileage, name, begin_register_date, color, engine_capacity, function, engine_number, manufacture_date, year_insurance, plate_num, transfer_number, auto_nature, create_time, create_user, status, car_photo, certificate_photo, other_photo, color_cn, region_id, auto_brand, auto_brand_cn, auto_style, auto_style_cn, auto_series, auto_series_cn, edit_time, auto_id from car_assess
+        select reject_reason,id, vin, mileage, name, begin_register_date, color, engine_capacity, function, engine_number, manufacture_date, year_insurance, plate_num, transfer_number, auto_nature, create_time, create_user, status, car_photo, certificate_photo, other_photo, color_cn, region_id, auto_brand, auto_brand_cn, auto_style, auto_style_cn, auto_series, auto_series_cn, edit_time, auto_id from car_assess
     </sql>
 
     <select id="selectCarAssessList" parameterType="com.wintop.ms.carauction.entity.CarAssess"
@@ -113,6 +114,7 @@
         auto_series_cn,
         edit_time,
         auto_id,
+        reject_reason,
         o.id AS order_id,
         o.price,
         o.status as order_status,
@@ -241,6 +243,7 @@
             auto_series_cn,
             edit_time,
             auto_id,
+            reject_reason,
             o.id AS order_id,
             o.price,
             o.STATUS AS order_status,

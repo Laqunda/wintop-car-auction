@@ -35,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="autoSeries != null  and autoSeries != ''  ">auto_series,</if>
 			<if test="autoSeriesCn != null  and autoSeriesCn != ''  ">auto_series_cn,</if>
 			<if test="editTime != null  ">edit_time,</if>
+			<if test="rejectReason != null  ">reject_reason,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
@@ -66,6 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="autoSeries != null  and autoSeries != ''  ">#{autoSeries},</if>
 			<if test="autoSeriesCn != null  and autoSeriesCn != ''  ">#{autoSeriesCn},</if>
 			<if test="editTime != null  ">#{editTime},</if>
+			<if test="rejectReason != null  ">#{rejectReason},</if>
          </trim>
     </insert>
 	 
@@ -101,6 +103,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="autoSeriesCn != null  and autoSeriesCn != ''  ">auto_series_cn = #{autoSeriesCn},</if>
             <if test="editTime != null  ">edit_time = #{editTime},</if>
             <if test="autoId != null  ">auto_id = #{autoId},</if>
+            <if test="rejectReason != null  ">reject_reason = #{rejectReason},</if>
         </trim>
         where id = #{id}
     </update>

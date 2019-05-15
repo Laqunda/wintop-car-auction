@@ -119,6 +119,7 @@ public class CarAssessOrderApi {
                 carAssessOrder = new CarAssessOrder();
             }
 
+
             CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
 
             CarAssessFollowData follow = carAssessOrder.getFollow();
@@ -235,10 +236,11 @@ public class CarAssessOrderApi {
                 //评估日志
                 logService.saveLog(managerUser, "申请不通过", idWorker.nextId(), old.getAssessId());
 
-                //修改评估状态为 已完成
+                //修改评估状态为 审核不通过
                 CarAssess assess = new CarAssess();
                 assess.setId(old.getAssessId());
-                assess.setStatus("2");
+                assess.setStatus("4");
+                assess.setRejectReason(obj.getString("rejectReason"));
                 assessService.updateCarAssess(assess);
             }
             int code = carAssessOrderService.updateCarAssessOrder(carAssessOrder);
