@@ -81,6 +81,9 @@ public class CarAutoApi {
     @AuthUserToken
     @AppApiVersion(value = "2.0")
     public ResponseEntity<ResultModel> retailOrderlist(@RequestBody Map<String,Object> map) {
+        if (map.get("page") == null) {
+            return new ResponseEntity<>(new ResultModel(false, 101, "缺少参数", null), HttpStatus.OK);
+        }
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carAuto/retailOrderList"))
