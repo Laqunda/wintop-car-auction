@@ -249,7 +249,7 @@
   </select>
   <select id="selectCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
     SELECT
-      t1.id,t1.main_photo,t1.auto_info_name,t8.vehicle_attribution_city_cn,t8.mileage,
+      t1.id,t1.main_photo,t1.auto_info_name,t8.vehicle_attribution_city_cn,t8.mileage,t1.status,
       t1.report_colligation_ranks,t1.report_servicing_ranks,t7.up_time as "submit_time",t7.auth_time as "auth_time",t7.auth_msg,
       t2.auction_start_time,t4.auth_time as "deal_time",t5.time as "pass_in_time"
     FROM car_auto t1
@@ -271,8 +271,27 @@
         t2.auction_type = #{auctionType}
       </if>
     </where>
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
   </select>
-
+  <select id="selectCarCount" resultType="Integer" parameterType="java.util.Map">
+    SELECT
+      count(t1.id)
+    FROM car_auto t1
+    LEFT JOIN car_auto_auction t2 ON t1.auto_auction_id=t2.id
+    <where>
+      <if test="status != null and status != ''">
+        t1.status = #{status}
+      </if>
+      <if test="autoInfoName != null and autoInfoName != ''">
+        t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%')
+      </if>
+      <if test="auctionType != null and auction_type != ''">
+        t2.auction_type = #{auctionType}
+      </if>
+    </where>
+  </select>
   <select id="selectAuctionCarCount" resultType="java.lang.Integer">
     SELECT count(DISTINCT t2.auto_auction_id)
     FROM car_locale_auction_car t2

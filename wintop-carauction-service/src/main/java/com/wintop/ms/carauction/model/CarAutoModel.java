@@ -77,6 +77,12 @@ public class CarAutoModel {
         return readDao.selectCarList(map);
     }
     /**
+     * 查询线上车辆数量
+     */
+    public Integer selectCarCount(Map<String,Object> map){
+        return readDao.selectCarCount(map);
+    }
+    /**
      * 查询总数量
      * @param map
      * @return

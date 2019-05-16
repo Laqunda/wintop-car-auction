@@ -71,7 +71,7 @@ public class CarAutoApi {
                         .post(URI.create(Constants.ROOT+"/service/carAuto/selectCarList"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
-        return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.LIST);
+        return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
     }
 
     @RequestMapping(value = "/retailOrderList",

@@ -102,6 +102,10 @@ public interface ICarAutoService {
      */
     List<CarAuto> selectCarList(Map<String, Object> map);
     /**
+     * 查询线上车辆数量
+     */
+    Integer selectCarCount(Map<String, Object> map);
+    /**
      *查询所有的车辆数目
      * @Author zhangzijiuan
      * @param map
