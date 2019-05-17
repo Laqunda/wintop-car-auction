@@ -24,6 +24,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.chaboshi.api</groupId>
+            <artifactId>sign</artifactId>
+            <version>0.0.2</version>
+        </dependency>
        <!-- &lt;!&ndash; 开启eureka客户端注册依赖 &ndash;&gt;
         <dependency>
             <groupId>org.springframework.cloud</groupId>

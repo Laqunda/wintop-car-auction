@@ -361,6 +361,13 @@ public class CarAutoServiceImpl implements ICarAutoService {
     public List<CarAuto> selectCarList(Map<String, Object> map) {
         return carAutoModel.selectCarList(map);
     }
+    /**
+     * 查询线上车辆数量
+     */
+    @Override
+    public Integer selectCarCount(Map<String, Object> map) {
+        return carAutoModel.selectCarCount(map);
+    }
 
     /**
      * 查询总数量

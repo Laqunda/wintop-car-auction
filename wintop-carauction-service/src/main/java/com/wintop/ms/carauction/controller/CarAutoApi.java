@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alipay.api.domain.Car;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -389,8 +390,9 @@ public class CarAutoApi {
     @PostMapping(value = "/selectCarList",
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
-    public ServiceResult<List<Map<String,Object>>> selectCarList(@RequestBody JSONObject obj) {
-        ServiceResult<List<Map<String, Object>>> result = new ServiceResult<List<Map<String, Object>>>();
+    public ServiceResult<ListEntity<CarAuto>> selectCarList(@RequestBody JSONObject obj) {
+        ServiceResult<ListEntity<CarAuto>> result = new ServiceResult<ListEntity<CarAuto>>();
+        ListEntity<CarAuto> listEntity = new ListEntity<CarAuto>();
         List<Map<String, Object>> list = Lists.newArrayList();
         Map<String, Object> paramMap = Maps.newHashMap();
         try {
@@ -399,8 +401,14 @@ public class CarAutoApi {
             }
             paramMap.put("status", obj.getString("status"));
             paramMap.put("auction_type",obj.getString("type"));
+
+            PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
+            paramMap.put("startRowNum",pageEntity.getStartRowNum());
+            paramMap.put("endRowNum",pageEntity.getEndRowNum());
             List<CarAuto> recordList = carAutoService.selectCarList(paramMap);
+            Integer count = carAutoService.selectCarCount(paramMap);
             Map<String, Object> map = Maps.newHashMap();
+            /*
             for (CarAuto record : recordList) {
                 map = Maps.newHashMap();
                 map.put("id", record.getId());
@@ -419,7 +427,10 @@ public class CarAutoApi {
                 map.put("passInTime", record.getDealTime());
                 list.add(map);
             }
-            result.setResult(list);
+            */
+            listEntity.setList(recordList);
+            listEntity.setCount(count);
+            result.setResult(listEntity);
             result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {
             logger.info("线上车辆管理列表查询失败",e);
