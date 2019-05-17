@@ -36,6 +36,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="autoSeriesCn != null  and autoSeriesCn != ''  ">auto_series_cn,</if>
 			<if test="editTime != null  ">edit_time,</if>
 			<if test="rejectReason != null  ">reject_reason,</if>
+			<if test="functionCn != null  ">function_cn,</if>
+			<if test="autoNatureCn != null  ">autonature_cn,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
@@ -52,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="plateNum != null  and plateNum != ''  ">#{plateNum},</if>
 			<if test="transferNumber != null  ">#{transferNumber},</if>
 			<if test="autoNature != null  and autoNature != ''  ">#{autoNature},</if>
-			<if test="createTime != null  ">#{createTime},</if>
+			now(),
 			<if test="createUser != null  ">#{createUser},</if>
 			<if test="status != null  and status != ''  ">#{status},</if>
 			<if test="carPhoto != null  and carPhoto != ''  ">#{carPhoto},</if>
@@ -68,6 +70,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="autoSeriesCn != null  and autoSeriesCn != ''  ">#{autoSeriesCn},</if>
 			<if test="editTime != null  ">#{editTime},</if>
 			<if test="rejectReason != null  ">#{rejectReason},</if>
+			<if test="functionCn != null  ">#{functionCn},</if>
+			<if test="autoNatureCn != null  ">#{autoNatureCn},</if>
          </trim>
     </insert>
 	 
@@ -104,6 +108,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="editTime != null  ">edit_time = #{editTime},</if>
             <if test="autoId != null  ">auto_id = #{autoId},</if>
             <if test="rejectReason != null  ">reject_reason = #{rejectReason},</if>
+			<if test="functionCn != null  ">function_cn = #{functionCn},</if>
+			<if test="autoNatureCn != null  ">autonature_cn = #{autoNatureCn},</if>
         </trim>
         where id = #{id}
     </update>

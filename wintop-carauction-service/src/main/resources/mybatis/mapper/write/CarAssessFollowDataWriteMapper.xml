@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="assessId != null  ">#{assessId},</if>
 			<if test="content != null  and content != ''  ">#{content},</if>
 			<if test="followResult != null  and followResult != ''  ">#{followResult},</if>
-			<if test="createTime != null  ">#{createTime},</if>
+			now(),
 			<if test="followUser != null  ">#{followUser},</if>
          </trim>
     </insert>

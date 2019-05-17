@@ -30,6 +30,8 @@ public class CarAssess extends BaseEntity
 	private BigDecimal engineCapacity;
 	/** 使用性质：1运营，2非运营，3营转非，4租赁营运，5租赁非营运 */
 	private String function;
+
+	private String functionCn;
 	/** 发动机号 */
 	private String engineNumber;
 	/** 出厂日期 */
@@ -42,6 +44,7 @@ public class CarAssess extends BaseEntity
 	private Integer transferNumber;
 	/** 车辆性质：1公户，2私户，3外事车 */
 	private String autoNature;
+	private String autoNatureCn;
 	/** 评估人 */
 	private Long createUser;
 	/** 状态：1草稿，2，完成评估，3提交审核 */
@@ -412,5 +415,21 @@ public class CarAssess extends BaseEntity
 
 	public void setRejectReason(String rejectReason) {
 		this.rejectReason = rejectReason;
+	}
+
+	public String getFunctionCn() {
+		return functionCn;
+	}
+
+	public void setFunctionCn(String functionCn) {
+		this.functionCn = functionCn;
+	}
+
+	public String getAutoNatureCn() {
+		return autoNatureCn;
+	}
+
+	public void setAutoNatureCn(String autoNatureCn) {
+		this.autoNatureCn = autoNatureCn;
 	}
 }

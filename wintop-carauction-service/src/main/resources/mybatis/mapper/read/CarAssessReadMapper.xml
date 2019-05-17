@@ -41,6 +41,8 @@
         <result property="reportColligationRanks" column="report_colligation_ranks"/>
         <result property="ownerName" column="owner_name"/>
         <result property="rejectReason" column="reject_reason"/>
+        <result property="functionCn" column="function_cn"/>
+        <result property="autoNatureCn" column="autonature_cn"/>
         <association property="order" javaType="com.wintop.ms.carauction.entity.CarAssessOrder">
             <id property="id" column="order_id"/>
             <result property="assessId" column="assess_id"/>
@@ -115,6 +117,8 @@
         edit_time,
         auto_id,
         reject_reason,
+        function_cn,
+        autonature_cn,
         o.id AS order_id,
         o.price,
         o.status as order_status,
@@ -164,6 +168,8 @@
             <if test="autoSeriesCn != null  and autoSeriesCn != '' ">and auto_series_cn = #{autoSeriesCn}</if>
             <if test="editTime != null ">and edit_time = #{editTime}</if>
             <if test="autoId != null ">and auto_id = #{autoId}</if>
+            <if test="functionCn != null  ">and function_cn = #{functionCn},</if>
+            <if test="autoNatureCn != null  ">and autonature_cn = #{autoNatureCn},</if>
         </where>
 
         order by a.id desc
@@ -208,6 +214,8 @@
             <if test="autoSeriesCn != null  and autoSeriesCn != '' ">and auto_series_cn = #{autoSeriesCn}</if>
             <if test="editTime != null ">and edit_time = #{editTime}</if>
             <if test="autoId != null ">and auto_id = #{autoId}</if>
+            <if test="functionCn != null  ">and function_cn = #{functionCn},</if>
+            <if test="autoNatureCn != null  ">and autonature_cn = #{autoNatureCn},</if>
         </where>
     </select>
 
@@ -244,6 +252,8 @@
             edit_time,
             auto_id,
             reject_reason,
+            function_cn,
+            autonature_cn,
             o.id AS order_id,
             o.price,
             o.STATUS AS order_status,
@@ -282,27 +292,27 @@
 
     <select id="selectCarAssessDetailById" parameterType="Long" resultMap="CarAssessResult">
         SELECT
-          a.car_photo,
-          a.certificate_photo,
-          a.other_photo,
-          a.name,
-          a.manufacture_date,
-          a.mileage,
-          a.vin,
-          a.plate_num,
-          o.price,
-          o.procurement_date,
-          o.purchase_tax,
-          o.driving_license,
-          o.registration_certificate,
-          e.name as "store_name",
-          d.follow_result,
-          tr.status as "transfer_status",
-          au.report_colligation_ranks,
-          o.customer_name,
-          o.customer_tel,
-          o.customer_source,
-          aa.owner_name
+        a.car_photo,
+        a.certificate_photo,
+        a.other_photo,
+        a.name,
+        a.manufacture_date,
+        a.mileage,
+        a.vin,
+        a.plate_num,
+        o.price,
+        o.procurement_date,
+        o.purchase_tax,
+        o.driving_license,
+        o.registration_certificate,
+        e.name as "store_name",
+        d.follow_result,
+        tr.status as "transfer_status",
+        au.report_colligation_ranks,
+        o.customer_name,
+        o.customer_tel,
+        o.customer_source,
+        aa.owner_name
         FROM car_assess a
         LEFT JOIN car_assess_order o on o.assess_id = a.id
         LEFT JOIN car_assess_follow_data d on d.assess_id = a.id
