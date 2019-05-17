@@ -4,11 +4,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AppApiVersion;
 import com.wintop.ms.carauction.core.annotation.AuthPublic;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
+import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.config.Constants;
+import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.config.ResultStatus;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -74,6 +77,26 @@ public class CarAutoApi {
         return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
     }
 
+    @ApiOperation(value = "审批发拍的车辆")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "carId",value = "车辆Id",required = true,paramType = "query",dataType = "long"),
+            @ApiImplicitParam(name = "status",value = "审批状态 1 通过 2 不通过",required = true,dataType = "string"),
+            @ApiImplicitParam(name = "msg",value = "审批留言",required = true,paramType = "query",dataType = "string")
+    })
+    @PostMapping(value = "/",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel approveCarAuto(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
+        map.put("managerId",managerId);
+        if(map.get("carId")==null || map.get("status")==null|| map.get("msg")==null|| map.get("managerId")==null){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAuto/approveCarAuto"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
     @RequestMapping(value = "/retailOrderList",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
