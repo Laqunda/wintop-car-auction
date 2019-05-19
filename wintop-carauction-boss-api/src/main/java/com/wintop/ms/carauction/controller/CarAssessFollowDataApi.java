@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
+import com.wintop.ms.carauction.core.annotation.RequestAuth;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
@@ -40,6 +41,7 @@ public class CarAssessFollowDataApi {
     @ApiOperation(value = "查询车辆评估跟进列表")
     @PostMapping(value = "/list",produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @RequestAuth(value = false)
     public ResultModel list(@RequestBody Map map) {
         if(map.get("page")==null || map.get("limit")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);

@@ -72,6 +72,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vehicleType != null  and vehicleType != ''  ">vehicle_type = #{vehicleType},</if>
             <if test="photo != null  and photo != ''  ">photo = #{photo},</if>
             <if test="engineNum != null  and engineNum != ''  ">engine_num = #{engineNum},</if>
+            <if test="pc_url != null  and pc_url != ''  ">pc_url = #{pc_url},</if>
+            <if test="app_url != null  and app_url != ''  ">app_url = #{app_url},</if>
+            <if test="finishTime != null  and finishTime != ''  ">finish_time = #{finishTime},</if>
         </trim>
         where id = #{id}
     </update>

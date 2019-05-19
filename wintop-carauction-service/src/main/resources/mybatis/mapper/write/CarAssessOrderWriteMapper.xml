@@ -37,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="customerSource != null  and customerSource != ''  ">customer_source,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
 			<if test="status != null  and status != ''  ">status,</if>
+			create_time,
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
@@ -70,6 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="customerSource != null  and customerSource != ''  ">#{customerSource},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
 			<if test="status != null  and status != ''  ">#{status},</if>
+			now(),
          </trim>
     </insert>
 	 

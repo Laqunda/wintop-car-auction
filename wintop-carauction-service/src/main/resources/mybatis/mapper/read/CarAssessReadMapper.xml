@@ -21,6 +21,7 @@
         <result property="autoNature" column="auto_nature"/>
         <result property="createTime" column="create_time"/>
         <result property="createUser" column="create_user"/>
+        <result property="createUserName" column="create_user_name"/>
         <result property="status" column="status"/>
         <result property="carPhoto" column="car_photo"/>
         <result property="certificatePhoto" column="certificate_photo"/>
@@ -43,11 +44,12 @@
         <result property="rejectReason" column="reject_reason"/>
         <result property="functionCn" column="function_cn"/>
         <result property="autoNatureCn" column="autonature_cn"/>
+        <result property="remark" column="remark"/>
         <association property="order" javaType="com.wintop.ms.carauction.entity.CarAssessOrder">
             <id property="id" column="order_id"/>
             <result property="assessId" column="assess_id"/>
             <result property="followId" column="follow_id"/>
-            <result property="remark" column="remark"/>
+            <result property="remark" column="order_remark"/>
             <result property="status" column="order_status"/>
             <result property="procurementType" column="procurement_type"/>
             <result property="price" column="price"/>
@@ -75,16 +77,19 @@
             <result property="customerName" column="customer_name"/>
             <result property="customerTel" column="customer_tel"/>
             <result property="customerSource" column="customer_source"/>
+            <result property="createTime" column="order_create_time"/>
         </association>
     </resultMap>
 
 
     <sql id="selectCarAssessVo">
-        select reject_reason,id, vin, mileage, name, begin_register_date, color, engine_capacity, function, engine_number, manufacture_date, year_insurance, plate_num, transfer_number, auto_nature, create_time, create_user, status, car_photo, certificate_photo, other_photo, color_cn, region_id, auto_brand, auto_brand_cn, auto_style, auto_style_cn, auto_series, auto_series_cn, edit_time, auto_id from car_assess
+        select remark,reject_reason,id, vin, mileage, name, begin_register_date, color, engine_capacity, function, engine_number, manufacture_date, year_insurance, plate_num, transfer_number, auto_nature, create_time, create_user, status, car_photo, certificate_photo, other_photo, color_cn, region_id, auto_brand, auto_brand_cn, auto_style, auto_style_cn, auto_series, auto_series_cn, edit_time, auto_id from car_assess
     </sql>
 
     <select id="selectCarAssessList" parameterType="com.wintop.ms.carauction.entity.CarAssess"
             resultMap="CarAssessResult">
+
+        select * from (
         SELECT
         a.id,
         vin,
@@ -100,8 +105,9 @@
         plate_num,
         transfer_number,
         auto_nature,
-        create_time,
+        a.create_time,
         create_user,
+        create_user_name,
         a.STATUS,
         car_photo,
         certificate_photo,
@@ -119,10 +125,11 @@
         reject_reason,
         function_cn,
         autonature_cn,
+        a.remark,
         o.id AS order_id,
         o.price,
         o.status as order_status,
-        o.remark,
+        o.remark as order_remark,
         o.assess_id,
         o.procurement_type,
         o.procurement_date,
@@ -131,15 +138,18 @@
         o.customer_Name,
         o.customer_tel,
         o.customer_source,
-        o.store_id
+        o.store_id,
+        o.create_time as order_create_time,
+        (SELECT f.follow_result FROM car_assess_follow_data f WHERE f.assess_id = a.id ORDER BY create_time DESC LIMIT 1
+        ) follow_result
         FROM
         car_assess a
         LEFT JOIN car_assess_order o on o.assess_id = a.id
         <where>
             <if test="id != null ">and a.id = #{id}</if>
-            <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
-            <if test="mileage != null ">and mileage = #{mileage}</if>
-            <if test="name != null  and name != '' ">and name = #{name}</if>
+            <if test="vin != null  and vin != '' ">and vin LIKE CONCAT(CONCAT('%', #{vin}),'%')</if>
+            <if test="mileage != null ">and mileage &lt;= #{mileage}</if>
+            <if test="name != null  and name != '' ">and name LIKE CONCAT(CONCAT('%', #{name}),'%')</if>
             <if test="beginRegisterDate != null ">and begin_register_date = #{beginRegisterDate}</if>
             <if test="color != null  and color != '' ">and color = #{color}</if>
             <if test="engineCapacity != null ">and engine_capacity = #{engineCapacity}</if>
@@ -147,11 +157,13 @@
             <if test="engineNumber != null  and engineNumber != '' ">and engine_number = #{engineNumber}</if>
             <if test="manufactureDate != null ">and manufacture_date = #{manufactureDate}</if>
             <if test="yearInsurance != null ">and year_insurance = #{yearInsurance}</if>
-            <if test="plateNum != null  and plateNum != '' ">and plate_num = #{plateNum}</if>
+            <if test="plateNum != null  and plateNum != '' ">and plate_num LIKE CONCAT(CONCAT('%', #{plateNum}),'%')
+            </if>
             <if test="transferNumber != null ">and transfer_number = #{transferNumber}</if>
             <if test="autoNature != null  and autoNature != '' ">and auto_nature = #{autoNature}</if>
             <if test="createTime != null ">and a.create_time = #{createTime}</if>
             <if test="createUser != null ">and a.create_user = #{createUser}</if>
+            <if test="createUserName != null ">and a.create_user_name = #{createUserName}</if>
             <if test="status != null  and status != '' ">and a.status = #{status}</if>
             <if test="carPhoto != null  and carPhoto != '' ">and car_photo = #{carPhoto}</if>
             <if test="certificatePhoto != null  and certificatePhoto != '' ">and certificate_photo =
@@ -170,9 +182,45 @@
             <if test="autoId != null ">and auto_id = #{autoId}</if>
             <if test="functionCn != null  ">and function_cn = #{functionCn},</if>
             <if test="autoNatureCn != null  ">and autonature_cn = #{autoNatureCn},</if>
+
+            <if test="params.sp_s != null ">
+                and a.begin_register_date &gt;= #{params.sp_s}
+            </if>
+
+            <if test="params.sp_e != null ">
+                and a.begin_register_date &lt;= #{params.sp_e}
+            </if>
+
+            <if test="params.cj_s != null ">
+                and a.create_time &gt;= #{params.cj_s}
+            </if>
+
+            <if test="params.cj_e != null ">
+                and a.create_time &lt;= #{params.cj_e}
+            </if>
+
+            <if test="params.gm_s != null ">
+                and o.create_time &gt;= #{params.gm_s}
+            </if>
+
+            <if test="params.gm_e != null ">
+                and o.create_time &lt;= #{params.gm_e}
+            </if>
+
+            <if test="params.statuses != null and params.statuses != '' ">
+                and find_in_set(o.status,#{params.statuses})
+            </if>
         </where>
 
-        order by a.id desc
+        ) r
+        <where>
+            1=1
+            <if test="params.followResult != null ">
+                and follow_result = #{params.followResult}
+            </if>
+        </where>
+
+        order by r.id desc
         <if test="endRowNum != null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
         </if>
@@ -180,12 +228,19 @@
 
     <select id="selectCarAssessCount" parameterType="com.wintop.ms.carauction.entity.CarAssess"
             resultType="java.lang.Integer">
-        select count(*) from car_assess
+        select count(*)
+
+        from (
+        select a.id,
+        (SELECT f.follow_result FROM car_assess_follow_data f WHERE f.assess_id = a.id ORDER BY create_time DESC LIMIT 1
+        ) follow_result
+        from car_assess a
+        LEFT JOIN car_assess_order o on o.assess_id = a.id
         <where>
-            <if test="id != null ">and id = #{id}</if>
-            <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
-            <if test="mileage != null ">and mileage = #{mileage}</if>
-            <if test="name != null  and name != '' ">and name = #{name}</if>
+            <if test="id != null ">and a.id = #{id}</if>
+            <if test="vin != null  and vin != '' ">and vin LIKE CONCAT(CONCAT('%', #{vin}),'%')</if>
+            <if test="mileage != null ">and mileage &lt;= #{mileage}</if>
+            <if test="name != null  and name != '' ">and name LIKE CONCAT(CONCAT('%', #{name}),'%')</if>
             <if test="beginRegisterDate != null ">and begin_register_date = #{beginRegisterDate}</if>
             <if test="color != null  and color != '' ">and color = #{color}</if>
             <if test="engineCapacity != null ">and engine_capacity = #{engineCapacity}</if>
@@ -193,12 +248,14 @@
             <if test="engineNumber != null  and engineNumber != '' ">and engine_number = #{engineNumber}</if>
             <if test="manufactureDate != null ">and manufacture_date = #{manufactureDate}</if>
             <if test="yearInsurance != null ">and year_insurance = #{yearInsurance}</if>
-            <if test="plateNum != null  and plateNum != '' ">and plate_num = #{plateNum}</if>
+            <if test="plateNum != null  and plateNum != '' ">and plate_num LIKE CONCAT(CONCAT('%', #{plateNum}),'%')
+            </if>
             <if test="transferNumber != null ">and transfer_number = #{transferNumber}</if>
             <if test="autoNature != null  and autoNature != '' ">and auto_nature = #{autoNature}</if>
-            <if test="createTime != null ">and create_time = #{createTime}</if>
-            <if test="createUser != null ">and create_user = #{createUser}</if>
-            <if test="status != null  and status != '' ">and status = #{status}</if>
+            <if test="createTime != null ">and a.create_time = #{createTime}</if>
+            <if test="createUser != null ">and a.create_user = #{createUser}</if>
+            <if test="createUserName != null ">and a.create_user_name = #{createUserName}</if>
+            <if test="status != null  and status != '' ">and a.status = #{status}</if>
             <if test="carPhoto != null  and carPhoto != '' ">and car_photo = #{carPhoto}</if>
             <if test="certificatePhoto != null  and certificatePhoto != '' ">and certificate_photo =
                 #{certificatePhoto}
@@ -216,6 +273,40 @@
             <if test="autoId != null ">and auto_id = #{autoId}</if>
             <if test="functionCn != null  ">and function_cn = #{functionCn},</if>
             <if test="autoNatureCn != null  ">and autonature_cn = #{autoNatureCn},</if>
+
+            <if test="params.sp_s != null ">
+                and a.begin_register_date &gt;= #{params.sp_s}
+            </if>
+
+            <if test="params.sp_e != null ">
+                and a.begin_register_date &lt;= #{params.sp_e}
+            </if>
+
+            <if test="params.cj_s != null ">
+                and a.create_time &gt;= #{params.cj_s}
+            </if>
+
+            <if test="params.cj_e != null ">
+                and a.create_time &lt;= #{params.cj_e}
+            </if>
+
+            <if test="params.gm_s != null ">
+                and o.create_time &gt;= #{params.gm_s}
+            </if>
+
+            <if test="params.gm_e != null ">
+                and o.create_time &lt;= #{params.gm_e}
+            </if>
+            <if test="params.statuses != null and params.statuses != '' ">
+                and find_in_set(o.status,#{params.statuses})
+            </if>
+        </where>
+        ) r
+        <where>
+            1=1
+            <if test="params.followResult != null ">
+                and follow_result = #{params.followResult}
+            </if>
         </where>
     </select>
 
@@ -235,8 +326,9 @@
             plate_num,
             transfer_number,
             auto_nature,
-            create_time,
-            create_user,
+            a.create_time,
+            a.create_user,
+            a.create_user_name,
             a.STATUS,
             car_photo,
             certificate_photo,
@@ -254,10 +346,11 @@
             reject_reason,
             function_cn,
             autonature_cn,
+            a.remark,
             o.id AS order_id,
             o.price,
             o.STATUS AS order_status,
-            o.remark,
+            o.remark as order_remark,
             o.assess_id,
             o.follow_id,
             o.procurement_type,
@@ -284,9 +377,12 @@
             o.transport_tax_end_date,
             o.customer_name,
             o.customer_tel,
-            o.customer_source
+            o.customer_source,
+            o.create_time as order_create_time,
+            e.name as "store_name",
          FROM car_assess a
         LEFT JOIN car_assess_order o on o.assess_id = a.id
+        LEFT JOIN car_store e on e.id = o.store_id
         where a.id = #{id}
     </select>
 

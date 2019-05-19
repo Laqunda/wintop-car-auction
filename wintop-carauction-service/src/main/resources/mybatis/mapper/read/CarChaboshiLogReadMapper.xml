@@ -24,10 +24,13 @@
         <result property="vehicleType" column="vehicle_type"/>
         <result property="photo" column="photo"/>
         <result property="engineNum" column="engine_num"/>
+        <result property="pc_url" column="pc_url"/>
+        <result property="app_url" column="app_url"/>
+        <result property="finishTime" column="finish_time"/>
     </resultMap>
 
     <sql id="selectCarChaboshiLogVo">
-        select vehicle_id,vehicle_type,photo,engine_num,id,paylog_id,store_id, create_time, user_type, user_id, vin, response_msg, source_type, response_result, money, edition, order_id, order_msg, user_name from car_chaboshi_log
+        select pc_url,app_url,finish_time,vehicle_id,vehicle_type,photo,engine_num,id,paylog_id,store_id, create_time, user_type, user_id, vin, response_msg, source_type, response_result, money, edition, order_id, order_msg, user_name from car_chaboshi_log
     </sql>
 
     <select id="selectCarChaboshiLogList" parameterType="com.wintop.ms.carauction.entity.CarChaboshiLog"

@@ -36,6 +36,18 @@ public class ChaboshiUtils {
 
     }
 
+
+    /**
+     * 获取报告json
+     *
+     * @param orderId
+     */
+    public static JSONObject reportJson(String orderId) {
+        String buyReport = CBS.getInstance(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret).getNewReportJson(orderId);
+        return JSONObject.parseObject(buyReport);
+
+    }
+
     /**
      * 查看订单状态接口
      *

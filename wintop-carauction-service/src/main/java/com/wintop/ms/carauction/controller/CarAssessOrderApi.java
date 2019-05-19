@@ -231,6 +231,13 @@ public class CarAssessOrderApi {
                 //评估日志
                 logService.saveLog(managerUser, "申请通过", idWorker.nextId(), old.getAssessId());
 
+                //修改评估状态为 审核通过
+                CarAssess assess = new CarAssess();
+                assess.setId(old.getAssessId());
+                assess.setStatus("5");
+                assess.setRejectReason(obj.getString("rejectReason"));
+                assessService.updateCarAssess(assess);
+
             } else if ("-1".equals(carAssessOrder.getStatus())) {
                 logMsg = "审核不通过";
                 //评估日志

@@ -47,6 +47,8 @@ public class CarAssess extends BaseEntity
 	private String autoNatureCn;
 	/** 评估人 */
 	private Long createUser;
+	/** 评估人姓名 */
+	private String createUserName;
 	/** 状态：1草稿，2，完成评估，3提交审核 */
 	private String status;
 	/** 车辆照片 */
@@ -431,5 +433,13 @@ public class CarAssess extends BaseEntity
 
 	public void setAutoNatureCn(String autoNatureCn) {
 		this.autoNatureCn = autoNatureCn;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
 	}
 }

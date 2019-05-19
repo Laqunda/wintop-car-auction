@@ -1,9 +1,11 @@
 package com.wintop.ms.carauction.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 查博士日志表 car_chaboshi_log
@@ -55,6 +57,14 @@ public class CarChaboshiLog extends BaseEntity
 	private String photo;
 	/*发动机号*/
 	private String engineNum;
+
+	/*pc的报告url*/
+	private String pc_url;
+	/*App报告url*/
+	private String app_url;
+	/*报告生成时间*/
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date finishTime;
 
 	public void setId(Long id) 
 	{
@@ -211,6 +221,30 @@ public class CarChaboshiLog extends BaseEntity
 
 	public void setEngineNum(String engineNum) {
 		this.engineNum = engineNum;
+	}
+
+	public String getPc_url() {
+		return pc_url;
+	}
+
+	public void setPc_url(String pc_url) {
+		this.pc_url = pc_url;
+	}
+
+	public String getApp_url() {
+		return app_url;
+	}
+
+	public void setApp_url(String app_url) {
+		this.app_url = app_url;
+	}
+
+	public Date getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Date finishTime) {
+		this.finishTime = finishTime;
 	}
 
 	public String toString() {

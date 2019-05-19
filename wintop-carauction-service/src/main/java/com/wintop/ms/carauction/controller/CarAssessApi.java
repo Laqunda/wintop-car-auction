@@ -19,10 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 车辆评估 信息操作处理
@@ -94,6 +93,50 @@ public class CarAssessApi {
     }
 
     /**
+     * 根据跟进数据 分组
+     */
+    @ApiOperation(value = "根据跟进数据分组")
+    @RequestMapping(value = "/groupFollowCount",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String, Object>> groupFollowCount() {
+        ServiceResult result = null;
+        try {
+            Map back = new HashMap();
+            CarAssess carAssess = new CarAssess();
+            result = new ServiceResult<>();
+
+            Map params = new HashMap();
+
+            params.put("followResult", 1);
+            carAssess.setParams(params);
+            back.put("followResult1", carAssessService.selectAssessCount(carAssess));
+
+            params.put("followResult", 2);
+            carAssess.setParams(params);
+            back.put("followResult2", carAssessService.selectAssessCount(carAssess));
+
+            params.put("followResult", 3);
+            carAssess.setParams(params);
+            back.put("followResult3", carAssessService.selectAssessCount(carAssess));
+
+            params.put("followResult", 4);
+            carAssess.setParams(params);
+            back.put("followResult4", carAssessService.selectAssessCount(carAssess));
+
+            result.setResult(back);
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询车辆评估列表", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+
+        return result;
+    }
+
+    /**
      * 查询车辆评估详情
      */
     @ApiOperation(value = "查询车辆评估详情")
@@ -129,8 +172,8 @@ public class CarAssessApi {
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8")
-    public ServiceResult<Map<String,Object>> purchaseAuditDetail(@RequestBody JSONObject obj) {
-        ServiceResult<Map<String,Object>> result = null;
+    public ServiceResult<Map<String, Object>> purchaseAuditDetail(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String, Object>> result = null;
 
         try {
             CarAssess carAssess = JSONObject.toJavaObject(obj, CarAssess.class);
@@ -152,11 +195,11 @@ public class CarAssessApi {
     /**
      * 库存管理-线上车辆详情
      */
-    @ApiOperation( value = "库存管理-线上车辆详情" )
-    @RequestMapping( value = "/onlineDetail",
+    @ApiOperation(value = "库存管理-线上车辆详情")
+    @RequestMapping(value = "/onlineDetail",
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
-            produces = "application/json; charset=UTF-8" )
+            produces = "application/json; charset=UTF-8")
     public ServiceResult<CarAssess> onlineDetail(@RequestBody JSONObject obj) {
         ServiceResult<CarAssess> result = null;
         try {
@@ -208,7 +251,10 @@ public class CarAssessApi {
             if (carAssess.getStatus() == null) {
                 carAssess.setStatus("2"); //已完成
             }
+            //设置name
+            carAssess.setName(carAssess.getAutoBrandCn() + " " + carAssess.getAutoSeriesCn() + " " + carAssess.getAutoStyleCn());//车辆名称=品牌+车系+车型
             carAssess.setCreateUser(managerUser.getId());
+            carAssess.setCreateUserName(managerUser.getUserName());
             carAssess.setId(idWorker.nextId());
             int code = carAssessService.insertCarAssess(carAssess);
 

@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
+import com.wintop.ms.carauction.core.annotation.RequestAuth;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
@@ -34,6 +35,7 @@ public class CarAssessApi {
 
     private ResultModel resultModel;
     private final RestTemplate restTemplate;
+
     CarAssessApi(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
@@ -42,33 +44,52 @@ public class CarAssessApi {
      * 查询车辆评估列表
      */
     @ApiOperation(value = "查询车辆评估列表")
-    @PostMapping(value = "/list",produces="application/json; charset=UTF-8")
+    @PostMapping(value = "/list", produces = "application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel list(@RequestBody Map<String,Object> map) {
-        if(map.get("page")==null || map.get("limit")==null){
-            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+    public ResultModel list(@RequestBody Map<String, Object> map) {
+        if (map.get("page") == null || map.get("limit") == null) {
+            return new ResultModel(false, ResultCode.NO_PARAM.value(), ResultCode.NO_PARAM.getRemark(), null);
         }
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/carAssess/list"))
+                        .post(URI.create(Constants.ROOT + "/service/carAssess/list"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(map),JSONObject.class);
-        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
+
+    /**
+     * 根据跟进数据分组
+     */
+    @ApiOperation(value = "根据跟进数据分组")
+    @PostMapping(value = "/groupFollowCount", produces = "application/json; charset=UTF-8")
+    @AuthUserToken
+    @RequestAuth(value = false)
+    public ResultModel groupFollowCount() {
+
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/carAssess/groupFollowCount"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(null), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
 
     /**
      * 查询车辆评估列表
      */
     @ApiOperation(value = "查询车辆评估详情")
-    @PostMapping(value = "/detail",produces="application/json; charset=UTF-8")
+    @PostMapping(value = "/detail", produces = "application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel detail(@RequestBody Map<String,Object> map) {
+    @RequestAuth(value = false)
+    public ResultModel detail(@RequestBody Map<String, Object> map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/carAssess/detail"))
+                        .post(URI.create(Constants.ROOT + "/service/carAssess/detail"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(map),JSONObject.class);
-        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
 
@@ -76,36 +97,36 @@ public class CarAssessApi {
      * 库存管理-线上车辆详情
      */
     @ApiOperation(value = "查询采购审批详情")
-    @PostMapping(value = "/purchaseAuditDetail",produces="application/json; charset=UTF-8")
+    @PostMapping(value = "/purchaseAuditDetail", produces = "application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel purchaseAuditDetail(@RequestBody Map<String,Object> map) {
+    public ResultModel purchaseAuditDetail(@RequestBody Map<String, Object> map) {
         if (map.get("autoId") == null) {
             return new ResultModel(false, 101, "缺少参数", null);
         }
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/carAssess/purchaseAuditDetail"))
+                        .post(URI.create(Constants.ROOT + "/service/carAssess/purchaseAuditDetail"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(map),JSONObject.class);
-        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
     /**
      * 库存管理-线上车辆详情
      */
     @ApiOperation(value = "库存管理-线上车辆详情")
-    @PostMapping(value = "/onlineDetail",produces="application/json; charset=UTF-8")
+    @PostMapping(value = "/onlineDetail", produces = "application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel onlineDetail(@RequestBody Map<String,Object> map) {
+    public ResultModel onlineDetail(@RequestBody Map<String, Object> map) {
         if (map.get("autoId") == null) {
             return new ResultModel(false, 101, "缺少参数", null);
         }
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/carAssess/onlineDetail"))
+                        .post(URI.create(Constants.ROOT + "/service/carAssess/onlineDetail"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(map),JSONObject.class);
-        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
     /**
@@ -113,19 +134,19 @@ public class CarAssessApi {
      */
     @ApiOperation(value = "新增保存车辆评估")
     @RequestMapping(value = "/add",
-            method= RequestMethod.POST,
-            consumes="application/json; charset=UTF-8",
-            produces="application/json; charset=UTF-8")
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel addSave(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
+    public ResultModel addSave(@CurrentUserId Long managerId, @RequestBody Map<String, Object> map) {
 
-        map.put("managerId",managerId);
+        map.put("managerId", managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/carAssess/add"))
+                        .post(URI.create(Constants.ROOT + "/service/carAssess/add"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(map),JSONObject.class);
-        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
 
@@ -134,18 +155,18 @@ public class CarAssessApi {
      */
     @ApiOperation(value = "修改车辆评估")
     @RequestMapping(value = "/edit",
-            method= RequestMethod.POST,
-            consumes="application/json; charset=UTF-8",
-            produces="application/json; charset=UTF-8")
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel editSave(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
-        map.put("managerId",managerId);
+    public ResultModel editSave(@CurrentUserId Long managerId, @RequestBody Map<String, Object> map) {
+        map.put("managerId", managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/carAssess/edit"))
+                        .post(URI.create(Constants.ROOT + "/service/carAssess/edit"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(map),JSONObject.class);
-        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
     /**
@@ -153,21 +174,21 @@ public class CarAssessApi {
      */
     @ApiOperation(value = "撤销申请收购")
     @RequestMapping(value = "/cancel",
-            method= RequestMethod.POST,
-            consumes="application/json; charset=UTF-8",
-            produces="application/json; charset=UTF-8")
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel cancelCarAssess(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
+    public ResultModel cancelCarAssess(@CurrentUserId Long managerId, @RequestBody Map<String, Object> map) {
         Map params = new HashMap();
-        params.put("id",map.get("id"));
-        params.put("status","1");
-        params.put("managerId",managerId);
+        params.put("id", map.get("id"));
+        params.put("status", "1");
+        params.put("managerId", managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/carAssess/cancel"))
+                        .post(URI.create(Constants.ROOT + "/service/carAssess/cancel"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(params),JSONObject.class);
-        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+                        .body(params), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
     /**
@@ -175,18 +196,18 @@ public class CarAssessApi {
      */
     @ApiOperation(value = "删除车辆评估")
     @RequestMapping(value = "/remove",
-            method= RequestMethod.POST,
-            consumes="application/json; charset=UTF-8",
-            produces="application/json; charset=UTF-8")
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel remove(@CurrentUserId Long managerId,@RequestBody Map<String,Object> map) {
-        map.put("managerId",managerId);
+    public ResultModel remove(@CurrentUserId Long managerId, @RequestBody Map<String, Object> map) {
+        map.put("managerId", managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/carAssess/remove"))
+                        .post(URI.create(Constants.ROOT + "/service/carAssess/remove"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(map),JSONObject.class);
-        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
 }

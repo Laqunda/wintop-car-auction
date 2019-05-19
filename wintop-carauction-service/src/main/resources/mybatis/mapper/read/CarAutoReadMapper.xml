@@ -716,7 +716,7 @@
       </foreach>
       or a.store_id is null)
     </if>
-    GROUP BY a.id
+--     GROUP BY a.id
     ORDER BY a.update_time DESC,a.create_time DESC
     <if test="startRowNum!=null and startRowNum!=null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}

@@ -31,7 +31,7 @@ public class BaseEntity implements Serializable
     private String remark;
 
     /** 请求参数 */
-    private Map<String, Object> params;
+    private Map<String, String> params;
 
     public String getSearchValue()
     {
@@ -73,7 +73,7 @@ public class BaseEntity implements Serializable
         this.remark = remark;
     }
 
-    public Map<String, Object> getParams()
+    public Map<String, String> getParams()
     {
         if (params == null)
         {
@@ -82,7 +82,7 @@ public class BaseEntity implements Serializable
         return params;
     }
 
-    public void setParams(Map<String, Object> params)
+    public void setParams(Map<String, String> params)
     {
         this.params = params;
     }

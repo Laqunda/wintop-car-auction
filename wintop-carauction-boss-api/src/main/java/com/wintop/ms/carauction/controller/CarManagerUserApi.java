@@ -1,7 +1,6 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sun.org.apache.bcel.internal.generic.FADD;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.annotation.RequestAuth;
@@ -9,13 +8,11 @@ import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.CarManagerUser;
 import com.wintop.ms.carauction.core.entity.TokenManager;
-import com.wintop.ms.carauction.core.entity.TokenSingleton;
-import com.wintop.ms.carauction.entity.ManagerRolePages;
-import com.wintop.ms.carauction.util.utils.ParamValidUtil;
-import com.wintop.ms.carauction.util.utils.RedisManagerTemplate;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.core.model.TokenModel;
+import com.wintop.ms.carauction.entity.ManagerRolePages;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
+import com.wintop.ms.carauction.util.utils.ParamValidUtil;
 import com.wintop.ms.carauction.util.utils.RedisStoreUserManager;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -29,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -306,6 +304,28 @@ public class CarManagerUserApi {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(rootUrl+"selectManagerUserList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
+    /**
+     * 查询评估师用户列表
+     *@Author:admin
+     *@date 2018/3/14
+     *@param:map
+     */
+    @ApiOperation(value = "查询评估师用户列表")
+    @RequestMapping(value = "/selectAssessUserList",
+            consumes = "application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel selectAssessUserList(@CurrentUserId Long userId) {
+        Map map = new HashMap();
+        map.put("userId",userId);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(rootUrl+"selectAssessUserList"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);

@@ -8,6 +8,7 @@ import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.model.CarFinancePayLogModel;
 import com.wintop.ms.carauction.service.*;
 import com.wintop.ms.carauction.util.AlipayUtil;
+import com.wintop.ms.carauction.util.ChaboshiUtils;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import com.wintop.ms.carauction.util.utils.RandCodeUtil;
@@ -58,6 +59,9 @@ public class CarChaboshiLogAPi {
     @Autowired
     private ICarChaboshiStoreAccountService accountService;
 
+    @Autowired
+    private ICarAssessService assessService;
+
 
     /**
      * 查询查博士日志列表
@@ -73,6 +77,13 @@ public class CarChaboshiLogAPi {
             CarChaboshiLog carChaboshiLog = JSONObject.toJavaObject(obj, CarChaboshiLog.class);
             if (carChaboshiLog == null) {
                 carChaboshiLog = new CarChaboshiLog();
+            }
+
+            /*根据assessId查询其查博士的查询日志*/
+            if (obj.getLong("assessId") > 0) {
+                CarAssess assess = assessService.selectCarAssessById(obj.getLong("assessId"));
+                carChaboshiLog.setVin(assess.getVin());
+                carChaboshiLog.setUserId(assess.getCreateUser());
             }
             result = new ServiceResult<>();
 
@@ -485,10 +496,34 @@ public class CarChaboshiLogAPi {
             log = carChaboshiLogService.selectCarChaboshiLog(log);
 
             if ("1".equals(result)) {
-                /*并更新状态*/
+                /*生成报告成功  并更新状态*/
                 if (log != null) {
+                    //获取url
+                    Map chaboshi = ChaboshiUtils.reportDetail(orderId);
+                    String pcUrl = (String) chaboshi.get("pcUrl");
+                    String mobileUrl = (String) chaboshi.get("mobileUrl");
+                    //获取json
+
+                    JSONObject object = ChaboshiUtils.reportJson(orderId);
+
+                    if (object != null) {
+                        log.setResponseMsg(object.toJSONString());
+                        if ("1104".equals(object.getString("Code"))) {
+
+                            String brand = object.getString("brand");
+                            String modelName = object.getString("modelName");
+                            String seriesName = object.getString("seriesName");
+
+                            log.setVehicleType(brand + "-" + seriesName + "-" + modelName);
+                        }
+                    }
+
+
                     log.setResponseResult("1");
                     log.setOrderMsg(message);
+                    log.setFinishTime(new Date());
+                    log.setPc_url(pcUrl);
+                    log.setApp_url(mobileUrl);
                     //TODO 无车型信息情况下 获取车型信息
                     carChaboshiLogService.updateCarChaboshiLog(log);
                 }
