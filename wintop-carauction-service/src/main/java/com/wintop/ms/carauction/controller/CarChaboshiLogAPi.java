@@ -80,7 +80,7 @@ public class CarChaboshiLogAPi {
             }
 
             /*根据assessId查询其查博士的查询日志*/
-            if (obj.getLong("assessId") > 0) {
+            if (obj.get("assessId")!=null && obj.getLong("assessId")> 0) {
                 CarAssess assess = assessService.selectCarAssessById(obj.getLong("assessId"));
                 carChaboshiLog.setVin(assess.getVin());
                 carChaboshiLog.setUserId(assess.getCreateUser());

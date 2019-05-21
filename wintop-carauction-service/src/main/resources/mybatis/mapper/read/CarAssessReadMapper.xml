@@ -207,8 +207,14 @@
                 and o.create_time &lt;= #{params.gm_e}
             </if>
 
+
             <if test="params.statuses != null and params.statuses != '' ">
                 and find_in_set(o.status,#{params.statuses})
+            </if>
+
+
+            <if test="params.status != null and params.status != '' ">
+                and find_in_set(a.status,#{params.status})
             </if>
         </where>
 
@@ -297,8 +303,13 @@
             <if test="params.gm_e != null ">
                 and o.create_time &lt;= #{params.gm_e}
             </if>
+
             <if test="params.statuses != null and params.statuses != '' ">
                 and find_in_set(o.status,#{params.statuses})
+            </if>
+
+            <if test="params.status != null and params.status != '' ">
+                and find_in_set(a.status,#{params.status})
             </if>
         </where>
         ) r
@@ -315,7 +326,7 @@
             a.id,
             vin,
             mileage,
-            NAME,
+            a.name,
             begin_register_date,
             color,
             engine_capacity,
@@ -334,7 +345,7 @@
             certificate_photo,
             other_photo,
             color_cn,
-            region_id,
+            a.region_id,
             auto_brand,
             auto_brand_cn,
             auto_style,
@@ -379,7 +390,7 @@
             o.customer_tel,
             o.customer_source,
             o.create_time as order_create_time,
-            e.name as "store_name",
+            e.name as "store_name"
          FROM car_assess a
         LEFT JOIN car_assess_order o on o.assess_id = a.id
         LEFT JOIN car_store e on e.id = o.store_id

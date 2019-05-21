@@ -70,7 +70,15 @@ public class Constants {
     public static final String CALLBACK_CHABOSHI = ROOT+"/service/carChaboshiLog/cbsCallback" ;
 
     /**在线签约微服务地址*/
-    public static final String COMMON_MODULE_ROOT = "http://test.yuntongauto.com" ;
+    public static final String COMMON_MODULE_ROOT = "http://test-api.yuntongauto.com" ;
+    /***
+     * 本地开发，接口调用测试环境接口
+     * http://test-api.yuntongauto.com/file 文件上传接口
+     * http://test-api.yuntongauto.com/message 短信发送接口
+     * http://test-api.yuntongauto.com/carmodel 车型库接口
+     */
+
+
 
     /**pdf模板方式合同生成甲方签字合同**/
     public static final String CREATESIGNATURE_TEMP_URL =  Constants.COMMON_MODULE_ROOT + "/signature/gosign/pdf/fill";
@@ -144,14 +152,14 @@ public class Constants {
     /***getVehicleListByVin
      * 根据vin码匹配车型列表
      */
-//    public static final String VIN_GET_VEHICLELIST_URL = COMMON_MODULE_ROOT+"/carmodel/vehiclelist";
-    public static final String VIN_GET_VEHICLELIST_URL = "http://192.168.22.67:2001/carmodel/vehiclelist";
+    public static final String VIN_GET_VEHICLELIST_URL = COMMON_MODULE_ROOT+"/carmodel/vehiclelist";
+//    public static final String VIN_GET_VEHICLELIST_URL = "http://192.168.22.67:2001/carmodel/vehiclelist";
 
     /***
      * 根据具体车型获取车辆详细配置信息
      */
-//    public static final String ID_GET_VEHICLEDETAIL_URL = COMMON_MODULE_ROOT+"/carmodel/vehicledetail";
-    public static final String ID_GET_VEHICLEDETAIL_URL = "http://192.168.22.67:2001/carmodel/vehicledetail";
+    public static final String ID_GET_VEHICLEDETAIL_URL = COMMON_MODULE_ROOT+"/carmodel/vehicledetail";
+//    public static final String ID_GET_VEHICLEDETAIL_URL = "http://192.168.22.67:2001/carmodel/vehicledetail";
 
 
     /**
@@ -166,11 +174,11 @@ public class Constants {
 //    public static final String ALIPAY_NOTIFY_URL = "http://2sc.wintop2sc.com/mobile/aliPay/payNotifyDeposit";
 
     /**图片上传*/
-//    public static final String UPLOADFILE_URL = COMMON_MODULE_ROOT+"/file/uploadFile";
-    public static final String UPLOADFILE_URL = "http://192.168.22.67:2003/file/uploadFile";
+    public static final String UPLOADFILE_URL = COMMON_MODULE_ROOT+"/file/uploadFile";
+//    public static final String UPLOADFILE_URL = "http://192.168.22.67:2003/file/uploadFile";
     /**图片上传*/
-//    public static final String UPLOADIMAGEFORQUALITY_URL = COMMON_MODULE_ROOT+"/file/uploadImageForQuality";
-    public static final String UPLOADIMAGEFORQUALITY_URL = "http://192.168.22.67:2003/file/uploadImageForQuality";
+    public static final String UPLOADIMAGEFORQUALITY_URL = COMMON_MODULE_ROOT+"/file/uploadImageForQuality";
+//    public static final String UPLOADIMAGEFORQUALITY_URL = "http://192.168.22.67:2003/file/uploadImageForQuality";
 
 
     /***

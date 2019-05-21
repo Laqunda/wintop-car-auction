@@ -292,8 +292,12 @@ public class CarAssessApi {
                 carAssess = new CarAssess();
             }
             int code = carAssessService.updateCarAssess(carAssess);
+            carAssess.setName(carAssess.getAutoBrandCn() + " " + carAssess.getAutoSeriesCn() + " " + carAssess.getAutoStyleCn());//车辆名称=品牌+车系+车型
 
             if (code > 0) {
+                if (carAssess.getOrder() != null && carAssess.getOrder().getId() != null) {
+                    orderService.updateCarAssessOrder(carAssess.getOrder());
+                }
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
             } else {
                 result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());

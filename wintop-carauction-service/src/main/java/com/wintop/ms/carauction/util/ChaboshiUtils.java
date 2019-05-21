@@ -6,8 +6,10 @@ import com.chaboshi.util.CBS;
 import com.wintop.ms.carauction.core.config.ChaBoShiConfig;
 import com.wintop.ms.carauction.core.config.Constants;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class ChaboshiUtils {
 
@@ -20,7 +22,8 @@ public class ChaboshiUtils {
         String engino = "";//发动机号
         String licenseplate = "";//车牌号
 
-        String buyReport = CBS.getInstance(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret).getBuyReport(vin, engino, licenseplate, Constants.CALLBACK_CHABOSHI);
+
+        String buyReport = CBS.getInstance(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret, false).getBuyReport(vin, engino, licenseplate, Constants.CALLBACK_CHABOSHI);
 
         JSONObject o = JSONObject.parseObject(buyReport);
 
@@ -29,6 +32,7 @@ public class ChaboshiUtils {
 
             String message = o.getString("Message");
             String orderId = o.getString("orderId");
+            System.out.println("message:" + message + "\norderId:" + orderId);
         } else {
             //订单失败
         }
@@ -103,8 +107,31 @@ public class ChaboshiUtils {
         HashMap param = new HashMap();
         param.put("vin", vin);
         param.put("callbackurl", Constants.CALLBACK_CHABOSHI);
+        param.put("timestamp", new Date().getTime());
+        param.put("nonce", UUID.randomUUID().toString());
+        param.put("userid", ChaBoShiConfig.userId);
         String str = cbs.sendPost("/new_report/buy", param);
         return JSONObject.parseObject(str);
+    }
+
+
+    //****************************************************************************************************************************
+
+
+    public static void main(String[] args) {
+
+//        JSONObject report = repairReport("LSGWS52X67S050013");
+
+
+        String userId = "824791";
+        String keySecret = "9021288d82f7e0175aad2db9c05a0026";
+        CBSBuilder cbsBuilder = CBSBuilder.newCBSBuilder(userId, keySecret, false);
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("vin", "LSGWS52X67S050013");
+        String data = cbsBuilder.sendPost("/new_report/buy", params);
+
+        System.out.println(data);
+//        System.out.println(report.toJSONString());
     }
 }
 
