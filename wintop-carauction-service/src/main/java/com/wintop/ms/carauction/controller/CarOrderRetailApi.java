@@ -53,7 +53,7 @@ public class CarOrderRetailApi {
             }
             carOrderRetail.setOrderNo(sdf.format(new Date())+idWorker.nextId());
             carOrderRetail.setId(idWorker.nextId());
-            int code = carOrderRetailService.insertSelective(carOrderRetail);
+            carOrderRetailService.insertSelective(carOrderRetail);
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {
             logger.info("新增保存车辆评估", e);

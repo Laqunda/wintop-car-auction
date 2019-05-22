@@ -28,7 +28,7 @@ public class CarOrderRetail {
 
     private String salesType;
 
-    private Long salesConsultant;
+    private String salesConsultant;
 
     private Date salesDate;
 
@@ -172,11 +172,11 @@ public class CarOrderRetail {
         this.salesType = salesType == null ? null : salesType.trim();
     }
 
-    public Long getSalesConsultant() {
+    public String getSalesConsultant() {
         return salesConsultant;
     }
 
-    public void setSalesConsultant(Long salesConsultant) {
+    public void setSalesConsultant(String salesConsultant) {
         this.salesConsultant = salesConsultant;
     }
 
