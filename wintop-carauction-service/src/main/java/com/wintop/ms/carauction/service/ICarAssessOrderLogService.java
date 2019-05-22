@@ -4,6 +4,7 @@ import com.wintop.ms.carauction.entity.CarAssessOrderLog;
 import com.wintop.ms.carauction.entity.CarManagerUser;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 评估采购日志 服务层
@@ -56,4 +57,12 @@ public interface ICarAssessOrderLogService
     int selectAssessOrderCount(CarAssessOrderLog carAssessOrderLog);
 
     void saveOrderLog(CarManagerUser managerUser, String s, String s1, long orderlog_id,long orderId);
+
+	int selectCountWaitByUserId(Long userId);
+
+	int selectCountEndByUserId(Long userId);
+
+	public List<CarAssessOrderLog> selectWaitOrderList(Map<String,Object> map);
+
+	public List<CarAssessOrderLog> selectEndOrderList(Map<String,Object> map);
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 评估采购日志 服务层实现
@@ -77,5 +78,21 @@ public class CarAssessOrderLogModel {
 
         return readDao.selectAssessOrderCount(carAssessOrderLog);
 
+    }
+
+    public int selectCountWaitByUserId(Long userId){
+        return readDao.selectCountWaitByUserId(userId);
+    }
+
+    public int selectCountEndByUserId(Long userId){
+        return readDao.selectCountEndByUserId(userId);
+    }
+
+    public List<CarAssessOrderLog> selectWaitOrderList(Map<String,Object> map){
+        return readDao.selectWaitOrderList(map);
+    }
+
+    public List<CarAssessOrderLog> selectEndOrderList(Map<String,Object> map){
+        return readDao.selectEndOrderList(map);
     }
 }

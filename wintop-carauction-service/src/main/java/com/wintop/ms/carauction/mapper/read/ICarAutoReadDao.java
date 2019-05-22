@@ -116,4 +116,8 @@ public interface ICarAutoReadDao {
      * 零售订单列表总数量
      */
     Integer selectRetailForCount(Map<String, Object> map);
+
+    List<CarAuto> selectUserOrderList(Map<String, Object> map);
+
+    int selectCountById(Long userId);
 }

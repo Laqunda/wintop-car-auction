@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 评估采购单 信息操作处理
@@ -410,4 +408,78 @@ public class CarAssessOrderApi {
         return 1;
     }
 
+
+    /**
+     * 根据条件查询采购申请
+     */
+    @ApiOperation(value = "根据条件查询采购申请")
+    @RequestMapping(value = "/selectListByType",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<ListEntity<Map<String,Object>>>selectListByType(@RequestBody JSONObject object) {
+        ServiceResult<ListEntity<Map<String,Object>>>result = new ServiceResult<>();
+        try {
+            Long userId = object.getLong("userId");
+            String type = object.getString("type");
+            Map<String,Object> paramMap = new HashMap<>();
+            paramMap.put("userId",userId);
+            PageEntity pageEntity= CarAutoUtils.getPageParam(object);
+            paramMap.put("startRowNum",pageEntity.getStartRowNum());
+            paramMap.put("endRowNum",pageEntity.getEndRowNum());
+            List<Map<String,Object>> list = new ArrayList<>();
+            ListEntity<Map<String,Object>> listEntity = new ListEntity<>();
+            if(type.equals("1")){
+                int count = orderLogService.selectCountWaitByUserId(userId);
+                paramMap.put("count",count);
+                listEntity.setCount(count);
+                List<CarAssessOrderLog> carAssessOrderLogs = orderLogService.selectWaitOrderList(paramMap);
+                for (CarAssessOrderLog carAssessOrderLog:carAssessOrderLogs){
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("mainPhoto",carAssessOrderLog.getMainPhoto());
+                    map.put("autoInfoName",carAssessOrderLog.getAutoInfoName());
+                    map.put("creatTime",carAssessOrderLog.getCreateTime());
+                    map.put("creatUser",carAssessOrderLog.getCreateUser());
+                    list.add(map);
+                    listEntity.setList(list);
+                }
+            }else if (type.equals("2")){
+                int count = orderLogService.selectCountEndByUserId(userId);
+                paramMap.put("count",count);
+                listEntity.setCount(count);
+                List<CarAssessOrderLog> carAssessOrderLogs = orderLogService.selectEndOrderList(paramMap);
+                for (CarAssessOrderLog carAssessOrderLog:carAssessOrderLogs){
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("mainPhoto",carAssessOrderLog.getMainPhoto());
+                    map.put("autoInfoName",carAssessOrderLog.getAutoInfoName());
+                    map.put("creatTime",carAssessOrderLog.getCreateTime());
+                    map.put("creatUser",carAssessOrderLog.getCreateUser());
+                    list.add(map);
+                    listEntity.setList(list);
+                }
+            }else if (type.equals("3")){
+                int count = carAssessOrderService.selectCountById(userId);
+                paramMap.put("count",count);
+                listEntity.setCount(count);
+                List<CarAssessOrder> carAssessOrders = carAssessOrderService.selectUserOrderList(paramMap);
+                for (CarAssessOrder carAssessOrder:carAssessOrders){
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("mainPhoto",carAssessOrder.getMainPhoto());
+                    map.put("autoInfoName",carAssessOrder.getAutoInfoName());
+                    map.put("creatTime",carAssessOrder.getCreateTime());
+                    map.put("creatUser",carAssessOrder.getCreateUser());
+                    list.add(map);
+                    listEntity.setList(list);
+                }
+            }
+            result.setResult(listEntity);
+            result.setSuccess("0","成功");
+        } catch (Exception e) {
+            logger.info("删除评估采购单", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+
+        }
+        return result;
+    }
 }

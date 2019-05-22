@@ -277,7 +277,7 @@ public class AliPayApi {
 
                 ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                         RequestEntity
-                                .post(URI.create(Constants.ROOT + "/service/carChaboshiLog/payChaboshiAmountCallback"))
+                                .post(URI.create(Constants.ROOT + "/service//payChaboshiAmountCallback"))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .body(jsonObject), JSONObject.class);
 

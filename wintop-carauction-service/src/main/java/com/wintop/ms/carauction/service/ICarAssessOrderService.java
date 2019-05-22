@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.service;
 import com.wintop.ms.carauction.entity.CarAssessOrder;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 评估采购单 服务层
@@ -53,4 +54,8 @@ public interface ICarAssessOrderService
 	public int deleteCarAssessOrderByIds(String ids);
 
     int selectAssessOrderCount(CarAssessOrder carAssessOrder);
+
+	int selectCountById(Long userId);
+
+	public List<CarAssessOrder> selectUserOrderList(Map<String,Object> map);
 }

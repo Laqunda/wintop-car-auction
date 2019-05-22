@@ -4,13 +4,13 @@ spring:
 #  cloud.stream.bindings.input.destination: verifications
   # remove::end[]
   redis:
-    host: 111.203.134.35
-    password: wintop-yth
-    port: 6390
+    host: 127.0.0.1
+    password: 123456
+    port: 6379
     pool:
       max-active: 1000 #--最大活动链接---#
       max-idle: 50      #------最大允许空闲-----#
-      max-wait: 100     #--------最大等待时间-----------#
+      max-wait: 100     #oa #
 
 server:
   connection-timeout: 5000

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 评估采购单 服务层实现
@@ -78,5 +79,15 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
     @Override
     public int selectAssessOrderCount(CarAssessOrder carAssessOrder) {
         return model.selectAssessOrderCount(carAssessOrder);
+    }
+
+    @Override
+    public int selectCountById(Long userId) {
+        return model.selectCountById(userId);
+    }
+
+    @Override
+    public List<CarAssessOrder> selectUserOrderList(Map<String, Object> map) {
+        return model.selectUserOrderList(map);
     }
 }

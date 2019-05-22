@@ -864,4 +864,16 @@ public class CarAutoServiceImpl implements ICarAutoService {
     public CarAutoAuction  selectCarInfoById(JSONObject object){
        return autoAuctionModel.selectAutoAuction(object.getLong("carId"));
     }
+
+    @Override
+    public List<CarAuto> selectUserOrderList(Map<String, Object> map) {
+        return carAutoModel.selectUserOrderList(map);
+    }
+
+    @Override
+    public int selectCountById(Long userId) {
+        return carAutoModel.selectCountById(userId);
+    }
+
+
 }

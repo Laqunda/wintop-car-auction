@@ -74,6 +74,10 @@
         INNER JOIN car_auto_info_detail t3 ON t1.car_id=t3.id
         INNER JOIN car_manager_user t4 ON t1.sales_consultant=t4.id
         WHERE t1.create_user=#{customerId}
+        ORDER BY t1.create_time DESC
+        <if test="startRowNum!=null and endRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
     </select>
 
     <select id="selectCarOrder" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -85,6 +89,10 @@
         INNER JOIN car_auto_info_detail t3 ON t1.id=t3.id
         INNER JOIN  wt_app_user t4 ON t2.customer_id=t4.id
         WHERE t1.publish_user_id=#{customerId}
+        ORDER BY t1.create_time DESC
+        <if test="startRowNum!=null and endRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
     </select>
 
     <select id="selectCarOrderCount" resultType="java.lang.Integer" parameterType="java.lang.Long">

@@ -52,6 +52,8 @@ public class CarAutoApi {
     private ICarManagerUserService managerUserService;
     @Autowired
     private ICarManagerRoleService roleService;
+    @Autowired
+    private ICarAutoLogService iCarAutoLogService;
 
     private IdWorker idWorker = new IdWorker(10);
     /***
@@ -927,6 +929,87 @@ public class CarAutoApi {
         }catch (Exception e){
             e.printStackTrace();
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /**
+     * 根据条件查询采购申请
+     */
+    @ApiOperation(value = "根据条件查询车辆申请")
+    @RequestMapping(value = "/selectListByType",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<ListEntity<Map<String,Object>>>selectListByType(@RequestBody JSONObject object) {
+
+     ServiceResult<ListEntity<Map<String,Object>>>result = new ServiceResult<>();
+        try {
+            Long userId = object.getLong("userId");
+            String type = object.getString("type");
+            Map<String,Object> paramMap = new HashMap<>();
+            paramMap.put("userId",userId);
+            PageEntity pageEntity= CarAutoUtils.getPageParam(object);
+            paramMap.put("startRowNum",pageEntity.getStartRowNum());
+            paramMap.put("endRowNum",pageEntity.getEndRowNum());
+            List<Map<String,Object>> list = new ArrayList<>();
+            ListEntity<Map<String,Object>> listEntity = new ListEntity<>();
+            if(type.equals("1")){
+                int count = iCarAutoLogService.selectCountWaitByUserId(userId);
+                paramMap.put("count",count);
+                listEntity.setCount(count);
+                List<CarAutoLog> carAutoLogs = iCarAutoLogService.selectWaitOrderList(paramMap);
+                for (CarAutoLog carAtuoLog:carAutoLogs){
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("mainPhoto",carAtuoLog.getMainPhoto());
+                    map.put("autoInfoName",carAtuoLog.getAutoInfoName());
+                    map.put("time",carAtuoLog.getTime());
+                    map.put("publishUserName",carAtuoLog.getPublishUserName());
+                    map.put("id",carAtuoLog.getId());
+                    map.put("status",carAtuoLog.getStatus());
+                    list.add(map);
+                    listEntity.setList(list);
+                }
+            }else if (type.equals("2")){
+                int count = iCarAutoLogService.selectCountEndByUserId(userId);
+                paramMap.put("count",count);
+                listEntity.setCount(count);
+                List<CarAutoLog> carAutoLogs = iCarAutoLogService.selectEndOrderList(paramMap);
+                for (CarAutoLog carAtuoLog:carAutoLogs){
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("mainPhoto",carAtuoLog.getMainPhoto());
+                    map.put("autoInfoName",carAtuoLog.getAutoInfoName());
+                    map.put("time",carAtuoLog.getTime());
+                    map.put("publishUserName",carAtuoLog.getPublishUserName());
+                    map.put("id",carAtuoLog.getId());
+                    map.put("status",carAtuoLog.getStatus());
+                    list.add(map);
+                    listEntity.setList(list);
+                }
+            }else if (type.equals("3")){
+                int count = carAutoService.selectCountById(userId);
+                paramMap.put("count",count);
+                listEntity.setCount(count);
+                List<CarAuto> carAutos = carAutoService.selectUserOrderList(paramMap);
+                for (CarAuto carAuto:carAutos){
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("mainPhoto",carAuto.getMainPhoto());
+                    map.put("autoInfoName",carAuto.getAutoInfoName());
+                    map.put("time",carAuto.getTime());
+                    map.put("publishUserName",carAuto.getPublishUserName());
+                    map.put("id",carAuto.getId());
+                    map.put("status",carAuto.getStatus());
+                    list.add(map);
+                    listEntity.setList(list);
+                }
+            }
+            result.setResult(listEntity);
+            result.setSuccess("0","成功");
+        } catch (Exception e) {
+            logger.info("根据条件查询车辆", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+
         }
         return result;
     }
