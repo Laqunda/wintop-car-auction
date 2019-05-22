@@ -75,4 +75,11 @@ public interface ICarAuctionBidRecordReadDao {
      */
     CarAuctionBidRecord selectMaxBidRecordByCarId(@Param("carId") Long carId,@Param("autoAuctionId") Long autoAuctionId);
 
+    /**
+     * 获取出价列表
+     * @param map
+     * @return
+     */
+    List<CarAuctionBidRecord> selectPriceList(Map<String,Object> map);
+
 }

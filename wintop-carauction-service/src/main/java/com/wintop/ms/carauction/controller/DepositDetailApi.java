@@ -5,6 +5,7 @@ import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.config.ResultStatus;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
+import com.wintop.ms.carauction.entity.CarManagerUser;
 import com.wintop.ms.carauction.entity.DepositDetail;
 import com.wintop.ms.carauction.entity.DepositFreeze;
 import com.wintop.ms.carauction.entity.ListEntity;

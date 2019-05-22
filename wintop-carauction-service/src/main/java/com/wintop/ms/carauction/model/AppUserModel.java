@@ -140,6 +140,17 @@ public class AppUserModel {
     }
 
     /**
+     * 查询会员车拍牌号是否重复
+     * @Author:zhangzijuan
+     * @param mobile
+     * @param auctionPlateNum
+     * @return
+     */
+    public Integer selectAuctionPlateNumIsRepeat(String mobile,String auctionPlateNum) {
+        return readDao.selectAuctionPlateNumIsRepeat(mobile, auctionPlateNum);
+    }
+
+    /**
      * 查询会员详情信息
      * @Author:zhangzijuan
      * @param userCode

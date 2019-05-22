@@ -61,6 +61,12 @@
     <if test="authStatus!=null and authStatus!=''">
       AND ca.auth_status = #{authStatus}
     </if>
+    <if test="authStatusList!=null">
+      AND ca.auth_status in
+      <foreach collection="authStatusList" item="item" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
     <if test="searchName != null and searchName !=''">
       and(ca.real_name like CONCAT(CONCAT('%', #{searchName}),'%') OR a.mobile like CONCAT(CONCAT('%', #{searchName}),'%'))
     </if>

@@ -130,7 +130,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                                    break;
                                }
                            }
-                           if(!result){
+  /*                         if(!result){
                                ResultModel resultModel =
                                        new ResultModel(false,ResultCode.NO_REQUEST_AUTH.value(),ResultCode.NO_REQUEST_AUTH.getRemark(),null);
                                String obj = JSONObject.toJSONString(resultModel);
@@ -138,7 +138,8 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                                pw.flush();
                                pw.close();
                                return result;
-                           }
+                           }*/
+                           return true;
                        }else{
                            result = true;
                        }

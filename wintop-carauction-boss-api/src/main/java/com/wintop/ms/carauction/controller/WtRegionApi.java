@@ -6,8 +6,10 @@ import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.annotation.RequestAuth;
 import com.wintop.ms.carauction.core.config.Constants;
+import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.config.ResultStatus;
 import com.wintop.ms.carauction.core.model.ResultModel;
+import com.wintop.ms.carauction.util.utils.ApiUtil;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -176,5 +175,18 @@ public class WtRegionApi {
             resultModel = new ResultModel(false, ResultStatus.ERROR);
             return new ResponseEntity<>(resultModel, resultResponseEntity.getStatusCode());
         }
+    }
+
+    @PostMapping( value = "/getAll", produces = "application/json; charset=UTF-8" )
+    public ResultModel getAll(@RequestBody Map<String, Object> map) {
+        if (map.get("status") == null) {
+            return new ResultModel(false, ResultCode.NO_PARAM.value(), ResultCode.NO_PARAM.getRemark(), null);
+        }
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/wtRegion/getAll"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map.get("status").toString()), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.LIST);
     }
 }

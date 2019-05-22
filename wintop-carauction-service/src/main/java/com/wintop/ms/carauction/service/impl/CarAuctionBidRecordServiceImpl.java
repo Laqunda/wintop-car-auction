@@ -172,6 +172,17 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
         return model.selectMaxPrice(map);
     }
 
+
+    /**
+     * 获取出价列表
+     * @param map
+     * @return
+     */
+    @Override
+    public List<CarAuctionBidRecord> selectPriceList(Map<String,Object> map) {
+        return model.selectPriceList(map);
+    }
+
     /**
      * 根据条件查询用户出价车辆列表
      */

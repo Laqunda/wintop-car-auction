@@ -54,6 +54,10 @@ public class CarAgent implements Serializable {
 
     private String handlerTel;
 
+    private String manualAdd;
+
+    private Long appUserId;
+
     public String getHandlerTel() {
         return handlerTel;
     }
@@ -228,5 +232,21 @@ public class CarAgent implements Serializable {
 
     public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
+    }
+
+    public String getManualAdd() {
+        return manualAdd;
+    }
+
+    public void setManualAdd(String manualAdd) {
+        this.manualAdd = manualAdd;
+    }
+
+    public Long getAppUserId() {
+        return appUserId;
+    }
+
+    public void setAppUserId(Long appUserId) {
+        this.appUserId = appUserId;
     }
 }

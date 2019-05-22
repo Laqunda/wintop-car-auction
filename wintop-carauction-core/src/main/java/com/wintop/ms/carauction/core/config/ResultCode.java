@@ -53,6 +53,7 @@ public enum ResultCode {
     DELETE_LEVEL_DEFAUIT(423, "该级别为默认级别，不能删除"),
     PARAM_ERROR(424, "参数错误"),
     NO_UPDATE_BREACH(425, "修改车价必须是争议之前订单状态为待付款"),
+    EXISTS_REPEAT_AUCTION_PLATE_NUM(426, "存在重复的拍牌号"),
 
     JZ_INVALID(501, "基站无效"),
     PP_INVALID(502, "拍牌无效"),

@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * class_name: ImportCarDataApi
@@ -106,10 +109,17 @@ public class ImportCarDataApi {
             cellValue=null;
         }
         String returnValue=null;
-        if (cellValue!=null){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = sdf.parse(cellValue.trim());
-            returnValue = sdf.format(date);
+        try {
+            if (cellValue!=null){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = sdf.parse(cellValue.trim());
+                returnValue = sdf.format(date);
+            }
+        } catch (ParseException e) {
+            SimpleDateFormat inputSdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.US);
+            SimpleDateFormat outputSdf = new SimpleDateFormat("yyyy-MM-dd");
+            String value = outputSdf.format(inputSdf.parse(cellValue.trim()));
+            return value;
         }
         return returnValue;
     }

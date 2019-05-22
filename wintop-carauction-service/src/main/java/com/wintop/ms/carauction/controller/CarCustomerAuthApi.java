@@ -6,6 +6,7 @@ import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarCustomerAuth;
 import com.wintop.ms.carauction.entity.ListEntity;
 import com.wintop.ms.carauction.service.ICarCustomerAuthService;
+import com.wintop.ms.carauction.util.StringUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -15,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,8 +30,18 @@ import java.util.Map;
 @RequestMapping(value = "/service/customerAuth")
 public class CarCustomerAuthApi {
     private static final Logger logger = LoggerFactory.getLogger(CarCustomerAuthApi.class);
+    private static Map<String, List<String>> auditStatusList = createAuditStatusList();
+
     @Resource
     private ICarCustomerAuthService customerAuthService;
+
+    private static Map<String, List<String>> createAuditStatusList() {
+        return new HashMap<String, List<String>>(){{
+            put("auth", Arrays.asList("1"));
+            put("sign", Arrays.asList("3", "6", "8"));
+            put("deposit", Arrays.asList("4", "9"));
+        }};
+    }
     /**
      * 根据用户id查询用户认证信息
      * @return
@@ -89,7 +102,11 @@ public class CarCustomerAuthApi {
             Integer pageSize=(Integer) paramMap.get("limit");
             paramMap.put("startRowNum",(page-1)*pageSize);
             paramMap.put("endRowNum",pageSize);
-            paramMap.put("authStatus","1");
+//            paramMap.put("authStatus","1");
+            // 审核状态集合
+            if (paramMap.get("audit") != null) {
+                paramMap.put("authStatusList", auditStatusList.get(paramMap.get("audit")));
+            }
             int count = customerAuthService.selectUserAuthCount(paramMap);
             List<CarCustomerAuth> customerAuths = customerAuthService.selectUserAuthList(paramMap);
             ListEntity<CarCustomerAuth> listEntity = new ListEntity<>();
