@@ -377,6 +377,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
                 carMap.put("auctionNum",0);
             }
             carMap.put("publishUserName",carLocaleAuctionCar.getPublishUserName());
+            carMap.put("status", carLocaleAuctionCar.getStatus());
             entriesList.add(carMap);
         }
         resultMap.put("shareUri", shareUri);
@@ -589,7 +590,9 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
         //最高出价
         CarAuctionBidRecord carAuctionBidRecord = carAuctionBidRecordModel.selectLastBidRecord(auctionCarId);
         if(carAuctionBidRecord==null||carAuctionBidRecord.getBidFee()==null||carAuctionBidRecord.getBidFee().compareTo(new BigDecimal(0))==0){
-            return new ServiceResult<>(false,"获取不到最高出价","101");
+//            return new ServiceResult<>(false,"获取不到最高出价","101");
+            carAuctionBidRecord = new CarAuctionBidRecord();
+            carAuctionBidRecord.setBidFee(BigDecimal.valueOf(new Long(0)));
         }
         //查询车辆的保留价
         CarAutoAuction carAutoAuction = carAutoAuctionModel.selectByPrimaryKey(carLocaleAuctionCar.getAutoAuctionId());

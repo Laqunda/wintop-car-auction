@@ -4,6 +4,7 @@ import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.entity.CommonNameVo;
 import com.wintop.ms.carauction.entity.WtAppUser;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -158,4 +159,14 @@ public interface IWtAppUserService {
      * @return
      */
     ServiceResult<Map<String,Object>> editUserAuctionPlateNum(JSONObject object);
+
+    /**
+     * 查询会员车拍牌号是否重复
+     *
+     * @param mobile
+     * @param auctionPlateNum
+     * @return
+     * @Author:zhangzijuan
+     */
+    Integer selectAuctionPlateNumIsRepeat(String mobile, String auctionPlateNum);
 }

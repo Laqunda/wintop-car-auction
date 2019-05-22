@@ -24,6 +24,8 @@
     <result column="status_name" property="statusName" jdbcType="VARCHAR" />
     <result column="transferId" property="transferId" jdbcType="BIGINT" />
     <result column="handler_tel" property="handlerTel" jdbcType="VARCHAR" />
+    <result column="manual_add" property="manualAdd" jdbcType="VARCHAR" />
+    <result column="app_user_id" property="appUserId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, order_id, car_id, agent_company_id, agent_company_name, create_time, create_user
@@ -46,7 +48,9 @@
         a3.auction_type,
         s.simple_name as carStoreName,
         rs.status_name,
-        t.id as transferId
+        t.id as transferId,
+        a1.manual_add,
+        a1.id as app_user_id
     FROM car_agent a
         INNER JOIN car_order o ON o.id = a.order_id
         INNER JOIN wt_app_user a1 ON a1.id = o.customer_id

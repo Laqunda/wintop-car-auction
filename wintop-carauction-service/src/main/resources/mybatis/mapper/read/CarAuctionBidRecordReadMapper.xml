@@ -82,6 +82,26 @@
       AND t1.auction_id=#{auctionId}
     </if>
   </select>
+
+    <select id="selectPriceList" resultMap="BaseResultMap">
+        SELECT t1.bid_fee AS bid_fee FROM car_auction_bid_record t1
+        WHERE t1.car_id=#{carId}
+        <if test="customerId != null">
+            AND t1.customer_id=#{customerId}
+        </if>
+        <if test="auctionCarId != null">
+            AND t1.auction_car_id=#{auctionCarId}
+        </if>
+        <if test="auctionId != null">
+            AND t1.auction_id=#{auctionId}
+        </if>
+        <if test="carId != null">
+            AND t1.car_id=#{carId}
+        </if>
+        <if test="customerId != null">
+            AND t1.customer_id=#{carId}
+        </if>
+    </select>
   <!--根据条件查询用户出价的车辆列表-->
   <select id="queryUserBidList" resultMap="BaseResultMap">
     SELECT

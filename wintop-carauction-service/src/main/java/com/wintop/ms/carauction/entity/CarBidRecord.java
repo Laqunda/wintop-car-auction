@@ -65,7 +65,10 @@ public class CarBidRecord implements Serializable{
      * 出价金额
      */
     private BigDecimal bidFee;
-
+    /**
+     * 竞拍状态
+     */
+    private String auctionStatus;
     public CarBidRecord() {
     }
 
@@ -84,6 +87,7 @@ public class CarBidRecord implements Serializable{
         this.bidTime = bidTime;
         this.bidFee = bidFee;
     }
+
 
     public Long getId() {
         return id;
@@ -189,6 +193,13 @@ public class CarBidRecord implements Serializable{
         this.bidFee = bidFee;
     }
 
+    public String getAuctionStatus() {
+        return auctionStatus;
+    }
+
+    public void setAuctionStatus(String auctionStatus) {
+        this.auctionStatus = auctionStatus;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

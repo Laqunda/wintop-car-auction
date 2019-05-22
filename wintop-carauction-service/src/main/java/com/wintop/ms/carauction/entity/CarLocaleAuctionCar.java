@@ -176,6 +176,10 @@ public class CarLocaleAuctionCar implements Serializable {
      * 加价额度
      */
     private BigDecimal priceRange;
+    /**
+     * 现场竞拍--拍卖场次--状态：1待上拍，2等待开拍，3正在竞拍，4竞拍结束
+     */
+    private String status;
 
     public BigDecimal getInitPriceRange() {
         return initPriceRange;
@@ -475,5 +479,13 @@ public class CarLocaleAuctionCar implements Serializable {
 
     public void setAuctionPlateNum(String auctionPlateNum) {
         this.auctionPlateNum = auctionPlateNum;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

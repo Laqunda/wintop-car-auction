@@ -64,6 +64,14 @@ public interface ICarAuctionBidRecordService {
     public BigDecimal selectMaxPrice(Map<String,Object> map);
 
     /**
+     * 获取出价列表
+     *
+     * @param map
+     * @return
+     */
+    List<CarAuctionBidRecord> selectPriceList(Map<String, Object> map);
+
+    /**
      * 根据条件查询用户出价的车辆列表
      */
     List<CarAuctionBidRecord> queryUserBidList(Map<String,Object> map);
