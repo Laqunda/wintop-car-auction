@@ -651,12 +651,16 @@
     ar.`name`,
     aa.expected_feedback_time,
     aa.auction_start_time,
-    aa.transfer_flag
+    aa.transfer_flag,
+    r.name AS cityName,
+    ar.user_num as userNum,
+    ret.sales_consultant as salesConsultant,
+    ret.transaction_fee as transactionFee
     FROM car_auto a
     LEFT JOIN car_auto_info_detail d ON d.auto_id=a.id
     LEFT JOIN car_auto_auction aa on aa.id=a.auto_auction_id
     LEFT JOIN (
-      SELECT la.title,la.start_time,ac.id,ac.car_id,ac.auto_auction_id
+      SELECT la.title,la.start_time,ac.id,ac.car_id,ac.auto_auction_id,la.city_id
       FROM
       car_locale_auction_car ac
       INNER  JOIN car_locale_auction la on la.id=ac.auction_id
@@ -666,6 +670,8 @@
     LEFT JOIN car_manager_user mu on mu.id=a.create_user
     LEFT JOIN car_order  co on (co.auto_auction_id=a.auto_auction_id and co.status!='8')
     LEFT JOIN wt_app_user ar on ar.id=aa.top_pricer_id
+    LEFT JOIN wt_region r on au.city_id = r.id
+    LEFT JOIN car_order_retail ret on ret.car_id = a.id and ret.sales_type = '1'
     WHERE a.status != '0' AND ((a.status='1' AND a.create_user=#{managerId}) OR a.status>'1')
     <if test="storeId!=null and storeId!=''">
       AND a.store_id=#{storeId}
@@ -678,6 +684,27 @@
     </if>
     <if test="status!=null and status!=''">
       AND a.status=#{status}
+    </if>
+    <if test="saleFlag!= null and saleFlag!=''">
+      AND a.sale_flag = #{saleFlag}
+    </if>
+    <if test="auctionStartTimeBegin != null and auctionStartTimeBegin !=''">
+      AND aa.auction_start_time &gt;= #{auctionStartTimeBegin}
+    </if>
+    <if test="auctionStartTimeEnd != null and auctionStartTimeEnd !=''">
+      AND aa.auction_start_time &lt;= #{auctionStartTimeEnd}
+    </if>
+    <if test="cityId != null and cityId != ''">
+      AND au.city_id = #{cityId}
+    </if>
+    <if test="title !=null and title != ''">
+      AND au.title = #{title}
+    </if>
+    <if test="salesStartDate != null and salesStartDate != ''">
+      AND ret.sales_date &gt;=#{salesStartDate}
+    </if>
+    <if test="salesEndDate != null and salesEndDate != ''">
+      AND ret.sales_date &lt;=#{salesEndDate}
     </if>
     <if test="auctionType!=null and auctionType!=''">
       AND aa.auction_type=#{auctionType}
@@ -727,8 +754,15 @@
     SELECT count(a.id)
     FROM car_auto a
     INNER JOIN car_auto_info_detail d ON d.auto_id=a.id
+    LEFT JOIN (
+      SELECT la.title,la.start_time,ac.id,ac.car_id,ac.auto_auction_id,la.city_id
+      FROM
+      car_locale_auction_car ac
+      INNER  JOIN car_locale_auction la on la.id=ac.auction_id
+    )au ON a.auto_auction_id=au.auto_auction_id
     LEFT JOIN car_auto_auction aa on aa.id=a.auto_auction_id
     LEFT JOIN car_manager_user mu on mu.id=a.create_user
+    LEFT JOIN car_order_retail ret on ret.car_id = a.id and ret.sales_type = '1'
     WHERE a.status != '0' AND ((a.status='1' AND a.create_user=#{managerId}) OR a.status>'1')
     <if test="storeId!=null and storeId!=''">
       AND a.store_id=#{storeId}
@@ -738,6 +772,24 @@
     </if>
     <if test="ifNew!=null and ifNew!=''">
       AND a.if_new=#{ifNew}
+    </if>
+    <if test="saleFlag!= null and saleFlag!=''">
+      AND a.sale_flag = #{saleFlag}
+    </if>
+    <if test="auctionStartTimeBegin != null and auctionStartTimeBegin !=''">
+      AND aa.auction_start_time &gt;= #{auctionStartTimeBegin}
+    </if>
+    <if test="auctionStartTimeEnd != null and auctionStartTimeEnd !=''">
+      AND aa.auction_start_time &lt;= #{auctionStartTimeEnd}
+    </if>
+    <if test="cityId != null and cityId != ''">
+      AND au.city_id = #{cityId}
+    </if>
+    <if test="salesStartDate != null and salesStartDate != ''">
+      AND ret.sales_date &gt;=#{salesStartDate}
+    </if>
+    <if test="salesEndDate != null and salesEndDate != ''">
+      AND ret.sales_date &lt;=#{salesEndDate}
     </if>
     <if test="status!=null and status!=''">
       AND a.status=#{status}

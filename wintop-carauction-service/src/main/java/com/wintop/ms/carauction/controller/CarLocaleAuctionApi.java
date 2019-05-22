@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
@@ -16,6 +17,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
@@ -886,9 +888,20 @@ public class CarLocaleAuctionApi {
         if(obj.getLong("customerId")!=null&&obj.getLong("customerId")!=0){
             carAuctionBidRecord.setCustomerId(obj.getLong("customerId"));
         }
-
         if(obj.getLong("lastAmount")==null){
             return new ServiceResult<>(false,"最高出价不能为空！","101");
+        }
+        Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put("auctionId", obj.getLong("auctionId"));
+        paramMap.put("auctionCarId", obj.getLong("auctionCarId"));
+        paramMap.put("carId", obj.getLong("carId"));
+        paramMap.put("customerId", obj.getLong("customerId"));
+        List<CarAuctionBidRecord> recordList = carAuctionBidRecordService.selectPriceList(paramMap);
+        if (CollectionUtils.isNotEmpty(recordList)) {
+            List<BigDecimal> priceList = recordList.stream().map(a -> a.getBidFee()).collect(Collectors.toList());
+            if (priceList.contains(obj.getBigDecimal("lastAmount"))) {
+                return new ServiceResult<>(false,"不可重复出价！","101");
+            }
         }
         CarLocaleAuctionCar carLocaleAuctionCar = carLocaleAuctionCarService.selectById(obj.getLong("auctionCarId"));
         if(carLocaleAuctionCar==null||!"1".equals(carLocaleAuctionCar.getAuctionStatus())){

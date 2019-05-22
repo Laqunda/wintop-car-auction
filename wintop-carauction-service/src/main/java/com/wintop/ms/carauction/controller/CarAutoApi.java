@@ -54,6 +54,21 @@ public class CarAutoApi {
     private ICarManagerRoleService roleService;
 
     private IdWorker idWorker = new IdWorker(10);
+
+    private static Map<String, List<String>> statusList = convertStatusMap();
+
+    private static Map<String, List<String>> convertStatusMap() {
+        return new HashMap<String, List<String>>(){{
+             put("1", Arrays.asList("1"));
+             put("2", Arrays.asList("2"));
+             put("3", Arrays.asList("3"));
+             put("4", Arrays.asList("6"));
+             put("5", Arrays.asList("7"));
+             put("6", Arrays.asList("8","9","10","11","12","13","14","15","16","17"));
+             put("7", Arrays.asList("19"));
+         }};
+    }
+
     /***
      * 车辆信息
      * @param obj
@@ -396,10 +411,13 @@ public class CarAutoApi {
         List<Map<String, Object>> list = Lists.newArrayList();
         Map<String, Object> paramMap = Maps.newHashMap();
         try {
+
             if (obj.getString("autoInfoName") != null) {
                 paramMap.put("autoInfoName", obj.getString("autoInfoName"));
             }
-            paramMap.put("status", obj.getString("status"));
+            if (obj.getString("status") != null) {
+                paramMap.put("statusList", statusList.get(obj.getString("status")));
+            }
             paramMap.put("auction_type",obj.getString("type"));
 
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
@@ -661,8 +679,42 @@ public class CarAutoApi {
         return result;
     }
 
+    /**
+     * 根据参数查询车辆列表
+     *@Author:zhangzijuan
+     *@date 2018/3/22
+     *@param:map
+     */
+    @ApiOperation(value = "根据参数查询车辆列表",notes = "根据参数查询车辆列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page",value = "当前页数",required = true,paramType = "query",dataType = "int"),
+            @ApiImplicitParam(name = "limit",value = "每页显示的条数",required = true,paramType = "query",dataType = "int"),
+            @ApiImplicitParam(name = "storeId",value = "店铺id",required = false,paramType = "query",dataType = "int"),
+            @ApiImplicitParam(name = "sourceType",value = "车辆来源：1个人车源，2公务车，3 4S店置换，4店铺车，5试乘试驾车",required = true,paramType = "query",dataType = "int"),
+            @ApiImplicitParam(name = "ifNew",value = "车辆类型 1二手车，2新车",required = false,paramType = "query",dataType = "int"),
+            @ApiImplicitParam(name = "status",value = "状态id",required = false,paramType = "query",dataType = "int"),
+            @ApiImplicitParam(name = "auctionType",value = "竞拍类型 拍卖类型（1线上、2线下)",required = false,paramType = "query",dataType = "int"),
+            @ApiImplicitParam(name = "startTime",value = "发车开始时间  2018-03-13",required = false,paramType = "query",dataType = "int"),
+            @ApiImplicitParam(name = "endTime",value = "结束发车时间  2018-03-13",required = false,paramType = "query",dataType = "int")
+    })
+    @PostMapping(value = "getCarAutoAllListByParam")
+    public ServiceResult<Map<String,Object>> getCarAutoAllListByParam (@RequestBody Map<String,Object> map){
+        ServiceResult<Map<String,Object>> result=new ServiceResult<>();
 
-
+        /**
+         * 数据权限过滤
+         */
+        Long userId=Long.parseLong(map.get("managerId").toString());
+        if(userId!=null){
+            List<Long> storeIds = managerUserService.queryStoreScope(userId);
+            map.put("storeIds",storeIds);
+        }
+        Map<String, Object> resultMap = Maps.newHashMap();
+        resultMap.put("list",carAutoService.getAllCarAutoList(map).getResult()) ;
+        result.setResult(resultMap);
+        result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        return result;
+    }
     /**
      *审核撤回审批的车辆
      * @Author zhangzijiuan

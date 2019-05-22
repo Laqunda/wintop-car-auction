@@ -82,6 +82,14 @@ public class CarAuctionBidRecordModel {
     }
 
     /**
+     * 获取出价列表
+     * @param map
+     * @return
+     */
+    public List<CarAuctionBidRecord> selectPriceList(Map<String,Object> map) {
+        return readDao.selectPriceList(map);
+    }
+    /**
      * 根据场次车辆id查询最高一次的出价记录
      * */
     public CarAuctionBidRecord selectLastBidRecord(Long auctionCarId){

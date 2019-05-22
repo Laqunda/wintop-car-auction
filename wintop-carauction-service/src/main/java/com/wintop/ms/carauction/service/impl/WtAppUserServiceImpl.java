@@ -1,5 +1,10 @@
 package com.wintop.ms.carauction.service.impl;
 
+import com.google.common.base.Predicates;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Maps;
+import com.google.common.primitives.Longs;
+import com.wintop.ms.carauction.controller.BargainingAuditApi;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.AppUser;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -11,7 +16,10 @@ import com.wintop.ms.carauction.util.utils.IdWorker;
 import com.wintop.ms.carauction.util.utils.RandCodeUtil;
 import com.wintop.ms.carauction.util.utils.RedisAppUserManager;
 import com.wintop.ms.carauction.util.utils.RedisTokenManager;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +29,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by liangtingsen on 2018/2/5.
@@ -28,6 +37,7 @@ import java.util.*;
  */
 @Service
 public class WtAppUserServiceImpl implements IWtAppUserService {
+    private static final Logger logger = LoggerFactory.getLogger(BargainingAuditApi.class);
     @Resource
     private AppUserModel appUserModel;
     @Resource
@@ -391,29 +401,33 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
         try {
             Integer a=0;
             Long managerId=object.getLong("managerId");
-            Long userId=object.getLong("userId");
+            List<Long> userIds= Splitter.on(",").splitToList(object.getString("userId")).stream().map(v-> Longs.tryParse(v)).collect(Collectors.toList());
             String groupIds=object.getString("groupIds");
             String[] groupIdArray = groupIds.split(",");
-                groupDetailModel.deleteByUserId(userId);
+                userIds.forEach(userId->{
+                    groupDetailModel.deleteByUserId(userId);
+                });
+            for (int j = 0; j < userIds.size(); j++) {
                 for(int i=0;i<groupIdArray.length;i++){
                     CarCustomerGroupDetail groupDetail=new CarCustomerGroupDetail();
                     groupDetail.setId(idWorker.nextId());
                     groupDetail.setCreateManager(managerId);
                     groupDetail.setCreateTime(new Date());
-                    groupDetail.setCustomerId(userId);
+                    groupDetail.setCustomerId(userIds.get(j));
                     groupDetail.setGroupId(Long.valueOf(groupIdArray[i]));
                     a=groupDetailModel.insertSelective(groupDetail);
                 }
                 //保存会员操作日志
                 CarCustomerLog log=new CarCustomerLog();
                 log.setId(idWorker.nextId());
-                log.setUserId(userId);
+                log.setUserId(userIds.get(j));
                 log.setStatus("9");
                 log.setMsg(object.getString("msg"));
                 log.setEditType("2");
                 log.setEditTime(new Date());
                 log.setEditUserId(managerId);
                 logModel.insertSelective(log);
+            }
             if (a>0){
                 result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());;
             }else {
@@ -528,11 +542,25 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
     }
 
     /**
+     * 查询会员车拍牌号是否重复
+     *
+     * @param mobile
+     * @param auctionPlateNum
+     * @return
+     * @Author:zhangzijuan
+     */
+    @Override
+    public Integer selectAuctionPlateNumIsRepeat(String mobile, String auctionPlateNum) {
+        return appUserModel.selectAuctionPlateNumIsRepeat(mobile,auctionPlateNum);
+    }
+
+    /**
      * 查询会员详情信息
      * @Author:zhangzijuan
      * @param userId
      * @return
      */
+    @Override
     public ServiceResult<WtAppUser> getUserInfoById(Long userId){
         ServiceResult<WtAppUser> result=new ServiceResult<>();
         try {
@@ -841,7 +869,8 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
         if (user==null && user1==null){
             // 保存用户信息
             WtAppUser appUser=new WtAppUser();
-            appUser.setId(idWorker.nextId());
+            long appUserId = idWorker.nextId();
+            appUser.setId(appUserId);
             appUser.setRegistTime(new Timestamp(System.currentTimeMillis()));
             appUser.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 //        7签约审核通过
@@ -893,6 +922,13 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
                 sign.setAuthManager(managerId);
                 sign.setAuthTime(new Date());
                 signModel.insert(sign);
+
+                // 保存关联组信息
+                object.put("userId",appUserId);
+                Map<String, Object> resultMap = updateUserGroup(object).getResult();
+                if (MapUtils.isNotEmpty(Maps.filterValues(resultMap, Predicates.equalTo("success")))) {
+                    logger.info("修改关联信息成功");
+                }
             }
         }
         return result;

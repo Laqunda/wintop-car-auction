@@ -1,6 +1,11 @@
 package com.wintop.ms.carauction.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
+import com.sun.org.apache.bcel.internal.generic.FADD;
+import com.wintop.ms.carauction.core.annotation.AuthPublic;
+
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.annotation.RequestAuth;
@@ -8,13 +13,19 @@ import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.CarManagerUser;
 import com.wintop.ms.carauction.core.entity.TokenManager;
+
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.core.model.TokenModel;
 import com.wintop.ms.carauction.entity.ManagerRolePages;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.ParamValidUtil;
 import com.wintop.ms.carauction.util.utils.RedisStoreUserManager;
+import com.wintop.ms.carauction.util.utils.*;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +36,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -331,6 +346,60 @@ public class CarManagerUserApi {
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
+    @AuthPublic
+    @PostMapping( value = "/exportManagerUserList" )
+    public void exportManagerUserList(HttpServletRequest request, HttpServletResponse rep, @RequestParam String searchName) {
+        String[] headers = {"登录账号", "用户姓名", "联系电话", "角色类型", "角色名称", "备注"};
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("searchName", searchName);
+        HSSFWorkbook workbook = ExcelUtil.createStartExcel("出价记录", headers);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/managerUser/selectManagerUserAllList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+        HSSFSheet sheet = workbook.getSheetAt(0);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            JSONObject obj = response.getBody();
+            JSONArray result = obj.getJSONObject("result").getJSONArray("list");
+            if (result != null && result.size() > 0) {
+                for (int i = 0; i < result.size(); i++) {
+                    JSONObject object = result.getJSONObject(i);
+                    HSSFRow itemRow = sheet.createRow(i + 2);
+                    HSSFCell c0 = itemRow.createCell(0);
+                    c0.setCellValue(object.getString("userKey"));
+
+                    HSSFCell c12 = itemRow.createCell(1);
+                    c12.setCellValue(object.getString("userName"));
+
+                    HSSFCell c1 = itemRow.createCell(2);
+                    c1.setCellValue(object.getString("userPhone"));
+
+                    HSSFCell c2 = itemRow.createCell(3);
+                    c2.setCellValue(object.getString("roleTypeName"));
+
+                    HSSFCell c3 = itemRow.createCell(4);
+                    c3.setCellValue(object.getString("roleName"));
+
+                    HSSFCell c4 = itemRow.createCell(5);
+                    c4.setCellValue(object.getString("remark"));
+
+                }
+            }
+        }
+        String filename = String.valueOf(ExcelUtil.processFileName(request, "系统用户信息列表")).concat(".xls");
+        rep.setContentType("application/vnd.ms-excel;charset=utf-8");
+        rep.setHeader("Content-disposition", "attachment;filename=" + filename);
+        try {
+            ServletOutputStream ouputStream = rep.getOutputStream();
+            workbook.write(ouputStream);
+            ouputStream.flush();
+            ouputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

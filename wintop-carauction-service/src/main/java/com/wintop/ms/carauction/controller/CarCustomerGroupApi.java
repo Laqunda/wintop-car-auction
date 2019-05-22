@@ -1,20 +1,22 @@
 package com.wintop.ms.carauction.controller;
 
+import com.google.common.primitives.Longs;
+import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarCustomerGroup;
 import com.wintop.ms.carauction.entity.CarCustomerLevel;
+import com.wintop.ms.carauction.entity.CarManagerUser;
 import com.wintop.ms.carauction.service.ICarCustomerGroupService;
+import com.wintop.ms.carauction.service.ICarManagerUserService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +31,11 @@ import java.util.Map;
 public class CarCustomerGroupApi {
     private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(CarCustomerGroupApi.class);
 
+    private static final Long ADMINISTRATOR = 1L;
     @Autowired
     private ICarCustomerGroupService customerGroupService;
-
+    @Autowired
+    private ICarManagerUserService managerUserService;
     /**
      * 查询用户分组及对应的用户数量
      * @Author:zhangzijuan
@@ -49,6 +53,31 @@ public class CarCustomerGroupApi {
         return customerGroupService.selectGroupAndNum(map);
     }
 
+    /***
+     * 获取用户角色
+     * @param object
+     * @return
+     */
+    @RequestMapping(value = "/selectUserRole",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> selectUserRole(@RequestBody JSONObject object) {
+        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+        try {
+            CarManagerUser mangerUser = managerUserService.selectByPrimaryKey(Longs.tryParse(object.get("managerId").toString()), false);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+            if (ADMINISTRATOR.equals(mangerUser.getRoleId())) {
+                result.setResult(Collections.singletonMap("flag", true));
+            } else {
+                result.setResult(Collections.singletonMap("flag", false));
+            }
+        } catch (Exception e) {
+            Logger.info("获取用户角色失败",e);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
 
     /**
      * 新建会分组
