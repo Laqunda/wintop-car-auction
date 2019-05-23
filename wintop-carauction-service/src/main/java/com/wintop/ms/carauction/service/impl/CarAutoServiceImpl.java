@@ -65,6 +65,8 @@ public class CarAutoServiceImpl implements ICarAutoService {
     @Autowired
     private ICarAuctionSettingService auctionSettingService;
     @Autowired
+    private CarOrderRetailModel carOrderRetailModel;
+    @Autowired
     private RedisAutoManager redisAutoManager;
     @Autowired
     private CarLocaleAuctionCarModel carLocaleAuctionCarModel;
@@ -732,7 +734,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
             String type = map.get("type").toString();
             if ("retail".equals(type)) {
                 // 零售
-                paramMap.put("saleFalg", "1");
+                paramMap.put("saleFlag", "1");
                 Integer num = carAutoModel.selectCarAutoForSaleCount(paramMap);
                 resultMap.put("title", "已售");
                 resultMap.put("num", num);
