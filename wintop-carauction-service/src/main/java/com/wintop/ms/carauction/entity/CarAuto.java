@@ -1159,4 +1159,33 @@ public class CarAuto implements Serializable {
     public void setPassInTime(Date passInTime) {
         this.passInTime = passInTime;
     }
+    private List<CarAutoLog> carAutoLog;
+
+    private List<TblAuctionLog> tblAuctionLog;
+
+    private String time;
+
+    public List<CarAutoLog> getCarAutoLog() {
+        return carAutoLog;
+    }
+
+    public void setCarAutoLog(List<CarAutoLog> carAutoLog) {
+        this.carAutoLog = carAutoLog;
+    }
+
+    public List<TblAuctionLog> getTblAuctionLog() {
+        return tblAuctionLog;
+    }
+
+    public void setTblAuctionLog(List<TblAuctionLog> tblAuctionLog) {
+        this.tblAuctionLog = tblAuctionLog;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 }
