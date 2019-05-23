@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.models.auth.In;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -418,7 +419,7 @@ public class CarAutoApi {
             if (obj.getString("status") != null) {
                 paramMap.put("statusList", statusList.get(obj.getString("status")));
             }
-            paramMap.put("auction_type",obj.getString("type"));
+            paramMap.put("auctionType",obj.getString("type"));
 
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
@@ -704,10 +705,12 @@ public class CarAutoApi {
         /**
          * 数据权限过滤
          */
-        Long userId=Long.parseLong(map.get("managerId").toString());
-        if(userId!=null){
-            List<Long> storeIds = managerUserService.queryStoreScope(userId);
-            map.put("storeIds",storeIds);
+        if (MapUtils.isNotEmpty(map) && map.keySet().contains("managerId")) {
+            Long userId=Long.parseLong(map.get("managerId").toString());
+            if(userId!=null){
+                List<Long> storeIds = managerUserService.queryStoreScope(userId);
+                map.put("storeIds",storeIds);
+            }
         }
         Map<String, Object> resultMap = Maps.newHashMap();
         resultMap.put("list",carAutoService.getAllCarAutoList(map).getResult()) ;
