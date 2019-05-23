@@ -408,6 +408,9 @@
       <if test="status != null" >
         t1.status = #{status},
       </if>
+      <if test="auctionType != null">
+        t1.auction_type = #{auctionType},
+      </if>
       <if test="topPricerId != null" >
         t1.top_pricer_id = #{topPricerId},
       </if>
