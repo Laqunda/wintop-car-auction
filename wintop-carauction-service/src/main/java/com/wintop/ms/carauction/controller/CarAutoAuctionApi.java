@@ -42,6 +42,7 @@ public class CarAutoAuctionApi {
     private static final Logger logger = LoggerFactory.getLogger(CarAutoAuctionApi.class);
     private static final String TRANSFER = "1";
     private static final String YES = "1";
+    private static final String UNDER_LINE = "2";
     @Autowired
     private ICarAutoAuctionService carAutoAuctionService;
     @Autowired
@@ -117,6 +118,9 @@ public class CarAutoAuctionApi {
             CarAutoAuction info = carAutoAuctionService.selectByAutoId(autoId);
             if (!TRANSFER.equals(info.getTransferFlag())){
                 CarAutoAuction carAutoAuction = new CarAutoAuction();
+                // 线下
+                carAutoAuction.setAuctionType(UNDER_LINE);
+                // 已转渠道
                 carAutoAuction.setTransferFlag(TRANSFER);
                 carAutoAuction.setAutoId(obj.getLong("autoId"));
                 try {
