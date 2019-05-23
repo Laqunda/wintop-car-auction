@@ -159,14 +159,28 @@ public class CarAutoApi {
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
-    //@AuthUserToken
+    @AuthUserToken
     @AppApiVersion(value = "2.0")
     public ResponseEntity<ResultModel> selectListByType(@RequestBody Map map) {
-        //map.put("userId",userId);
-
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT + "/service/carAuto/selectListByType"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
+    }
+
+    @ApiOperation(value = "申请撤拍接口")
+    @RequestMapping(value = "/withDrawCarAuction",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResponseEntity<ResultModel> withDrawCarAuction(@RequestBody Map map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/carAuto/withDrawCarAuction"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map), JSONObject.class);
         return ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);

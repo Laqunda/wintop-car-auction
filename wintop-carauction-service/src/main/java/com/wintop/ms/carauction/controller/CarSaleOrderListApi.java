@@ -28,8 +28,7 @@ public class CarSaleOrderListApi {
     private static final Logger logger = LoggerFactory.getLogger(CarSaleOrderListApi.class);
     @Autowired
     private ICarSaleOrderService iCarSaleOrderService;
-    @ApiOperation(value = "根据条件类型查询所有的状态")
-    @ApiImplicitParam(dataType = "string", name = "type", value = "类型", required = true)
+    @ApiOperation(value = "查询零售订单")
     @PostMapping(value = "getCarSaleOrderRetailList", produces="application/json; charset=UTF-8")
     public ServiceResult<ListEntity<Map<String,Object>>> getCarSaleOrderRetailList(@RequestBody JSONObject object){
         ServiceResult<ListEntity<Map<String,Object>>> result=new ServiceResult<>();
@@ -41,7 +40,7 @@ public class CarSaleOrderListApi {
             PageEntity pageEntity= CarAutoUtils.getPageParam(object);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
-            List<CarSaleOrder> carSaleOrders = iCarSaleOrderService.selectCarSaleOrder(customerId);
+            List<CarSaleOrder> carSaleOrders = iCarSaleOrderService.selectCarSaleOrder(paramMap);
             List<Map<String,Object>> list = new ArrayList<>();
             for (CarSaleOrder carSaleOrder : carSaleOrders){
                 Map<String,Object> map = new HashMap<>();
@@ -71,8 +70,7 @@ public class CarSaleOrderListApi {
         return result;
 
     }
-    @ApiOperation(value = "根据条件类型查询所有的状态")
-    @ApiImplicitParam(dataType = "string", name = "type", value = "类型", required = true)
+    @ApiOperation(value = "查询销售订单")
     @PostMapping(value = "getCarOrderList", produces="application/json; charset=UTF-8")
     public ServiceResult<ListEntity<Map<String,Object>>> getCarOrderList(@RequestBody JSONObject object){
         ServiceResult<ListEntity<Map<String,Object>>> result=new ServiceResult<>();
@@ -84,7 +82,7 @@ public class CarSaleOrderListApi {
             PageEntity pageEntity= CarAutoUtils.getPageParam(object);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
-            List<CarSaleOrder> carSaleOrders = iCarSaleOrderService.selectCarOrder(customerId);
+            List<CarSaleOrder> carSaleOrders = iCarSaleOrderService.selectCarOrder(paramMap);
             List<Map<String,Object>> list = new ArrayList<>();
             for (CarSaleOrder carSaleOrder : carSaleOrders){
                 Map<String,Object> map = new HashMap<>();
@@ -113,8 +111,7 @@ public class CarSaleOrderListApi {
         return result;
 
     }
-    @ApiOperation(value = "根据条件类型查询所有的状态")
-    @ApiImplicitParam(dataType = "string", name = "type", value = "类型", required = true)
+    @ApiOperation(value = "查询零售订单详情")
     @PostMapping(value = "getCarSaleOrderRetail", produces="application/json; charset=UTF-8")
     public ServiceResult<Map<String,Object>> getCarSaleOrderRetail(@RequestBody JSONObject object){
         ServiceResult<Map<String,Object>> result=new ServiceResult<>();

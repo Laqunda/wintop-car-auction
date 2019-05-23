@@ -8,18 +8,19 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CarSaleOrderModel {
     @Resource
     private ICarSaleOrderReadDAO iCarSaleOrderReadDAO;
 
-    public  List<CarSaleOrder> selectCarOrder(Long customerId){
-        return iCarSaleOrderReadDAO.selectCarOrder(customerId);
+    public  List<CarSaleOrder> selectCarOrder(Map<String,Object> paramMap){
+        return iCarSaleOrderReadDAO.selectCarOrder(paramMap);
     }
 
-    public List<CarSaleOrder> selectCarSaleOrder(Long customerId){
-        return iCarSaleOrderReadDAO.selectCarSaleOrder(customerId);
+    public List<CarSaleOrder> selectCarSaleOrder(Map<String,Object> paramMap){
+        return iCarSaleOrderReadDAO.selectCarSaleOrder(paramMap);
     }
 
     public CarSaleOrder selectCarSaleRetail(Long customerId){

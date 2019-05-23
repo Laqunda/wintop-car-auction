@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class CarSaleOrderServiceServiceImpl implements ICarSaleOrderService {
 
@@ -15,13 +17,13 @@ public class CarSaleOrderServiceServiceImpl implements ICarSaleOrderService {
     private CarSaleOrderModel carSaleOrderModel;
 
     @Override
-    public List<CarSaleOrder> selectCarOrder(Long customerId) {
-        return carSaleOrderModel.selectCarOrder(customerId);
+    public List<CarSaleOrder> selectCarOrder(Map<String,Object> paramMap) {
+        return carSaleOrderModel.selectCarOrder(paramMap);
     }
 
     @Override
-    public List<CarSaleOrder> selectCarSaleOrder(Long customerId) {
-        return carSaleOrderModel.selectCarSaleOrder(customerId);
+    public List<CarSaleOrder> selectCarSaleOrder(Map<String,Object> paramMap) {
+        return carSaleOrderModel.selectCarSaleOrder(paramMap);
     }
 
     @Override

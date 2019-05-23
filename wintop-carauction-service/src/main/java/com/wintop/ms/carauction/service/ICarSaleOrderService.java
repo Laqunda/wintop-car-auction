@@ -8,9 +8,9 @@ import java.util.Map;
 
 public interface ICarSaleOrderService {
 
-    List<CarSaleOrder> selectCarOrder(Long customerId);
+    List<CarSaleOrder> selectCarOrder(Map<String,Object> paramMap);
 
-    List<CarSaleOrder> selectCarSaleOrder(Long customerId);
+    List<CarSaleOrder> selectCarSaleOrder(Map<String,Object> paramMap);
 
     CarSaleOrder selectCarSaleOrderRetail(Long customerId);
 

@@ -1073,4 +1073,44 @@ public class CarAutoApi {
         }
         return result;
     }
+
+    /**
+     *申请撤拍
+     * @Author zhangzijiuan
+     * @return
+     */
+    @ApiOperation(value = "申请撤拍")
+    @RequestMapping(value = "/withDrawCarAuction",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> withDrawCarAuction(@RequestBody JSONObject object){
+        ServiceResult<Map<String,Object>> result=new ServiceResult<>();
+        try {
+            CarAuto auto = new CarAuto();
+            Long carId = object.getLong("carId");
+            auto.setId(carId);
+            Long userId=object.getLong("userId");
+            auto.setStatus("4");
+            CarManagerRole managerRole = roleService.selectByUserId(userId);
+            auto.setUpdateUser(userId);
+            Date date = new Date();
+            auto.setUpdateTime(date);
+            carAutoService.updateByPrimaryKeySelective(auto);
+            CarAutoLog carAutoLog = new CarAutoLog();
+            carAutoLog.setId(idWorker.nextId());
+            carAutoLog.setAutoId(carId);
+            carAutoLog.setStatus("4");
+            carAutoLog.setTime(date);
+            carAutoLog.setUserType("2");
+            carAutoLog.setUserId(userId);
+            carAutoLog.setUserName(managerRole.getRoleName());
+            carAutoLog.setMsg("申请撤拍");
+            iCarAutoLogService.insert(carAutoLog);
+        }catch (Exception e){
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
 }
