@@ -42,6 +42,12 @@ public class CarAssessOrderLog extends BaseEntity {
      */
     private String userName;
 
+    private String mainPhoto;
+
+    private String autoInfoName;
+
+    private String createUser;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -106,10 +112,6 @@ public class CarAssessOrderLog extends BaseEntity {
         return userName;
     }
 
-    private String mainPhoto;
-
-    private String createUser;
-
 
     public String getMainPhoto() {
         return mainPhoto;
@@ -127,7 +129,6 @@ public class CarAssessOrderLog extends BaseEntity {
         this.createUser = createUser;
     }
 
-    private String autoInfoName;
 
     public String getAutoInfoName() {
         return autoInfoName;

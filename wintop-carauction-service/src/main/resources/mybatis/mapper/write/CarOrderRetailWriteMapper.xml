@@ -179,6 +179,9 @@
       <if test="createDate != null" >
         create_date,
       </if>
+      <if test="mortgagePlan != null" >
+        mortgage_plan,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -289,7 +292,7 @@
       <if test="createDate != null" >
         #{createDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="mortgage_plan != null" >
+      <if test="mortgagePlan != null" >
         #{mortgagePlan,jdbcType=VARCHAR},
       </if>
     </trim>

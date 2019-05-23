@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -57,6 +58,8 @@ public class CarAssessOrderApi {
     @Autowired
     private ICarAutoLogService autoLogService;
 
+    @Autowired
+    private ICarManagerUserService iCarManagerUserService;
 
     /**
      * 查询评估采购单列表
@@ -429,20 +432,26 @@ public class CarAssessOrderApi {
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
             List<Map<String,Object>> list = new ArrayList<>();
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();
+            //待我审批 -- 店铺管理员可以审批采购申请
             if(type.equals("1")){
-                int count = orderLogService.selectCountWaitByUserId(userId);
-                paramMap.put("count",count);
-                listEntity.setCount(count);
-                List<CarAssessOrderLog> carAssessOrderLogs = orderLogService.selectWaitOrderList(paramMap);
-                for (CarAssessOrderLog carAssessOrderLog:carAssessOrderLogs){
-                    Map<String,Object> map = new HashMap<>();
-                    map.put("mainPhoto",carAssessOrderLog.getMainPhoto());
-                    map.put("autoInfoName",carAssessOrderLog.getAutoInfoName());
-                    map.put("creatTime",carAssessOrderLog.getCreateTime());
-                    map.put("creatUser",carAssessOrderLog.getCreateUser());
-                    list.add(map);
-                    listEntity.setList(list);
+                CarManagerUser carManagerUser = iCarManagerUserService.selectByPrimaryKey(userId,true);
+                if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
+                    paramMap.put("storeId",carManagerUser.getDepartmentId());
+                    int count = orderLogService.selectCountWaitByParams(paramMap);
+                    paramMap.put("count",count);
+                    listEntity.setCount(count);
+                    List<CarAssessOrderLog> carAssessOrderLogs = orderLogService.selectWaitOrderList(paramMap);
+                    for (CarAssessOrderLog carAssessOrderLog:carAssessOrderLogs){
+                        Map<String,Object> map = new HashMap<>();
+                        map.put("mainPhoto",carAssessOrderLog.getMainPhoto());
+                        map.put("autoInfoName",carAssessOrderLog.getAutoInfoName());
+                        map.put("creatTime",carAssessOrderLog.getCreateTime());
+                        map.put("creatUser",carAssessOrderLog.getUserName());
+                        map.put("orderId",carAssessOrderLog.getAssessOrderId());
+                        list.add(map);
+                    }
                 }
+                listEntity.setList(list);
             }else if (type.equals("2")){
                 int count = orderLogService.selectCountEndByUserId(userId);
                 paramMap.put("count",count);
@@ -455,8 +464,8 @@ public class CarAssessOrderApi {
                     map.put("creatTime",carAssessOrderLog.getCreateTime());
                     map.put("creatUser",carAssessOrderLog.getCreateUser());
                     list.add(map);
-                    listEntity.setList(list);
                 }
+                listEntity.setList(list);
             }else if (type.equals("3")){
                 int count = carAssessOrderService.selectCountById(userId);
                 paramMap.put("count",count);
@@ -469,13 +478,12 @@ public class CarAssessOrderApi {
                     map.put("creatTime",carAssessOrder.getCreateTime());
                     map.put("creatUser",carAssessOrder.getCreateUser());
                     list.add(map);
-                    listEntity.setList(list);
                 }
+                listEntity.setList(list);
             }
             result.setResult(listEntity);
             result.setSuccess("0","成功");
         } catch (Exception e) {
-            logger.info("删除评估采购单", e);
             e.printStackTrace();
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
 

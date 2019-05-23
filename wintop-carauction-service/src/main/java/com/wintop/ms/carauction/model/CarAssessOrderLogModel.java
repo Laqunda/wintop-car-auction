@@ -80,8 +80,8 @@ public class CarAssessOrderLogModel {
 
     }
 
-    public int selectCountWaitByUserId(Long userId){
-        return readDao.selectCountWaitByUserId(userId);
+    public int selectCountWaitByParams(Map<String,Object> map){
+        return readDao.selectCountWaitByParams(map);
     }
 
     public int selectCountEndByUserId(Long userId){
