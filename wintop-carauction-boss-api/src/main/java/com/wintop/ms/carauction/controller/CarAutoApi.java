@@ -438,7 +438,8 @@ public class CarAutoApi {
                                     @RequestParam("storeId") String storeId,
                                     @RequestParam("carType") String carType,
                                     @RequestParam("startTime") String startTime,
-                                    @RequestParam("endTime") String endTime) {
+                                    @RequestParam("endTime") String endTime,
+                                    @RequestParam("authorization") String authorization) {
         String[] headers = {"车辆编号", "车辆名称", "车牌号", "上拍数", "车辆归属城市", "初次上牌","公里数","VIN","所属店铺","车辆类型","车辆来源","价格信息","竞拍类型","开拍信息","成交价","服务费","是否代办","车辆状态","发车时间","发车人"};
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
         Map<String, Object> map = Maps.newHashMap();
@@ -454,6 +455,9 @@ public class CarAutoApi {
         }
         if (StringUtils.isNotEmpty(endTime)) {
             map.put("endTime", sdf.format(endTime));
+        }
+        if (StringUtils.isNotEmpty(authorization)) {
+            map.put("managerId", StringUtils.split(authorization,"_")[0]);
         }
         HSSFWorkbook workbook = ExcelUtil.createStartExcel("在线车辆记录", headers);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
@@ -605,7 +609,8 @@ public class CarAutoApi {
                                    @RequestParam("title") String title,
                                    @RequestParam("cityId") String cityId,
                                    @RequestParam("auctionStartTimeBegin") String auctionStartTimeBegin,
-                                   @RequestParam("auctionStartTimeEnd") String auctionStartTimeEnd) {
+                                   @RequestParam("auctionStartTimeEnd") String auctionStartTimeEnd,
+                                   @RequestParam("authorization") String authorization) {
         String[] headers = {"辆编号","车辆标题","车牌号","车所属店铺","车辆来源","开拍时间","开拍地点","场次主题","起拍价","保留价","最后出价","车商号","状态","初登日期","竞拍次数","发车人","发车人账号"};
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
         Map<String, Object> map = Maps.newHashMap();
@@ -619,6 +624,9 @@ public class CarAutoApi {
         }
         if (StringUtils.isNotEmpty(auctionStartTimeEnd)) {
             map.put("auctionStartTimeEnd", sdf.format(auctionStartTimeEnd));
+        }
+        if (StringUtils.isNotEmpty(authorization)) {
+            map.put("managerId", StringUtils.split(authorization,"_")[0]);
         }
         HSSFWorkbook workbook = ExcelUtil.createStartExcel("线下车辆记录", headers);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
@@ -753,7 +761,8 @@ public class CarAutoApi {
                                     @RequestParam("autoInfoName") String autoInfoName,
                                     @RequestParam("licenseNumber") String licenseNumber,
                                     @RequestParam("createUserName") String createUserName,
-                                    @RequestParam("vin") String vin) {
+                                    @RequestParam("vin") String vin,
+                                    @RequestParam("authorization") String authorization) {
         String[] headers = {"车辆编号", "车辆名称", "车牌号", "上拍数", "车辆归属城市", "初次上牌","公里数","VIN","所属店铺","销售人员","车辆类型","车辆来源","成交价","付款方式","是否代办","发车时间","发车人"};
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
         Map<String, Object> map = Maps.newHashMap();
@@ -767,12 +776,13 @@ public class CarAutoApi {
 
         if (StringUtils.isNotEmpty(salesStartDate)) {
             map.put("auctionStartTimeBegin", sdf.format(salesStartDate));
-            map.put("salesStartDate",salesStartDate);
 
         }
         if (StringUtils.isNotEmpty(salesEndDate)) {
             map.put("auctionStartTimeEnd", sdf.format(salesEndDate));
-            map.put("salesEndDate",salesEndDate);
+        }
+        if (StringUtils.isNotEmpty(authorization)) {
+            map.put("managerId", StringUtils.split(authorization,"_")[0]);
         }
         HSSFWorkbook workbook = ExcelUtil.createStartExcel("零售车辆记录", headers);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
@@ -865,20 +875,20 @@ public class CarAutoApi {
 
                     HSSFCell c14 = itemRow.createCell(14);
                     String ifAgent = "";
-                    if (object.getString("paymentType") != null) {
+                    if (object.getString("ifAgent") != null) {
                         ifAgent = object.getString("ifAgent").equals("1") ? "需要" : "不需要";
                     }
                     c14.setCellValue(ifAgent);
 
                     String publishTime = "";
                     if (object.getString("publishTime") != null) {
-                        publishTime = StringUtils.left(sdf.format(new Date(object.getLong("publishTime"))),4);
+                        publishTime = sdf.format(new Date(object.getLong("publishTime")));
                     }
-                    HSSFCell c15 = itemRow.createCell(5);
+                    HSSFCell c15 = itemRow.createCell(15);
                     c15.setCellValue(publishTime);
 
                     HSSFCell c16 = itemRow.createCell(16);
-                    c16.setCellValue(object.getString("transactionFee"));
+                    c16.setCellValue(object.getString("publishUserName"));
                 }
             }
         }

@@ -15,4 +15,6 @@ public interface ICarSaleOrderReadDAO {
     Integer selectCarOrderCount (Long customerId);
 
     Integer selectCarSaleOrderCount (Long customerId);
+
+    CarSaleOrder selectRetailById(Long id);
 }

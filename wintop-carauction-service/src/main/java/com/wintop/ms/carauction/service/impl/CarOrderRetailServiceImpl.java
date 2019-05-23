@@ -4,9 +4,11 @@ import com.wintop.ms.carauction.core.config.CarStatusEnum;
 import com.wintop.ms.carauction.entity.CarAuto;
 import com.wintop.ms.carauction.entity.CarAutoLog;
 import com.wintop.ms.carauction.entity.CarOrderRetail;
+import com.wintop.ms.carauction.entity.CarSaleOrder;
 import com.wintop.ms.carauction.model.CarAutoLogModel;
 import com.wintop.ms.carauction.model.CarAutoModel;
 import com.wintop.ms.carauction.model.CarOrderRetailModel;
+import com.wintop.ms.carauction.model.CarSaleOrderModel;
 import com.wintop.ms.carauction.service.ICarOrderRetailService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +26,13 @@ public class CarOrderRetailServiceImpl implements ICarOrderRetailService {
     private CarAutoModel carAutoModel;
     @Autowired
     private CarAutoLogModel autoLogModel;
+    @Autowired
+    private CarSaleOrderModel carSaleOrderModel;
 
     private IdWorker idWorker = new IdWorker(10);
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void insertSelective(CarOrderRetail record) {
         //保存零售车辆
         carOrderRetailModel.insertSelective(record);
@@ -49,5 +53,10 @@ public class CarOrderRetailServiceImpl implements ICarOrderRetailService {
         autoLog.setUserId(record.getCreateUser());
         autoLog.setTime(new Date());
         autoLogModel.insert(autoLog);
+    }
+
+    @Override
+    public CarSaleOrder selectRetailById(Long id) {
+        return carSaleOrderModel.selectRetailById(id);
     }
 }

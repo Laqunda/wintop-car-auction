@@ -32,4 +32,8 @@ public class CarSaleOrderModel {
     public Integer selectCarSaleOrderCount (Long customerId){
         return iCarSaleOrderReadDAO.selectCarSaleOrderCount(customerId);
     }
+
+    public CarSaleOrder selectRetailById(Long id) {
+        return iCarSaleOrderReadDAO.selectRetailById(id);
+    }
 }

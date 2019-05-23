@@ -6,6 +6,7 @@ import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarAssess;
 import com.wintop.ms.carauction.entity.CarManagerUser;
 import com.wintop.ms.carauction.entity.CarOrderRetail;
+import com.wintop.ms.carauction.entity.CarSaleOrder;
 import com.wintop.ms.carauction.service.ICarManagerUserService;
 import com.wintop.ms.carauction.service.ICarOrderRetailService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
@@ -57,6 +59,32 @@ public class CarOrderRetailApi {
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {
             logger.info("新增保存车辆评估", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /**
+     * 零售单信息
+     */
+    @ApiOperation(value = "零售单信息")
+    @RequestMapping(value = "/selectRetailById",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String, Object>> selectRetailById(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
+        try {
+            CarOrderRetail carOrderRetail = JSONObject.toJavaObject(obj, CarOrderRetail.class);
+            if (carOrderRetail == null) {
+                carOrderRetail = new CarOrderRetail();
+            }
+            CarSaleOrder order = carOrderRetailService.selectRetailById(carOrderRetail.getId());
+            result.setResult(Collections.singletonMap("order",order));
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询零售单信息", e);
             e.printStackTrace();
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
         }
