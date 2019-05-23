@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 评估采购日志 服务层实现
@@ -95,6 +96,25 @@ public class CarAssessOrderLogServiceImpl implements ICarAssessOrderLogService {
         log.setUserName(managerUser.getUserName());
 
         insertCarAssessOrderLog(log);
+    }
+
+    @Override
+    public int selectCountWaitByUserId(Long userId) {
+        return model.selectCountWaitByUserId(userId);
+    }
+
+    @Override
+    public int selectCountEndByUserId(Long userId) {
+        return model.selectCountEndByUserId(userId);
+    }
+
+    @Override
+    public List<CarAssessOrderLog> selectWaitOrderList(Map<String,Object> map){
+        return model.selectWaitOrderList(map);
+    }
+    @Override
+    public List<CarAssessOrderLog> selectEndOrderList(Map<String,Object> map){
+        return model.selectEndOrderList(map);
     }
 
 }

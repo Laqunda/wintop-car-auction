@@ -24,8 +24,8 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-@Controller
-@RequestMapping("service/carAutoSchedule")
+//@Controller
+//@RequestMapping("service/carAutoSchedule")
 public class CarAutoSchedule {
     @Autowired
     private RedisAutoManager redisAutoManager;

@@ -76,6 +76,8 @@ public class CarOrderRetail {
 
     private Date createDate;
 
+    private String mortgagePlan;
+
     public Long getId() {
         return id;
     }
@@ -362,5 +364,13 @@ public class CarOrderRetail {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getMortgagePlan() {
+        return mortgagePlan;
+    }
+
+    public void setMortgagePlan(String mortgagePlan) {
+        this.mortgagePlan = mortgagePlan;
     }
 }

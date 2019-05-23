@@ -12,6 +12,9 @@
     <result column="user_mobile" property="userMobile" jdbcType="VARCHAR" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+    <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
+    <result column="publish_user_name" property="publishUserName" jdbcType="VARCHAR" />
+    <result column="main_photo" property="mainPhoto" jdbcType="VARCHAR" />
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -63,4 +66,35 @@
     limit 0,1;
   </select>
 
+  <select id="selectCountWaitByUserId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+    SELECT count(id)
+    FROM car_auto_log
+    WHERE user_id=#{userId} and (status='1' or status = '2')
+  </select>
+
+  <select id="selectCountEndByUserId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+    SELECT count(id)
+    FROM car_auto_log
+    WHERE user_id=#{userId} and  status !='1' and status !='2'
+  </select>
+
+  <select id="selectWaitOrderList" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT t2.publish_user_name, t2.auto_info_name, t2.main_photo, t1.time, t2.id, t2.status
+    FROM car_auto_log t1
+    INNER JOIN car_auto t2 ON t1.auto_id=t2.id
+    WHERE t1.user_id=#{userId} and (t1.status='1' or t1.status = '2')
+    <if test="startRowNum!=null and endRowNum!=null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="selectEndOrderList" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT t2.publish_user_name, t2.auto_info_name, t2.main_photo, t1.time, t2.id, t1.status
+    FROM car_auto_log t1
+    INNER JOIN car_auto t2 ON t1.auto_id=t2.id
+    WHERE t1.user_id=#{userId} and t1.status ='3' or t1.status = '6'
+    <if test="startRowNum!=null and endRowNum!=null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
 </mapper>

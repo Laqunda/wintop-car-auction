@@ -195,4 +195,34 @@ public class CarAutoLog implements Serializable {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    private String autoInfoName;
+
+    private String publishUserName;
+
+    public String getAutoInfoName() {
+        return autoInfoName;
+    }
+
+    public void setAutoInfoName(String autoInfoName) {
+        this.autoInfoName = autoInfoName;
+    }
+
+    public String getPublishUserName() {
+        return publishUserName;
+    }
+
+    public void setPublishUserName(String publishUserName) {
+        this.publishUserName = publishUserName;
+    }
+
+    private String mainPhoto;
+
+    public String getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public void setMainPhoto(String mainPhoto) {
+        this.mainPhoto = mainPhoto;
+    }
 }

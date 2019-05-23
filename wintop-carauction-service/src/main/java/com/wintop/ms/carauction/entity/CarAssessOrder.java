@@ -383,4 +383,35 @@ public class CarAssessOrder extends BaseEntity {
     public void setFollow(CarAssessFollowData follow) {
         this.follow = follow;
     }
+
+    private String mainPhoto;
+
+    private String createUser;
+
+
+    public String getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public void setMainPhoto(String mainPhoto) {
+        this.mainPhoto = mainPhoto;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    private String autoInfoName;
+
+    public String getAutoInfoName() {
+        return autoInfoName;
+    }
+
+    public void setAutoInfoName(String autoInfoName) {
+        this.autoInfoName = autoInfoName;
+    }
 }

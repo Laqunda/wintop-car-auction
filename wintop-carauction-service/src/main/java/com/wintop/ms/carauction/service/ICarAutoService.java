@@ -151,4 +151,8 @@ public interface ICarAutoService {
      * 根据车辆id查询起拍价和保留价
      */
     CarAutoAuction  selectCarInfoById(JSONObject object);
+
+    List<CarAuto> selectUserOrderList(Map<String, Object> map);
+
+    int selectCountById(Long userId);
 }

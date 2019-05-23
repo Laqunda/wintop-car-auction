@@ -38,6 +38,7 @@
     <result column="other_accounts" property="otherAccounts" jdbcType="VARCHAR" />
     <result column="create_user" property="createUser" jdbcType="BIGINT" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="mortgage_plan" property="mortgagePlan" jdbcType="VARCHAR" />
   </resultMap>
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarOrderRetail" >
     insert into car_order_retail (id, order_no, car_id, 
@@ -51,7 +52,7 @@
       remarks, vehicle_owner_type, phone, 
       name, source, id_card, 
       address, drawee, opening_bank, 
-      bank_account, other_accounts, create_user, 
+      bank_account, other_accounts, create_user, mortgage_plan
       create_date)
     values (#{id,jdbcType=BIGINT}, #{orderNo,jdbcType=VARCHAR}, #{carId,jdbcType=BIGINT}, 
       #{transactionFee,jdbcType=DECIMAL}, #{earnestMoney,jdbcType=DECIMAL}, #{paymentType,jdbcType=VARCHAR}, 
@@ -65,7 +66,7 @@
       #{name,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{drawee,jdbcType=VARCHAR}, #{openingBank,jdbcType=VARCHAR}, 
       #{bankAccount,jdbcType=VARCHAR}, #{otherAccounts,jdbcType=VARCHAR}, #{createUser,jdbcType=BIGINT}, 
-      #{createDate,jdbcType=TIMESTAMP})
+      #{createDate,jdbcType=TIMESTAMP},#{mortgagePlan,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarOrderRetail" >
     insert into car_order_retail
@@ -287,6 +288,9 @@
       </if>
       <if test="createDate != null" >
         #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mortgage_plan != null" >
+        #{mortgagePlan,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

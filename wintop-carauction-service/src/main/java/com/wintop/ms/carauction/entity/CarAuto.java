@@ -208,43 +208,6 @@ public class CarAuto implements Serializable {
     private Date dealTime;
     private Date passInTime;
 
-    /**
-     * 所在城市名称
-     */
-    private String cityName;
-    /**
-     * 车商号
-     */
-    private String userNum;
-    /**
-     * 城市id
-     */
-    private Long cityId;
-    /**
-     * 出售起始日期
-     */
-    private Date salesStartDate;
-    /**
-     * 出售起始日期
-     */
-    private Date salesEndDate;
-
-    /**
-     * 起拍时间开始
-     */
-    private Date auctionStartTimeBegin;
-    /**
-     * 起拍时间开始
-     */
-    private Date auctionStartTimeEnd;
-    /**
-     * 销售顾问
-     */
-    private String salesConsultant;
-    /**
-     * 支付方式
-     */
-    private String paymentType;
     public String getMaxPriceUserId() {
         return maxPriceUserId;
     }
@@ -1196,76 +1159,33 @@ public class CarAuto implements Serializable {
     public void setPassInTime(Date passInTime) {
         this.passInTime = passInTime;
     }
+    private List<CarAutoLog> carAutoLog;
 
-    public String getCityName() {
-        return cityName;
+    private List<TblAuctionLog> tblAuctionLog;
+
+    private String time;
+
+    public List<CarAutoLog> getCarAutoLog() {
+        return carAutoLog;
     }
 
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
+    public void setCarAutoLog(List<CarAutoLog> carAutoLog) {
+        this.carAutoLog = carAutoLog;
     }
 
-    public String getUserNum() {
-        return userNum;
+    public List<TblAuctionLog> getTblAuctionLog() {
+        return tblAuctionLog;
     }
 
-    public void setUserNum(String userNum) {
-        this.userNum = userNum;
+    public void setTblAuctionLog(List<TblAuctionLog> tblAuctionLog) {
+        this.tblAuctionLog = tblAuctionLog;
     }
 
-    public Long getCityId() {
-        return cityId;
+    public String getTime() {
+        return time;
     }
 
-    public void setCityId(Long cityId) {
-        this.cityId = cityId;
-    }
-
-    public Date getSalesStartDate() {
-        return salesStartDate;
-    }
-
-    public void setSalesStartDate(Date salesStartDate) {
-        this.salesStartDate = salesStartDate;
-    }
-
-    public Date getSalesEndDate() {
-        return salesEndDate;
-    }
-
-    public void setSalesEndDate(Date salesEndDate) {
-        this.salesEndDate = salesEndDate;
-    }
-
-    public Date getAuctionStartTimeBegin() {
-        return auctionStartTimeBegin;
-    }
-
-    public void setAuctionStartTimeBegin(Date auctionStartTimeBegin) {
-        this.auctionStartTimeBegin = auctionStartTimeBegin;
-    }
-
-    public Date getAuctionStartTimeEnd() {
-        return auctionStartTimeEnd;
-    }
-
-    public void setAuctionStartTimeEnd(Date auctionStartTimeEnd) {
-        this.auctionStartTimeEnd = auctionStartTimeEnd;
-    }
-
-    public String getSalesConsultant() {
-        return salesConsultant;
-    }
-
-    public void setSalesConsultant(String salesConsultant) {
-        this.salesConsultant = salesConsultant;
-    }
-
-    public String getPaymentType() {
-        return paymentType;
-    }
-
-    public void setPaymentType(String paymentType) {
-        this.paymentType = paymentType;
+    public void setTime(String time) {
+        this.time = time;
     }
 }

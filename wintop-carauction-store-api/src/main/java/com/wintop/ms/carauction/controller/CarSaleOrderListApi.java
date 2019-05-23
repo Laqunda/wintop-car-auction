@@ -36,8 +36,7 @@ public class CarSaleOrderListApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> getCarSaleOrderRetailList(Long userId){
-        Map<String,Object> map = new HashMap<String, Object>();
+    public ResponseEntity<ResultModel> getCarSaleOrderRetailList(@RequestBody Map<String,Object> map, @CurrentUserId Long userId){
         map.put("customerId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
@@ -54,8 +53,7 @@ public class CarSaleOrderListApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> getCarSaleOrderList(Long userId){
-        Map<String,Object> map = new HashMap<String, Object>();
+    public ResponseEntity<ResultModel> getCarSaleOrderList(@RequestBody Map<String,Object> map, @CurrentUserId Long userId){
         map.put("customerId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
@@ -71,8 +69,7 @@ public class CarSaleOrderListApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> getCarSaleOrderRetail(Long userId){
-        Map<String,Object> map = new HashMap<String, Object>();
+    public ResponseEntity<ResultModel> getCarSaleOrderRetail(@RequestBody Map<String,Object> map, @CurrentUserId Long userId){
         map.put("customerId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity

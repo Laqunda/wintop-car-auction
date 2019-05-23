@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 评估采购单 服务层实现
@@ -84,5 +85,10 @@ public class CarAssessOrderModel
 		return writeDao.deleteCarAssessOrderByIds(Convert.toStrArray(ids));
 	}
 
-
+	public int selectCountById(Long userId){
+		return readDao.selectCountById(userId);
+	}
+	public List<CarAssessOrder> selectUserOrderList(Map<String,Object> map){
+		return readDao.selectUserOrderList(map);
+	}
 }

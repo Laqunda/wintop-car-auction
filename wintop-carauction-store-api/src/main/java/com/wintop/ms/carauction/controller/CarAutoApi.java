@@ -153,4 +153,22 @@ public class CarAutoApi {
                         .body(map),JSONObject.class);
         return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
     }
+
+    @ApiOperation(value = "根据条件查询车辆申请")
+    @RequestMapping(value = "/selectListByType",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    //@AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResponseEntity<ResultModel> selectListByType(@RequestBody Map map) {
+        //map.put("userId",userId);
+
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/carAuto/selectListByType"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
+    }
 }

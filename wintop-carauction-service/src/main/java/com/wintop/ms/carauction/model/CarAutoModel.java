@@ -183,4 +183,12 @@ public class CarAutoModel {
     public Integer selectCarAutoForSaleCount(Map<String, Object> map){
         return readDao.selectCarAutoForSaleCount(map);
     }
+
+    public List<CarAuto> selectUserOrderList(Map<String, Object> map){
+        return  readDao.selectUserOrderList(map);
+    }
+
+    public int selectCountById(Long userId){
+        return readDao.selectCountById(userId);
+    }
 }

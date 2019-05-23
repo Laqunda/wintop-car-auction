@@ -31,6 +31,7 @@ public class RedisTokenManager implements TokenManager {
     @Qualifier(value = "redisTemplate")
     public void setRedis(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
+        redisTemplate.opsForValue().set("bdce67a4230d20f2a14e72a2670cbd52", "true");
         //泛型设置成Long后必须更改对应的序列化方案
         redisTemplate.setKeySerializer(new JdkSerializationRedisSerializer());
     }

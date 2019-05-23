@@ -14,6 +14,9 @@
         <result property="createPerson" column="create_person"/>
         <result property="userMobile" column="user_mobile"/>
         <result property="userName" column="user_name"/>
+        <result property="mianPhoto"   column="mian_photo" />
+        <result property="createUser"  column="create_user" />
+        <result property="autoInfoName"  column="auto_info_name" />
     </resultMap>
 
     <sql id="selectCarAssessOrderLogVo">
@@ -65,5 +68,40 @@
         where id = #{id}
     </select>
 
+    <select id="selectCountWaitByUserId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT count(id)
+        FROM car_assess_order_log
+        WHERE create_person=#{userId} and status='1'
+    </select>
+
+    <select id="selectCountEndByUserId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT count(id)
+        FROM car_assess_order_log
+        WHERE create_person=#{userId} and status !='1'
+    </select>
+
+    <select id="selectWaitOrderList" resultMap="CarAssessOrderLogResult" parameterType="java.util.Map">
+        SELECT t2.create_user, t3.auto_info_name, t3.main_photo, t4.create_time
+        FROM car_assess_order t1
+        INNER JOIN car_assess t2 ON t1.assess_id=t2.id
+        INNER JOIN car_auto t3 ON t2.auto_id=t3.id
+        INNER JOIN car_assess_order_log t4 ON t1.id=t4.assess_order_id
+        WHERE t4.create_person=#{userId} and t4.status ='1'
+        <if test="startRowNum!=null and endRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="selectEndOrderList" resultMap="CarAssessOrderLogResult" parameterType="java.util.Map">
+        SELECT t2.create_user, t3.auto_info_name, t3.main_photo, t4.create_time
+        FROM car_assess_order t1
+        INNER JOIN car_assess t2 ON t1.assess_id=t2.id
+        INNER JOIN car_auto t3 ON t2.auto_id=t3.id
+        INNER JOIN car_assess_order_log t4 ON t1.id=t4.assess_order_id
+        WHERE t4.create_person=#{userId} and t4.status !='1'
+        <if test="startRowNum!=null and endRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
 
 </mapper>
