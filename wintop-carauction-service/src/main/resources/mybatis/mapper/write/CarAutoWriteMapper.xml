@@ -223,6 +223,9 @@
       <if test="autoAuctionId != null">
         auto_auction_id = #{autoAuctionId},
       </if>
+      <if test="saleFlag != null">
+        sale_flag = #{saleFlag},
+      </if>
     </set>
     where id = #{id}
   </update>

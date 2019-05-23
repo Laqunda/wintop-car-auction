@@ -14,7 +14,7 @@
     <result column="monthly_repayment" property="monthlyRepayment" jdbcType="DECIMAL" />
     <result column="transfer" property="transfer" jdbcType="VARCHAR" />
     <result column="sales_type" property="salesType" jdbcType="VARCHAR" />
-    <result column="sales_consultant" property="salesConsultant" jdbcType="BIGINT" />
+    <result column="sales_consultant" property="salesConsultant" jdbcType="VARCHAR" />
     <result column="sales_date" property="salesDate" jdbcType="DATE" />
     <result column="insurance_company" property="insuranceCompany" jdbcType="VARCHAR" />
     <result column="commercial_insurance_expires" property="commercialInsuranceExpires" jdbcType="DATE" />
@@ -58,7 +58,7 @@
       #{transactionFee,jdbcType=DECIMAL}, #{earnestMoney,jdbcType=DECIMAL}, #{paymentType,jdbcType=VARCHAR}, 
       #{downPayments,jdbcType=DECIMAL}, #{mortgageAmount,jdbcType=DECIMAL}, #{mortgagePeriod,jdbcType=BIGINT}, 
       #{monthlyRepayment,jdbcType=DECIMAL}, #{transfer,jdbcType=VARCHAR}, #{salesType,jdbcType=VARCHAR}, 
-      #{salesConsultant,jdbcType=BIGINT}, #{salesDate,jdbcType=DATE}, #{insuranceCompany,jdbcType=VARCHAR}, 
+      #{salesConsultant,jdbcType=VARCHAR}, #{salesDate,jdbcType=DATE}, #{insuranceCompany,jdbcType=VARCHAR},
       #{commercialInsuranceExpires,jdbcType=DATE}, #{compulsoryInsuranceExpires,jdbcType=DATE}, 
       #{mortgageCharges,jdbcType=DECIMAL}, #{insuranceRebate,jdbcType=DECIMAL}, #{boutiqueProfit,jdbcType=DECIMAL}, 
       #{guaranteedProfit,jdbcType=DECIMAL}, #{addProfits,jdbcType=DECIMAL}, #{otherExpenses,jdbcType=DECIMAL}, 
@@ -218,7 +218,7 @@
         #{salesType,jdbcType=VARCHAR},
       </if>
       <if test="salesConsultant != null" >
-        #{salesConsultant,jdbcType=BIGINT},
+        #{salesConsultant,jdbcType=VARCHAR},
       </if>
       <if test="salesDate != null" >
         #{salesDate,jdbcType=DATE},

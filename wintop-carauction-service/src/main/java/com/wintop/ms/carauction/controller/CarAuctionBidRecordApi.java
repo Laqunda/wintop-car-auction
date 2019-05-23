@@ -3,7 +3,6 @@ package com.wintop.ms.carauction.controller;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
-import com.wintop.ms.carauction.entity.CarAssess;
 import com.wintop.ms.carauction.entity.CarAuctionBidRecord;
 import com.wintop.ms.carauction.entity.CarBidRecord;
 import com.wintop.ms.carauction.entity.ListEntity;

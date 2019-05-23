@@ -9,5 +9,5 @@ public interface ICarOrderRetailService {
      * @param record
      * @return
      */
-    public int insertSelective(CarOrderRetail record);
+    public void insertSelective(CarOrderRetail record);
 }
