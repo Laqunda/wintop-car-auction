@@ -20,17 +20,16 @@
 
     <select id="selectCarAssessFollowDataList" parameterType="com.wintop.ms.carauction.entity.CarAssessFollowData"
             resultMap="CarAssessFollowDataResult">
-        select f.id, f.assess_id, f.content, f.follow_result, f.create_time, f.follow_user ,u.user_name as create_user
+        select f.id, f.assess_id, f.content, f.follow_result, f.create_time, f.follow_user ,ca.create_user_name as create_user
         from car_assess_follow_data f
-        left join car_manager_user u on u.id = f.follow_user
-
+        left join car_assess ca on ca.create_user = f.follow_user
         <where>
             <if test="id != null ">and f.id = #{id}</if>
-            <if test="assessId != null ">and assess_id = #{assessId}</if>
-            <if test="content != null  and content != '' ">and content = #{content}</if>
-            <if test="followResult != null  and followResult != '' ">and follow_result = #{followResult}</if>
+            <if test="assessId != null ">and f.assess_id = #{assessId}</if>
+            <if test="content != null  and content != '' ">and f.content = #{content}</if>
+            <if test="followResult != null  and followResult != '' ">and f.follow_result = #{followResult}</if>
             <if test="createTime != null ">and f.create_time = #{createTime}</if>
-            <if test="followUser != null ">and follow_user = #{followUser}</if>
+            <if test="followUser != null ">and f.follow_user = #{followUser}</if>
         </where>
         order by f.id desc
         <if test="endRowNum != null">

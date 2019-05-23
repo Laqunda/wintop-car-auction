@@ -58,7 +58,7 @@ public interface ICarAssessOrderLogService
 
     void saveOrderLog(CarManagerUser managerUser, String s, String s1, long orderlog_id,long orderId);
 
-	int selectCountWaitByUserId(Long userId);
+	int selectCountWaitByParams(Map<String,Object> map);
 
 	int selectCountEndByUserId(Long userId);
 

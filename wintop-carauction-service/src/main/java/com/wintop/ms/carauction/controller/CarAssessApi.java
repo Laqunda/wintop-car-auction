@@ -242,7 +242,7 @@ public class CarAssessApi {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
             CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
-
+            //评估
             CarAssess carAssess = JSONObject.toJavaObject(obj, CarAssess.class);
             if (carAssess == null) {
                 carAssess = new CarAssess();
@@ -250,13 +250,13 @@ public class CarAssessApi {
             if (carAssess.getStatus() == null) {
                 carAssess.setStatus("2"); //已完成
             }
+            carAssess.setCreateUserName(managerUser.getUserName());
             //设置name
             carAssess.setName(carAssess.getAutoBrandCn() + " " + carAssess.getAutoSeriesCn() + " " + carAssess.getAutoStyleCn());//车辆名称=品牌+车系+车型
             carAssess.setCreateUser(managerUser.getId());
             carAssess.setCreateUserName(managerUser.getUserName());
             carAssess.setId(idWorker.nextId());
             int code = carAssessService.insertCarAssess(carAssess);
-
             if (code > 0) {
                 //评估创建日志
                 logService.saveLog(managerUser, "创建评估", idWorker.nextId(), carAssess.getId());
@@ -286,6 +286,7 @@ public class CarAssessApi {
     public ServiceResult<Map<String, Object>> editSave(@RequestBody JSONObject obj) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
+            CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
             CarAssess carAssess = JSONObject.toJavaObject(obj, CarAssess.class);
             if (carAssess == null) {
                 carAssess = new CarAssess();
@@ -297,6 +298,10 @@ public class CarAssessApi {
                 if (carAssess.getOrder() != null && carAssess.getOrder().getId() != null) {
                     orderService.updateCarAssessOrder(carAssess.getOrder());
                 }
+                //评估创建日志
+                logService.saveLog(managerUser, "申请采购", idWorker.nextId(), carAssess.getId());
+                //写入订单记录表
+                orderLogService.saveOrderLog(managerUser, "提交申请采购单！", "1", idWorker.nextId(), carAssess.getOrder().getId());
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
             } else {
                 result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());

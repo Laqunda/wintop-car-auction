@@ -99,8 +99,8 @@ public class CarAssessOrderLogServiceImpl implements ICarAssessOrderLogService {
     }
 
     @Override
-    public int selectCountWaitByUserId(Long userId) {
-        return model.selectCountWaitByUserId(userId);
+    public int selectCountWaitByParams(Map<String,Object> map) {
+        return model.selectCountWaitByParams(map);
     }
 
     @Override

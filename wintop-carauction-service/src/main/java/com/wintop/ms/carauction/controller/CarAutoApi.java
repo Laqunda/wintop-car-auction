@@ -1003,8 +1003,7 @@ public class CarAutoApi {
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8")
     public ServiceResult<ListEntity<Map<String,Object>>>selectListByType(@RequestBody JSONObject object) {
-
-     ServiceResult<ListEntity<Map<String,Object>>>result = new ServiceResult<>();
+        ServiceResult<ListEntity<Map<String,Object>>>result = new ServiceResult<>();
         try {
             Long userId = object.getLong("userId");
             String type = object.getString("type");

@@ -138,7 +138,6 @@ public class CarAssessOrderApi {
     @AppApiVersion(value = "2.0")
     public ResultModel remove(@CurrentUserId Long managerId, @RequestBody Map map) {
         map.put("managerId",managerId);
-
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT + "/service/carAssessOrder/remove"))
@@ -146,14 +145,16 @@ public class CarAssessOrderApi {
                         .body(map), JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
+
     @ApiOperation(value = "根据条件查询采购申请")
     @RequestMapping(value = "/selectListByType",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
-    //@AuthUserToken
+    @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResultModel selectListByType( @RequestBody Map map) {
+    public ResultModel selectListByType( @RequestBody Map map,@CurrentUserId Long managerId) {
+        map.put("userId",managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT + "/service/carAssessOrder/selectListByType"))

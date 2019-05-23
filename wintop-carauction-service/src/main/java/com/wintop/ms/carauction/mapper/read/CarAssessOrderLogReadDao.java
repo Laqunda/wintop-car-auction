@@ -31,7 +31,7 @@ public interface CarAssessOrderLogReadDao
 
 	int selectAssessOrderCount(CarAssessOrderLog carAssessOrderLog);
 
-	int selectCountWaitByUserId(Long userId);
+	int selectCountWaitByParams(Map<String,Object> map);
 
 	int selectCountEndByUserId(Long userId);
 
