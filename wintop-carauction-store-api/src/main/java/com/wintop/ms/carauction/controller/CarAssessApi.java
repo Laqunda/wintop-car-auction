@@ -47,7 +47,8 @@ public class CarAssessApi {
     @PostMapping(value = "/list",produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResultModel list(@RequestBody Map<String,Object> map) {
+    public ResultModel list(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) {
+        map.put("customerId",userId);
         if(map.get("page")==null || map.get("limit")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
@@ -169,7 +170,7 @@ public class CarAssessApi {
     public ResultModel cancelCarAssess(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         Map params = new HashMap();
         params.put("id",map.get("id"));
-        params.put("status","1");
+        params.put("status","2");
         params.put("managerId",managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity

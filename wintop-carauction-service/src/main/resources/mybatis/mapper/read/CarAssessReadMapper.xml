@@ -234,7 +234,6 @@
     <select id="selectCarAssessCount" parameterType="com.wintop.ms.carauction.entity.CarAssess"
             resultType="java.lang.Integer">
         select count(*)
-
         from (
         select a.id,
         (SELECT f.follow_result FROM car_assess_follow_data f WHERE f.assess_id = a.id ORDER BY create_time DESC LIMIT 1

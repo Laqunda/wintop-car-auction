@@ -65,18 +65,17 @@ public class CarAssessApi {
     public ServiceResult<ListEntity<CarAssess>> list(@RequestBody JSONObject obj) {
         ServiceResult<ListEntity<CarAssess>> result = null;
         try {
+            result = new ServiceResult<>();
+            Long userId = obj.getLong("customerId");
             CarAssess carAssess = JSONObject.toJavaObject(obj, CarAssess.class);
             if (carAssess == null) {
                 carAssess = new CarAssess();
             }
-            result = new ServiceResult<>();
-
+            carAssess.setCreateUser(userId);
             int count = carAssessService.selectAssessCount(carAssess);
-
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             carAssess.setStartRowNum(pageEntity.getStartRowNum());
             carAssess.setEndRowNum(pageEntity.getEndRowNum());
-
             List<CarAssess> list = carAssessService.selectCarAssessList(carAssess);
             ListEntity<CarAssess> listEntity = new ListEntity<>();
             listEntity.setList(list);
@@ -323,13 +322,11 @@ public class CarAssessApi {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
             CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
-
             CarAssess carAssess = JSONObject.toJavaObject(obj, CarAssess.class);
             if (carAssess == null) {
                 carAssess = new CarAssess();
             }
             int code = carAssessService.updateCarAssess(carAssess);
-
             if (code > 0) {
                 carAssess = carAssessService.selectCarAssessById(carAssess.getId());
                 //order 取消
@@ -340,14 +337,10 @@ public class CarAssessApi {
                     order.setId(carAssess.getOrder().getId());
                 order.setStatus("3");//审核撤销
                 orderService.updateCarAssessOrder(order);
-
                 //评估日志
                 logService.saveLog(managerUser, "撤销申请采购", idWorker.nextId(), carAssess.getId());
-
                 //order操作日志
                 orderLogService.saveOrderLog(managerUser, "撤销审核", "3", idWorker.nextId(), order.getId());
-
-
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
             } else {
                 result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());
