@@ -427,7 +427,7 @@ public class CarAutoApi {
             if (obj.getString("status") != null) {
                 paramMap.put("statusList", statusList.get(obj.getString("status")));
             }
-            paramMap.put("auction_type",obj.getString("type"));
+            paramMap.put("auctionType",obj.getString("type"));
 
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
