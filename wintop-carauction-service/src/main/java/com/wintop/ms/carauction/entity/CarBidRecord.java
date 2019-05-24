@@ -69,24 +69,14 @@ public class CarBidRecord implements Serializable{
      * 竞拍状态
      */
     private String auctionStatus;
-    public CarBidRecord() {
-    }
-
-    public CarBidRecord(Long id, String userCode, String userNum, String username, String mobile, String userStoreName, String carAutoNo, String autoInfoName, String carStoreName, String auctionType, BigDecimal startingPrice, Date bidTime, BigDecimal bidFee) {
-        this.id = id;
-        this.userCode = userCode;
-        this.userNum = userNum;
-        this.username = username;
-        this.mobile = mobile;
-        this.userStoreName = userStoreName;
-        this.carAutoNo = carAutoNo;
-        this.autoInfoName = autoInfoName;
-        this.carStoreName = carStoreName;
-        this.auctionType = auctionType;
-        this.startingPrice = startingPrice;
-        this.bidTime = bidTime;
-        this.bidFee = bidFee;
-    }
+    /**
+     * 店铺id
+     */
+    private Long storeId;
+    /**
+     * 显示中心店铺
+     */
+    private String centerName;
 
 
     public Long getId() {
@@ -200,6 +190,23 @@ public class CarBidRecord implements Serializable{
     public void setAuctionStatus(String auctionStatus) {
         this.auctionStatus = auctionStatus;
     }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getCenterName() {
+        return centerName;
+    }
+
+    public void setCenterName(String centerName) {
+        this.centerName = centerName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

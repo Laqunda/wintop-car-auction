@@ -58,6 +58,7 @@ public class CarBidRecordApi {
         try {
             SimpleDateFormat fmt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Map<String,Object> paramMap = new HashMap<>();
+            Long cityId = obj.get("cityId") == null ? null : obj.getLong("cityId");
             String searchName=obj.get("searchName")==null?null:obj.getString("searchName");
             searchName=checkParamNull(searchName);
             String carSearchName=obj.get("carSearchName")==null?null:obj.getString("carSearchName");
@@ -82,6 +83,7 @@ public class CarBidRecordApi {
             paramMap.put("auctionType",auctionType);
             paramMap.put("beginTime",beginTime);
             paramMap.put("endTime",endTime);
+            paramMap.put("cityId", cityId);
             if (obj.get("carId")!=null){
                 paramMap.put("carId",obj.getLong("carId"));
             }
@@ -124,6 +126,7 @@ public class CarBidRecordApi {
                 recordMap.put("startingPrice",record.getStartingPrice());
                 recordMap.put("bidTime",fmt.format(record.getBidTime()));
                 recordMap.put("bidFee",record.getBidFee());
+                recordMap.put("centerName", record.getCenterName());
                 if(record.getUserCode()!=null){
                     recordMap.put("userCode",record.getUserCode());
                 }else{
