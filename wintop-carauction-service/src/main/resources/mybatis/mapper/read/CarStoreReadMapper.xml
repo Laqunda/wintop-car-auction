@@ -85,4 +85,11 @@
   <select id="selectAllStoreIds" resultMap="IdResultMap">
     SELECT id FROM car_store;
   </select>
+  <select id="idByExample" parameterType="java.util.Map" resultType="java.lang.Long" >
+    select id from car_store
+    where 1=1
+    <if test="storeName!=null">
+      and name LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+    </if>
+  </select>
 </mapper>
