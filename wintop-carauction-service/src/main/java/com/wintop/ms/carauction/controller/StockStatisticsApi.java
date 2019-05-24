@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +41,11 @@ public class StockStatisticsApi {
         ServiceResult<Map<String,Object>> result = new ServiceResult<>();
         try {
             String type = obj.getString("type");
-            List<Map<String,Object>> list = carAutoService.selectCarAutoForSaleCount(Collections.singletonMap("type", type));
+            long userId = obj.getLong("customerId");
+            Map params = new HashMap();
+            params.put("type",type);
+            params.put("userId",userId);
+            List<Map<String,Object>> list = carAutoService.selectCarAutoForSaleCount(params);
             result.setResult(Collections.singletonMap("dataList",list));
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {

@@ -46,10 +46,11 @@ public class StockStatisticsApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> stockInfo(@RequestBody Map<String,Object> map) throws MalformedURLException {
+    public ResponseEntity<ResultModel> stockInfo(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) throws MalformedURLException {
         if (map.get("type") == null) {
             return new ResponseEntity<>(new ResultModel(false, 101, "缺少参数", null), HttpStatus.OK);
         }
+        map.put("customerId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/stockStatisticsApi/stockInfo"))

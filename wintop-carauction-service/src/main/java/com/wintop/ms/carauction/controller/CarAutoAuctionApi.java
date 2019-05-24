@@ -59,6 +59,8 @@ public class CarAutoAuctionApi {
     private RedisManagerTemplate redisManagerTemplate;
     @Autowired
     private CarAutoApi carAutoApi;
+    @Autowired
+    private ICarAutoLogService carAutoLogService;
 
     private IdWorker idWorker = new IdWorker(10);
 
@@ -100,7 +102,7 @@ public class CarAutoAuctionApi {
     /**
      * 查询车辆评估列表
      */
-    @ApiOperation(value = "查询车辆评估列表")
+    @ApiOperation(value = "车辆转渠道")
     @RequestMapping(value = "/saveTransferFlag",
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
@@ -125,6 +127,18 @@ public class CarAutoAuctionApi {
                 carAutoAuction.setAutoId(obj.getLong("autoId"));
                 try {
                     carAutoAuctionService.updateAuctionEndTime(carAutoAuction);
+                    //增加车辆日志
+                    CarAutoLog autoLog = new CarAutoLog();
+                    autoLog.setId(idWorker.nextId());
+                    autoLog.setStatus(CarStatusEnum.WAITING_AUDITOR.value());
+                    autoLog.setMsg("线上车辆申请现场拍卖");
+                    autoLog.setAutoId(obj.getLong("autoId"));
+                    autoLog.setTime(new Date());
+                    autoLog.setUserType("2");
+                    autoLog.setUserMobile(carManagerUser.getUserPhone());
+                    autoLog.setUserName(carManagerUser.getUserName());
+                    autoLog.setUserId(obj.getLong("managerId"));
+                    carAutoLogService.insert(autoLog);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

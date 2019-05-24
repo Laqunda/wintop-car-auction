@@ -448,6 +448,7 @@ public class CarAssessOrderApi {
                         map.put("creatTime",carAssessOrderLog.getCreateTime());
                         map.put("creatUser",carAssessOrderLog.getUserName());
                         map.put("orderId",carAssessOrderLog.getAssessOrderId());
+                        map.put("assessId",carAssessOrderLog.getAssessId());
                         list.add(map);
                     }
                 }
@@ -463,10 +464,12 @@ public class CarAssessOrderApi {
                     map.put("autoInfoName",carAssessOrderLog.getAutoInfoName());
                     map.put("creatTime",carAssessOrderLog.getCreateTime());
                     map.put("creatUser",carAssessOrderLog.getCreateUser());
+                    map.put("status",carAssessOrderLog.getStatus());
                     list.add(map);
                 }
                 listEntity.setList(list);
             }else if (type.equals("3")){
+                //我提交的申请
                 int count = carAssessOrderService.selectCountById(userId);
                 paramMap.put("count",count);
                 listEntity.setCount(count);
@@ -477,6 +480,9 @@ public class CarAssessOrderApi {
                     map.put("autoInfoName",carAssessOrder.getAutoInfoName());
                     map.put("creatTime",carAssessOrder.getCreateTime());
                     map.put("creatUser",carAssessOrder.getCreateUser());
+                    map.put("status",carAssessOrder.getStatus());
+                    map.put("orderId",carAssessOrder.getId());
+                    map.put("assessId",carAssessOrder.getAssessId());
                     list.add(map);
                 }
                 listEntity.setList(list);

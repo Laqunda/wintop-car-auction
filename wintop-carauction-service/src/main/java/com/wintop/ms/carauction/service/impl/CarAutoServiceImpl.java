@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.wintop.ms.carauction.core.config.Constants;
+import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.RedisAutoData;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -60,6 +61,8 @@ public class CarAutoServiceImpl implements ICarAutoService {
     private CarAutoProceduresModel proceduresModel;
     @Autowired
     private CarStoreModel storeModel;
+    @Autowired
+    private CarManagerUserModel userModel;
     @Autowired
     private ICarAutoAuctionService carAutoAuctionService;
     @Autowired
@@ -361,6 +364,18 @@ public class CarAutoServiceImpl implements ICarAutoService {
 
     @Override
     public List<CarAuto> selectCarList(Map<String, Object> map) {
+        //查询用户权限
+        CarManagerUser carManagerUser = userModel.selectByPrimaryKey(Long.valueOf(map.get("userId")+""));
+        //如果用户是中心店管理员
+        if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
+            map.put("roleTyped","2");//中心店
+            map.put("managerRole",carManagerUser.getRoleId());
+        }
+        //如果用户是店铺管理员
+        if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
+            map.put("roleTyped","3");//店铺
+            map.put("managerRole",carManagerUser.getRoleId());
+        }
         return carAutoModel.selectCarList(map);
     }
     /**
@@ -368,7 +383,26 @@ public class CarAutoServiceImpl implements ICarAutoService {
      */
     @Override
     public Integer selectCarCount(Map<String, Object> map) {
-        return carAutoModel.selectCarCount(map);
+        List<Map<String, Object>> resultList = Lists.newArrayList();
+        Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put("autoInfoName",map.get("autoInfoName"));
+        //查询用户权限
+        CarManagerUser carManagerUser = userModel.selectByPrimaryKey(Long.valueOf(map.get("userId")+""));
+        paramMap.put("userId",carManagerUser.getId());
+        //如果用户是中心店管理员
+        if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
+            paramMap.put("auctionType","2");//现场车辆
+            paramMap.put("roleTyped","2");//中心店
+            paramMap.put("managerRole",carManagerUser.getRoleId());
+        }
+        //如果用户是店铺管理员
+        if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
+            paramMap.put("auctionType","1");//线上车辆
+            paramMap.put("roleTyped","3");//店铺
+            paramMap.put("managerRole",carManagerUser.getRoleId());
+        }
+        paramMap.put("auctionType",map.get("auctionType"));
+        return carAutoModel.selectCarAutoCount(map);
     }
 
     /**
@@ -415,6 +449,25 @@ public class CarAutoServiceImpl implements ICarAutoService {
     @Override
     public List<Map<String, Object>> selectRetailForExample(Map<String, Object> map) {
         List<Map<String, Object>> resultList = Lists.newArrayList();
+        Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put("autoInfoName",map.get("autoInfoName"));
+        //查询用户权限
+        CarManagerUser carManagerUser = userModel.selectByPrimaryKey(Long.valueOf(map.get("userId")+""));
+        paramMap.put("userId",carManagerUser.getId());
+        //如果用户是中心店管理员
+        if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
+            paramMap.put("auctionType","2");//现场车辆
+            paramMap.put("roleTyped","2");//中心店
+            paramMap.put("managerRole",carManagerUser.getRoleId());
+        }
+        //如果用户是店铺管理员
+        if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
+            paramMap.put("auctionType","1");//线上车辆
+            paramMap.put("roleTyped","3");//店铺
+            paramMap.put("managerRole",carManagerUser.getRoleId());
+        }
+        // 零售
+        paramMap.put("saleFlag", "1");
         List<CarAuto> recordList = carAutoModel.selectRetailForExample(map);
         Map<String, Object> recordMap;
         for (CarAuto record : recordList) {
@@ -433,7 +486,26 @@ public class CarAutoServiceImpl implements ICarAutoService {
      */
     @Override
     public Integer selectRetailForCount(Map<String, Object> map) {
-        return carAutoModel.selectRetailForCount(map);
+        Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put("autoInfoName",map.get("autoInfoName"));
+        //查询用户权限
+        CarManagerUser carManagerUser = userModel.selectByPrimaryKey(Long.valueOf(map.get("userId")+""));
+        paramMap.put("userId",carManagerUser.getId());
+        //如果用户是中心店管理员
+        if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
+            paramMap.put("auctionType","2");//现场车辆
+            paramMap.put("roleTyped","2");//中心店
+            paramMap.put("managerRole",carManagerUser.getRoleId());
+        }
+        //如果用户是店铺管理员
+        if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
+            paramMap.put("auctionType","1");//线上车辆
+            paramMap.put("roleTyped","3");//店铺
+            paramMap.put("managerRole",carManagerUser.getRoleId());
+        }
+         // 零售
+        paramMap.put("saleFlag", "1");
+        return carAutoModel.selectCarAutoForSaleCount(paramMap);
     }
 
     /**
@@ -732,6 +804,23 @@ public class CarAutoServiceImpl implements ICarAutoService {
         }};
         try {
             String type = map.get("type").toString();
+            //查询用户权限
+            CarManagerUser carManagerUser = userModel.selectByPrimaryKey(Long.valueOf(map.get("userId")+""));
+            paramMap.put("userId",carManagerUser.getId());
+            //如果用户是中心店管理员
+            if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
+//                paramMap.put("auctionType","2");//现场车辆
+                paramMap.put("roleTyped","2");//中心店
+                paramMap.put("managerRole",carManagerUser.getRoleId());
+            }
+            //如果用户是店铺管理员
+            if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
+//                paramMap.put("auctionType","1");//线上车辆
+                paramMap.put("roleTyped","3");//店铺
+                paramMap.put("managerRole",carManagerUser.getRoleId());
+            }
+            //竞拍
+            paramMap.put("saleFalg", "0");
             if ("retail".equals(type)) {
                 // 零售
                 paramMap.put("saleFlag", "1");
@@ -740,8 +829,6 @@ public class CarAutoServiceImpl implements ICarAutoService {
                 resultMap.put("num", num);
                 mapArrayList.add(resultMap);
             } else if ("online".equals(type)) {
-                //竞拍
-                paramMap.put("saleFalg", "0");
                 // 线上
                 paramMap.put("auctionType", "1");
                 // 车辆库存
@@ -749,8 +836,6 @@ public class CarAutoServiceImpl implements ICarAutoService {
                     getStockNumResultList(mapArrayList, paramMap, paramStatusList, titleList, i);
                 }
             } else if ("onsite".equals(type)) {
-                // 竞拍
-                paramMap.put("saleFalg", "0");
                 // 现场
                 paramMap.put("auctionType", "2");
                 // 车辆库存
@@ -769,7 +854,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
         Map<String, Object> resultMap;
         resultMap = Maps.newHashMap();
         paramMap.put("status", auctionTypeMap.get(paramStatusList.get(i)));
-        Integer num = carAutoModel.selectCarAutoForSaleCount(paramMap);
+        Integer num = carAutoModel.selectCarAutoCount(paramMap);
         resultMap.put("title", titleList.get(i));
         resultMap.put("num", num);
         mapArrayList.add(resultMap);

@@ -1,10 +1,7 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wintop.ms.carauction.core.annotation.AppApiVersion;
-import com.wintop.ms.carauction.core.annotation.AuthPublic;
-import com.wintop.ms.carauction.core.annotation.AuthUserToken;
-import com.wintop.ms.carauction.core.annotation.CurrentUserId;
+import com.wintop.ms.carauction.core.annotation.*;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.config.ResultStatus;
@@ -65,10 +62,11 @@ public class CarAutoApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> selectCarList(@RequestBody Map<String,Object> map) {
+    public ResponseEntity<ResultModel> selectCarList(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) {
         if (map.get("type") == null || map.get("status") == null) {
             return new ResponseEntity<>(new ResultModel(false, 101, "缺少参数", null), HttpStatus.OK);
         }
+        map.put("userId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carAuto/selectCarList"))
@@ -103,10 +101,11 @@ public class CarAutoApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> retailOrderlist(@RequestBody Map<String,Object> map) {
+    public ResponseEntity<ResultModel> retailOrderlist(@RequestBody Map<String,Object> map , @CurrentUserId Long userId) {
         if (map.get("page") == null) {
             return new ResponseEntity<>(new ResultModel(false, 101, "缺少参数", null), HttpStatus.OK);
         }
+        map.put("managerId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carAuto/retailOrderList"))
@@ -177,7 +176,8 @@ public class CarAutoApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> withDrawCarAuction(@RequestBody Map map) {
+    public ResponseEntity<ResultModel> withDrawCarAuction(@RequestBody Map map ,@CurrentUserId Long managerId) {
+        map.put("userId",managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT + "/service/carAuto/withDrawCarAuction"))

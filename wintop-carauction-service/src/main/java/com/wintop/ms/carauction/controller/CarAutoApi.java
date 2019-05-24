@@ -6,6 +6,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.primitives.Longs;
+import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -57,6 +58,8 @@ public class CarAutoApi {
     private ICarAutoLogService iCarAutoLogService;
     @Autowired
     private TblAuctionLogService tblAuctionLogService;
+    @Autowired
+    private ICarManagerUserService userService ;
 
     private IdWorker idWorker = new IdWorker(10);
 
@@ -427,8 +430,8 @@ public class CarAutoApi {
             if (obj.getString("status") != null) {
                 paramMap.put("statusList", statusList.get(obj.getString("status")));
             }
+            paramMap.put("userId", obj.getLong("userId"));
             paramMap.put("auctionType",obj.getString("type"));
-
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
@@ -509,17 +512,15 @@ public class CarAutoApi {
         Map<String, Object> map = Maps.newHashMap();
         try {
             map.put("autoInfoName", obj.getString("query"));
+            map.put("userId", obj.getLong("managerId"));
             Integer count = carAutoService.selectRetailForCount(map);
-
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             map.put("startRowNum",pageEntity.getStartRowNum());
             map.put("endRowNum",pageEntity.getEndRowNum());
-
             List<Map<String, Object>> list = carAutoService.selectRetailForExample(map);
             ListEntity<Map<String, Object>> listEntity = new ListEntity<>();
             listEntity.setList(list);
             listEntity.setCount(count);
-
             result.setResult(listEntity);
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {

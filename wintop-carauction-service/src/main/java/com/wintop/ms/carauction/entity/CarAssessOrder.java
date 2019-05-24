@@ -41,6 +41,10 @@ public class CarAssessOrder extends BaseEntity {
      */
     private Long storeId;
     /**
+     * 店铺名称
+     */
+    private String storeName;
+    /**
      * 是否新车置换：1是，2否
      */
     private String ifOldNew;
@@ -190,6 +194,14 @@ public class CarAssessOrder extends BaseEntity {
 
     public Long getStoreId() {
         return storeId;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
     public void setIfOldNew(String ifOldNew) {

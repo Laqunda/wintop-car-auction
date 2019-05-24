@@ -44,6 +44,8 @@ public class CarSaleOrderListApi {
             List<Map<String,Object>> list = new ArrayList<>();
             for (CarSaleOrder carSaleOrder : carSaleOrders){
                 Map<String,Object> map = new HashMap<>();
+                map.put("id",carSaleOrder.getId());
+                map.put("earnestMoney",carSaleOrder.getEarnestMoney());
                 map.put("name", carSaleOrder.getName());
                 map.put("autoInfoName", carSaleOrder.getAutoInfoName());
                 map.put("vehicleAttributionCityCN",carSaleOrder.getVehicleAttributionCityCN());

@@ -78,6 +78,7 @@
             <result property="customerTel" column="customer_tel"/>
             <result property="customerSource" column="customer_source"/>
             <result property="createTime" column="order_create_time"/>
+            <result property="storeName" column="store_name"/>
         </association>
     </resultMap>
 
@@ -139,11 +140,13 @@
         o.customer_source,
         o.store_id,
         o.create_time as order_create_time,
+        s.name store_name,
         (SELECT f.follow_result FROM car_assess_follow_data f WHERE f.assess_id = a.id ORDER BY create_time DESC LIMIT 1
         ) follow_result
         FROM
         car_assess a
         LEFT JOIN car_assess_order o on o.assess_id = a.id
+        LEFT JOIN car_store s on s.id = o.store_id
         <where>
             <if test="id != null ">and a.id = #{id}</if>
             <if test="vin != null  and vin != '' ">and vin LIKE CONCAT(CONCAT('%', #{vin}),'%')</if>

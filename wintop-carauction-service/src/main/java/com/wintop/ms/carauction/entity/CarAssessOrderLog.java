@@ -48,6 +48,11 @@ public class CarAssessOrderLog extends BaseEntity {
 
     private String createUser;
 
+    /**
+     * 评估id
+     */
+    private String assessId;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -138,4 +143,11 @@ public class CarAssessOrderLog extends BaseEntity {
         this.autoInfoName = autoInfoName;
     }
 
+    public String getAssessId() {
+        return assessId;
+    }
+
+    public void setAssessId(String assessId) {
+        this.assessId = assessId;
+    }
 }

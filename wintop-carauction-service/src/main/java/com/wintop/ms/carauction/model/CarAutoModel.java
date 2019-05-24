@@ -178,10 +178,17 @@ public class CarAutoModel {
     }
 
     /**
-     * 库存管理--（零售[已售]、线上拍[车辆库存、审批状态、竞价状态、竞价结果]、现场拍[车辆库存、审批状态、竞价状态、竞价结果]）
+     * 库存管理--（零售[已售]）
      */
     public Integer selectCarAutoForSaleCount(Map<String, Object> map){
         return readDao.selectCarAutoForSaleCount(map);
+    }
+
+    /**
+     * 库存管理--（线上拍[车辆库存、审批状态、竞价状态、竞价结果]、现场拍[车辆库存、审批状态、竞价状态、竞价结果]）
+     */
+    public Integer selectCarAutoCount(Map<String, Object> map){
+        return readDao.selectCarAutoCount(map);
     }
 
     public List<CarAuto> selectUserOrderList(Map<String, Object> map){

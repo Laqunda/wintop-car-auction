@@ -93,6 +93,7 @@
     FROM car_auto_log t1
     INNER JOIN car_auto t2 ON t1.auto_id=t2.id
     WHERE t1.user_id=#{userId} and t1.status ='3' or t1.status = '6'
+    ORDER BY t2.create_time DESC
     <if test="startRowNum!=null and endRowNum!=null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>

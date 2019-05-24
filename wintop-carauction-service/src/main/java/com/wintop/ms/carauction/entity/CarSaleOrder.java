@@ -28,6 +28,70 @@ public class CarSaleOrder implements Serializable {
     private String name;
     //销售员
     private String managerName;
+    //ID
+    private Long id;
+    //车辆ID
+    private Long carId;
+    //订单编号
+    private String orderNo;
+    //出售类型
+    private String salesType;
+    //销售顾问ID
+    private Long salesConsultant;
+    //订单创建时间
+    private Date createTime;
+    //付款方式
+    private String paymentType;
+    //评估人
+    private String carAssess;
+    //过户
+    private String transfer;
+    //出售日期
+    private String salesDate;
+    //保险公司
+    private String insuranceCompany;
+    //商业险到期
+    private Date commercialInsuranceExpires;
+    //交强险到期
+    private Date compulsoryInsuranceExpires;
+    //按揭手续费
+    private BigDecimal mortgageCharges;
+    //保险返利
+    private BigDecimal insuranceRebate;
+    //精品利润
+    private BigDecimal boutiqueProfit;
+    //质保利润
+    private BigDecimal guaranteedProfit;
+    //加装利润
+    private BigDecimal addProfit;
+    //其他费用
+    private BigDecimal otherExpenses;
+    //备注
+    private String remarks;
+    //车主类型
+    private String vehicleOwnerType;
+    //手机号
+    private String phone;
+    //来源
+    private String source;
+    //身份证号
+    private String idCard;
+    //地址
+    private String address;
+    //付款人
+    private String drawee;
+    //开户行
+    private String openingBank;
+    //银行账号
+    private String bankAccount;
+    //其他账号
+    private String otherAccounts;
+    //按揭金额
+    private BigDecimal mortgageAmount;
+    //按揭期数
+    private Long mortgagePeriod;
+    //每月还款
+    private BigDecimal monthlyRepayment;
 
     public String getMainPhoto() {
         return mainPhoto;
@@ -116,58 +180,6 @@ public class CarSaleOrder implements Serializable {
     public void setManagerName(String managerName) {
         this.managerName = managerName;
     }
-    //付款方式
-    private String paymentType;
-    //评估人
-    private String carAssess;
-    //过户
-    private String transfer;
-    //出售日期
-    private String salesDate;
-    //保险公司
-    private String insuranceCompany;
-    //商业险到期
-    private Date commercialInsuranceExpires;
-    //交强险到期
-    private Date compulsoryInsuranceExpires;
-    //按揭手续费
-    private BigDecimal mortgageCharges;
-    //保险返利
-    private BigDecimal insuranceRebate;
-    //精品利润
-    private BigDecimal boutiqueProfit;
-    //质保利润
-    private BigDecimal guaranteedProfit;
-    //加装利润
-    private BigDecimal addProfit;
-    //其他费用
-    private BigDecimal otherExpenses;
-    //备注
-    private String remarks;
-    //车主类型
-    private String vehicleOwnerType;
-    //手机号
-    private String phone;
-    //来源
-    private String source;
-    //身份证号
-    private String idCard;
-    //地址
-    private String address;
-    //付款人
-    private String drawee;
-    //开户行
-    private String openingBank;
-    //银行账号
-    private String bankAccount;
-    //其他账号
-    private String otherAccounts;
-    //按揭金额
-    private BigDecimal mortgageAmount;
-    //按揭期数
-    private Long mortgagePeriod;
-    //每月还款
-    private BigDecimal monthlyRepayment;
 
     public String getPaymentType() {
         return paymentType;
@@ -376,12 +388,6 @@ public class CarSaleOrder implements Serializable {
     public void setMonthlyRepayment(BigDecimal monthlyRepayment) {
         this.monthlyRepayment = monthlyRepayment;
     }
-    //ID
-    private Long id;
-    //车辆ID
-    private Long carId;
-    //订单编号
-    private String orderNo;
 
     public Long getId() {
         return id;
@@ -415,10 +421,6 @@ public class CarSaleOrder implements Serializable {
     public void setDownPayments(BigDecimal downPayments) {
         this.downPayments = downPayments;
     }
-    //出售类型
-    private String salesType;
-    //销售顾问ID
-    private Long salesConsultant;
 
     public String getSalesType() {
         return salesType;
@@ -435,8 +437,6 @@ public class CarSaleOrder implements Serializable {
     public void setSalesConsultant(Long salesConsultant) {
         this.salesConsultant = salesConsultant;
     }
-    //订单创建时间
-    private Date createTime;
 
     public Date getCreateTime() {
         return createTime;

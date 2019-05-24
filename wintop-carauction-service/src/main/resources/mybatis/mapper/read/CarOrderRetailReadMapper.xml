@@ -67,13 +67,13 @@
     </select>
 
     <select id="selectCarSaleOrder" resultMap="BaseResultMap" parameterType="java.util.Map" >
-        select t1.name , t1.sales_date, t1.sales_type, t1.earnest_money, t1.transaction_fee, t2.store_name, t2.main_photo, t2.report_colligation_ranks,
+        select t1.id,t1.name , t1.sales_date, t1.sales_type, t1.earnest_money, t1.transaction_fee, t2.store_name, t2.main_photo, t2.report_colligation_ranks,
         t2.report_servicing_ranks, t3.mileage, t3.vehicle_attribution_city_cn,t4.user_name
         FROM car_order_retail t1
         INNER JOIN car_auto t2 ON t1.car_id=t2.id
-        INNER JOIN car_auto_info_detail t3 ON t1.car_id=t3.id
-        INNER JOIN car_manager_user t4 ON t1.sales_consultant=t4.id
-        WHERE t1.create_user=#{customerId}
+        INNER JOIN car_auto_info_detail t3 ON t1.car_id=t3.auto_id
+        INNER JOIN car_manager_user t4 ON t1.create_user = t4.id
+        WHERE t1.create_user = #{customerId}
         <if test="startRowNum!=null and endRowNum!=null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
         </if>
