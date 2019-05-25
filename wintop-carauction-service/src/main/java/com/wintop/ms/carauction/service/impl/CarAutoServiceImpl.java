@@ -456,13 +456,13 @@ public class CarAutoServiceImpl implements ICarAutoService {
         paramMap.put("userId",carManagerUser.getId());
         //如果用户是中心店管理员
         if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
-            paramMap.put("auctionType","2");//现场车辆
+//            paramMap.put("auctionType","2");//现场车辆
             paramMap.put("roleTyped","2");//中心店
             paramMap.put("managerRole",carManagerUser.getRoleId());
         }
         //如果用户是店铺管理员
         if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
-            paramMap.put("auctionType","1");//线上车辆
+//            paramMap.put("auctionType","1");//线上车辆
             paramMap.put("roleTyped","3");//店铺
             paramMap.put("managerRole",carManagerUser.getRoleId());
         }
