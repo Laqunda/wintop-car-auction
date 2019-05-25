@@ -91,14 +91,21 @@ public class HandleDisputeApi {
                     }
                     if("2".equals(carAuto1.getStatus())){
                         carAuto.setStatus("1");
-                        count = iCarAutoService.updateByPrimaryKeySelective(carAuto).getResult();
-                        redisAutoManager.delAuto(Constants.CAR_AUTO_AUCTION+"_"+id);
                     }
                     if("5".equals(carAuto1.getStatus()) || "6".equals(carAuto1.getStatus())){
                         carAuto.setStatus("4");
-                        count = iCarAutoService.updateByPrimaryKeySelective(carAuto).getResult();
-                        redisAutoManager.delAuto(Constants.CAR_AUTO_AUCTION+"_"+id);
                     }
+                    //如果是转渠道撤回到线上
+                    if(TRANSFER_OFFLINE.equals(carAuto1.getTransferFlag())){
+                        carAuto.setTransferFlag("0");
+                        CarAutoAuction autoAuction = new CarAutoAuction();
+                        autoAuction.setId(carAuto1.getAutoAuctionId());
+                        autoAuction.setAutoId(carAuto1.getId());
+                        autoAuction.setAuctionType("1");
+                        iCarAutoAuctionService.updateByPrimaryKeySelective(autoAuction);
+                    }
+                    count = iCarAutoService.updateByPrimaryKeySelective(carAuto).getResult();
+                    redisAutoManager.delAuto(Constants.CAR_AUTO_AUCTION+"_"+id);
                 }
             }else{
                 result.setError("0","查询不到相关车辆信息");
@@ -144,14 +151,15 @@ public class HandleDisputeApi {
             }
             Integer count = 0;
             Integer autoCount = 0;
+            //更改销售渠道类型
             CarAutoAuction carAutoAuction = new CarAutoAuction();
             carAutoAuction.setId(carAuto1.getAutoAuctionId());
-            carAutoAuction.setTransferFlag(TRANSFER_OFFLINE);
             carAutoAuction.setAuctionType(OFFLINE);
-
+            //更新车辆信息
             CarAuto carAuto = new CarAuto();
             carAuto.setId(id);
             carAuto.setStatus(AUDIT);
+            carAuto.setTransferFlag(TRANSFER_OFFLINE);
             if(carAuto1 != null ){
                 //
                 autoCount =  iCarAutoService.updateByIdSelective(carAuto);
