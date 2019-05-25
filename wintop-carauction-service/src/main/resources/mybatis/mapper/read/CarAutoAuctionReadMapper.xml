@@ -124,4 +124,17 @@
     WHERE t1.auto_id=#{carId}
     ORDER BY t1.create_time DESC limit 1
   </select>
+
+  <!-- 根据场次获取车辆拍卖信息 -->
+  <select id="selectAutoAuctionBylocale"  resultMap="BaseResultMap" parameterType="java.util.Map">
+    select t1.*
+    from car_auto_auction t1
+        ,car_auto ca
+        ,car_locale_auction_car lac
+    where t1.id = ca.auto_auction_id
+    and ca.id = lac.car_id
+    and lac.auction_id = #{auctionId}
+    and ca.`status` = #{status}
+    and ca.transfer_flag = #{transferFlag}
+  </select>
 </mapper>

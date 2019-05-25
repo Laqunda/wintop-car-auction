@@ -226,6 +226,9 @@
       <if test="saleFlag != null">
         sale_flag = #{saleFlag},
       </if>
+      <if test="transferFlag != null">
+        transfer_flag = #{transferFlag},
+      </if>
     </set>
     where id = #{id}
   </update>
