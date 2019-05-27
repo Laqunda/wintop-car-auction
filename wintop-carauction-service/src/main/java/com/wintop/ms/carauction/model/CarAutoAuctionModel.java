@@ -134,4 +134,11 @@ public class CarAutoAuctionModel {
     public int updateAuctionEndTime(CarAutoAuction record){
         return writeDao.updateAuctionEndTime(record);
     }
+
+    /**
+     * 获取场次中车辆竞拍信息
+     */
+    public List<CarAutoAuction> selectAutoAuctionBylocale(Map<String,Object> map){
+        return readDao.selectAutoAuctionBylocale(map);
+    }
 }

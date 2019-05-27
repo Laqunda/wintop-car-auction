@@ -1,6 +1,8 @@
 package com.wintop.ms.carauction.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wintop.ms.carauction.core.config.CarStatusEnum;
+import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.model.CarAutoAuctionModel;
@@ -48,10 +50,6 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
     private CarOrderLogModel carOrderLogModel;
     @Autowired
     private CarManagerUserModel carManagerUserModel;
-
-    @Value( "${share_uri}" )
-    private String shareUri;
-
 
     private IdWorker idWorker = new IdWorker(10);
 
@@ -379,7 +377,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
             carMap.put("publishUserName",carLocaleAuctionCar.getPublishUserName());
             entriesList.add(carMap);
         }
-        resultMap.put("shareUri", shareUri);
+        resultMap.put("shareUri", Constants.STATIC_WEBSITE+"/ht/share/index.html");
         resultMap.put("entries",entriesList);
         result.setResult(resultMap);
         return result;
@@ -811,6 +809,48 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
         updateAuction.setId(carLocaleAuction.getId());
         updateAuction.setStatus("4");
         Integer count =model.updateByIdSelective(updateAuction);
+        //将转渠道的流拍车辆定义为草稿
+        //查询拍卖场次转渠道并且流拍的车
+        paramMap.clear();
+        paramMap.put("auctionId",auctionId);
+        paramMap.put("status", CarStatusEnum.ABORTIVE_AUCTION.value());
+        paramMap.put("transferFlag","1");
+        List<CarAutoAuction> carAutoAuctionList = carAutoAuctionModel.selectAutoAuctionBylocale(paramMap);
+        if(carAutoAuctionList != null && carAutoAuctionList.size() > 0){
+            //将车辆定义为草稿状态
+            for(CarAutoAuction autoAuction: carAutoAuctionList ){
+                Long autoAuctionId = idWorker.nextId();
+                CarAuto carAuto = new CarAuto();
+                carAuto.setId(autoAuction.getAutoId());
+                carAuto.setStatus(CarStatusEnum.DRAFT.value());
+                carAuto.setAutoAuctionId(autoAuctionId);
+                carAutoModel.updateByPrimaryKey(carAuto);
+                CarAuto auto = carAutoModel.selectByPrimaryKey(carAuto.getId());
+                //重新插入一条竞拍信息
+                autoAuction.setAuctionType("1");
+                autoAuction.setStatus("1");
+                autoAuction.setAuctionStartTime(null);
+                autoAuction.setAuctionEndDefaultTime(null);
+                autoAuction.setAuctionEndTime(null);
+                autoAuction.setTopPricerId(null);
+                autoAuction.setTopBidPrice(null);
+                autoAuction.setTopBidTime(null);
+                autoAuction.setCreateTime(new Date());
+                autoAuction.setCreatePerson(auto.getCreateUser());
+                autoAuction.setId(autoAuctionId);
+                carAutoAuctionModel.insert(autoAuction);
+                //保存log日志
+                CarAutoLog carAutoLog = new CarAutoLog();
+                carAutoLog.setId(idWorker.nextId());
+                carAutoLog.setAutoId(auto.getId());
+                carAutoLog.setUserType("2");
+                carAutoLog.setStatus(CarStatusEnum.DRAFT.value());
+                carAutoLog.setTime(new Date());
+                carAutoLog.setMsg("现场拍流拍后转车辆草稿");
+                carAutoLogModel.insert(carAutoLog);
+            }
+        }
+
         ServiceResult<Map<String,Object>> result=new ServiceResult<>();
         Map resultMap =new HashMap();
         resultMap.put("count",count);
