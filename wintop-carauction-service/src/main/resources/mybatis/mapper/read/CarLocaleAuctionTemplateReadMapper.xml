@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarLocaleAuctionTemplateReadDao">
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarLocaleAuctionTemplate" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="type" property="type" jdbcType="VARCHAR" />
+        <result column="poster" property="poster" jdbcType="VARCHAR" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="region_id" property="regionId" jdbcType="BIGINT" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="gps_longitude" property="gpsLongitude" jdbcType="DECIMAL" />
+        <result column="gps_latitude" property="gpsLatitude" jdbcType="DECIMAL" />
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="corporate_agent" property="corporateAgent" jdbcType="BIGINT" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="describe" property="describe" jdbcType="VARCHAR" />
+        <result column="see_car_man" property="seeCarMan" jdbcType="VARCHAR" />
+        <result column="see_car_phone" property="seeCarPhone" jdbcType="VARCHAR" />
+        <result column="see_car_time" property="seeCarTime" jdbcType="VARCHAR" />
+        <result column="editor" property="editor" jdbcType="VARCHAR" />
+        <result column="edit_time" property="editTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="stop_start_time" property="stopStartTime" jdbcType="TIMESTAMP" />
+        <result column="stop_end_time" property="stopEndTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, `type`, poster, title, region_id, address, gps_longitude, gps_latitude, start_time,
+        corporate_agent, status, `describe`, see_car_phone, see_car_man, see_car_time, editor, edit_time,
+        end_time, stop_start_time, stop_end_time
+    </sql>
+
+	<select id="get" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select
+          <include refid="Base_Column_List" />
+        from car_locale_auction_template where id = #{value}
+	</select>
+
+	<select id="list" resultMap="BaseResultMap" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuctionTemplate">
+		select `id`,`type`,`poster`,`title`,`region_id`,`address`,`gps_longitude`,`gps_latitude`,`start_time`,`corporate_agent`,`status`,`describe`,`see_car_man`,`see_car_time`,`editor`,`edit_time`,`end_time` from car_locale_auction_template
+        <where>
+            <if test="id != null and id != ''"> and id = #{id} </if>
+            <if test="type != null and type != ''"> and type = #{type} </if>
+            <if test="poster != null and poster != ''"> and poster = #{poster} </if>
+            <if test="title != null and title != ''"> and title LIKE CONCAT(CONCAT('%', #{title}),'%') </if>
+            <if test="regionId != null and regionId != ''"> and region_id = #{regionId} </if>
+            <if test="address != null and address != ''"> and address = #{address} </if>
+            <if test="gpsLongitude != null and gpsLongitude != ''"> and gps_longitude = #{gpsLongitude} </if>
+            <if test="gpsLatitude != null and gpsLatitude != ''"> and gps_latitude = #{gpsLatitude} </if>
+            <if test="startTime != null and startTime != ''"> and start_time = #{startTime} </if>
+            <if test="corporateAgent != null and corporateAgent != ''"> and corporate_agent = #{corporateAgent} </if>
+            <if test="status != null and status != ''"> and status = #{status} </if>
+            <if test="describe != null and describe != ''"> and describe = #{describe} </if>
+            <if test="seeCarPhone != null and seeCarPhone != ''"> and see_car_phone = #{seeCarPhone} </if>
+            <if test="seeCarMan != null and seeCarMan != ''"> and see_car_man = #{seeCarMan} </if>
+            <if test="seeCarTime != null and seeCarTime != ''"> and see_car_time = #{seeCarTime} </if>
+            <if test="editor != null and editor != ''"> and editor = #{editor} </if>
+            <if test="editTime != null and editTime != ''"> and edit_time = #{editTime} </if>
+            <if test="endTime != null and endTime != ''"> and end_time = #{endTime} </if>
+        </where>
+        <if test="startRowNum != null and endRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+	</select>
+
+ 	<select id="count" resultType="int" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuctionTemplate">
+		select count(*) from car_locale_auction_template
+		 <where>
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="poster != null and poster != ''"> and poster = #{poster} </if>
+		  		  <if test="title != null and title != ''"> and title = #{title} </if>
+		  		  <if test="regionId != null and regionId != ''"> and region_id = #{regionId} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="gpsLongitude != null and gpsLongitude != ''"> and gps_longitude = #{gpsLongitude} </if>
+		  		  <if test="gpsLatitude != null and gpsLatitude != ''"> and gps_latitude = #{gpsLatitude} </if>
+		  		  <if test="startTime != null and startTime != ''"> and start_time = #{startTime} </if>
+		  		  <if test="corporateAgent != null and corporateAgent != ''"> and corporate_agent = #{corporateAgent} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		  <if test="describe != null and describe != ''"> and describe = #{describe} </if>
+		  		  <if test="seeCarMan != null and seeCarMan != ''"> and see_car_man = #{seeCarMan} </if>
+                  <if test="seeCarPhone != null and seeCarPhone != ''"> and see_car_phone = #{seeCarPhone} </if>
+		  		  <if test="seeCarTime != null and seeCarTime != ''"> and see_car_time = #{seeCarTime} </if>
+		  		  <if test="editor != null and editor != ''"> and editor = #{editor} </if>
+		  		  <if test="editTime != null and editTime != ''"> and edit_time = #{editTime} </if>
+		  		  <if test="endTime != null and endTime != ''"> and end_time = #{endTime} </if>
+		  		</where>
+	</select>
+
+</mapper>

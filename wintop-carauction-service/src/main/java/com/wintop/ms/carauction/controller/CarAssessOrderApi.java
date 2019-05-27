@@ -339,8 +339,9 @@ public class CarAssessOrderApi {
         auto.setCreateUser(a.getCreateUser());
         auto.setCreateTime(new Date());
         auto.setAuctionNum(0);
-        if (a.getRegionId() != null)
+        if (a.getRegionId() != null) {
             auto.setRegionId(Long.parseLong(a.getRegionId()));
+        }
 
         auto.setMainPhoto(a.getCarPhoto());
         auto.setStatus("5");//等待上拍
