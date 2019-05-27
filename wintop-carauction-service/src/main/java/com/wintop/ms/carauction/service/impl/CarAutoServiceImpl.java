@@ -368,12 +368,14 @@ public class CarAutoServiceImpl implements ICarAutoService {
         CarManagerUser carManagerUser = userModel.selectByPrimaryKey(Long.valueOf(map.get("userId")+""));
         //如果用户是中心店管理员
         if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
-            map.put("roleTyped","2");//中心店
+//            map.put("roleTyped","2");//中心店
+            map.put("departmentId",carManagerUser.getDepartmentId());
             map.put("managerRole",carManagerUser.getRoleId());
         }
         //如果用户是店铺管理员
         if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
-            map.put("roleTyped","3");//店铺
+//            map.put("roleTyped","3");//店铺
+            map.put("departmentId",carManagerUser.getDepartmentId());
             map.put("managerRole",carManagerUser.getRoleId());
         }
         return carAutoModel.selectCarList(map);
@@ -384,24 +386,22 @@ public class CarAutoServiceImpl implements ICarAutoService {
     @Override
     public Integer selectCarCount(Map<String, Object> map) {
         List<Map<String, Object>> resultList = Lists.newArrayList();
-        Map<String, Object> paramMap = Maps.newHashMap();
-        paramMap.put("autoInfoName",map.get("autoInfoName"));
         //查询用户权限
         CarManagerUser carManagerUser = userModel.selectByPrimaryKey(Long.valueOf(map.get("userId")+""));
-        paramMap.put("userId",carManagerUser.getId());
         //如果用户是中心店管理员
         if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
-            paramMap.put("auctionType","2");//现场车辆
-            paramMap.put("roleTyped","2");//中心店
-            paramMap.put("managerRole",carManagerUser.getRoleId());
+//            paramMap.put("auctionType","2");//现场车辆
+//            paramMap.put("roleTyped","2");//中心店
+            map.put("departmentId",carManagerUser.getDepartmentId());
+            map.put("managerRole",carManagerUser.getRoleId());
         }
         //如果用户是店铺管理员
         if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
-            paramMap.put("auctionType","1");//线上车辆
-            paramMap.put("roleTyped","3");//店铺
-            paramMap.put("managerRole",carManagerUser.getRoleId());
+//            paramMap.put("auctionType","1");//线上车辆
+//            paramMap.put("roleTyped","3");//店铺
+            map.put("departmentId",carManagerUser.getDepartmentId());
+            map.put("managerRole",carManagerUser.getRoleId());
         }
-        paramMap.put("auctionType",map.get("auctionType"));
         return carAutoModel.selectCarAutoCount(map);
     }
 
@@ -457,13 +457,15 @@ public class CarAutoServiceImpl implements ICarAutoService {
         //如果用户是中心店管理员
         if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
 //            paramMap.put("auctionType","2");//现场车辆
-            paramMap.put("roleTyped","2");//中心店
+//            paramMap.put("roleTyped","2");//中心店
+            paramMap.put("departmentId",carManagerUser.getDepartmentId());
             paramMap.put("managerRole",carManagerUser.getRoleId());
         }
         //如果用户是店铺管理员
         if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
 //            paramMap.put("auctionType","1");//线上车辆
-            paramMap.put("roleTyped","3");//店铺
+//            paramMap.put("roleTyped","3");//店铺
+            paramMap.put("departmentId",carManagerUser.getDepartmentId());
             paramMap.put("managerRole",carManagerUser.getRoleId());
         }
         // 零售
@@ -493,14 +495,16 @@ public class CarAutoServiceImpl implements ICarAutoService {
         paramMap.put("userId",carManagerUser.getId());
         //如果用户是中心店管理员
         if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
-            paramMap.put("auctionType","2");//现场车辆
-            paramMap.put("roleTyped","2");//中心店
+//            paramMap.put("auctionType","2");//现场车辆
+//            paramMap.put("roleTyped","2");//中心店
+            paramMap.put("departmentId",carManagerUser.getDepartmentId());
             paramMap.put("managerRole",carManagerUser.getRoleId());
         }
         //如果用户是店铺管理员
         if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
-            paramMap.put("auctionType","1");//线上车辆
-            paramMap.put("roleTyped","3");//店铺
+//            paramMap.put("auctionType","1");//线上车辆
+//            paramMap.put("roleTyped","3");//店铺
+            paramMap.put("departmentId",carManagerUser.getDepartmentId());
             paramMap.put("managerRole",carManagerUser.getRoleId());
         }
          // 零售
@@ -810,13 +814,15 @@ public class CarAutoServiceImpl implements ICarAutoService {
             //如果用户是中心店管理员
             if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
 //                paramMap.put("auctionType","2");//现场车辆
-                paramMap.put("roleTyped","2");//中心店
+//                paramMap.put("roleTyped","2");//中心店
+                paramMap.put("departmentId",carManagerUser.getDepartmentId());
                 paramMap.put("managerRole",carManagerUser.getRoleId());
             }
             //如果用户是店铺管理员
             if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
 //                paramMap.put("auctionType","1");//线上车辆
-                paramMap.put("roleTyped","3");//店铺
+//                paramMap.put("roleTyped","3");//店铺
+                paramMap.put("departmentId",carManagerUser.getDepartmentId());
                 paramMap.put("managerRole",carManagerUser.getRoleId());
             }
             //竞拍

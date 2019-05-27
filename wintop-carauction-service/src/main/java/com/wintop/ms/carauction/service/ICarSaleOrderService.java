@@ -12,6 +12,6 @@ public interface ICarSaleOrderService {
 
     CarSaleOrder selectCarSaleOrderRetail(Map<String,Object> paramMap);
 
-    Integer selectCarSaleOrderCount (Long customerId);
+    Integer selectCarSaleOrderCount (Map<String,Object> paramMap);
 
 }

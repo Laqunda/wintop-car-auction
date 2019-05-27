@@ -23,8 +23,8 @@ public class CarSaleOrderModel {
         return iCarSaleOrderReadDAO.selectCarSaleRetail(paramMap);
     }
 
-    public Integer selectCarSaleOrderCount (Long customerId){
-        return iCarSaleOrderReadDAO.selectCarSaleOrderCount(customerId);
+    public Integer selectCarSaleOrderCount (Map<String,Object> paramMap){
+        return iCarSaleOrderReadDAO.selectCarSaleOrderCount(paramMap);
     }
 
     public CarSaleOrder selectRetailById(Long id) {

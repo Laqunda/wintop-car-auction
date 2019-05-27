@@ -27,7 +27,7 @@ public class CarSaleOrderServiceServiceImpl implements ICarSaleOrderService {
     }
 
     @Override
-    public Integer selectCarSaleOrderCount(Long customerId) {
-        return carSaleOrderModel.selectCarSaleOrderCount(customerId);
+    public Integer selectCarSaleOrderCount(Map<String,Object> paramMap) {
+        return carSaleOrderModel.selectCarSaleOrderCount(paramMap);
     }
 }

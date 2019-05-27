@@ -165,31 +165,19 @@
         select  count(t1.id)
         from car_auto t1
         inner join car_auto_auction t2 on  t2.id = t1.auto_auction_id
-    <if test="managerRole != null and managerRole != ''">
-      inner join car_store cs on cs.id = t1.store_id
-      <if test="managerRole == 3">
-        inner join car_center_store ccs on ccs.store_id = cs.id
-        inner join car_center cc on cc.id = ccs.center_id
-        inner join car_manager_user cmu on cmu.department_id = cc.id
-      </if>
-      <if test="managerRole == 8">
-        inner join car_manager_user cmu on cmu.department_id = cs.id
-      </if>
-    </if>
         where t1.sale_flag = '0'
           and t2.auction_type = #{auctionType}
     <choose>
       <when test="managerRole != null and managerRole != ''">
-        AND cmu.role_type_id = #{roleTyped}
-        AND cmu.id = #{userId}
+        and t1.store_id  = #{departmentId}
       </when>
       <otherwise>
-        AND t1.publish_user_id = #{userId}
+        and t1.publish_user_id = #{userId}
       </otherwise>
     </choose>
-    <if test="status != null">
-      AND t1.status in
-      <foreach collection="status" item="item" open="(" separator="," close=")">
+    <if test="statusList != null">
+      and t1.status in
+      <foreach collection="statusList" item="item" separator="," open="(" close=")">
         #{item}
       </foreach>
     </if>
@@ -200,23 +188,11 @@
           FROM car_order_retail t1
         INNER JOIN car_auto t2 ON t1.car_id = t2.id
         INNER JOIN car_auto_auction caa ON caa.id = t2.auto_auction_id
-        <if test="managerRole != null and managerRole != ''">
-          INNER JOIN car_store cs ON cs.id = t2.store_id
-          <if test="managerRole == 3">
-            INNER JOIN car_center_store ccs ON ccs.store_id = cs.id
-            INNER JOIN car_center cc ON cc.id = ccs.center_id
-            INNER JOIN car_manager_user cmu ON cmu.department_id = cc.id
-          </if>
-          <if test="managerRole == 8">
-            INNER JOIN car_manager_user cmu ON cmu.department_id = cs.id
-          </if>
-        </if>
         WHERE
             t2.sale_flag = #{saleFlag}
         <choose>
           <when test="managerRole != null and managerRole != ''">
-            AND cmu.role_type_id = #{roleTyped}
-            AND cmu.id = #{userId}
+            AND t2.store_id  = #{departmentId}
           </when>
           <otherwise>
             AND t1.create_user = #{userId}
@@ -294,38 +270,26 @@
     </if>
   </select>
   <select id="selectCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
-    SELECT
+    select
       t1.id,t1.main_photo,t1.auto_info_name,t8.vehicle_attribution_city_cn,t8.mileage,t1.status,
       t1.report_colligation_ranks,t1.report_servicing_ranks,t7.up_time as "submit_time",t7.auth_time as "auth_time",t7.auth_msg,
       t2.auction_start_time,t4.auth_time as "deal_time",t5.time as "pass_in_time",t1.create_time
-    FROM car_auto t1
-    LEFT JOIN car_auto_auction t2 ON t1.auto_auction_id=t2.id
-    LEFT JOIN car_order t3 on t1.auto_auction_id = t3.auto_auction_id
-    LEFT JOIN car_auto_transfer t4 on t4.order_id = t3.id
-    LEFT JOIN car_auto_log t5 on t5.auto_id = t1.id
-    LEFT JOIN car_agent t6 on t6.car_id = t1.id
-    LEFT JOIN car_agent_log t7 on t7.agent_id = t6.id
-    LEFT JOIN car_auto_info_detail t8 on t8.auto_id=t1.id
-    <if test="managerRole != null and managerRole != ''">
-      INNER JOIN car_store cs ON cs.id = t1.store_id
-      <if test="managerRole == 3">
-        INNER JOIN car_center_store ccs ON ccs.store_id = cs.id
-        INNER JOIN car_center cc ON cc.id = ccs.center_id
-        INNER JOIN car_manager_user cmu ON cmu.department_id = cc.id
-      </if>
-      <if test="managerRole == 8">
-        INNER JOIN car_manager_user cmu ON cmu.department_id = cs.id
-      </if>
-    </if>
+    from car_auto t1
+    left join car_auto_auction t2 ON t1.auto_auction_id=t2.id
+    left join car_order t3 on t1.auto_auction_id = t3.auto_auction_id
+    left join car_auto_transfer t4 on t4.order_id = t3.id
+    left join car_auto_log t5 on t5.auto_id = t1.id
+    left join car_agent t6 on t6.car_id = t1.id
+    left join car_agent_log t7 on t7.agent_id = t6.id
+    left join car_auto_info_detail t8 on t8.auto_id=t1.id
     <trim prefix="where" prefixOverrides="and">
       t1.sale_flag = '0'
       <choose>
         <when test="managerRole != null and managerRole != ''">
-          AND cmu.role_type_id = #{roleTyped}
-          AND cmu.id = #{userId}
+          and t1.store_id = #{departmentId}
         </when>
         <otherwise>
-          AND t1.publish_user_id = #{userId}
+          and t1.publish_user_id = #{userId}
         </otherwise>
       </choose>
       <if test="status != null and status != ''">
@@ -334,7 +298,7 @@
       <if test="autoInfoName != null and autoInfoName != ''">
         and t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%')
       </if>
-      <if test="auctionType != null and auction_type != ''">
+      <if test="auctionType != null and auctionType != ''">
         and t2.auction_type = #{auctionType}
       </if>
       <if test="statusList != null">
@@ -344,33 +308,41 @@
         </foreach>
       </if>
     </trim>
+    group by t1.id
     <if test="endRowNum != null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
   </select>
+
   <select id="selectCarCount" resultType="Integer" parameterType="java.util.Map">
-    SELECT
+    select
       count(t1.id)
-    FROM car_auto t1
-    LEFT JOIN car_auto_auction t2 ON t1.auto_auction_id=t2.id
-    <trim prefix="where" prefixOverrides="and">
+    from car_auto t1
+    left join car_auto_auction t2 ON t1.auto_auction_id=t2.id
+    where t1.sale_flag = '0'
+      and t2.auction_type = #{auctionType}
+      <choose>
+        <when test="managerRole != null and managerRole != ''">
+          and t1.store_id  = #{departmentId}
+        </when>
+        <otherwise>
+          and t1.create_user = #{userId}
+        </otherwise>
+      </choose>
       <if test="status != null and status != ''">
         and t1.status = #{status}
       </if>
       <if test="autoInfoName != null and autoInfoName != ''">
         and t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%')
       </if>
-      <if test="auctionType != null and auction_type != ''">
-        and t2.auction_type = #{auctionType}
-      </if>
       <if test="statusList != null">
         and t1.status in
         <foreach collection="statusList" item="item" separator="," open="(" close=")">
           #{item}
         </foreach>
       </if>
-    </trim>
   </select>
+
   <select id="selectAuctionCarCount" resultType="java.lang.Integer">
     SELECT count(DISTINCT t2.auto_auction_id)
     FROM car_locale_auction_car t2
@@ -929,6 +901,7 @@
       </foreach>
     </if>
   </select>
+
   <select id="selectRetailForExample" parameterType="java.util.Map" resultMap="BaseResultMap">
     select
     t1.id,
@@ -938,23 +911,11 @@
     from car_auto t1
     inner join car_order_retail t2 on t1.id = t2.car_id
     inner join car_auto_auction caa on caa.id = t1.auto_auction_id
-    <if test="managerRole != null and managerRole != ''">
-      inner join car_store cs on cs.id = t1.store_id
-    <if test="managerRole == 3">
-      inner join car_center_store ccs on ccs.store_id = cs.id
-      inner join car_center cc on cc.id = ccs.center_id
-      inner join car_manager_user cmu on cmu.department_id = cc.id
-    </if>
-    <if test="managerRole == 8">
-      inner join car_manager_user cmu on cmu.department_id = cs.id
-    </if>
-  </if>
     <where>
       t1.sale_flag = '1'
       <choose>
         <when test="managerRole != null and managerRole != ''">
-          and cmu.role_type_id = #{roleTyped}
-          and cmu.id = #{userId}
+          and t1.store_id = #{departmentId}
         </when>
         <otherwise>
           and t2.create_user = #{userId}
@@ -969,12 +930,21 @@
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
   </select>
+
   <select id="selectRetailForCount" parameterType="java.util.Map" resultType="java.lang.Integer">
     select
       count(t1.id)
     from car_auto t1
     inner join car_order_retail t2 on t1.id = t2.car_id
     <where>
+      <choose>
+        <when test="managerRole != null and managerRole != ''">
+          and t1.store_id = #{departmentId}
+        </when>
+        <otherwise>
+          and t2.create_user = #{userId}
+        </otherwise>
+      </choose>
       <if test="autoInfoName != null and autoInfoName != ''">
         t1.auto_info_name like '%{autoInfoName}%'
       </if>

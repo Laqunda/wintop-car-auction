@@ -432,32 +432,11 @@ public class CarAutoApi {
             }
             paramMap.put("userId", obj.getLong("userId"));
             paramMap.put("auctionType",obj.getString("type"));
+            Integer count = carAutoService.selectCarCount(paramMap);
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
             List<CarAuto> recordList = carAutoService.selectCarList(paramMap);
-            Integer count = carAutoService.selectCarCount(paramMap);
-            Map<String, Object> map = Maps.newHashMap();
-            /*
-            for (CarAuto record : recordList) {
-                map = Maps.newHashMap();
-                map.put("id", record.getId());
-                map.put("mainPhoto", record.getMainPhoto());
-                map.put("autoInfoName", record.getAutoInfoName());
-                map.put("vehicleAttributionCity", record.getVehicleAttributionCity());
-                map.put("mileage", record.getMileage());
-                map.put("reportColligationRanks", record.getReportColligationRanks());
-                map.put("reportServicingRanks", record.getReportServicingRanks());
-                map.put("status", record.getStatus());
-                map.put("submitTime", record.getSubmitTime());
-                map.put("authTime", record.getAuthTime());
-                map.put("authMsg", record.getAuthMsg());
-                map.put("auctionStartTime", record.getAuctionStarTime());
-                map.put("dealTime", record.getDealTime());
-                map.put("passInTime", record.getDealTime());
-                list.add(map);
-            }
-            */
             listEntity.setList(recordList);
             listEntity.setCount(count);
             result.setResult(listEntity);
@@ -512,7 +491,23 @@ public class CarAutoApi {
         Map<String, Object> map = Maps.newHashMap();
         try {
             map.put("autoInfoName", obj.getString("query"));
-            map.put("userId", obj.getLong("managerId"));
+            //查询用户权限
+            CarManagerUser carManagerUser = userService.selectByPrimaryKey(obj.getLong("managerId"),true);
+            map.put("userId",carManagerUser.getId());
+            //如果用户是中心店管理员
+            if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
+//                map.put("auctionType","2");//现场车辆
+//                map.put("roleTyped","2");//中心店
+                map.put("departmentId",carManagerUser.getDepartmentId());
+                map.put("managerRole",carManagerUser.getRoleId());
+            }
+            //如果用户是店铺管理员
+            if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
+//                map.put("auctionType","1");//线上车辆
+//                map.put("roleTyped","3");//店铺
+                map.put("departmentId",carManagerUser.getDepartmentId());
+                map.put("managerRole",carManagerUser.getRoleId());
+            }
             Integer count = carAutoService.selectRetailForCount(map);
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             map.put("startRowNum",pageEntity.getStartRowNum());

@@ -78,8 +78,6 @@ public class Constants {
      * http://test-api.yuntongauto.com/carmodel 车型库接口
      */
 
-
-
     /**pdf模板方式合同生成甲方签字合同**/
     public static final String CREATESIGNATURE_TEMP_URL =  Constants.COMMON_MODULE_ROOT + "/signature/gosign/pdf/fill";
 
@@ -152,8 +150,8 @@ public class Constants {
     /***getVehicleListByVin
      * 根据vin码匹配车型列表
      */
-    public static final String VIN_GET_VEHICLELIST_URL = COMMON_MODULE_ROOT+"/carmodel/vehiclelist";
-//    public static final String VIN_GET_VEHICLELIST_URL = "http://192.168.22.67:2001/carmodel/vehiclelist";
+//    public static final String VIN_GET_VEHICLELIST_URL = COMMON_MODULE_ROOT+"/carmodel/vehiclelist";
+    public static final String VIN_GET_VEHICLELIST_URL = "http://192.168.22.67:2001/carmodel/vehiclelist";
 
     /***
      * 根据具体车型获取车辆详细配置信息
