@@ -15,19 +15,12 @@ public class CarSaleOrderModel {
     @Resource
     private ICarSaleOrderReadDAO iCarSaleOrderReadDAO;
 
-    public  List<CarSaleOrder> selectCarOrder(Map<String,Object> paramMap){
-        return iCarSaleOrderReadDAO.selectCarOrder(paramMap);
-    }
-
     public List<CarSaleOrder> selectCarSaleOrder(Map<String,Object> paramMap){
         return iCarSaleOrderReadDAO.selectCarSaleOrder(paramMap);
     }
 
-    public CarSaleOrder selectCarSaleRetail(Long customerId){
-        return iCarSaleOrderReadDAO.selectCarSaleRetail(customerId);
-    }
-    public Integer selectCarOrderCount (Long customerId){
-        return iCarSaleOrderReadDAO.selectCarOrderCount(customerId);
+    public CarSaleOrder selectCarSaleRetail(Map<String,Object> paramMap){
+        return iCarSaleOrderReadDAO.selectCarSaleRetail(paramMap);
     }
 
     public Integer selectCarSaleOrderCount (Long customerId){

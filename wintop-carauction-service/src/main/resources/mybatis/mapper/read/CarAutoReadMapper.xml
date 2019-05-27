@@ -951,7 +951,6 @@
   </if>
     <where>
       t1.sale_flag = '1'
---       and t2.auction_type = #{auctionType}
       <choose>
         <when test="managerRole != null and managerRole != ''">
           and cmu.role_type_id = #{roleTyped}

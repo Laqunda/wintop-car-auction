@@ -11,7 +11,7 @@ public interface ICarSaleOrderReadDAO {
 
     List<CarSaleOrder> selectCarSaleOrder(Map<String,Object> paramMap);
 
-    CarSaleOrder selectCarSaleRetail(Long customerId);
+    CarSaleOrder selectCarSaleRetail(Map<String,Object> paramMap);
 
     Integer selectCarOrderCount (Long customerId);
 

@@ -302,6 +302,7 @@ public class CarOrderApi {
                 CarManagerUser carManagerUser = iCarManagerUserService.selectByPrimaryKey(userId,true);
                 paramMap.put("departmentId",carManagerUser.getDepartmentId());
             }
+            paramMap.put("auctionType",obj.getString("auctionType"));
             int count = carOrderService.queryHistoryCarCount(paramMap);
             PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
@@ -327,6 +328,8 @@ public class CarOrderApi {
                 map.put("reportColligationRanks",carOrder.getReportColligationRanks());
                 map.put("reportServicingRanks",carOrder.getReportServicingRanks());
                 map.put("licenseNumber",carOrder.getLicenseNumber());
+                map.put("storeName",carOrder.getStoreName());
+                map.put("userName",carOrder.getUserName());
                 list.add(map);
             }
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();

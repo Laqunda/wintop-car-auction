@@ -37,6 +37,7 @@
         <result column="opening_bank" property="openingBank" jdbcType="VARCHAR" />
         <result column="bank_account" property="bankAccount" jdbcType="VARCHAR" />
         <result column="other_accounts" property="otherAccounts" jdbcType="VARCHAR" />
+        <result column="mortgage_plan" property="mortgagePlan" jdbcType="VARCHAR" />
         <result column="main_photo" property="mainPhoto" jdbcType="VARCHAR" />
         <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
         <result column="report_colligation_ranks" property="reportColligationRanks" jdbcType="VARCHAR" />
@@ -45,25 +46,60 @@
         <result column="mileage" property="mileage" jdbcType="DECIMAL" />
         <result column="store_name" property="storeName" jdbcType="VARCHAR" />
         <result column="user_name" property="managerName" jdbcType="VARCHAR" />
-        <result column="create_user" property="carAssess" jdbcType="VARCHAR" />
-        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="VARCHAR" />
 
     </resultMap>
     <sql id="Base_Column_List" >
-        t1.id, t1.car_id, t1.is_open, t1.order_no, t1.transaction_fee, t1.earnest_money, t1.payment_type, t1.down_payments, t1.mortgage_amount, t1.mortgage_period,
-        t1.monthly_repayment, t1.transfer, t1.sales_type, t1.insurance_company, t1.commercial_insurance_expires, t1.compulsory_insurance_expires, t1.mortgage_charges,
-        t1.insurance_rebate, t1.boutique_profit, t1.guaranteed_profit, t1.add_profits, t1.other_expenses, t1.remarks, t1.vehicle_owner_type , t1.phone, t1.name, t1.source,
-        t1.id_card, t1.address, t1.drawee, t1.opening_bank, t1.other_accounts
+          t1.`id`,
+          t1.`order_no`,
+          t1.`car_id`,
+          t1.`transaction_fee`,
+          t1.`earnest_money`,
+          t1.`payment_type`,
+          t1.`down_payments`,
+          t1.`mortgage_amount`,
+          t1.`mortgage_period`,
+          t1.`monthly_repayment`,
+          t1.`transfer`,
+          t1.`sales_type`,
+          t1.`sales_consultant`,
+          t1.`sales_date`,
+          t1.`insurance_company`,
+          t1.`commercial_insurance_expires`,
+          t1.`compulsory_insurance_expires`,
+          t1.`mortgage_charges`,
+          t1.`insurance_rebate`,
+          t1.`boutique_profit`,
+          t1.`guaranteed_profit`,
+          t1.`add_profits`,
+          t1.`other_expenses`,
+          t1.`remarks`,
+          t1.`vehicle_owner_type`,
+          t1.`phone`,
+          t1.`name`,
+          t1.`source`,
+          t1.`id_card`,
+          t1.`address`,
+          t1.`drawee`,
+          t1.`opening_bank`,
+          t1.`bank_account`,
+          t1.`other_accounts`,
+          t1.`create_user`,
+          t1.`create_date`,
+          t1.`mortgage_plan`
     </sql>
 
-    <select id="selectCarSaleRetail" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-        select t1.id, t1.car_id, t1.order_no, t1.transaction_fee, t1.earnest_money, t1.payment_type, t1.down_payments, t1.mortgage_amount, t1.mortgage_period,
-        t1.monthly_repayment, t1.transfer, t1.sales_type, t1.insurance_company, t1.commercial_insurance_expires, t1.compulsory_insurance_expires, t1.mortgage_charges,
-        t1.insurance_rebate, t1.boutique_profit, t1.guaranteed_profit, t1.add_profits, t1.other_expenses, t1.remarks, t1.vehicle_owner_type , t1.phone, t1.name, t1.source,
-        t1.id_card, t1.address, t1.drawee, t1.opening_bank, t1.other_accounts, t1.mortgage_plan, t2.create_user
+    <select id="selectCarSaleRetail" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List"/>
+        ,t2.user_name managerName
         FROM car_order_retail t1
-        INNER JOIN car_assess t2 ON t1.car_id=t2.auto_id
+        INNER JOIN car_manager_user t2 ON t1.create_user = t2.id
         WHERE t1.create_user=#{customerId}
+        <if test="id != null ">
+            and t1.id = #{id}
+        </if>
     </select>
 
     <select id="selectCarSaleOrder" resultMap="BaseResultMap" parameterType="java.util.Map" >
@@ -77,29 +113,6 @@
         <if test="startRowNum!=null and endRowNum!=null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
         </if>
-    </select>
-
-    <select id="selectCarOrder" resultMap="BaseResultMap" parameterType="java.util.Map" >
-        select t1.store_name, t1.main_photo, t1.report_colligation_ranks, t1.report_servicing_ranks,
-        t2.create_time, t2.transaction_fee,
-        t3.mileage, t3.vehicle_attribution_city_cn, t4.name
-        FROM car_auto t1
-        INNER JOIN car_order t2 ON t1.id=t2.car_id
-        INNER JOIN car_auto_info_detail t3 ON t1.id=t3.id
-        INNER JOIN  wt_app_user t4 ON t2.customer_id=t4.id
-        WHERE t1.publish_user_id=#{customerId}
-        ORDER BY t1.create_time DESC
-        <if test="startRowNum!=null and endRowNum!=null">
-            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
-        </if>
-    </select>
-
-    <select id="selectCarOrderCount" resultType="java.lang.Integer" parameterType="java.lang.Long">
-    SELECT count(t1.id)
-    FROM car_order t1
-    INNER JOIN car_auto t2 ON t1.car_id=t2.id
-    INNER JOIN car_auto_info_detail t3 ON t2.id=t3.auto_id
-    WHERE t2.publish_user_id=#{customerId}
     </select>
 
     <select id="selectCarSaleOrderCount" resultType="java.lang.Integer" parameterType="java.lang.Long">

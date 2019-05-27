@@ -46,23 +46,6 @@ public class CarSaleOrderListApi {
         return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
     }
 
-
-    @RequestMapping(value = "/getCarOrderList",
-            method= RequestMethod.POST,
-            consumes="application/json; charset=UTF-8",
-            produces="application/json; charset=UTF-8")
-    @AuthUserToken
-    @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> getCarSaleOrderList(@RequestBody Map<String,Object> map, @CurrentUserId Long userId){
-        map.put("customerId",userId);
-        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
-                RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/carSaleOrder/getCarOrderList"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(map),JSONObject.class);
-        return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
-    }
-
     @RequestMapping(value = "/getCarSaleOrderRetail",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",

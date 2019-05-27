@@ -17,23 +17,13 @@ public class CarSaleOrderServiceServiceImpl implements ICarSaleOrderService {
     private CarSaleOrderModel carSaleOrderModel;
 
     @Override
-    public List<CarSaleOrder> selectCarOrder(Map<String,Object> paramMap) {
-        return carSaleOrderModel.selectCarOrder(paramMap);
-    }
-
-    @Override
     public List<CarSaleOrder> selectCarSaleOrder(Map<String,Object> paramMap) {
         return carSaleOrderModel.selectCarSaleOrder(paramMap);
     }
 
     @Override
-    public CarSaleOrder selectCarSaleOrderRetail(Long customerId) {
-        return carSaleOrderModel.selectCarSaleRetail(customerId);
-    }
-
-    @Override
-    public Integer selectCarOrderCount(Long customerId) {
-        return carSaleOrderModel.selectCarOrderCount(customerId);
+    public CarSaleOrder selectCarSaleOrderRetail(Map<String,Object> paramMap) {
+        return carSaleOrderModel.selectCarSaleRetail(paramMap);
     }
 
     @Override

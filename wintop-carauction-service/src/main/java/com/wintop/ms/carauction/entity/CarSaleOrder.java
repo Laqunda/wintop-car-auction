@@ -36,10 +36,8 @@ public class CarSaleOrder implements Serializable {
     private String orderNo;
     //出售类型
     private String salesType;
-    //销售顾问ID
-    private Long salesConsultant;
-    //订单创建时间
-    private Date createTime;
+    //销售顾问名称
+    private String salesConsultant;
     //付款方式
     private String paymentType;
     //评估人
@@ -92,6 +90,12 @@ public class CarSaleOrder implements Serializable {
     private Long mortgagePeriod;
     //每月还款
     private BigDecimal monthlyRepayment;
+    //按揭方案
+    private String mortgagePlan;
+    //创建人id
+    private Long createUser;
+    //订单创建时间
+    private Date createDate;
 
     public String getMainPhoto() {
         return mainPhoto;
@@ -430,23 +434,21 @@ public class CarSaleOrder implements Serializable {
         this.salesType = salesType;
     }
 
-    public Long getSalesConsultant() {
+    public String getSalesConsultant() {
         return salesConsultant;
     }
 
-    public void setSalesConsultant(Long salesConsultant) {
+    public void setSalesConsultant(String salesConsultant) {
         this.salesConsultant = salesConsultant;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
-
-    private String mortgagePlan;
 
     public String getMortgagePlan() {
         return mortgagePlan;
@@ -454,5 +456,17 @@ public class CarSaleOrder implements Serializable {
 
     public void setMortgagePlan(String mortgagePlan) {
         this.mortgagePlan = mortgagePlan;
+    }
+
+    public void setSalesDate(String salesDate) {
+        this.salesDate = salesDate;
+    }
+
+    public Long getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(Long createUser) {
+        this.createUser = createUser;
     }
 }
