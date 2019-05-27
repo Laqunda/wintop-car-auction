@@ -2,6 +2,7 @@ package com.wintop.ms.carauction.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.config.CarStatusEnum;
+import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.model.CarAutoAuctionModel;
@@ -49,10 +50,6 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
     private CarOrderLogModel carOrderLogModel;
     @Autowired
     private CarManagerUserModel carManagerUserModel;
-
-    @Value( "${share_uri}" )
-    private String shareUri;
-
 
     private IdWorker idWorker = new IdWorker(10);
 
@@ -380,7 +377,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
             carMap.put("publishUserName",carLocaleAuctionCar.getPublishUserName());
             entriesList.add(carMap);
         }
-        resultMap.put("shareUri", shareUri);
+        resultMap.put("shareUri", Constants.STATIC_WEBSITE+"/ht/share/index.html");
         resultMap.put("entries",entriesList);
         result.setResult(resultMap);
         return result;
