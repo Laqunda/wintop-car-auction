@@ -22,8 +22,9 @@
             resultMap="CarAssessFollowDataResult">
         select f.id, f.assess_id, f.content, f.follow_result, f.create_time, f.follow_user ,ca.create_user_name as create_user
         from car_assess_follow_data f
-        left join car_assess ca on ca.create_user = f.follow_user
+             ,car_assess ca
         <where>
+            f.assess_id = ca.id
             <if test="id != null ">and f.id = #{id}</if>
             <if test="assessId != null ">and f.assess_id = #{assessId}</if>
             <if test="content != null  and content != '' ">and f.content = #{content}</if>

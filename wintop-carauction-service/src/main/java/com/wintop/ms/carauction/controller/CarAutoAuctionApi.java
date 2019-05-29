@@ -99,9 +99,9 @@ public class CarAutoAuctionApi {
         return result;
     }
 
-    /**
+   /* *//**
      * 查询车辆评估列表
-     */
+     *//*
     @ApiOperation(value = "车辆转渠道")
     @RequestMapping(value = "/saveTransferFlag",
             method = RequestMethod.POST,
@@ -148,7 +148,7 @@ public class CarAutoAuctionApi {
             result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());
         }
         return result;
-    }
+    }*/
 
     /***
      * 获取车辆拍卖最高价信息

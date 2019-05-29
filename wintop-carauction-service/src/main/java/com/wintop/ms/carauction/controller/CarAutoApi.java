@@ -68,9 +68,9 @@ public class CarAutoApi {
     private static Map<String, List<String>> convertStatusMap() {
         return new HashMap<String, List<String>>(){{
              put("1", Arrays.asList("1"));
-             put("2", Arrays.asList("2"));
+             put("2", Arrays.asList("2","4"));
              put("3", Arrays.asList("3"));
-             put("4", Arrays.asList("6"));
+             put("4", Arrays.asList("5","6"));
              put("5", Arrays.asList("7"));
              put("6", Arrays.asList("8","9","10","11","12","13","14","15","16","17"));
              put("7", Arrays.asList("19"));
@@ -1011,18 +1011,19 @@ public class CarAutoApi {
             List<Map<String,Object>> list = new ArrayList<>();
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();
             if(type.equals("1")){
-                int count = iCarAutoLogService.selectCountWaitByUserId(userId);
+                //待我审批 -- 线上车辆分配到城市，现场车辆分配到中心
+                Integer count = carAutoService.selectCarAutoApprovalCount(paramMap);
                 paramMap.put("count",count);
                 listEntity.setCount(count);
-                List<CarAutoLog> carAutoLogs = iCarAutoLogService.selectWaitOrderList(paramMap);
-                for (CarAutoLog carAtuoLog:carAutoLogs){
+                List<CarAuto> carAutoList = carAutoService.selectCarAutoApprovalList(paramMap);
+                for (CarAuto carAuto:carAutoList){
                     Map<String,Object> map = new HashMap<>();
-                    map.put("mainPhoto",carAtuoLog.getMainPhoto());
-                    map.put("autoInfoName",carAtuoLog.getAutoInfoName());
-                    map.put("time",carAtuoLog.getTime());
-                    map.put("publishUserName",carAtuoLog.getPublishUserName());
-                    map.put("id",carAtuoLog.getId());
-                    map.put("status",carAtuoLog.getStatus());
+                    map.put("mainPhoto",carAuto.getMainPhoto());
+                    map.put("autoInfoName",carAuto.getAutoInfoName());
+                    map.put("time",carAuto.getUpdateTime());
+                    map.put("publishUserName",carAuto.getPublishUserName());
+                    map.put("id",carAuto.getId());
+                    map.put("status",carAuto.getStatus());
                     list.add(map);
                     listEntity.setList(list);
                 }
@@ -1051,7 +1052,7 @@ public class CarAutoApi {
                     Map<String,Object> map = new HashMap<>();
                     map.put("mainPhoto",carAuto.getMainPhoto());
                     map.put("autoInfoName",carAuto.getAutoInfoName());
-                    map.put("time",carAuto.getTime());
+                    map.put("time",carAuto.getTime().getTime());
                     map.put("publishUserName",carAuto.getPublishUserName());
                     map.put("id",carAuto.getId());
                     map.put("status",carAuto.getStatus());
@@ -1070,11 +1071,11 @@ public class CarAutoApi {
         return result;
     }
 
-    /**
+   /* *//**
      *申请撤拍
      * @Author zhangzijiuan
      * @return
-     */
+     *//*
     @ApiOperation(value = "申请撤拍")
     @RequestMapping(value = "/withDrawCarAuction",
             method = RequestMethod.POST,
@@ -1093,20 +1094,10 @@ public class CarAutoApi {
             Date date = new Date();
             auto.setUpdateTime(date);
             carAutoService.updateByPrimaryKeySelective(auto);
-            CarAutoLog carAutoLog = new CarAutoLog();
-            carAutoLog.setId(idWorker.nextId());
-            carAutoLog.setAutoId(carId);
-            carAutoLog.setStatus("4");
-            carAutoLog.setTime(date);
-            carAutoLog.setUserType("2");
-            carAutoLog.setUserId(userId);
-            carAutoLog.setUserName(managerRole.getRoleName());
-            carAutoLog.setMsg("申请撤拍");
-            iCarAutoLogService.insert(carAutoLog);
         }catch (Exception e){
             e.printStackTrace();
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
         }
         return result;
-    }
+    }*/
 }

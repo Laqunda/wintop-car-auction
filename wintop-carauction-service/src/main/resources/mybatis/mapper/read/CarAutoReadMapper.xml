@@ -277,7 +277,7 @@
       t2.auction_start_time,t4.auth_time as "deal_time",t5.time as "pass_in_time",t1.create_time
     from car_auto t1
     left join car_auto_auction t2 ON t1.auto_auction_id=t2.id
-    left join car_order t3 on t1.auto_auction_id = t3.auto_auction_id
+    left join car_order t3 on t1.id = t3.car_id
     left join car_auto_transfer t4 on t4.order_id = t3.id
     left join car_auto_log t5 on t5.auto_id = t1.id
     left join car_agent t6 on t6.car_id = t1.id
@@ -315,34 +315,6 @@
     </if>
   </select>
 
-  <select id="selectCarCount" resultType="Integer" parameterType="java.util.Map">
-    select
-      count(t1.id)
-    from car_auto t1
-    left join car_auto_auction t2 ON t1.auto_auction_id=t2.id
-    where t1.sale_flag = '0'
-      and t2.auction_type = #{auctionType}
-      <choose>
-        <when test="managerRole != null and managerRole != ''">
-          and t1.store_id  = #{departmentId}
-        </when>
-        <otherwise>
-          and t1.create_user = #{userId}
-        </otherwise>
-      </choose>
-      <if test="status != null and status != ''">
-        and t1.status = #{status}
-      </if>
-      <if test="autoInfoName != null and autoInfoName != ''">
-        and t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%')
-      </if>
-      <if test="statusList != null">
-        and t1.status in
-        <foreach collection="statusList" item="item" separator="," open="(" close=")">
-          #{item}
-        </foreach>
-      </if>
-  </select>
 
   <select id="selectAuctionCarCount" resultType="java.lang.Integer">
     SELECT count(DISTINCT t2.auto_auction_id)
@@ -953,17 +925,59 @@
   </select>
 
   <select id="selectCountById" resultType="java.lang.Integer" parameterType="java.lang.Long">
-    SELECT count(t1.id)
-    FROM car_auto t1
-    INNER JOIN car_auto_log t2 ON t1.id=t2.auto_id
-    WHERE t1.publish_user_id=#{userId}
+      SELECT
+          count(t1.id)
+      FROM
+          car_auto t1
+      INNER JOIN car_auto_log t2 ON t1.id = t2.auto_id
+      WHERE
+          (
+              t2.`status` = 2
+              OR t2.`status` = 4
+          )
+      AND t2.user_id = #{userId}
   </select>
 
   <select id="selectUserOrderList" resultMap="BaseResultMap" parameterType="java.util.Map">
-    SELECT t2.publish_user_name, t2.auto_info_name, t2.main_photo, t1.time, t2.id, t2.status
-    FROM car_auto_log t1
-    INNER JOIN car_auto t2 ON t1.auto_id=t2.id
-    WHERE t2.publish_user_id=#{userId}
+    SELECT
+    t1.publish_user_name,
+    t1.auto_info_name,
+    t1.main_photo,
+    t2.time,
+    t1.id,
+    t1.`status`
+    FROM
+    car_auto t1
+    INNER JOIN car_auto_log t2 ON t1.id = t2.auto_id
+    WHERE
+    (
+    t2.`status` = 2
+    OR t2.`status` = 4
+    )
+    AND t2.user_id = #{userId}
+    <if test="startRowNum!=null and endRowNum!=null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="selectCarAutoApprovalCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+    SELECT count(t1.id)
+    FROM car_auto t1
+    WHERE (t1.`status` = 2 OR t1.`status` = 4 )
+  </select>
+
+  <select id="selectCarAutoApprovalList" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+    t1.id,
+    t1.auto_info_name,
+    t1.main_photo,
+    t1.update_time,
+    t1.publish_user_name,
+    t1.`status`
+    FROM
+    car_auto t1
+    WHERE
+    (t1.`status` = 2 OR t1.`status` = 4 )
     <if test="startRowNum!=null and endRowNum!=null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>

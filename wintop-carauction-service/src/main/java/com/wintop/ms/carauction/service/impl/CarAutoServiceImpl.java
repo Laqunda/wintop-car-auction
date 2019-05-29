@@ -149,7 +149,6 @@ public class CarAutoServiceImpl implements ICarAutoService {
     public ServiceResult<Integer> updateByPrimaryKeySelective(CarAuto record) {
         ServiceResult<Integer> result = new ServiceResult<>();
         try {
-
             //增加车辆日志
             CarAutoLog autoLog = new CarAutoLog();
             autoLog.setId(idWorker.nextId());
@@ -161,7 +160,6 @@ public class CarAutoServiceImpl implements ICarAutoService {
             autoLog.setUserMobile(record.getLogUserMobile());
             autoLog.setUserName(record.getLogUserName());
             logModel.insert(autoLog);
-
             int count = this.carAutoModel.updateByPrimaryKeySelective(record);
             result.setResult(count);
             result.setSuccess("0","成功");
@@ -859,7 +857,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
     private void getStockNumResultList(List<Map<String, Object>> mapArrayList, Map<String, Object> paramMap, List<String> paramStatusList, List<String> titleList, int i) {
         Map<String, Object> resultMap;
         resultMap = Maps.newHashMap();
-        paramMap.put("status", auctionTypeMap.get(paramStatusList.get(i)));
+        paramMap.put("statusList", auctionTypeMap.get(paramStatusList.get(i)));
         Integer num = carAutoModel.selectCarAutoCount(paramMap);
         resultMap.put("title", titleList.get(i));
         resultMap.put("num", num);
@@ -968,5 +966,14 @@ public class CarAutoServiceImpl implements ICarAutoService {
         return carAutoModel.selectCountById(userId);
     }
 
+    @Override
+    public int selectCarAutoApprovalCount(Map<String, Object> map) {
+        return carAutoModel.selectCarAutoApprovalCount(map);
+    }
+
+    @Override
+    public List<CarAuto> selectCarAutoApprovalList(Map<String, Object> map) {
+        return carAutoModel.selectCarAutoApprovalList(map);
+    }
 
 }

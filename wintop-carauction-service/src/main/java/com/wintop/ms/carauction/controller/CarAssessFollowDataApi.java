@@ -59,17 +59,12 @@ public class CarAssessFollowDataApi {
                 carAssessFollowData = new CarAssessFollowData();
             }
             result = new ServiceResult<>();
-
             int count = carAssessFollowDataService.selectAssessFollowDataCount(carAssessFollowData);
-
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             carAssessFollowData.setStartRowNum(pageEntity.getStartRowNum());
             carAssessFollowData.setEndRowNum(pageEntity.getEndRowNum());
-
-
             result = new ServiceResult<>();
             List<CarAssessFollowData> list = carAssessFollowDataService.selectCarAssessFollowDataList(carAssessFollowData);
-
             ListEntity<CarAssessFollowData> listEntity = new ListEntity<>();
             listEntity.setList(list);
             listEntity.setCount(count);

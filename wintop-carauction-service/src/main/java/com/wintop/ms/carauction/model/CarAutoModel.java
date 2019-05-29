@@ -76,12 +76,7 @@ public class CarAutoModel {
     public List<CarAuto> selectCarList(Map<String, Object> map){
         return readDao.selectCarList(map);
     }
-    /**
-     * 查询线上车辆数量
-     */
-    public Integer selectCarCount(Map<String,Object> map){
-        return readDao.selectCarCount(map);
-    }
+
     /**
      * 查询总数量
      * @param map
@@ -197,5 +192,23 @@ public class CarAutoModel {
 
     public int selectCountById(Long userId){
         return readDao.selectCountById(userId);
+    }
+
+    /**
+     * 待我审批车辆条数
+     * @param map
+     * @return
+     */
+    public int selectCarAutoApprovalCount(Map<String, Object> map){
+        return readDao.selectCarAutoApprovalCount(map);
+    }
+
+    /**
+     * 待我审批车辆列表
+     * @param map
+     * @return
+     */
+    public List<CarAuto> selectCarAutoApprovalList(Map<String, Object> map){
+        return readDao.selectCarAutoApprovalList(map);
     }
 }

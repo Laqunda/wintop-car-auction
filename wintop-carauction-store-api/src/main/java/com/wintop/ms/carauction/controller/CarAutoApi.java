@@ -160,7 +160,8 @@ public class CarAutoApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> selectListByType(@RequestBody Map map) {
+    public ResponseEntity<ResultModel> selectListByType(@RequestBody Map map,@CurrentUserId Long userId) {
+        map.put("userId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT + "/service/carAuto/selectListByType"))
@@ -168,7 +169,7 @@ public class CarAutoApi {
                         .body(map), JSONObject.class);
         return ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
     }
-
+/*
     @ApiOperation(value = "申请撤拍接口")
     @RequestMapping(value = "/withDrawCarAuction",
             method= RequestMethod.POST,
@@ -184,5 +185,5 @@ public class CarAutoApi {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map), JSONObject.class);
         return ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
-    }
+    }*/
 }

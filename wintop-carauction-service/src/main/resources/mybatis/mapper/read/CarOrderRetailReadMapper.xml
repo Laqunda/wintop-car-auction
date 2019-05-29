@@ -107,6 +107,7 @@
                ,t1.name
                ,t1.sales_date
                ,t1.sales_type
+               ,t1.sales_consultant
                ,t1.earnest_money
                ,t1.transaction_fee
                ,t2.auto_info_name

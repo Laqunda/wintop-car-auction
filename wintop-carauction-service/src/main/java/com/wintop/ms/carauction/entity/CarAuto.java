@@ -125,6 +125,9 @@ public class CarAuto implements Serializable {
 
     // 销售状态 0拍卖,1零售
     private String saleFlag;
+
+    //时间
+    private Date time;
     /**
      * VO字段
      */
@@ -1163,8 +1166,6 @@ public class CarAuto implements Serializable {
 
     private List<TblAuctionLog> tblAuctionLog;
 
-    private String time;
-
     public List<CarAutoLog> getCarAutoLog() {
         return carAutoLog;
     }
@@ -1181,11 +1182,11 @@ public class CarAuto implements Serializable {
         this.tblAuctionLog = tblAuctionLog;
     }
 
-    public String getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 }

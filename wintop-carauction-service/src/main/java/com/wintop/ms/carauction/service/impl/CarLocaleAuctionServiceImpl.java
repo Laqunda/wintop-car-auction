@@ -827,6 +827,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
                 carAuto.setId(autoAuction.getAutoId());
                 carAuto.setStatus(CarStatusEnum.DRAFT.value());
                 carAuto.setAutoAuctionId(autoAuctionId);
+                carAuto.setTransferFlag("0");
                 carAutoModel.updateByPrimaryKey(carAuto);
                 CarAuto auto = carAutoModel.selectByPrimaryKey(carAuto.getId());
                 //重新插入一条竞拍信息

@@ -66,12 +66,6 @@
     limit 0,1;
   </select>
 
-  <select id="selectCountWaitByUserId" resultType="java.lang.Integer" parameterType="java.lang.Long">
-    SELECT count(id)
-    FROM car_auto_log
-    WHERE user_id=#{userId} and (status='1' or status = '2')
-  </select>
-
   <select id="selectCountEndByUserId" resultType="java.lang.Integer" parameterType="java.lang.Long">
     SELECT count(id)
     FROM car_auto_log

@@ -155,4 +155,18 @@ public interface ICarAutoService {
     List<CarAuto> selectUserOrderList(Map<String, Object> map);
 
     int selectCountById(Long userId);
+
+    /**
+     * 查询车辆待审批列表条数
+     * @param map
+     * @return
+     */
+    int selectCarAutoApprovalCount(Map<String, Object> map);
+
+    /**
+     * 查询车辆待审批列表
+     * @param map
+     * @return
+     */
+    List<CarAuto> selectCarAutoApprovalList(Map<String, Object> map);
 }

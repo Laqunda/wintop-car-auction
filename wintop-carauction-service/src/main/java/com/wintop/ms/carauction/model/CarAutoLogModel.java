@@ -50,10 +50,6 @@ public class CarAutoLogModel {
         return readDao.selectCarLog(map);
     }
 
-    public int selectCountWaitByUserId(Long userId){
-        return readDao.selectCountWaitByUserId(userId);
-    }
-
     public int selectCountEndByUserId(Long userId){
         return readDao.selectCountEndByUserId(userId);
     }

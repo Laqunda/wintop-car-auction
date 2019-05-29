@@ -93,7 +93,7 @@ public class CarAutoAuctionApi {
         logger.info("保存车辆转渠道");
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/carAutoAuction/saveTransferFlag"))
+                        .post(URI.create(Constants.ROOT+"/service/handleDispute/transferChannelCar"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(object),JSONObject.class);
         return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);

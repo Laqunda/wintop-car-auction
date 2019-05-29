@@ -82,6 +82,7 @@ public class CarSaleOrderListApi {
                 map.put("saleDate",carSaleOrder.getSalesDate());
                 map.put("salesType",carSaleOrder.getSalesType());
                 map.put("managerName",carSaleOrder.getManagerName());
+                map.put("salesConsultant",carSaleOrder.getSalesConsultant());
                 list.add(map);
             }
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();

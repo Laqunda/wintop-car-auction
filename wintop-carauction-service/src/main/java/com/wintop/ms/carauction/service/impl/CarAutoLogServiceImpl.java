@@ -94,11 +94,6 @@ public class CarAutoLogServiceImpl implements ICarAutoLogService {
     }
 
     @Override
-    public int selectCountWaitByUserId(Long userId) {
-        return carAutoLogModel.selectCountWaitByUserId(userId);
-    }
-
-    @Override
     public int selectCountEndByUserId(Long userId) {
         return carAutoLogModel.selectCountEndByUserId(userId);
     }

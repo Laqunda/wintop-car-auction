@@ -171,7 +171,7 @@ public class HandleDisputeApi {
                 IdWorker idWorker=new IdWorker(10);
                 carAutoLog.setId(idWorker.nextId());
                 carAutoLog.setAutoId(id);
-                carAutoLog.setMsg("线上转现场-审核中");
+                carAutoLog.setMsg("线上拍转现场拍申请");
                 carAutoLog.setUserMobile(user.getUserKey());
                 carAutoLog.setUserName(user.getUserName());
                 carAutoLog.setStatus(AUDIT);

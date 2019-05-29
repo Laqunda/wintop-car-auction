@@ -85,8 +85,8 @@
         WHERE
             cao.id = caol.assess_order_id
         AND (
-                cao.`status` = '2'
-                OR cao.`status` = '-1'
+                caol.`status` = '2'
+                OR caol.`status` = '-1'
               )
         AND caol.create_person = #{userId}
     </select>
@@ -113,7 +113,8 @@
         t2.create_user_name create_user,
         t2.name auto_info_name,
         t2.car_photo mian_photo,
-        t1.create_time
+        t1.create_time,
+        t4.`status`
         FROM car_assess_order t1
         INNER JOIN car_assess t2 ON t1.assess_id = t2.id
         INNER JOIN car_assess_order_log t4 ON t4.assess_order_id = t1.id
