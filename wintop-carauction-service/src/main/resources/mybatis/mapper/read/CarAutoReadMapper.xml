@@ -131,6 +131,7 @@
   <select id="selectByCarId" resultMap="BaseResultMap" parameterType="java.util.Map" >
     SELECT
     t1.id,t1.store_id,t1.store_name,t1.if_new,t1.auto_info_name,t1.report_colligation_ranks,t1.report_servicing_ranks,t1.views,t1.car_auto_no,t1.status,
+    t1.publish_user_name,
     t2.vehicle_attribution_city_cn,t2.begin_register_date,t2.mileage,t2.remark,t2.environment_cn,
     t3.auction_type,t3.starting_price,t3.service_price,t1.auction_num,
     t3.auction_start_time,t3.auction_end_time,
