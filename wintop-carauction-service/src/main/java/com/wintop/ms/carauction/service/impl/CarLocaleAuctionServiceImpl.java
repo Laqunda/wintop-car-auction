@@ -377,7 +377,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
             carMap.put("publishUserName",carLocaleAuctionCar.getPublishUserName());
             entriesList.add(carMap);
         }
-        resultMap.put("shareUri", Constants.STATIC_WEBSITE+"/ht/share/index.html");
+        resultMap.put("shareUri", Constants.STATIC_WEBSITE+"/carauction/share/index.html");
         resultMap.put("entries",entriesList);
         result.setResult(resultMap);
         return result;
@@ -824,6 +824,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
                 carAuto.setId(autoAuction.getAutoId());
                 carAuto.setStatus(CarStatusEnum.DRAFT.value());
                 carAuto.setAutoAuctionId(autoAuctionId);
+                carAuto.setTransferFlag("0");
                 carAutoModel.updateByPrimaryKey(carAuto);
                 CarAuto auto = carAutoModel.selectByPrimaryKey(carAuto.getId());
                 //重新插入一条竞拍信息
