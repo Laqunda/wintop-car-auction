@@ -1,6 +1,8 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
@@ -70,22 +72,20 @@ public class CarAssessOrderApi {
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8")
     public ServiceResult<ListEntity<CarAssessOrder>> list(@RequestBody JSONObject obj) {
-        ServiceResult<ListEntity<CarAssessOrder>> result = null;
+        ServiceResult<ListEntity<CarAssessOrder>> result = new ServiceResult<>();
         try {
-            CarAssessOrder carAssessOrder = JSONObject.toJavaObject(obj, CarAssessOrder.class);
-            if (carAssessOrder == null) {
-                carAssessOrder = new CarAssessOrder();
-            }
-            result = new ServiceResult<>();
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
 
-            int count = carAssessOrderService.selectAssessOrderCount(carAssessOrder);
+            int count = carAssessOrderService.selectAssessOrderCount(param);
 
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
-            carAssessOrder.setStartRowNum(pageEntity.getStartRowNum());
-            carAssessOrder.setEndRowNum(pageEntity.getEndRowNum());
+//            carAssessOrder.setStartRowNum(pageEntity.getStartRowNum());
+//            carAssessOrder.setEndRowNum(pageEntity.getEndRowNum());
+            param.put("startRowNum", pageEntity.getStartRowNum());
+            param.put("endRowNum", pageEntity.getEndRowNum());
 
-
-            List<CarAssessOrder> list = carAssessOrderService.selectCarAssessOrderList(carAssessOrder);
+            List<CarAssessOrder> list = carAssessOrderService.selectCarAssessOrderList(param);
 
             ListEntity<CarAssessOrder> listEntity = new ListEntity<>();
             listEntity.setList(list);
@@ -250,6 +250,8 @@ public class CarAssessOrderApi {
                 assess.setStatus("4");
                 assess.setRejectReason(obj.getString("rejectReason"));
                 assessService.updateCarAssess(assess);
+            }  else if ("4".equals(carAssessOrder.getStatus())) {
+                logMsg = "已付全款";
             }
             int code = carAssessOrderService.updateCarAssessOrder(carAssessOrder);
             if (code > 0) {

@@ -27,7 +27,9 @@
 
     <select id="selectCarAssessOrderLogList" parameterType="com.wintop.ms.carauction.entity.CarAssessOrderLog"
             resultMap="CarAssessOrderLogResult">
-        <include refid="selectCarAssessOrderLogVo"/>
+        <!--<include refid="selectCarAssessOrderLogVo"/>-->
+        select id, assess_order_id, status, status_cn, log_msg, create_time, create_person, user_mobile, user_name from
+        (select id, assess_order_id, status, status_cn, log_msg, create_time, create_person, user_mobile, user_name from car_assess_order_log order by create_time desc) t
         <where>
             <if test="id != null ">and id = #{id}</if>
             <if test="assessOrderId != null ">and assess_order_id = #{assessOrderId}</if>
@@ -39,7 +41,8 @@
             <if test="userMobile != null  and userMobile != '' ">and user_mobile = #{userMobile}</if>
             <if test="userName != null  and userName != '' ">and user_name = #{userName}</if>
         </where>
-        order by create_time desc
+        group by `status`
+        order by status
         <if test="endRowNum != null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
         </if>

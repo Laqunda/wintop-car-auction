@@ -1,7 +1,11 @@
 package com.wintop.ms.carauction.service.impl;
 
+import com.wintop.ms.carauction.entity.CarAssess;
 import com.wintop.ms.carauction.entity.CarAssessOrder;
+import com.wintop.ms.carauction.entity.CarStore;
+import com.wintop.ms.carauction.model.CarAssessModel;
 import com.wintop.ms.carauction.model.CarAssessOrderModel;
+import com.wintop.ms.carauction.model.CarStoreModel;
 import com.wintop.ms.carauction.service.ICarAssessOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +23,10 @@ import java.util.Map;
 public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
     @Autowired
     private CarAssessOrderModel model;
-
+    @Autowired
+    private CarAssessModel carAssessModel;
+    @Autowired
+    private CarStoreModel carStoreModel;
     /**
      * 查询评估采购单信息
      *
@@ -34,12 +41,21 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
     /**
      * 查询评估采购单列表
      *
-     * @param carAssessOrder 评估采购单信息
+     * @param param 评估采购单信息
      * @return 评估采购单集合
      */
     @Override
-    public List<CarAssessOrder> selectCarAssessOrderList(CarAssessOrder carAssessOrder) {
-        return model.selectCarAssessOrderList(carAssessOrder);
+    public List<CarAssessOrder> selectCarAssessOrderList(Map<String,Object> param) {
+        List<CarAssessOrder> carAssessOrderList = model.selectCarAssessOrderList(param);
+        for (CarAssessOrder recored : carAssessOrderList) {
+            CarAssess carAssess = carAssessModel.selectCarAssessById(recored.getAssessId());
+            recored.setCarAssess(carAssess);
+            if (recored.getStoreId() != null) {
+                CarStore carStore = carStoreModel.selectByPrimaryKey(recored.getStoreId());
+                recored.setCarStore(carStore);
+            }
+        }
+        return carAssessOrderList;
     }
 
     /**
@@ -77,8 +93,8 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
 
 
     @Override
-    public int selectAssessOrderCount(CarAssessOrder carAssessOrder) {
-        return model.selectAssessOrderCount(carAssessOrder);
+    public int selectAssessOrderCount(Map<String,Object> param) {
+        return model.selectAssessOrderCount(param);
     }
 
     @Override

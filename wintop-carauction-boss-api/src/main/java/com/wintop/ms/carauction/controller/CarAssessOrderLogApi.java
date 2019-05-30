@@ -58,6 +58,22 @@ public class CarAssessOrderLogApi {
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
+    /**
+     * 查询评估采购日志列表
+     */
+    @RequestMapping(value = "/allList",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel allList(@RequestBody Map map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/carAssessOrderLog/allList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
 
     /**
      * 新增保存评估采购日志
