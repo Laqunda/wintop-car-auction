@@ -17,24 +17,25 @@ public class ChaboshiUtils {
      * @param vin
      */
     public static JSONObject report(String vin) {
-        String engino = "";//发动机号
+        CBSBuilder cbs = CBSBuilder.newCBSBuilder(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret, true);
+        HashMap param = new HashMap();
+        param.put("vin", vin);
+        param.put("callbackurl", Constants.CALLBACK_CHABOSHI);
+        String str = cbs.sendPost("/report/buy_report", param);
+        return JSONObject.parseObject(str);
+        /*String engino = "";//发动机号
         String licenseplate = "";//车牌号
-
-
         String buyReport = CBS.getInstance(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret, false).getBuyReport(vin, engino, licenseplate, Constants.CALLBACK_CHABOSHI);
-
         JSONObject o = JSONObject.parseObject(buyReport);
-
         //订单成功
         if ("0".equals(o.getString("code"))) {
-
             String message = o.getString("Message");
             String orderId = o.getString("orderId");
             System.out.println("message:" + message + "\norderId:" + orderId);
         } else {
             //订单失败
         }
-        return o;
+        return o;*/
 
     }
 
@@ -115,20 +116,9 @@ public class ChaboshiUtils {
 
     public static void main(String[] args) {
 
-        JSONObject report = repairReport("LSGWS52X67S050013");
-
-
-        /*String userId = "824791";
-        String keySecret = "9021288d82f7e0175aad2db9c05a0026";
-        CBSBuilder cbsBuilder = CBSBuilder.newCBSBuilder(userId, keySecret, false);
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("vin", "LSGWS52X67S050013");
-        String data = cbsBuilder.sendPost("/new_report/buy", params);*/
-
-        System.out.println(report);
+        System.out.println(repairReport("LSGWS52X67S050013"));
         System.out.println(report("LSGWS52X67S050013"));
 
-//        System.out.println(report.toJSONString());
     }
 }
 
