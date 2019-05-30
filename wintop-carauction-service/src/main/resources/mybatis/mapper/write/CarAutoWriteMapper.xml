@@ -256,7 +256,8 @@
       update_time = #{updateTime},
       auction_num = #{auctionNum},
       region_id = #{regionId},
-      auto_auction_id = #{autoAuctionId}
+      auto_auction_id = #{autoAuctionId},
+      transfer_flag = #{transferFlag}
     where id = #{id}
   </update>
 </mapper>

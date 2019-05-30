@@ -417,9 +417,6 @@
       <if test="topBidTime != null" >
         t1.top_bid_time = #{topBidTime},
       </if>
-      <if test="transferFlag != null">
-        t1.transfer_flag = #{transferFlag}
-      </if>
     </set>
     where t1.id=t2.auto_auction_id and t2.id = #{autoId}
   </update>
