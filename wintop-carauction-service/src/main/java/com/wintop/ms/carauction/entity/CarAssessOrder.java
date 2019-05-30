@@ -33,6 +33,10 @@ public class CarAssessOrder extends BaseEntity {
      */
     private BigDecimal price;
     /**
+     * 采购价格
+     */
+    private BigDecimal paidPrice;
+    /**
      * 采购日期
      */
     private Date procurementDate;
@@ -137,6 +141,9 @@ public class CarAssessOrder extends BaseEntity {
      */
     private String status;
 
+    private CarAssess carAssess;
+
+    private CarStore carStore;
 
     private CarAssessFollowData follow;
 
@@ -425,5 +432,29 @@ public class CarAssessOrder extends BaseEntity {
 
     public void setAutoInfoName(String autoInfoName) {
         this.autoInfoName = autoInfoName;
+    }
+
+    public BigDecimal getPaidPrice() {
+        return paidPrice;
+    }
+
+    public void setPaidPrice(BigDecimal paidPrice) {
+        this.paidPrice = paidPrice;
+    }
+
+    public CarAssess getCarAssess() {
+        return carAssess;
+    }
+
+    public void setCarAssess(CarAssess carAssess) {
+        this.carAssess = carAssess;
+    }
+
+    public CarStore getCarStore() {
+        return carStore;
+    }
+
+    public void setCarStore(CarStore carStore) {
+        this.carStore = carStore;
     }
 }

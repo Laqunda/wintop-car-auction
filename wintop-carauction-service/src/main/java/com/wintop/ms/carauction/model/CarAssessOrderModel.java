@@ -40,15 +40,15 @@ public class CarAssessOrderModel
 	/**
      * 查询评估采购单列表
      * 
-     * @param carAssessOrder 评估采购单信息
+     * @param param 评估采购单信息
      * @return 评估采购单集合
      */
-	public List<CarAssessOrder> selectCarAssessOrderList(CarAssessOrder carAssessOrder)
+	public List<CarAssessOrder> selectCarAssessOrderList(Map<String,Object> param)
 	{
-	    return readDao.selectCarAssessOrderList(carAssessOrder);
+	    return readDao.selectCarAssessOrderList(param);
 	}
-	public int selectAssessOrderCount(CarAssessOrder carAssessOrder) {
-		return readDao.selectAssessOrderCount(carAssessOrder);
+	public int selectAssessOrderCount(Map<String,Object> map) {
+		return readDao.selectAssessOrderCount(map);
 
 	}
 

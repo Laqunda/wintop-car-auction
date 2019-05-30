@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,6 @@ public class CarAssessOrderLogApi {
     /**
      * 查询评估采购日志列表
      */
-    @PostMapping("/list")
     @RequestMapping(value = "/list",
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
@@ -75,6 +75,36 @@ public class CarAssessOrderLogApi {
         return result;
     }
 
+    /**
+     * 查询评估采购日志列表
+     */
+    @RequestMapping(value = "/allList",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> allList(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String,Object>> result = null;
+        try {
+            CarAssessOrderLog carAssessOrderLog = JSONObject.toJavaObject(obj, CarAssessOrderLog.class);
+            if (carAssessOrderLog == null) {
+                carAssessOrderLog = new CarAssessOrderLog();
+            }
+
+            result = new ServiceResult<>();
+
+            int count = carAssessOrderLogService.selectAssessOrderCount(carAssessOrderLog);
+
+            List<CarAssessOrderLog> list = carAssessOrderLogService.selectCarAssessOrderLogList(carAssessOrderLog);
+            result.setResult(Collections.singletonMap("list",list));
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询评估采购日志全部列表", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+
+        return result;
+    }
 
     /**
      * 新增保存评估采购日志

@@ -61,6 +61,26 @@ public class CarAssessOrderApi {
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
+    /**
+     * 查询评估采购单详情
+     */
+    @ApiOperation(value = "查询评估采购单详情")
+    @RequestMapping(value = "/detail",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel detail(@RequestBody Map map) {
+        if (map.get("id") == null ) {
+            return new ResultModel(false, ResultCode.NO_PARAM.value(), ResultCode.NO_PARAM.getRemark(), null);
+        }
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/carAssessOrder/list"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
 
     /**
      * 新增保存评估采购单
