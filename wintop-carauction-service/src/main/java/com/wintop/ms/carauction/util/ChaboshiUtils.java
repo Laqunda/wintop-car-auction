@@ -6,15 +6,13 @@ import com.chaboshi.util.CBS;
 import com.wintop.ms.carauction.core.config.ChaBoShiConfig;
 import com.wintop.ms.carauction.core.config.Constants;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class ChaboshiUtils {
 
     /**
-     * 购买报告接口
+     * 维保购买报告接口
      *
      * @param vin
      */
@@ -97,19 +95,16 @@ public class ChaboshiUtils {
 
 
     /**
-     * 维保接口
+     * 碰撞综合版
      *
      * @param vin
      * @return]
      */
     public static JSONObject repairReport(String vin) {
-        CBSBuilder cbs = CBSBuilder.newCBSBuilder(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret, false);
+        CBSBuilder cbs = CBSBuilder.newCBSBuilder(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret, true);
         HashMap param = new HashMap();
         param.put("vin", vin);
         param.put("callbackurl", Constants.CALLBACK_CHABOSHI);
-        param.put("timestamp", new Date().getTime());
-        param.put("nonce", UUID.randomUUID().toString());
-        param.put("userid", ChaBoShiConfig.userId);
         String str = cbs.sendPost("/new_report/buy", param);
         return JSONObject.parseObject(str);
     }
@@ -120,17 +115,19 @@ public class ChaboshiUtils {
 
     public static void main(String[] args) {
 
-//        JSONObject report = repairReport("LSGWS52X67S050013");
+        JSONObject report = repairReport("LSGWS52X67S050013");
 
 
-        String userId = "824791";
+        /*String userId = "824791";
         String keySecret = "9021288d82f7e0175aad2db9c05a0026";
         CBSBuilder cbsBuilder = CBSBuilder.newCBSBuilder(userId, keySecret, false);
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("vin", "LSGWS52X67S050013");
-        String data = cbsBuilder.sendPost("/new_report/buy", params);
+        String data = cbsBuilder.sendPost("/new_report/buy", params);*/
 
-        System.out.println(data);
+        System.out.println(report);
+        System.out.println(report("LSGWS52X67S050013"));
+
 //        System.out.println(report.toJSONString());
     }
 }

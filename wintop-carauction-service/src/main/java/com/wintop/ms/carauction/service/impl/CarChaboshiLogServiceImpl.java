@@ -348,10 +348,11 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
         JSONObject object = null;
         if ("1".equals(edition)) {
             //维修版本
-            object = ChaboshiUtils.repairReport(vin);
+            object = ChaboshiUtils.report(vin);
         } else if ("2".equals(edition)) {
             //综合版本
-            object = ChaboshiUtils.report(vin);
+            object = ChaboshiUtils.repairReport(vin);
+
         } else {
             result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_OBJECT.getRemark());
         }
