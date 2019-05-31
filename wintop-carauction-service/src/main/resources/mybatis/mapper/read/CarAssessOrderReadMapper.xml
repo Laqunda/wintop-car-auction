@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectCarAssessOrderVo">
-        cas.id, cas.assess_id, cas.follow_id, cas.procurement_type, cas.price, cas.paid_price, cas.procurement_date, cas.store_id, cas.if_old_new, cas.entirety_price, cas.new_car_price, cas.car_address, cas.purchase_tax, cas.driving_license, cas.registration_certificate, cas.if_add, cas.car_keys, cas.new_car_invoice, cas.quality_guarantee, cas.maintenance_manual, cas.sali, cas.sali_end_date, cas.commercial_insurance, cas.commercial_insurance_end_date, cas.commercial_insurance_price, cas.transport_tax, cas.transport_tax_end_date, cas.customer_name, cas.customer_tel, cas.customer_source, cas.remark, cas.status
+        cas.id, cas.assess_id, cas.follow_id, cas.procurement_type, cas.price, cas.procurement_date, cas.store_id, cas.if_old_new, cas.entirety_price, cas.new_car_price, cas.car_address, cas.purchase_tax, cas.driving_license, cas.registration_certificate, cas.if_add, cas.car_keys, cas.new_car_invoice, cas.quality_guarantee, cas.maintenance_manual, cas.sali, cas.sali_end_date, cas.commercial_insurance, cas.commercial_insurance_end_date, cas.commercial_insurance_price, cas.transport_tax, cas.transport_tax_end_date, cas.customer_name, cas.customer_tel, cas.customer_source, cas.remark, cas.status
     </sql>
 	
     <select id="selectCarAssessOrderList" parameterType="com.wintop.ms.carauction.entity.CarAssessOrder" resultMap="CarAssessOrderResult">

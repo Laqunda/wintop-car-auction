@@ -215,14 +215,11 @@ public class CarAssessOrderApi {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
             CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
-
             CarAssessOrder carAssessOrder = JSONObject.toJavaObject(obj, CarAssessOrder.class);
             CarAssessOrder old = carAssessOrderService.selectCarAssessOrderById(carAssessOrder.getId());
             if (carAssessOrder == null) {
                 carAssessOrder = new CarAssessOrder();
             }
-
-
             //写入日日志表
             //审核通过
             String logMsg = "";
@@ -231,19 +228,16 @@ public class CarAssessOrderApi {
                 //审核不通过
                 //评估日志
                 logService.saveLog(managerUser, "申请通过", idWorker.nextId(), old.getAssessId());
-
                 //修改评估状态为 审核通过
                 CarAssess assess = new CarAssess();
                 assess.setId(old.getAssessId());
                 assess.setStatus("5");
                 assess.setRejectReason(obj.getString("rejectReason"));
                 assessService.updateCarAssess(assess);
-
             } else if ("-1".equals(carAssessOrder.getStatus())) {
                 logMsg = "审核不通过";
                 //评估日志
                 logService.saveLog(managerUser, "申请不通过", idWorker.nextId(), old.getAssessId());
-
                 //修改评估状态为 审核不通过
                 CarAssess assess = new CarAssess();
                 assess.setId(old.getAssessId());
@@ -259,9 +253,7 @@ public class CarAssessOrderApi {
                 orderLogService.saveOrderLog(managerUser, logMsg, carAssessOrder.getStatus(), idWorker.nextId(), carAssessOrder.getId());
                 if ("2".equals(carAssessOrder.getStatus())) {
                     /*写入库存 car_auto car_auto_auction ...*/
-                    int backCode = writeAuto(old.getId(), carAssessOrder.getId(), idWorker.nextId(), managerUser);
-
-
+                    int backCode = writeAuto(old.getAssessId(), carAssessOrder.getId(), idWorker.nextId(), managerUser);
                 }
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
             } else {
@@ -314,16 +306,13 @@ public class CarAssessOrderApi {
      * @return
      */
     private int writeAuto(Long assessId, Long orderId, Long autoId, CarManagerUser managerUser) {
-
-
         /*更新评估表*/
         CarAssess t = new CarAssess();
         t.setId(assessId);
         t.setAutoId(autoId);
         assessService.updateCarAssess(t);
-
-
-        CarAssess a = assessService.selectCarAssessById(assessId);
+        t.setAutoId(null);
+        CarAssess a = assessService.selectCarAssessById(t);
         CarAssessOrder oreder = carAssessOrderService.selectCarAssessOrderById(orderId);
         CarManagerUser user = managerUserService.selectByPrimaryKey(a.getCreateUser(), true);
 
