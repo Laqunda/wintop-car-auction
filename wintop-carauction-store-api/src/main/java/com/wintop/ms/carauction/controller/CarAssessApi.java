@@ -99,7 +99,7 @@ public class CarAssessApi {
     /**
      * 库存管理-线上车辆详情
      */
-    @ApiOperation(value = "库存管理-线上车辆详情")
+    /*@ApiOperation(value = "库存管理-线上车辆详情") 接口错误 不使用
     @PostMapping(value = "/onlineDetail",produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
@@ -113,7 +113,7 @@ public class CarAssessApi {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
-    }
+    }*/
 
     /**
      * 新增保存车辆评估

@@ -81,9 +81,11 @@ public class CarChaboshiLogAPi {
 
             /*根据assessId查询其查博士的查询日志*/
             if (obj.get("assessId")!=null && obj.getLong("assessId")> 0) {
-                CarAssess assess = assessService.selectCarAssessById(obj.getLong("assessId"));
-                carChaboshiLog.setVin(assess.getVin());
-                carChaboshiLog.setUserId(assess.getCreateUser());
+                CarAssess assess  = new CarAssess();
+                assess.setId(obj.getLong("assessId"));
+                CarAssess assessDao = assessService.selectCarAssessById(assess);
+                carChaboshiLog.setVin(assessDao.getVin());
+                carChaboshiLog.setUserId(assessDao.getCreateUser());
             }
             result = new ServiceResult<>();
 

@@ -157,6 +157,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
             autoLog.setAutoId(record.getId());
             autoLog.setTime(new Date());
             autoLog.setUserType("2");
+            autoLog.setUserId(record.getUpdateUser());
             autoLog.setUserMobile(record.getLogUserMobile());
             autoLog.setUserName(record.getLogUserName());
             logModel.insert(autoLog);
@@ -289,7 +290,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
         }else if("2".equals(carAuto.getTransferFee())){
             sellerBear+="过户费;";
         }
-        if(carAuto.getIllegalScore()>0){
+        if(carAuto.getIllegalScore() != null && carAuto.getIllegalScore()>0){
             if("1".equals(carAuto.getIllegalWho())){
                 buyerBear+=("违法扣分"+carAuto.getIllegalScore()+"分;");
             }else{

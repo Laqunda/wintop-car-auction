@@ -63,13 +63,28 @@
     LEFT JOIN car_relate_status s on (s.status=l.status AND s.type='2')
     WHERE l.auto_id=#{carId} and l.status=#{status}
     order by l.time DESC
-    limit 0,1;
+    limit 0,1
   </select>
 
   <select id="selectCountEndByUserId" resultType="java.lang.Integer" parameterType="java.lang.Long">
-    SELECT count(id)
-    FROM car_auto_log
-    WHERE user_id=#{userId} and  status !='1' and status !='2'
+    SELECT COUNT(1)
+      FROM
+          (
+              SELECT
+                  count(id)
+              FROM
+                  car_auto_log
+              WHERE
+                  user_id = #{userId}
+              AND (
+                  `status` = '3'
+                  OR `status` = '5'
+                  OR `status` = '6'
+              )
+              GROUP BY
+                  auto_id
+          ) t
+      WHERE 1 = 1
   </select>
 
   <select id="selectWaitOrderList" resultMap="BaseResultMap" parameterType="java.util.Map">
@@ -83,11 +98,30 @@
   </select>
 
   <select id="selectEndOrderList" resultMap="BaseResultMap" parameterType="java.util.Map">
-    SELECT t2.publish_user_name, t2.auto_info_name, t2.main_photo, t1.time, t2.id, t1.status
-    FROM car_auto_log t1
-    INNER JOIN car_auto t2 ON t1.auto_id=t2.id
-    WHERE t1.user_id=#{userId} and t1.status ='3' or t1.status = '6'
-    ORDER BY t2.create_time DESC
+    SELECT  *
+    FROM
+    (
+        SELECT
+        t2.publish_user_name,
+        t2.auto_info_name,
+        t2.main_photo,
+        t1.time,
+        t2.id,
+        t1.`status`,
+        cmu.user_name
+        FROM
+        car_auto_log t1,
+        car_auto t2,
+        car_manager_user cmu
+        WHERE
+        t1.auto_id = t2.id
+        AND cmu.id = t2.create_user
+        AND t1.user_id = #{userId}
+        AND ( t1.`status` = '3'  OR t1.`status` = '5' OR t1.`status` = '6' )
+        ORDER BY t1.time DESC
+    ) t
+    WHERE 1 = 1
+    GROUP BY t.id
     <if test="startRowNum!=null and endRowNum!=null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>

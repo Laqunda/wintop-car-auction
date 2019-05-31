@@ -48,8 +48,10 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
     public List<CarAssessOrder> selectCarAssessOrderList(Map<String,Object> param) {
         List<CarAssessOrder> carAssessOrderList = model.selectCarAssessOrderList(param);
         for (CarAssessOrder recored : carAssessOrderList) {
-            CarAssess carAssess = carAssessModel.selectCarAssessById(recored.getAssessId());
-            recored.setCarAssess(carAssess);
+            CarAssess carAssess = new CarAssess();
+            carAssess.setId(recored.getAssessId());
+            CarAssess carAssessDao = carAssessModel.selectCarAssessById(carAssess);
+            recored.setCarAssess(carAssessDao);
             if (recored.getStoreId() != null) {
                 CarStore carStore = carStoreModel.selectByPrimaryKey(recored.getStoreId());
                 recored.setCarStore(carStore);

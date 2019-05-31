@@ -81,7 +81,7 @@ public class CarAutoApi {
             @ApiImplicitParam(name = "status",value = "审批状态 1 通过 2 不通过",required = true,dataType = "string"),
             @ApiImplicitParam(name = "msg",value = "审批留言",required = true,paramType = "query",dataType = "string")
     })
-    @PostMapping(value = "/",produces="application/json; charset=UTF-8")
+    @PostMapping(value = "/approveCarAuto",produces="application/json; charset=UTF-8")
     @AuthUserToken
     public ResultModel approveCarAuto(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         map.put("managerId",managerId);

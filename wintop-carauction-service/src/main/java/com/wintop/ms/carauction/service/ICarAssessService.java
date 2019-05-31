@@ -15,11 +15,12 @@ public interface ICarAssessService
 {
 	/**
      * 查询车辆评估信息
-     * 
-     * @param id 车辆评估ID
+     *
+	 *
+	 * @param carAssess 车辆评估信息
      * @return 车辆评估信息
      */
-	public CarAssess selectCarAssessById(Long id);
+	public CarAssess selectCarAssessById(CarAssess carAssess);
 	
 	/**
      * 查询车辆评估列表

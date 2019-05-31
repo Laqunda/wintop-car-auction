@@ -436,6 +436,7 @@ public class CarAutoApi {
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
+            paramMap.put("statusListType",obj.getString("status"));
             List<CarAuto> recordList = carAutoService.selectCarList(paramMap);
             listEntity.setList(recordList);
             listEntity.setCount(count);
@@ -553,6 +554,8 @@ public class CarAutoApi {
             auto.setUpdateTime(new Date());
             auto.setStatus("2");
             auto.setLogMsg("提交审核");
+            auto.setLogUserMobile(object.getString("userMobile"));
+            auto.setLogUserName(object.getString("userName"));
             ServiceResult serviceResult = carAutoService.updateByPrimaryKeySelective(auto);
             if (serviceResult.getSuccess() && serviceResult.getResult()!=null){
                 result.setSuccess("0","提交成功");
@@ -1021,7 +1024,7 @@ public class CarAutoApi {
                     map.put("mainPhoto",carAuto.getMainPhoto());
                     map.put("autoInfoName",carAuto.getAutoInfoName());
                     map.put("time",carAuto.getUpdateTime());
-                    map.put("publishUserName",carAuto.getPublishUserName());
+                    map.put("userName",carAuto.getLogUserName());
                     map.put("id",carAuto.getId());
                     map.put("status",carAuto.getStatus());
                     list.add(map);
@@ -1037,7 +1040,7 @@ public class CarAutoApi {
                     map.put("mainPhoto",carAtuoLog.getMainPhoto());
                     map.put("autoInfoName",carAtuoLog.getAutoInfoName());
                     map.put("time",carAtuoLog.getTime());
-                    map.put("publishUserName",carAtuoLog.getPublishUserName());
+                    map.put("userName",carAtuoLog.getUserName());
                     map.put("id",carAtuoLog.getId());
                     map.put("status",carAtuoLog.getStatus());
                     list.add(map);
@@ -1053,7 +1056,7 @@ public class CarAutoApi {
                     map.put("mainPhoto",carAuto.getMainPhoto());
                     map.put("autoInfoName",carAuto.getAutoInfoName());
                     map.put("time",carAuto.getTime().getTime());
-                    map.put("publishUserName",carAuto.getPublishUserName());
+                    map.put("userName",carAuto.getLogUserName());
                     map.put("id",carAuto.getId());
                     map.put("status",carAuto.getStatus());
                     list.add(map);

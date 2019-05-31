@@ -151,8 +151,8 @@ public class CarAssessApi {
                 carAssess = new CarAssess();
             }
             result = new ServiceResult<>();
-
-            carAssess = carAssessService.selectCarAssessById(carAssess.getId());
+            Map params = new HashMap();
+            carAssess = carAssessService.selectCarAssessById(carAssess);
             result.setResult(carAssess);
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {
@@ -333,7 +333,7 @@ public class CarAssessApi {
             }
             int code = carAssessService.updateCarAssess(carAssess);
             if (code > 0) {
-                carAssess = carAssessService.selectCarAssessById(carAssess.getId());
+                carAssess = carAssessService.selectCarAssessById(carAssess);
                 //order 取消
                 CarAssessOrder order = new CarAssessOrder();
                 order.setAssessId(carAssess.getId());

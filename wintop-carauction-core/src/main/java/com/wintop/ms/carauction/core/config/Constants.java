@@ -156,7 +156,7 @@ public class Constants {
     /***
      * 根据具体车型获取车辆详细配置信息
      */
-    public static final String ID_GET_VEHICLEDETAIL_URL = COMMON_MODULE_ROOT+"/carmodel/vehicledetail";
+    public static final String ID_GET_VEHICLEDETAIL_URL = COMMON_MODULE_ROOT+"/carmodel";
 //    public static final String ID_GET_VEHICLEDETAIL_URL = "http://192.168.22.67:2001/carmodel/vehicledetail";
 
 
@@ -192,7 +192,7 @@ public class Constants {
      * 静态资源服务器地址
      */
 //    public static final String STATIC_WEBSITE = "http://2sc.wintop2sc.com";
-    public static final String STATIC_WEBSITE = "http://test-admin.yuntongauto.com";
+    public static final String STATIC_WEBSITE = "http://szemw5.natappfree.cc";
 
     /***
      * 柠檬竞价logo，用于通用图片使用
