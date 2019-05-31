@@ -1,12 +1,14 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Splitter;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarChaboshiStoreConf;
 import com.wintop.ms.carauction.entity.ListEntity;
 import com.wintop.ms.carauction.service.ICarChaboshiStoreConfService;
+import com.wintop.ms.carauction.util.StringUtils;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import io.swagger.annotations.ApiOperation;
@@ -97,7 +99,7 @@ public class CarChaboshiStoreConfApi {
                 bean = new CarChaboshiStoreConf();
             }
             result = new ServiceResult<>();
-            List<CarChaboshiStoreConf> list = service.selectCarChaboshiStoreConfList(new CarChaboshiStoreConf());
+            List<CarChaboshiStoreConf> list = service.selectCarChaboshiStoreConfList(bean);
             if (list != null && list.size() > 0) {
                 bean = list.get(0);
             }
@@ -156,10 +158,16 @@ public class CarChaboshiStoreConfApi {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
             CarChaboshiStoreConf bean = JSONObject.toJavaObject(obj, CarChaboshiStoreConf.class);
+            CarChaboshiStoreConf param = new CarChaboshiStoreConf();
             if (bean == null) {
                 bean = new CarChaboshiStoreConf();
             }
-            List<CarChaboshiStoreConf> storeConfs = service.selectCarChaboshiStoreConfList(bean);
+            if (StringUtils.isNotEmpty(bean.getStoreIds())) {
+                param.setStoreIdList(Splitter.on(",").splitToList(bean.getStoreIds()));
+            } else {
+                param.setStoreId(bean.getStoreId());
+            }
+            List<CarChaboshiStoreConf> storeConfs = service.selectCarChaboshiStoreConfList(param);
 
             int code = 0;
             if (storeConfs == null || storeConfs.size() == 0) {
@@ -167,7 +175,16 @@ public class CarChaboshiStoreConfApi {
                 bean.setId(idWorker.nextId());
                 code = service.insertCarChaboshiStoreConf(bean);
             } else {
-                code = service.updateCarChaboshiStoreConf(bean);
+                if (StringUtils.isNotEmpty(bean.getStoreIds())) {
+                    code = 1;
+                    for (CarChaboshiStoreConf storeConf : storeConfs) {
+                        bean.setStoreId(storeConf.getStoreId());
+                        service.updateCarChaboshiStoreConf(bean);
+                    }
+                } else{
+                    code = service.updateCarChaboshiStoreConf(bean);
+                }
+
             }
 
             if (code > 0) {

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 查博士店铺设置表 car_chaboshi_store_conf
@@ -27,6 +28,10 @@ public class CarChaboshiStoreConf extends BaseEntity
 	private BigDecimal payment;
 	/** 综合版支付金额 */
 	private BigDecimal paymentComposite;
+	/** 多个店铺ID ,分隔 */
+	private String storeIds;
+	/** 多个店铺 List */
+	private List<String> storeIdList;
 
 	public void setId(Long id) 
 	{
@@ -83,7 +88,23 @@ public class CarChaboshiStoreConf extends BaseEntity
 		return paymentComposite;
 	}
 
-    public String toString() {
+	public String getStoreIds() {
+		return storeIds;
+	}
+
+	public void setStoreIds(String storeIds) {
+		this.storeIds = storeIds;
+	}
+
+	public List<String> getStoreIdList() {
+		return storeIdList;
+	}
+
+	public void setStoreIdList(List<String> storeIdList) {
+		this.storeIdList = storeIdList;
+	}
+
+	public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("storeId", getStoreId())

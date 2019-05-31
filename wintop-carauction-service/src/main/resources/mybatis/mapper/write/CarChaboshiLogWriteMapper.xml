@@ -51,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 	 
-    <update id="updateCarChaboshiLog" parameterType="com.wintop.ms.carauction.entity.CarChaboshiLog">
+    <update id="updateCarChaboshiLog" parameterType="java.util.Map">
         update car_chaboshi_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="createTime != null  ">create_time = #{createTime},</if>

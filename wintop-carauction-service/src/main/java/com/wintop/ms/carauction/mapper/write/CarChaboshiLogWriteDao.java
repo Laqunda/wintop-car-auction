@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.mapper.write;
 import com.wintop.ms.carauction.entity.CarChaboshiLog;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 查博士日志 数据层
@@ -23,10 +24,10 @@ public interface CarChaboshiLogWriteDao
 	/**
      * 修改查博士日志
      * 
-     * @param carChaboshiLog 查博士日志信息
+     * @param map 查博士日志信息
      * @return 结果
      */
-	public int updateCarChaboshiLog(CarChaboshiLog carChaboshiLog);
+	public int updateCarChaboshiLog(Map<String,Object> map);
 	
 	/**
      * 删除查博士日志

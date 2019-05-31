@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -78,6 +79,42 @@ public class CarChaboshiStoreAccountApi
 
 	}
 
+	/**
+	 * 查询查博士店铺资金流水列表
+	 */
+	@ApiOperation(value = "博士店铺资金流水列表")
+	@RequestMapping(value = "/allList",
+			method = RequestMethod.POST,
+			consumes = "application/json; charset=UTF-8",
+			produces = "application/json; charset=UTF-8")
+
+	public ServiceResult<Map<String,Object>> allList(@RequestBody JSONObject obj) {
+		ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+		try {
+			CarChaboshiStoreAccount bean = JSONObject.toJavaObject(obj, CarChaboshiStoreAccount.class);
+			if (bean == null) {
+				bean = new CarChaboshiStoreAccount();
+			}
+
+
+			int count = service.selectCount(bean);
+
+			PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
+			bean.setStartRowNum(pageEntity.getStartRowNum());
+			bean.setEndRowNum(pageEntity.getEndRowNum());
+
+			List<CarChaboshiStoreAccount> list = service.selectCarChaboshiStoreAccountList(bean);
+			result.setResult(Collections.singletonMap("list", list));
+			result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+		} catch (Exception e) {
+			logger.info("博士店铺资金流水列表", e);
+			e.printStackTrace();
+			result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+		}
+
+		return result;
+
+	}
 
 
 

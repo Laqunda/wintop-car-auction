@@ -28,11 +28,11 @@ public interface ICarChaboshiLogService
 	/**
      * 查询查博士日志列表
      * 
-     * @param carChaboshiLog 查博士日志信息
+     * @param map 查博士日志信息
      * @return 查博士日志集合
      */
-	public List<CarChaboshiLog> selectCarChaboshiLogList(CarChaboshiLog carChaboshiLog);
-	
+//	public List<CarChaboshiLog> selectCarChaboshiLogList(CarChaboshiLog carChaboshiLog);
+	public List<CarChaboshiLog> selectCarChaboshiLogList(Map<String,Object> map);
 	/**
      * 新增查博士日志
      * 
@@ -44,10 +44,10 @@ public interface ICarChaboshiLogService
 	/**
      * 修改查博士日志
      * 
-     * @param carChaboshiLog 查博士日志信息
+     * @param map 查博士日志信息
      * @return 结果
      */
-	public int updateCarChaboshiLog(CarChaboshiLog carChaboshiLog);
+	public int updateCarChaboshiLog(Map<String,Object> map);
 		
 	/**
      * 删除查博士日志信息
@@ -57,7 +57,8 @@ public interface ICarChaboshiLogService
      */
 	public int deleteCarChaboshiLogByIds(String ids);
 
-	int selectCount(CarChaboshiLog carChaboshiLog);
+	//	int selectCount(CarChaboshiLog carChaboshiLog);
+	int selectCount(Map<String,Object> map);
 
     ServiceResult<Map<String, Object>> chaboshi(Long userId,String userName, String edition, Long logId, String vin);
 
@@ -65,7 +66,8 @@ public interface ICarChaboshiLogService
 
 	ServiceResult<Map<String, Object>> chaboshiOrder(CarChaboshiLog log,Long userId, String userName);
 
-	CarChaboshiLog selectCarChaboshiLog(CarChaboshiLog log);
+	//	CarChaboshiLog selectCarChaboshiLog(CarChaboshiLog log);
+	CarChaboshiLog selectCarChaboshiLog(Map<String, Object> map);
 
 	int savePayLog(CarFinancePayLog payLog);
 }

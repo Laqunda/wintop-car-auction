@@ -27,6 +27,12 @@
             <if test="balance != null ">and balance = #{balance}</if>
             <if test="payment != null ">and payment = #{payment}</if>
             <if test="paymentComposite != null ">and payment_composite = #{paymentComposite}</if>
+            <if test="storeIdList != null">
+                and store_id in
+                <foreach collection="storeIdList" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
     </select>
     <select id="selectCount" parameterType="com.wintop.ms.carauction.entity.CarChaboshiStoreConf"

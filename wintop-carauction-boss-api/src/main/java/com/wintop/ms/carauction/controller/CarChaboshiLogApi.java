@@ -1,22 +1,36 @@
 package com.wintop.ms.carauction.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.annotation.*;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.CarManagerUser;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
+import com.wintop.ms.carauction.util.utils.ExcelUtil;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -152,5 +166,124 @@ public class CarChaboshiLogApi {
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 
+    @AuthPublic
+    @PostMapping( value = "/export" )
+    public void export(HttpServletRequest request, HttpServletResponse rep,
+                             @RequestParam("userType") String userType,
+                             @RequestParam("sourceType") Long sourceType,
+                             @RequestParam("responseResult") String responseResult,
+                             @RequestParam("buyerSearchName") Long buyerSearchName) {
+        String[] headers = {"客户姓名","客户电话","查询车辆","查询版本","查询时间","查询结果","报告来源"};
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("userType", userType);
+        map.put("sourceType", sourceType);
+        map.put("responseResult", responseResult);
+        map.put("buyerSearchName", buyerSearchName);
+        HSSFWorkbook workbook = ExcelUtil.createStartExcel("查博士买家记录", headers);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/carChaboshiLog/allList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+        HSSFSheet sheet = workbook.getSheetAt(0);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            JSONObject obj = response.getBody();
+            JSONArray result = obj.getJSONObject("result").getJSONArray("list");
+            if (result != null && result.size() > 0) {
+                for (int i = 0; i < result.size(); i++) {
+                    JSONObject object = result.getJSONObject(i);
+                    HSSFRow itemRow = sheet.createRow(i + 2);
 
+
+                    HSSFCell c0 = itemRow.createCell(0);
+                    c0.setCellValue(object.getJSONObject("wtAppUser").getString("name"));
+
+
+                    HSSFCell c1 = itemRow.createCell(1);
+                    c1.setCellValue(object.getJSONObject("wtAppUser").getString("mobile"));
+
+                    String carInfo = "";
+                    if (object.getJSONObject("carChaboshiVinData") != null) {
+                        carInfo = String.format("%s %s",object.getJSONObject("carChaboshiVinData").getString("modelName"),
+                                object.getJSONObject("carChaboshiVinData").getString("seriesName"));
+                    }
+                    HSSFCell c2 = itemRow.createCell(2);
+                    c2.setCellValue(carInfo);
+
+                    String editionMoney = "";
+                    if (object.getJSONObject("carChaboshiPaymentConf") != null) {
+                        editionMoney = object.getString("edition").equals("1")
+                                ? object.getJSONObject("carChaboshiPaymentConf").getString("payment") :
+                                object.getJSONObject("carChaboshiPaymentConf").getString("paymentComposite");
+                        editionMoney = editionMoney + "元";
+                        editionMoney = getEdition(object.getString("edition")) + ' ' + editionMoney;
+                    }
+                    HSSFCell c3 = itemRow.createCell(3);
+                    c3.setCellValue(editionMoney);
+
+                    HSSFCell c4 = itemRow.createCell(4);
+                    c4.setCellValue(sdf.format(object.getDate("finishTime")));
+
+                    HSSFCell c5 = itemRow.createCell(5);
+                    c5.setCellValue(getResponseResult(object.getString("responseResult")));
+
+                    HSSFCell c6 = itemRow.createCell(6);
+                    c6.setCellValue(getSourceType(object.getString("sourceType")));
+                }
+            }
+        }
+        String filename = String.valueOf(ExcelUtil.processFileName(request, "查博士买家列表")).concat(".xls");
+        rep.setContentType("application/vnd.ms-excel;charset=utf-8");
+        rep.setHeader("Content-disposition", "attachment;filename=" + filename);
+        try {
+            ServletOutputStream ouputStream = rep.getOutputStream();
+            workbook.write(ouputStream);
+            ouputStream.flush();
+            ouputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getEdition(String key) {
+        Map<String, String> map = new HashMap<String, String>(){{
+            put("1", "维修版");
+            put("2", "综合版");
+        }};
+        return map.get(key);
+    }
+
+    private String getResponseResult(String key) {
+        Map<String, String> map = new HashMap<String, String>() {{
+            put("1", "查询成功");
+            put("2", "查询失败");
+            put("3", "查询中");
+            put("4", "查询失败-已退款");
+        }};
+        return map.get(key);
+    }
+
+    private String  getSourceType(String key) {
+        Map<String, String> map = new HashMap<String, String>() {{
+            put("1", "查博士");
+            put("2", "数据库");
+        }};
+        return map.get(key);
+    }
+
+    /**
+     * 查询查博士日志列表
+     */
+    @ApiOperation(value = "查询查博士日志列表")
+    @PostMapping(value = "/allList",produces="application/json; charset=UTF-8")
+    public ResultModel allList(@RequestBody Map<String,Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carChaboshiLog/allList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
 }

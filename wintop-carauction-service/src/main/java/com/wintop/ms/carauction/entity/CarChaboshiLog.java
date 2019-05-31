@@ -66,6 +66,15 @@ public class CarChaboshiLog extends BaseEntity
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date finishTime;
 
+	/*用户信息*/
+	private WtAppUser wtAppUser;
+
+	/*查博士返回数据*/
+	CarChaboshiVinData carChaboshiVinData;
+
+	/*查博士买家端支付金额设置*/
+	CarChaboshiPaymentConf carChaboshiPaymentConf;
+
 	public void setId(Long id) 
 	{
 		this.id = id;
@@ -247,6 +256,31 @@ public class CarChaboshiLog extends BaseEntity
 		this.finishTime = finishTime;
 	}
 
+	public WtAppUser getWtAppUser() {
+		return wtAppUser;
+	}
+
+	public void setWtAppUser(WtAppUser wtAppUser) {
+		this.wtAppUser = wtAppUser;
+	}
+
+	public CarChaboshiVinData getCarChaboshiVinData() {
+		return carChaboshiVinData;
+	}
+
+	public void setCarChaboshiVinData(CarChaboshiVinData carChaboshiVinData) {
+		this.carChaboshiVinData = carChaboshiVinData;
+	}
+
+	public CarChaboshiPaymentConf getCarChaboshiPaymentConf() {
+		return carChaboshiPaymentConf;
+	}
+
+	public void setCarChaboshiPaymentConf(CarChaboshiPaymentConf carChaboshiPaymentConf) {
+		this.carChaboshiPaymentConf = carChaboshiPaymentConf;
+	}
+
+	@Override
 	public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())

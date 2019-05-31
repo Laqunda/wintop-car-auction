@@ -3,24 +3,19 @@ package com.wintop.ms.carauction.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
-import com.wintop.ms.carauction.entity.CarChaboshiLog;
-import com.wintop.ms.carauction.entity.CarChaboshiStoreAccount;
-import com.wintop.ms.carauction.entity.CarFinancePayLog;
-import com.wintop.ms.carauction.model.CarChaboshiLogModel;
-import com.wintop.ms.carauction.model.CarChaboshiStoreAccountModel;
-import com.wintop.ms.carauction.model.CarFinancePayLogModel;
+import com.wintop.ms.carauction.entity.*;
+import com.wintop.ms.carauction.model.*;
 import com.wintop.ms.carauction.service.ICarChaboshiLogService;
 import com.wintop.ms.carauction.util.AlipayUtil;
 import com.wintop.ms.carauction.util.ChaboshiUtils;
+import com.wintop.ms.carauction.util.Class2MapUtil;
 import com.wintop.ms.carauction.util.utils.IdWorker;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 查博士日志 服务层实现
@@ -36,7 +31,12 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     private CarChaboshiStoreAccountModel storeAccountModel;
     @Autowired
     private CarFinancePayLogModel financePayLogModel;
-
+    @Autowired
+    private AppUserModel appUserModel;
+    @Autowired
+    private CarChaboshiVinDataModel carChaboshiVinDataModel;
+    @Autowired
+    private CarChaboshiPaymentConfModel carChaboshiPaymentConfModel;
     private IdWorker idWorker = new IdWorker(10);
 
 
@@ -54,12 +54,28 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     /**
      * 查询查博士日志列表
      *
-     * @param carChaboshiLog 查博士日志信息
+     * @param map 查博士日志信息
      * @return 查博士日志集合
      */
     @Override
-    public List<CarChaboshiLog> selectCarChaboshiLogList(CarChaboshiLog carChaboshiLog) {
-        return model.selectCarChaboshiLogList(carChaboshiLog);
+    public List<CarChaboshiLog> selectCarChaboshiLogList(Map<String,Object> map) {
+        List<CarChaboshiLog> logList = model.selectCarChaboshiLogList(map);
+        for (CarChaboshiLog log : logList) {
+            WtAppUser wtAppUser = appUserModel.findById(log.getUserId());
+            List<CarChaboshiVinData> vinDataList = carChaboshiVinDataModel.selectByCondition(Collections.singletonMap("vin", log.getVin()));
+            if (CollectionUtils.isNotEmpty(vinDataList)) {
+                CarChaboshiVinData carChaboshiVinData = vinDataList.stream().findFirst().orElse(new CarChaboshiVinData());
+                log.setCarChaboshiVinData(carChaboshiVinData);
+            }
+            List<CarChaboshiPaymentConf> confList = carChaboshiPaymentConfModel.selectCarChaboshiPaymentConfList(new CarChaboshiPaymentConf());
+            if (CollectionUtils.isNotEmpty(confList)) {
+                CarChaboshiPaymentConf carChaboshiPaymentConf = confList.stream().findFirst().orElse(new CarChaboshiPaymentConf());
+                log.setCarChaboshiPaymentConf(carChaboshiPaymentConf);
+            }
+
+            log.setWtAppUser(wtAppUser);
+        }
+        return logList;
     }
 
     /**
@@ -76,12 +92,12 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     /**
      * 修改查博士日志
      *
-     * @param carChaboshiLog 查博士日志信息
+     * @param map 查博士日志信息
      * @return 结果
      */
     @Override
-    public int updateCarChaboshiLog(CarChaboshiLog carChaboshiLog) {
-        return model.updateCarChaboshiLog(carChaboshiLog);
+    public int updateCarChaboshiLog(Map<String,Object> map) {
+        return model.updateCarChaboshiLog(map);
     }
 
     /**
@@ -96,19 +112,19 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     }
 
     @Override
-    public int selectCount(CarChaboshiLog carChaboshiLog) {
-        return model.selectCount(carChaboshiLog);
+    public int selectCount(Map<String,Object> map) {
+        return model.selectCount(map);
     }
 
     /**
      * 根据查博士订单id获取查询日志
      *
-     * @param log
+     * @param map
      * @return
      */
     @Override
-    public CarChaboshiLog selectCarChaboshiLog(CarChaboshiLog log) {
-        List<CarChaboshiLog> logs = selectCarChaboshiLogList(log);
+    public CarChaboshiLog selectCarChaboshiLog(Map<String,Object> map) {
+        List<CarChaboshiLog> logs = selectCarChaboshiLogList(map);
         if (logs != null && logs.size() > 0) {
             return logs.get(0);
         }
@@ -120,6 +136,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
      *
      * @param payLog
      */
+    @Override
     public int savePayLog(CarFinancePayLog payLog) {
         payLog.setId(idWorker.nextId());
         payLog.setStatus("3");//退款
@@ -169,7 +186,8 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
             result.setSuccess(ResultCode.FAIL.strValue(), "查找失败！");
         }
         /*更新日志*/
-        int code = updateCarChaboshiLog(log);
+        Map<String, Object> param = Class2MapUtil.convertMap(log);
+        int code = updateCarChaboshiLog(param);
         if (!isSuccess) {
             /*退款到个人支付宝*/
             CarFinancePayLog payLog = financePayLogModel.selectById(log.getPayLogId());

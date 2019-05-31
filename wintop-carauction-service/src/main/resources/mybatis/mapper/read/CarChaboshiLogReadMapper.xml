@@ -30,12 +30,17 @@
     </resultMap>
 
     <sql id="selectCarChaboshiLogVo">
-        select pc_url,app_url,finish_time,vehicle_id,vehicle_type,photo,engine_num,id,paylog_id,store_id, create_time, user_type, user_id, vin, response_msg, source_type, response_result, money, edition, order_id, order_msg, user_name from car_chaboshi_log
+        ccl.pc_url,ccl.app_url,ccl.finish_time,ccl.vehicle_id,ccl.vehicle_type,ccl.photo,ccl.engine_num,ccl.id,ccl.paylog_id,ccl.store_id,ccl.create_time,ccl.user_type,ccl.user_id,ccl.vin,ccl.response_msg,ccl.source_type,ccl.response_result,ccl.money,ccl.edition,ccl.order_id,ccl.order_msg,ccl.user_name
     </sql>
 
-    <select id="selectCarChaboshiLogList" parameterType="com.wintop.ms.carauction.entity.CarChaboshiLog"
+    <select id="selectCarChaboshiLogList" parameterType="java.util.Map"
             resultMap="CarChaboshiLogResult">
+        select
         <include refid="selectCarChaboshiLogVo"/>
+        from car_chaboshi_log ccl
+        <if test='userType != null and userType == "1"'>
+            left join wt_app_user wau on ccl.user_id = wau.id and ccl.user_type = '1'
+        </if>
         <where>
             <if test="id != null ">and id = #{id}</if>
             <if test="createTime != null ">and create_time = #{createTime}</if>
@@ -56,15 +61,27 @@
             <if test="vehicleType != null  and vehicleType != ''  ">and vehicle_type = #{vehicleType},</if>
             <if test="photo != null  and photo != ''  ">and photo = #{photo},</if>
             <if test="engineNum != null  and engineNum != ''  ">and engine_num = #{engineNum},</if>
-
+            <if test="buyerSearchName != null and buyerSearchName != ''">
+                and (wau.name like CONCAT(CONCAT('%',#{buyerSearchName}),'%')
+                or wau.mobile like CONCAT(CONCAT('%',#{buyerSearchName}),'%'))
+            </if>
+            <if test="storeIds != null">
+                and store_id in
+                <foreach collection="storeIds" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
         </where>
         order by create_time desc
     </select>
 
 
-    <select id="selectCount" parameterType="com.wintop.ms.carauction.entity.CarChaboshiLog"
+    <select id="selectCount" parameterType="java.util.Map"
             resultType="java.lang.Integer">
-        select count(*) from car_chaboshi_log
+        select count(*) from car_chaboshi_log ccl
+        <if test='userType != null and userType == "1"'>
+            left join wt_app_user wau on ccl.user_id = wau.id and ccl.user_type = '1'
+        </if>
         <where>
             <if test="id != null ">and id = #{id}</if>
             <if test="createTime != null ">and create_time = #{createTime}</if>
@@ -85,7 +102,10 @@
             <if test="vehicleType != null  and vehicleType != ''  ">and vehicle_type = #{vehicleType},</if>
             <if test="photo != null  and photo != ''  ">and photo = #{photo},</if>
             <if test="engineNum != null  and engineNum != ''  ">and engine_num = #{engineNum},</if>
-
+            <if test="buyerSearchName != null and buyerSearchName != ''">
+                and (wau.name like CONCAT(CONCAT('%',#{buyerSearchName}),'%')
+                or wau.mobile like CONCAT(CONCAT('%',#{buyerSearchName}),'%'))
+            </if>
         </where>
     </select>
 

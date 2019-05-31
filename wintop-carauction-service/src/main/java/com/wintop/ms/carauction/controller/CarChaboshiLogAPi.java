@@ -1,6 +1,10 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Predicates;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -9,6 +13,7 @@ import com.wintop.ms.carauction.model.CarFinancePayLogModel;
 import com.wintop.ms.carauction.service.*;
 import com.wintop.ms.carauction.util.AlipayUtil;
 import com.wintop.ms.carauction.util.ChaboshiUtils;
+import com.wintop.ms.carauction.util.Class2MapUtil;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import com.wintop.ms.carauction.util.utils.RandCodeUtil;
@@ -20,10 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 查博士日志 信息操作处理
@@ -62,6 +64,9 @@ public class CarChaboshiLogAPi {
     @Autowired
     private ICarAssessService assessService;
 
+    @Autowired
+    private ICarChaboshiStoreConfService carChaboshiStoreConfService;
+
 
     /**
      * 查询查博士日志列表
@@ -74,26 +79,31 @@ public class CarChaboshiLogAPi {
     public ServiceResult<ListEntity<CarChaboshiLog>> list(@RequestBody JSONObject obj) {
         ServiceResult<ListEntity<CarChaboshiLog>> result = null;
         try {
-            CarChaboshiLog carChaboshiLog = JSONObject.toJavaObject(obj, CarChaboshiLog.class);
-            if (carChaboshiLog == null) {
-                carChaboshiLog = new CarChaboshiLog();
-            }
-
+//            CarChaboshiLog carChaboshiLog = JSONObject.toJavaObject(obj, CarChaboshiLog.class);
+//            if (carChaboshiLog == null) {
+//                carChaboshiLog = new CarChaboshiLog();
+//            }
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
             /*根据assessId查询其查博士的查询日志*/
             if (obj.get("assessId")!=null && obj.getLong("assessId")> 0) {
                 CarAssess assess = assessService.selectCarAssessById(obj.getLong("assessId"));
-                carChaboshiLog.setVin(assess.getVin());
-                carChaboshiLog.setUserId(assess.getCreateUser());
+//                carChaboshiLog.setVin(assess.getVin());
+//                carChaboshiLog.setUserId(assess.getCreateUser());
+                param.put("vin", assess.getVin());
+                param.put("userId", assess.getCreateUser());
             }
             result = new ServiceResult<>();
 
-            int count = carChaboshiLogService.selectCount(carChaboshiLog);
+            int count = carChaboshiLogService.selectCount(param);
 
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
-            carChaboshiLog.setStartRowNum(pageEntity.getStartRowNum());
-            carChaboshiLog.setEndRowNum(pageEntity.getEndRowNum());
+//            carChaboshiLog.setStartRowNum(pageEntity.getStartRowNum());
+//            carChaboshiLog.setEndRowNum(pageEntity.getEndRowNum());
+            param.put("startRowNum",pageEntity.getStartRowNum());
+            param.put("endRowNum",pageEntity.getEndRowNum());
 
-            List<CarChaboshiLog> list = carChaboshiLogService.selectCarChaboshiLogList(carChaboshiLog);
+            List<CarChaboshiLog> list = carChaboshiLogService.selectCarChaboshiLogList(param);
             ListEntity<CarChaboshiLog> listEntity = new ListEntity<>();
             listEntity.setList(list);
             listEntity.setCount(count);
@@ -108,6 +118,37 @@ public class CarChaboshiLogAPi {
         return result;
     }
 
+    /**
+     * 查询查博士日志列表
+     */
+    @ApiOperation(value = "查询查博士日志列表")
+    @RequestMapping(value = "/allList",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> allList(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String,Object>> result =  new ServiceResult<>();
+        try {
+
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
+            /*根据assessId查询其查博士的查询日志*/
+            if (obj.get("assessId")!=null && obj.getLong("assessId")> 0) {
+                CarAssess assess = assessService.selectCarAssessById(obj.getLong("assessId"));
+                param.put("vin", assess.getVin());
+                param.put("userId", assess.getCreateUser());
+            }
+            List<CarChaboshiLog> list = carChaboshiLogService.selectCarChaboshiLogList(param);
+            result.setResult(Collections.singletonMap("list", list));
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询查博士日志列表", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+
+        return result;
+    }
 
     /**
      * 新增保存查博士日志
@@ -152,11 +193,38 @@ public class CarChaboshiLogAPi {
     public ServiceResult<Map<String, Object>> editSave(@RequestBody JSONObject obj) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-            CarChaboshiLog carChaboshiLog = JSONObject.toJavaObject(obj, CarChaboshiLog.class);
-            if (carChaboshiLog == null) {
-                carChaboshiLog = new CarChaboshiLog();
+//            CarChaboshiLog carChaboshiLog = JSONObject.toJavaObject(obj, CarChaboshiLog.class);
+//            if (carChaboshiLog == null) {
+//                carChaboshiLog = new CarChaboshiLog();
+//            }
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
+            int code = 0;
+            Set<Integer> codeSet = Sets.newHashSet();
+            if (param.get("storeIds") != null) {
+                code = 1;
+                List<String> storeIds = Splitter.on(",").splitToList(param.get("storeIds").toString());
+                param.put("storeIds", storeIds);
+                List<CarChaboshiLog> chaboshiLogList = carChaboshiLogService.selectCarChaboshiLogList(Collections.singletonMap("storeIds", storeIds));
+                for (CarChaboshiLog carChaboshiLog : chaboshiLogList) {
+                    BigDecimal money = BigDecimal.valueOf(Double.valueOf(param.get("money").toString())).add(carChaboshiLog.getMoney());
+                    carChaboshiLog.setMoney(money);
+                    Map<String, Object> updateMap = Class2MapUtil.convertMap(carChaboshiLog);
+                    updateMap.put("storeId", carChaboshiLog.getStoreId());
+                    carChaboshiLogService.updateCarChaboshiLog(updateMap);
+                    CarChaboshiStoreConf carChaboshiStoreConf = new CarChaboshiStoreConf();
+                    carChaboshiStoreConf.setStoreId(carChaboshiLog.getStoreId());
+                    // 商家金金额修改
+                    List<CarChaboshiStoreConf> carChaboshiStoreConfList = carChaboshiStoreConfService.selectCarChaboshiStoreConfList(carChaboshiStoreConf);
+                    for (CarChaboshiStoreConf conf : carChaboshiStoreConfList) {
+                        conf.setBalance(money);
+                        carChaboshiStoreConfService.updateCarChaboshiStoreConf(conf);
+                    }
+                }
+            } else {
+               code = carChaboshiLogService.updateCarChaboshiLog(param);
             }
-            int code = carChaboshiLogService.updateCarChaboshiLog(carChaboshiLog);
+
             if (code > 0) {
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
             } else {
@@ -489,11 +557,15 @@ public class CarChaboshiLogAPi {
         try {
 
             /*根据orderId获取log数据 */
-            CarChaboshiLog log = new CarChaboshiLog();
-            log.setResponseResult("3");
-            log.setSourceType("1");
-            log.setOrderId(orderId);
-            log = carChaboshiLogService.selectCarChaboshiLog(log);
+//            CarChaboshiLog log = new CarChaboshiLog();
+//            log.setResponseResult("3");
+//            log.setSourceType("1");
+//            log.setOrderId(orderId);
+            Map<String, Object> param = Maps.newHashMap();
+            param.put("responseResult", "3");
+            param.put("sourceType", "1");
+            param.put("orderId", orderId);
+            CarChaboshiLog log = carChaboshiLogService.selectCarChaboshiLog(param);
 
             if ("1".equals(result)) {
                 /*生成报告成功  并更新状态*/
@@ -525,14 +597,16 @@ public class CarChaboshiLogAPi {
                     log.setPc_url(pcUrl);
                     log.setApp_url(mobileUrl);
                     //TODO 无车型信息情况下 获取车型信息
-                    carChaboshiLogService.updateCarChaboshiLog(log);
+                    Map<String, Object> logMap = Class2MapUtil.convertMap(log);
+                    carChaboshiLogService.updateCarChaboshiLog(logMap);
                 }
             } else {
 
                 if (log != null) {
                     log.setResponseResult("2");//失败
                     log.setOrderMsg(message);
-                    carChaboshiLogService.updateCarChaboshiLog(log);
+                    Map<String, Object> logMap = Class2MapUtil.convertMap(log);
+                    carChaboshiLogService.updateCarChaboshiLog(logMap);
 
                     /*退款*/
                     if ("1".equals(log.getUserType())) {

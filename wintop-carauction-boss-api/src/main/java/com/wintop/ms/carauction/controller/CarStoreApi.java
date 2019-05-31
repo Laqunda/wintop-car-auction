@@ -87,7 +87,7 @@ public class CarStoreApi {
      *@param:map
      */
     @ApiOperation(value = "保存店铺")
-    @RequestMapping(value = "/saveCarStore",
+    @RequestMapping(value = "/save",
             consumes = "application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken

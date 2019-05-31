@@ -8,6 +8,7 @@
     <result column="simple_name" property="simpleName" jdbcType="VARCHAR" />
     <result column="store_photo" property="storePhoto" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
     <result column="service_tel" property="serviceTel" jdbcType="VARCHAR" />
     <result column="latitude" property="latitude" jdbcType="DOUBLE" />
     <result column="longitude" property="longitude" jdbcType="DOUBLE" />
@@ -32,7 +33,7 @@
   <sql id="Base_Column_List" >
     t1.id, t1.code, t1.`name`, t1.simple_name, t1.store_photo, t1.address, t1.service_tel, t1.latitude,
     t1.longitude, t1.status,t1.create_time,t1.create_person, t1.update_time, t1.update_person,t1.del_time, t1.del_person,
-    t1.remark,t1.region_id
+    t1.remark,t1.region_id, t1.area
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select

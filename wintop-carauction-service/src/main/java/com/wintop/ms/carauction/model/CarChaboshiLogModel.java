@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 查博士日志 服务层实现
@@ -36,15 +37,15 @@ public class CarChaboshiLogModel {
     /**
      * 查询查博士日志列表
      *
-     * @param carChaboshiLog 查博士日志信息
+     * @param map 查博士日志信息
      * @return 查博士日志集合
      */
-    public List<CarChaboshiLog> selectCarChaboshiLogList(CarChaboshiLog carChaboshiLog) {
-        return readDao.selectCarChaboshiLogList(carChaboshiLog);
+    public List<CarChaboshiLog> selectCarChaboshiLogList(Map<String,Object> map) {
+        return readDao.selectCarChaboshiLogList(map);
     }
 
-    public int selectCount(CarChaboshiLog carChaboshiLog) {
-        return readDao.selectCount(carChaboshiLog);
+    public int selectCount(Map<String,Object> map) {
+        return readDao.selectCount(map);
     }
 
     /**
@@ -60,11 +61,11 @@ public class CarChaboshiLogModel {
     /**
      * 修改查博士日志
      *
-     * @param carChaboshiLog 查博士日志信息
+     * @param map 查博士日志信息
      * @return 结果
      */
-    public int updateCarChaboshiLog(CarChaboshiLog carChaboshiLog) {
-        return writeDao.updateCarChaboshiLog(carChaboshiLog);
+    public int updateCarChaboshiLog(Map<String,Object> map) {
+        return writeDao.updateCarChaboshiLog(map);
     }
 
     /**
