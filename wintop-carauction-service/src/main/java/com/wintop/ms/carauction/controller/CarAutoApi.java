@@ -357,6 +357,7 @@ public class CarAutoApi {
                 map.put("beginRegisterDate",carAuto.getBeginRegisterDate());
                 map.put("status",carAuto.getStatus());
                 map.put("auctionId",carAuto.getAutoAuctionId());
+                map.put("transferFlag",carAuto.getTransferFlag());
                 list.add(map);
             }
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();

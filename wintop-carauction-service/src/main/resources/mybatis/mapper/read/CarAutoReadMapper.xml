@@ -250,7 +250,7 @@
     t3.auction_start_time,t3.auction_end_time,t2.environment_cn,t2.begin_register_date
     ,(CASE WHEN t4.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow
     ,(CASE WHEN t5.entrust_fee IS NOT NULL THEN '1' ELSE '2' END ) AS isEntrust
-    ,t1.auto_auction_id
+    ,t1.auto_auction_id,t1.transfer_flag
     FROM car_auto t1
     INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
     INNER JOIN car_auto_auction t3 ON t1.auto_auction_id=t3.id
