@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alipay.api.domain.Car;
 import com.google.common.base.Predicates;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
@@ -87,7 +88,9 @@ public class CarChaboshiLogAPi {
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
             /*根据assessId查询其查博士的查询日志*/
             if (obj.get("assessId")!=null && obj.getLong("assessId")> 0) {
-                CarAssess assess = assessService.selectCarAssessById(obj.getLong("assessId"));
+                CarAssess carAssess = new CarAssess();
+                carAssess.setId(obj.getLong("assessId"));
+                CarAssess assess = assessService.selectCarAssessById(carAssess);
 //                carChaboshiLog.setVin(assess.getVin());
 //                carChaboshiLog.setUserId(assess.getCreateUser());
                 param.put("vin", assess.getVin());
@@ -134,7 +137,9 @@ public class CarChaboshiLogAPi {
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
             /*根据assessId查询其查博士的查询日志*/
             if (obj.get("assessId")!=null && obj.getLong("assessId")> 0) {
-                CarAssess assess = assessService.selectCarAssessById(obj.getLong("assessId"));
+                CarAssess carAssess = new CarAssess();
+                carAssess.setId(obj.getLong("assessId"));
+                CarAssess assess = assessService.selectCarAssessById(carAssess);
                 param.put("vin", assess.getVin());
                 param.put("userId", assess.getCreateUser());
             }
