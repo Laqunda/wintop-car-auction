@@ -247,6 +247,97 @@ public class CarChaboshiLogApi {
         }
     }
 
+
+    @AuthPublic
+    @PostMapping( value = "/sellerExport" )
+    public void sellerExport(HttpServletRequest request, HttpServletResponse rep,
+                       @RequestParam("userType") String userType,
+                       @RequestParam("sourceType") Long sourceType,
+                       @RequestParam("responseResult") String responseResult,
+                       @RequestParam("sellerSearchName") Long sellerSearchName) {
+        String[] headers = {"操作人","电话","所属店铺","查询车辆","查询版本","查询金额（元）","查询时间","查询结果","报告来源"};
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("userType", userType);
+        map.put("sourceType", sourceType);
+        map.put("responseResult", responseResult);
+        map.put("sellerSearchName", sellerSearchName);
+        HSSFWorkbook workbook = ExcelUtil.createStartExcel("查博士卖家记录", headers);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/carChaboshiLog/allList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+        HSSFSheet sheet = workbook.getSheetAt(0);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            JSONObject obj = response.getBody();
+            JSONArray result = obj.getJSONObject("result").getJSONArray("list");
+            if (result != null && result.size() > 0) {
+                for (int i = 0; i < result.size(); i++) {
+                    JSONObject object = result.getJSONObject(i);
+                    HSSFRow itemRow = sheet.createRow(i + 2);
+
+
+                    HSSFCell c0 = itemRow.createCell(0);
+                    c0.setCellValue(object.getJSONObject("carManagerUser").getString("userName"));
+
+
+                    HSSFCell c1 = itemRow.createCell(1);
+                    c1.setCellValue(object.getJSONObject("carManagerUser").getString("userPhone"));
+
+                    HSSFCell c2 = itemRow.createCell(2);
+                    c2.setCellValue(object.getJSONObject("carStore").getString("simpleName"));
+
+                    String carInfo = "";
+                    if (object.getJSONObject("carChaboshiVinData") != null) {
+                        carInfo = String.format("%s %s",object.getJSONObject("carChaboshiVinData").getString("modelName"),
+                                object.getJSONObject("carChaboshiVinData").getString("seriesName"));
+                    }
+                    HSSFCell c3 = itemRow.createCell(3);
+                    c3.setCellValue(carInfo);
+
+
+
+                    HSSFCell c4 = itemRow.createCell(4);
+                    c4.setCellValue(getEdition(object.getString("edition")));
+
+                    String editionMoney = "";
+                    if (object.getJSONObject("carChaboshiPaymentConf") != null) {
+                        editionMoney = object.getString("edition").equals("1")
+                                ? object.getJSONObject("carChaboshiPaymentConf").getString("payment") :
+                                object.getJSONObject("carChaboshiPaymentConf").getString("paymentComposite");
+
+                    }
+                    HSSFCell c5 = itemRow.createCell(5);
+                    c5.setCellValue(editionMoney);
+
+
+                    HSSFCell c6 = itemRow.createCell(6);
+                    c6.setCellValue(sdf.format(object.getDate("createTime")));
+
+                    HSSFCell c7 = itemRow.createCell(7);
+                    c7.setCellValue(getResponseResult(object.getString("responseResult")));
+
+                    HSSFCell c8 = itemRow.createCell(8);
+                    c8.setCellValue(getSourceType(object.getString("sourceType")));
+                }
+            }
+        }
+        String filename = String.valueOf(ExcelUtil.processFileName(request, "查博士卖家列表")).concat(".xls");
+        rep.setContentType("application/vnd.ms-excel;charset=utf-8");
+        rep.setHeader("Content-disposition", "attachment;filename=" + filename);
+        try {
+            ServletOutputStream ouputStream = rep.getOutputStream();
+            workbook.write(ouputStream);
+            ouputStream.flush();
+            ouputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private String getEdition(String key) {
         Map<String, String> map = new HashMap<String, String>(){{
             put("1", "维修版");

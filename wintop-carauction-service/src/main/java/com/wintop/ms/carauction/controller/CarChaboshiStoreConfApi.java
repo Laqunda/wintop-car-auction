@@ -179,9 +179,11 @@ public class CarChaboshiStoreConfApi {
                     code = 1;
                     for (CarChaboshiStoreConf storeConf : storeConfs) {
                         bean.setStoreId(storeConf.getStoreId());
+                        bean.setId(storeConf.getId());
                         service.updateCarChaboshiStoreConf(bean);
                     }
                 } else{
+                    bean.setId(storeConfs.get(0).getId());
                     code = service.updateCarChaboshiStoreConf(bean);
                 }
 

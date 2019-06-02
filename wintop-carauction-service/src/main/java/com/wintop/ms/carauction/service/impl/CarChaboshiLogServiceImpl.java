@@ -37,6 +37,10 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     private CarChaboshiVinDataModel carChaboshiVinDataModel;
     @Autowired
     private CarChaboshiPaymentConfModel carChaboshiPaymentConfModel;
+    @Autowired
+    private CarManagerUserModel carManagerUserModel;
+    @Autowired
+    private CarStoreModel carStoreModel;
     private IdWorker idWorker = new IdWorker(10);
 
 
@@ -61,7 +65,17 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     public List<CarChaboshiLog> selectCarChaboshiLogList(Map<String,Object> map) {
         List<CarChaboshiLog> logList = model.selectCarChaboshiLogList(map);
         for (CarChaboshiLog log : logList) {
-            WtAppUser wtAppUser = appUserModel.findById(log.getUserId());
+
+            if (log.getUserType().equals("1")) {
+                WtAppUser wtAppUser = appUserModel.findById(log.getUserId());
+                log.setWtAppUser(wtAppUser);
+            } else {
+                CarManagerUser carManagerUser =  carManagerUserModel.selectByPrimaryKey(log.getUserId());
+                log.setCarManagerUser(carManagerUser);
+                CarStore carStore = carStoreModel.selectByPrimaryKey(log.getStoreId());
+                log.setCarStore(carStore);
+            }
+
             List<CarChaboshiVinData> vinDataList = carChaboshiVinDataModel.selectByCondition(Collections.singletonMap("vin", log.getVin()));
             if (CollectionUtils.isNotEmpty(vinDataList)) {
                 CarChaboshiVinData carChaboshiVinData = vinDataList.stream().findFirst().orElse(new CarChaboshiVinData());
@@ -73,7 +87,6 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                 log.setCarChaboshiPaymentConf(carChaboshiPaymentConf);
             }
 
-            log.setWtAppUser(wtAppUser);
         }
         return logList;
     }

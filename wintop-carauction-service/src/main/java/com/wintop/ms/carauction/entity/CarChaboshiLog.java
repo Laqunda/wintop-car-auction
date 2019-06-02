@@ -69,11 +69,17 @@ public class CarChaboshiLog extends BaseEntity
 	/*用户信息*/
 	private WtAppUser wtAppUser;
 
+	/*用户信息*/
+	private CarManagerUser carManagerUser;
+
 	/*查博士返回数据*/
-	CarChaboshiVinData carChaboshiVinData;
+	private CarChaboshiVinData carChaboshiVinData;
 
 	/*查博士买家端支付金额设置*/
-	CarChaboshiPaymentConf carChaboshiPaymentConf;
+	private CarChaboshiPaymentConf carChaboshiPaymentConf;
+
+	/*店铺信息*/
+	private CarStore carStore;
 
 	public void setId(Long id) 
 	{
@@ -278,6 +284,22 @@ public class CarChaboshiLog extends BaseEntity
 
 	public void setCarChaboshiPaymentConf(CarChaboshiPaymentConf carChaboshiPaymentConf) {
 		this.carChaboshiPaymentConf = carChaboshiPaymentConf;
+	}
+
+	public CarManagerUser getCarManagerUser() {
+		return carManagerUser;
+	}
+
+	public void setCarManagerUser(CarManagerUser carManagerUser) {
+		this.carManagerUser = carManagerUser;
+	}
+
+	public CarStore getCarStore() {
+		return carStore;
+	}
+
+	public void setCarStore(CarStore carStore) {
+		this.carStore = carStore;
 	}
 
 	@Override

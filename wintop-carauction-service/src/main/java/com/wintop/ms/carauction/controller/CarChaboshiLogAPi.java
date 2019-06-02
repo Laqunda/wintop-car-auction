@@ -200,31 +200,7 @@ public class CarChaboshiLogAPi {
 //            }
             Map param = JSONObject.toJavaObject(obj, Map.class);
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
-            int code = 0;
-            Set<Integer> codeSet = Sets.newHashSet();
-            if (param.get("storeIds") != null) {
-                code = 1;
-                List<String> storeIds = Splitter.on(",").splitToList(param.get("storeIds").toString());
-                param.put("storeIds", storeIds);
-                List<CarChaboshiLog> chaboshiLogList = carChaboshiLogService.selectCarChaboshiLogList(Collections.singletonMap("storeIds", storeIds));
-                for (CarChaboshiLog carChaboshiLog : chaboshiLogList) {
-                    BigDecimal money = BigDecimal.valueOf(Double.valueOf(param.get("money").toString())).add(carChaboshiLog.getMoney());
-                    carChaboshiLog.setMoney(money);
-                    Map<String, Object> updateMap = Class2MapUtil.convertMap(carChaboshiLog);
-                    updateMap.put("storeId", carChaboshiLog.getStoreId());
-                    carChaboshiLogService.updateCarChaboshiLog(updateMap);
-                    CarChaboshiStoreConf carChaboshiStoreConf = new CarChaboshiStoreConf();
-                    carChaboshiStoreConf.setStoreId(carChaboshiLog.getStoreId());
-                    // 商家金金额修改
-                    List<CarChaboshiStoreConf> carChaboshiStoreConfList = carChaboshiStoreConfService.selectCarChaboshiStoreConfList(carChaboshiStoreConf);
-                    for (CarChaboshiStoreConf conf : carChaboshiStoreConfList) {
-                        conf.setBalance(money);
-                        carChaboshiStoreConfService.updateCarChaboshiStoreConf(conf);
-                    }
-                }
-            } else {
-               code = carChaboshiLogService.updateCarChaboshiLog(param);
-            }
+            int code = carChaboshiLogService.updateCarChaboshiLog(param);
 
             if (code > 0) {
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());

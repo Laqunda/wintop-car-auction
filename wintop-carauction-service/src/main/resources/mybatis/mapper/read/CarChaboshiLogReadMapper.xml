@@ -41,6 +41,9 @@
         <if test='userType != null and userType == "1"'>
             left join wt_app_user wau on ccl.user_id = wau.id and ccl.user_type = '1'
         </if>
+        <if test='userType != null and userType == "2"'>
+            left join car_store cs on ccl.store_id = cs.id
+        </if>
         <where>
             <if test="id != null ">and id = #{id}</if>
             <if test="createTime != null ">and create_time = #{createTime}</if>
@@ -65,6 +68,10 @@
                 and (wau.name like CONCAT(CONCAT('%',#{buyerSearchName}),'%')
                 or wau.mobile like CONCAT(CONCAT('%',#{buyerSearchName}),'%'))
             </if>
+            <if test="sellerSearchName != null and sellerSearchName != ''">
+                and (ccl.user_name like CONCAT(CONCAT('%',#{sellerSearchName}),'%')
+                or cs.name like CONCAT(CONCAT('%',#{sellerSearchName}),'%'))
+            </if>
             <if test="storeIds != null">
                 and store_id in
                 <foreach collection="storeIds" item="item" open="(" separator="," close=")">
@@ -73,6 +80,9 @@
             </if>
         </where>
         order by create_time desc
+        <if test="startRowNum != null and endRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
     </select>
 
 

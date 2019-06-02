@@ -788,6 +788,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
      * @Date 2018-3-26
      * @About 根据场次Id获取更新最后的场次竞拍结果
      * */
+    @Override
     @Transactional
     public ServiceResult<Map<String,Object>> largeScreenAuctionFinish(Long auctionId){
         CarLocaleAuction carLocaleAuction =model.selectById(auctionId);
@@ -869,6 +870,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
      * @Date 2018-3-26
      * @About 根据场次Id获取更新最后的场次竞拍结果
      * */
+    @Override
     @Transactional
     public ServiceResult<Map<String,Object>> clearLargeScreenAuctionCar(Long auctionId){
         ServiceResult<Map<String,Object>> result=new ServiceResult<>();

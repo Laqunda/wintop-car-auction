@@ -5,8 +5,10 @@ import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarChaboshiStoreAccount;
+import com.wintop.ms.carauction.entity.CarManagerUser;
 import com.wintop.ms.carauction.entity.ListEntity;
 import com.wintop.ms.carauction.service.ICarChaboshiStoreAccountService;
+import com.wintop.ms.carauction.service.ICarManagerUserService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +40,8 @@ public class CarChaboshiStoreAccountApi
 
 	@Autowired
 	private ICarChaboshiStoreAccountService service;
-
+    @Autowired
+    private ICarManagerUserService carManagerUserService;
 
 	/**
 	 * 查询查博士店铺资金流水列表
@@ -134,6 +138,12 @@ public class CarChaboshiStoreAccountApi
 			if (bean == null) {
 				bean = new CarChaboshiStoreAccount();
 			}
+            if (obj.get("managerId") != null) {
+                CarManagerUser carManagerUser = this.carManagerUserService.selectByPrimaryKey(Long.parseLong(obj.get("managerId").toString()), false);
+                bean.setUserId(carManagerUser.getId());
+                bean.setUserName(carManagerUser.getUserName());
+            }
+            bean.setCreateTime(new Date());
 			bean.setId(idWorker.nextId());
 			int code = service.insertCarChaboshiStoreAccount(bean);
 			if (code > 0) {
