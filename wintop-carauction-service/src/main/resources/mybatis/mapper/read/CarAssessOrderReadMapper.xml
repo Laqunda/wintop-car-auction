@@ -41,6 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createUser"  column="create_user" />
         <result property="createTime"  column="create_time" />
         <result property="autoInfoName"  column="auto_info_name" />
+        <result property="regionId"  column="region_id" />
     </resultMap>
 	
 	<sql id="selectCarAssessOrderVo">

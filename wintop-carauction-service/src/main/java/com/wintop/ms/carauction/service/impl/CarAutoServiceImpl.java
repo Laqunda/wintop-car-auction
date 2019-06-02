@@ -605,10 +605,19 @@ public class CarAutoServiceImpl implements ICarAutoService {
                     auto.setAuctionNum(auto.getAuctionNum()-1);
                 }
                 auto.setStatus("1");
-
                 //如果是现场拍的车辆，撤回通过，需要修改场次车辆绑定表的状态为，撤回
 //                carLocaleAuctionCarModel.deleteById()
-
+                //如果是转渠道车辆 回到 转渠道之前
+                if("1".equals(auto.getTransferFlag())){
+                    auto.setTransferFlag("0");
+                    CarAutoAuction autoAuction = new CarAutoAuction();
+                    autoAuction.setId(auto.getAutoAuctionId());
+                    autoAuction.setAutoId(auto.getId());
+                    autoAuction.setAuctionType("1");
+                    autoAuction.setAuctionStartTime(null);
+                    autoAuction.setAuctionEndTime(null);
+                    autoAuctionModel.updateByPrimaryKeySelective(autoAuction);
+                }
             }else if ("2".equals(object.getString("status"))){
                 Map<String,Object> map=new HashMap<>();
                 map.put("carId",carId);
@@ -616,6 +625,10 @@ public class CarAutoServiceImpl implements ICarAutoService {
                 // 车辆已经过了开拍时间 设为19=流拍
                 if (auto.getAuctionStartTime()!=null && auto.getAuctionStartTime().compareTo(new Date())<0){
                     auto.setStatus("19");
+                    //如果是转渠道车辆 回到 转渠道之前
+                    //查询车辆竞拍信息
+                    CarAutoAuction autoAuction = autoAuctionModel.selectByPrimaryKey(auto.getAutoAuctionId());
+                    carAutoModel.updateAutoData(autoAuction);
                 }else {
                     // 车辆状态回到撤回的前一个状态（日志表的倒数第二条记录）
                     List<CarAutoLog> logs=logModel.selectCarLogByCarId(map);
@@ -628,6 +641,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
             }else {
                 return result;
             }
+
             //2.日志存储
             log.setStatus(auto.getStatus());
             log.setAutoId(carId);

@@ -95,15 +95,6 @@ public class HandleDisputeApi {
                     if("5".equals(carAuto1.getStatus()) || "6".equals(carAuto1.getStatus())){
                         carAuto.setStatus("4");
                     }
-                    //如果是转渠道撤回到线上
-                    if(TRANSFER_OFFLINE.equals(carAuto1.getTransferFlag())){
-                        carAuto.setTransferFlag("0");
-                        CarAutoAuction autoAuction = new CarAutoAuction();
-                        autoAuction.setId(carAuto1.getAutoAuctionId());
-                        autoAuction.setAutoId(carAuto1.getId());
-                        autoAuction.setAuctionType("1");
-                        iCarAutoAuctionService.updateByPrimaryKeySelective(autoAuction);
-                    }
                     count = iCarAutoService.updateByPrimaryKeySelective(carAuto).getResult();
                     redisAutoManager.delAuto(Constants.CAR_AUTO_AUCTION+"_"+id);
                 }
@@ -155,6 +146,7 @@ public class HandleDisputeApi {
             CarAutoAuction carAutoAuction = new CarAutoAuction();
             carAutoAuction.setId(carAuto1.getAutoAuctionId());
             carAutoAuction.setAuctionType(OFFLINE);
+            carAutoAuction.setAuctionStartTime(null);
             //更新车辆信息
             CarAuto carAuto = new CarAuto();
             carAuto.setId(id);
@@ -163,6 +155,8 @@ public class HandleDisputeApi {
             if(carAuto1 != null ){
                 //
                 autoCount =  iCarAutoService.updateByIdSelective(carAuto);
+                // 修改已转换标识
+                count = iCarAutoAuctionService.updateByPrimaryKeySelective(carAutoAuction).getResult();
                 // 日志信息记录
                 CarManagerUser user = userService.selectByPrimaryKey(userId, false);
                 CarAutoLog carAutoLog = new CarAutoLog();

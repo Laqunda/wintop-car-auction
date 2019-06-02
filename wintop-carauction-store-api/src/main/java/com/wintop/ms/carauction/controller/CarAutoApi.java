@@ -95,6 +95,34 @@ public class CarAutoApi {
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
+
+    /**
+     * 审核撤回审批的车辆
+     *@Author:zhangzijuan
+     *@date 2018/3/22
+     *@param:map
+     */
+    @ApiOperation(value = "审核撤回审批的车辆")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "carId",value = "车辆Id",required = true,dataType = "long"),
+            @ApiImplicitParam(name = "status",value = "审批状态 1 通过 2 不通过",required = true,dataType = "string"),
+            @ApiImplicitParam(name = "msg",value = "审批留言",required = false,paramType = "query",dataType = "string")
+    })
+    @PostMapping(value = "/revokeApprove",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel revokeApprove(@CurrentUserId Long managerId,@RequestBody Map<String,Object> map) {
+        map.put("managerId",managerId);
+        if(map.get("carId")==null || map.get("status")==null|| map.get("msg")==null|| map.get("managerId")==null){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAuto/revokeApprove"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
+
     @RequestMapping(value = "/retailOrderList",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wintop.ms.carauction.mapper.read.ICarSaleOrderReadDAO" >
-    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarSaleOrder" >
-        <id column="id" property="id" jdbcType="BIGINT" />
-        <result column="car_id" property="carId" jdbcType="BIGINT" />
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarOrderRetail" >
+        <result column="id" property="id" jdbcType="BIGINT" />
         <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+        <result column="car_id" property="carId" jdbcType="BIGINT" />
         <result column="transaction_fee" property="transactionFee" jdbcType="DECIMAL" />
         <result column="earnest_money" property="earnestMoney" jdbcType="DECIMAL" />
         <result column="payment_type" property="paymentType" jdbcType="VARCHAR" />
@@ -14,17 +14,16 @@
         <result column="monthly_repayment" property="monthlyRepayment" jdbcType="DECIMAL" />
         <result column="transfer" property="transfer" jdbcType="VARCHAR" />
         <result column="sales_type" property="salesType" jdbcType="VARCHAR" />
-        <result column="sales_consultant" property="salesConsultant" jdbcType="BIGINT" />
+        <result column="sales_consultant" property="salesConsultant" jdbcType="VARCHAR" />
         <result column="sales_date" property="salesDate" jdbcType="DATE" />
         <result column="insurance_company" property="insuranceCompany" jdbcType="VARCHAR" />
         <result column="commercial_insurance_expires" property="commercialInsuranceExpires" jdbcType="DATE" />
         <result column="compulsory_insurance_expires" property="compulsoryInsuranceExpires" jdbcType="DATE" />
-        <result column="mortgage_plan" property="mortgagePlan" jdbcType="VARCHAR" />
         <result column="mortgage_charges" property="mortgageCharges" jdbcType="DECIMAL" />
         <result column="insurance_rebate" property="insuranceRebate" jdbcType="DECIMAL" />
         <result column="boutique_profit" property="boutiqueProfit" jdbcType="DECIMAL" />
         <result column="guaranteed_profit" property="guaranteedProfit" jdbcType="DECIMAL" />
-        <result column="add_profits" property="addProfit" jdbcType="DECIMAL" />
+        <result column="add_profits" property="addProfits" jdbcType="DECIMAL" />
         <result column="other_expenses" property="otherExpenses" jdbcType="DECIMAL" />
         <result column="remarks" property="remarks" jdbcType="VARCHAR" />
         <result column="vehicle_owner_type" property="vehicleOwnerType" jdbcType="VARCHAR" />
@@ -37,6 +36,8 @@
         <result column="opening_bank" property="openingBank" jdbcType="VARCHAR" />
         <result column="bank_account" property="bankAccount" jdbcType="VARCHAR" />
         <result column="other_accounts" property="otherAccounts" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" jdbcType="BIGINT" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
         <result column="mortgage_plan" property="mortgagePlan" jdbcType="VARCHAR" />
         <result column="main_photo" property="mainPhoto" jdbcType="VARCHAR" />
         <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
@@ -46,8 +47,6 @@
         <result column="mileage" property="mileage" jdbcType="DECIMAL" />
         <result column="store_name" property="storeName" jdbcType="VARCHAR" />
         <result column="user_name" property="managerName" jdbcType="VARCHAR" />
-        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
-        <result column="create_date" property="createDate" jdbcType="VARCHAR" />
 
     </resultMap>
     <sql id="Base_Column_List" >
@@ -93,7 +92,7 @@
     <select id="selectCarSaleRetail" resultMap="BaseResultMap" parameterType="java.util.Map" >
         select
         <include refid="Base_Column_List"/>
-        ,t2.user_name managerName
+        ,t2.user_name
         FROM car_order_retail t1
         INNER JOIN car_manager_user t2 ON t1.create_user = t2.id
         WHERE t1.create_user=#{customerId}
@@ -131,6 +130,7 @@
                 and t1.create_user = #{customerId}
             </otherwise>
         </choose>
+        ORDER BY t1.create_date DESC
         <if test="startRowNum!=null and endRowNum!=null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
         </if>

@@ -389,22 +389,19 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
     public List<Map<String,Object>> getBidPriceList(Long autoId) {
         List<Map<String,Object>> resultList = Lists.newArrayList();
         List<CarAuctionBidRecord> bidRecordList = model.getCustomerBidPriceList(Collections.singletonMap("carId", autoId));
-        Map<String, List<CarAuctionBidRecord>> groupBidList = bidRecordList.stream().collect(Collectors.groupingBy(record -> String.format("%d_%d", record.getAutoId(), record.getCustomerId())));
-        groupBidList.forEach((key,value)->{
-            if (!CollectionUtils.isEmpty(value)){
-                Collections.sort(value, Comparator.comparing(CarAuctionBidRecord::getBidFee).reversed());
-                // 排序后的第一个值
-                Map<String, Object> record = Maps.newHashMap();
-
-                WtAppUser appUser = appUserModel.getUserInfoById(value.get(0).getCustomerId());
-                record.put("customerName", appUser.getName());
-                record.put("mobile", appUser.getMobile());
-                record.put("customerId", value.get(0).getCustomerId());
-                record.put("bidFee", value.get(0).getBidFee());
-                record.put("bidTime", value.get(0).getBidTime());
-                resultList.add(record);
+        for (int i = 0; i < bidRecordList.size();i++){
+            CarAuctionBidRecord record = bidRecordList.get(i);
+            if(record.getCustomerId() != null){
+                WtAppUser appUser = appUserModel.getUserInfoById(record.getCustomerId());
+                Map<String, Object> resultMap = Maps.newHashMap();
+                resultMap.put("customerName", appUser.getName());
+                resultMap.put("mobile", appUser.getMobile());
+                resultMap.put("customerId", appUser.getId());
+                resultMap.put("bidFee", record.getBidFee());
+                resultMap.put("bidTime", record.getBidTime());
+                resultList.add(resultMap);
             }
-        });
+        }
         return resultList;
     }
 }

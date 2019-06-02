@@ -2,7 +2,7 @@ package com.wintop.ms.carauction.model;
 
 
 
-import com.wintop.ms.carauction.entity.CarSaleOrder;
+import com.wintop.ms.carauction.entity.CarOrderRetail;
 import com.wintop.ms.carauction.mapper.read.ICarSaleOrderReadDAO;
 import org.springframework.stereotype.Repository;
 
@@ -15,11 +15,11 @@ public class CarSaleOrderModel {
     @Resource
     private ICarSaleOrderReadDAO iCarSaleOrderReadDAO;
 
-    public List<CarSaleOrder> selectCarSaleOrder(Map<String,Object> paramMap){
+    public List<CarOrderRetail> selectCarSaleOrder(Map<String,Object> paramMap){
         return iCarSaleOrderReadDAO.selectCarSaleOrder(paramMap);
     }
 
-    public CarSaleOrder selectCarSaleRetail(Map<String,Object> paramMap){
+    public CarOrderRetail selectCarSaleRetail(Map<String,Object> paramMap){
         return iCarSaleOrderReadDAO.selectCarSaleRetail(paramMap);
     }
 
@@ -27,7 +27,7 @@ public class CarSaleOrderModel {
         return iCarSaleOrderReadDAO.selectCarSaleOrderCount(paramMap);
     }
 
-    public CarSaleOrder selectRetailById(Long id) {
+    public CarOrderRetail selectRetailById(Long id) {
         return iCarSaleOrderReadDAO.selectRetailById(id);
     }
 }

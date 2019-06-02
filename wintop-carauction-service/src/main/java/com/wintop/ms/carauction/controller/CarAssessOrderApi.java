@@ -7,8 +7,13 @@ import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
-import com.wintop.ms.carauction.entity.*;
-import com.wintop.ms.carauction.service.*;
+import com.wintop.ms.carauction.entity.CarAssessOrder;
+import com.wintop.ms.carauction.entity.CarAssessOrderLog;
+import com.wintop.ms.carauction.entity.CarManagerUser;
+import com.wintop.ms.carauction.entity.ListEntity;
+import com.wintop.ms.carauction.service.ICarAssessOrderLogService;
+import com.wintop.ms.carauction.service.ICarAssessOrderService;
+import com.wintop.ms.carauction.service.ICarManagerUserService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +25,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 评估采购单 信息操作处理
@@ -37,28 +45,7 @@ public class CarAssessOrderApi {
     @Autowired
     private ICarAssessOrderService carAssessOrderService;
     @Autowired
-    private ICarAssessFollowDataService followDataService;
-    @Autowired
-    private ICarAssessService assessService;
-    @Autowired
     private ICarAssessOrderLogService orderLogService;
-
-    @Autowired
-    private ICarAssessLogService logService;
-    @Autowired
-    private ICarManagerUserService managerUserService;
-
-    @Autowired
-    private ICarAutoService carAutoService;
-
-    @Autowired
-    private ICarAutoAuctionService auctionService;
-
-    @Autowired
-    private ICarAutoInfoDetailService autoInfoDetailService;
-
-    @Autowired
-    private ICarAutoLogService autoLogService;
 
     @Autowired
     private ICarManagerUserService iCarManagerUserService;

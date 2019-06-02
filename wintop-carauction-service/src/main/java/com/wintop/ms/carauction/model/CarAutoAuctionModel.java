@@ -4,6 +4,7 @@ import com.wintop.ms.carauction.core.entity.RedisAutoData;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.mapper.read.*;
 import com.wintop.ms.carauction.mapper.write.ICarAutoAuctionWriteDao;
+import com.wintop.ms.carauction.mapper.write.ICarAutoLogWriteDao;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

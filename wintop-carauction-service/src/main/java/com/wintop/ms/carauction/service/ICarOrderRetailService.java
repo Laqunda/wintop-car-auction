@@ -1,7 +1,6 @@
 package com.wintop.ms.carauction.service;
 
 import com.wintop.ms.carauction.entity.CarOrderRetail;
-import com.wintop.ms.carauction.entity.CarSaleOrder;
 
 public interface ICarOrderRetailService {
 
@@ -17,5 +16,5 @@ public interface ICarOrderRetailService {
      * @param id
      * @return
      */
-    public CarSaleOrder selectRetailById(Long id);
+    public CarOrderRetail selectRetailById(Long id);
 }

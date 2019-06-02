@@ -3,15 +3,11 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
-import com.wintop.ms.carauction.entity.CarAssess;
-import com.wintop.ms.carauction.entity.CarManagerUser;
 import com.wintop.ms.carauction.entity.CarOrderRetail;
-import com.wintop.ms.carauction.entity.CarSaleOrder;
 import com.wintop.ms.carauction.service.ICarManagerUserService;
 import com.wintop.ms.carauction.service.ICarOrderRetailService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +76,7 @@ public class CarOrderRetailApi {
             if (carOrderRetail == null) {
                 carOrderRetail = new CarOrderRetail();
             }
-            CarSaleOrder order = carOrderRetailService.selectRetailById(carOrderRetail.getId());
+            CarOrderRetail order = carOrderRetailService.selectRetailById(carOrderRetail.getId());
             result.setResult(Collections.singletonMap("order",order));
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {

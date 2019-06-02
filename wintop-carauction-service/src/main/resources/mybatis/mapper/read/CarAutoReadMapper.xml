@@ -176,6 +176,12 @@
         and t1.create_user = #{userId}
       </otherwise>
     </choose>
+    <if test="status != null and status != ''">
+      and t1.status = #{status}
+    </if>
+    <if test="autoInfoName != null and autoInfoName != ''">
+      and t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%')
+    </if>
     <if test="statusList != null">
       and t1.status in
       <foreach collection="statusList" item="item" separator="," open="(" close=")">

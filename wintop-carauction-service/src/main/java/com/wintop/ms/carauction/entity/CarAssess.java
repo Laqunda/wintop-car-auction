@@ -274,12 +274,12 @@ public class CarAssess extends BaseEntity
 	{
 		return colorCn;
 	}
-	public void setRegionId(String regionId) 
+	public void setRegionId(String regionId)
 	{
 		this.regionId = regionId;
 	}
 
-	public String getRegionId() 
+	public String getRegionId()
 	{
 		return regionId;
 	}

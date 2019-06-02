@@ -147,9 +147,7 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
             if (carAssessOrder == null) {
                 carAssessOrder = new CarAssessOrder();
             }
-
             CarManagerUser managerUser = userModel.selectByPrimaryKey(obj.getLong("managerId"));
-
             CarAssessFollowData follow = carAssessOrder.getFollow();
             long followId = idWorker.nextId();
             long order_id = idWorker.nextId();
@@ -173,6 +171,7 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
                     CarAssess assess = new CarAssess();
                     assess.setId(carAssessOrder.getAssessId());
                     assess.setStatus("3");
+                    assess.setRegionId(carAssessOrder.getRegionId());
                     carAssessModel.updateCarAssess(assess);
 
                     //评估日志

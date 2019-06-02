@@ -1,7 +1,6 @@
 package com.wintop.ms.carauction.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 
 

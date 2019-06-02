@@ -147,6 +147,8 @@ public class CarAssessOrder extends BaseEntity {
 
     private CarAssessFollowData follow;
 
+    private String regionId;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -456,5 +458,13 @@ public class CarAssessOrder extends BaseEntity {
 
     public void setCarStore(CarStore carStore) {
         this.carStore = carStore;
+    }
+
+    public String getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(String regionId) {
+        this.regionId = regionId;
     }
 }

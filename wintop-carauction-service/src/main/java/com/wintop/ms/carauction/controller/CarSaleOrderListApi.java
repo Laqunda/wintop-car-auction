@@ -5,12 +5,11 @@ import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarManagerUser;
-import com.wintop.ms.carauction.entity.CarSaleOrder;
+import com.wintop.ms.carauction.entity.CarOrderRetail;
 import com.wintop.ms.carauction.entity.ListEntity;
 import com.wintop.ms.carauction.service.ICarManagerUserService;
 import com.wintop.ms.carauction.service.ICarSaleOrderService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,9 +63,9 @@ public class CarSaleOrderListApi {
             PageEntity pageEntity= CarAutoUtils.getPageParam(object);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
-            List<CarSaleOrder> carSaleOrders = iCarSaleOrderService.selectCarSaleOrder(paramMap);
+            List<CarOrderRetail> carSaleOrders = iCarSaleOrderService.selectCarSaleOrder(paramMap);
             List<Map<String,Object>> list = new ArrayList<>();
-            for (CarSaleOrder carSaleOrder : carSaleOrders){
+            for (CarOrderRetail carSaleOrder : carSaleOrders){
                 Map<String,Object> map = new HashMap<>();
                 map.put("id",carSaleOrder.getId());
                 map.put("earnestMoney",carSaleOrder.getEarnestMoney());
@@ -100,13 +99,13 @@ public class CarSaleOrderListApi {
 
     @ApiOperation(value = "查询零售订单详情")
     @PostMapping(value = "getCarSaleOrderRetail", produces="application/json; charset=UTF-8")
-    public ServiceResult<CarSaleOrder> getCarSaleOrderRetail(@RequestBody JSONObject object){
-        ServiceResult<CarSaleOrder> result=new ServiceResult<>();
+    public ServiceResult<CarOrderRetail> getCarSaleOrderRetail(@RequestBody JSONObject object){
+        ServiceResult<CarOrderRetail> result=new ServiceResult<>();
         Map params = new HashMap();
         try{
             params.put("customerId",object.getLong("customerId"));
             params.put("id",object.getLong("orderId"));
-            CarSaleOrder carSaleOrder = iCarSaleOrderService.selectCarSaleOrderRetail(params);
+            CarOrderRetail carSaleOrder = iCarSaleOrderService.selectCarSaleOrderRetail(params);
             result.setResult(carSaleOrder);
             result.setSuccess("0","成功");
         }catch(Exception e){

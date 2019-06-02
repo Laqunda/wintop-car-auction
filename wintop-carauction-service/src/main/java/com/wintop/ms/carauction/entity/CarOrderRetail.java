@@ -78,6 +78,23 @@ public class CarOrderRetail {
 
     private String mortgagePlan;
 
+    //车辆 主照片
+    private String mainPhoto;
+    //车辆名称=品牌+车系+车型
+    private String autoInfoName;
+    //质检报告综合等级
+    private String reportColligationRanks;
+    //质检报告整备等级
+    private String reportServicingRanks;
+    //归属省份中文
+    private String vehicleAttributionCityCN;
+    //里程表里程
+    private BigDecimal mileage;
+    //店铺名称
+    private String storeName;
+    //销售员
+    private String managerName;
+
     public Long getId() {
         return id;
     }
@@ -372,5 +389,69 @@ public class CarOrderRetail {
 
     public void setMortgagePlan(String mortgagePlan) {
         this.mortgagePlan = mortgagePlan;
+    }
+
+    public String getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public void setMainPhoto(String mainPhoto) {
+        this.mainPhoto = mainPhoto;
+    }
+
+    public String getAutoInfoName() {
+        return autoInfoName;
+    }
+
+    public void setAutoInfoName(String autoInfoName) {
+        this.autoInfoName = autoInfoName;
+    }
+
+    public String getReportColligationRanks() {
+        return reportColligationRanks;
+    }
+
+    public void setReportColligationRanks(String reportColligationRanks) {
+        this.reportColligationRanks = reportColligationRanks;
+    }
+
+    public String getReportServicingRanks() {
+        return reportServicingRanks;
+    }
+
+    public void setReportServicingRanks(String reportServicingRanks) {
+        this.reportServicingRanks = reportServicingRanks;
+    }
+
+    public String getVehicleAttributionCityCN() {
+        return vehicleAttributionCityCN;
+    }
+
+    public void setVehicleAttributionCityCN(String vehicleAttributionCityCN) {
+        this.vehicleAttributionCityCN = vehicleAttributionCityCN;
+    }
+
+    public BigDecimal getMileage() {
+        return mileage;
+    }
+
+    public void setMileage(BigDecimal mileage) {
+        this.mileage = mileage;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
     }
 }

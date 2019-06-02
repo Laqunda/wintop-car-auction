@@ -179,7 +179,6 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
      */
     @Override
     public ServiceResult<List<CarLocaleAuction>> selectAuctionList(Map<String,Object> map){
-
         ServiceResult<List<CarLocaleAuction>> result=new ServiceResult<>();
         List<CarLocaleAuction> carAuctions = model.selectAuctionList(map);
         for(CarLocaleAuction carAuction:carAuctions){
@@ -823,36 +822,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
         if(carAutoAuctionList != null && carAutoAuctionList.size() > 0){
             //将车辆定义为草稿状态
             for(CarAutoAuction autoAuction: carAutoAuctionList ){
-                Long autoAuctionId = idWorker.nextId();
-                CarAuto carAuto = new CarAuto();
-                carAuto.setId(autoAuction.getAutoId());
-                carAuto.setStatus(CarStatusEnum.DRAFT.value());
-                carAuto.setAutoAuctionId(autoAuctionId);
-                carAuto.setTransferFlag("0");
-                carAutoModel.updateByPrimaryKeySelective(carAuto);
-                CarAuto auto = carAutoModel.selectByPrimaryKey(carAuto.getId());
-                //重新插入一条竞拍信息
-                autoAuction.setAuctionType("1");
-                autoAuction.setStatus("1");
-                autoAuction.setAuctionStartTime(null);
-                autoAuction.setAuctionEndDefaultTime(null);
-                autoAuction.setAuctionEndTime(null);
-                autoAuction.setTopPricerId(null);
-                autoAuction.setTopBidPrice(null);
-                autoAuction.setTopBidTime(null);
-                autoAuction.setCreateTime(new Date());
-                autoAuction.setCreatePerson(auto.getCreateUser());
-                autoAuction.setId(autoAuctionId);
-                carAutoAuctionModel.insert(autoAuction);
-                //保存log日志
-                CarAutoLog carAutoLog = new CarAutoLog();
-                carAutoLog.setId(idWorker.nextId());
-                carAutoLog.setAutoId(auto.getId());
-                carAutoLog.setUserType("2");
-                carAutoLog.setStatus(CarStatusEnum.DRAFT.value());
-                carAutoLog.setTime(new Date());
-                carAutoLog.setMsg("现场拍流拍后转车辆草稿");
-                carAutoLogModel.insert(carAutoLog);
+                carAutoModel.updateAutoData(autoAuction);
             }
         }
         ServiceResult<Map<String,Object>> result=new ServiceResult<>();

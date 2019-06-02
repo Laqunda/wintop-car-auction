@@ -1,15 +1,21 @@
 package com.wintop.ms.carauction.model;
 
-import com.wintop.ms.carauction.core.entity.ServiceResult;
+import com.wintop.ms.carauction.core.config.CarStatusEnum;
 import com.wintop.ms.carauction.entity.CarAuto;
+import com.wintop.ms.carauction.entity.CarAutoAuction;
+import com.wintop.ms.carauction.entity.CarAutoLog;
 import com.wintop.ms.carauction.mapper.read.ICarAutoReadDao;
+import com.wintop.ms.carauction.mapper.write.ICarAutoAuctionWriteDao;
+import com.wintop.ms.carauction.mapper.write.ICarAutoLogWriteDao;
 import com.wintop.ms.carauction.mapper.write.ICarAutoWriteDao;
+import com.wintop.ms.carauction.util.utils.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +25,13 @@ public class CarAutoModel {
     private ICarAutoReadDao readDao;
     @Resource
     private ICarAutoWriteDao writeDao;
+    @Autowired
+    private ICarAutoAuctionWriteDao auctionWriteDao;
+    @Autowired
+    private ICarAutoLogWriteDao autoLogWriteDao;
+
+
+    private IdWorker idWorker = new IdWorker(10);
     private static final Logger logger = LoggerFactory.getLogger(CarAutoModel.class);
 
     public int countByExample(Map<String,Object> map) {
@@ -210,5 +223,41 @@ public class CarAutoModel {
      */
     public List<CarAuto> selectCarAutoApprovalList(Map<String, Object> map){
         return readDao.selectCarAutoApprovalList(map);
+    }
+    /**
+     * 更新车辆发拍信息
+     * @param autoAuction
+     */
+    public void updateAutoData(CarAutoAuction autoAuction){
+        Long autoAuctionId = idWorker.nextId();
+        CarAuto carAuto = new CarAuto();
+        carAuto.setId(autoAuction.getAutoId());
+        carAuto.setStatus(CarStatusEnum.DRAFT.value());
+        carAuto.setAutoAuctionId(autoAuctionId);
+        carAuto.setTransferFlag("0");
+        writeDao.updateByPrimaryKeySelective(carAuto);
+        CarAuto auto = readDao.selectByPrimaryKey(carAuto.getId());
+        //重新插入一条竞拍信息
+        autoAuction.setAuctionType("1");
+        autoAuction.setStatus("1");
+        autoAuction.setAuctionStartTime(null);
+        autoAuction.setAuctionEndDefaultTime(null);
+        autoAuction.setAuctionEndTime(null);
+        autoAuction.setTopPricerId(null);
+        autoAuction.setTopBidPrice(null);
+        autoAuction.setTopBidTime(null);
+        autoAuction.setCreateTime(new Date());
+        autoAuction.setCreatePerson(auto.getCreateUser());
+        autoAuction.setId(autoAuctionId);
+        auctionWriteDao.insert(autoAuction);
+        //保存log日志
+        CarAutoLog carAutoLog = new CarAutoLog();
+        carAutoLog.setId(idWorker.nextId());
+        carAutoLog.setAutoId(auto.getId());
+        carAutoLog.setUserType("2");
+        carAutoLog.setStatus(CarStatusEnum.DRAFT.value());
+        carAutoLog.setTime(new Date());
+        carAutoLog.setMsg("现场拍流拍后转车辆草稿");
+        autoLogWriteDao.insert(carAutoLog);
     }
 }

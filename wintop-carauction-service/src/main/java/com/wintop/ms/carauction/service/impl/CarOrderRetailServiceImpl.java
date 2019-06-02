@@ -4,7 +4,6 @@ import com.wintop.ms.carauction.core.config.CarStatusEnum;
 import com.wintop.ms.carauction.entity.CarAuto;
 import com.wintop.ms.carauction.entity.CarAutoLog;
 import com.wintop.ms.carauction.entity.CarOrderRetail;
-import com.wintop.ms.carauction.entity.CarSaleOrder;
 import com.wintop.ms.carauction.model.CarAutoLogModel;
 import com.wintop.ms.carauction.model.CarAutoModel;
 import com.wintop.ms.carauction.model.CarOrderRetailModel;
@@ -56,7 +55,7 @@ public class CarOrderRetailServiceImpl implements ICarOrderRetailService {
     }
 
     @Override
-    public CarSaleOrder selectRetailById(Long id) {
+    public CarOrderRetail selectRetailById(Long id) {
         return carSaleOrderModel.selectRetailById(id);
     }
 }
