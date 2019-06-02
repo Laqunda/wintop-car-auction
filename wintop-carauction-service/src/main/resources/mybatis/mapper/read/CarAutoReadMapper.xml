@@ -173,7 +173,7 @@
         and t1.store_id  = #{departmentId}
       </when>
       <otherwise>
-        and t1.publish_user_id = #{userId}
+        and t1.create_user = #{userId}
       </otherwise>
     </choose>
     <if test="statusList != null">
@@ -271,45 +271,61 @@
     </if>
   </select>
   <select id="selectCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
-    select
-      t1.id,t1.main_photo,t1.auto_info_name,t8.vehicle_attribution_city_cn,t8.mileage,t1.status,
-      t1.report_colligation_ranks,t1.report_servicing_ranks,t7.up_time as "submit_time",t7.auth_time as "auth_time",t7.auth_msg,
-      t2.auction_start_time,t4.auth_time as "deal_time",t5.time as "pass_in_time",t1.create_time
-    from car_auto t1
-    left join car_auto_auction t2 ON t1.auto_auction_id=t2.id
-    left join car_order t3 on t1.id = t3.car_id
-    left join car_auto_transfer t4 on t4.order_id = t3.id
-    left join car_auto_log t5 on t5.auto_id = t1.id
-    left join car_agent t6 on t6.car_id = t1.id
-    left join car_agent_log t7 on t7.agent_id = t6.id
-    left join car_auto_info_detail t8 on t8.auto_id=t1.id
-    <trim prefix="where" prefixOverrides="and">
-      t1.sale_flag = '0'
-      <choose>
-        <when test="managerRole != null and managerRole != ''">
-          and t1.store_id = #{departmentId}
-        </when>
-        <otherwise>
-          and t1.publish_user_id = #{userId}
-        </otherwise>
-      </choose>
-      <if test="status != null and status != ''">
-        and t1.status = #{status}
-      </if>
-      <if test="autoInfoName != null and autoInfoName != ''">
-        and t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%')
-      </if>
-      <if test="auctionType != null and auctionType != ''">
-        and t2.auction_type = #{auctionType}
-      </if>
-      <if test="statusList != null">
-        and t1.status in
-        <foreach collection="statusList" item="item" separator="," open="(" close=")">
-          #{item}
-        </foreach>
-      </if>
-    </trim>
-    group by t1.id
+    select *
+    from (
+            select
+            t1.id,
+            t1.main_photo,
+            t1.auto_info_name,
+            t8.vehicle_attribution_city_cn,
+            t8.mileage,
+            t1. STATUS,
+            t1.report_colligation_ranks,
+            t1.report_servicing_ranks,
+            t2.auction_start_time,
+            t4.auth_time AS "deal_time",
+            t5.time AS "pass_in_time",
+            t5.msg auth_msg,
+            t1.create_time
+            from car_auto t1
+            left join car_auto_auction t2 ON t1.auto_auction_id=t2.id
+            left join car_order t3 on t1.id = t3.car_id
+            left join car_auto_transfer t4 on t4.order_id = t3.id
+            left join car_auto_log t5 on t5.auto_id = t1.id
+            left join car_auto_info_detail t8 on t8.auto_id=t1.id
+            <trim prefix="where" prefixOverrides="and">
+              t1.sale_flag = '0'
+              <choose>
+                <when test="managerRole != null and managerRole != ''">
+                  and t1.store_id = #{departmentId}
+                </when>
+                <otherwise>
+                  and t1.create_user = #{userId}
+                </otherwise>
+              </choose>
+              <if test="status != null and status != ''">
+                and t1.status = #{status}
+              </if>
+              <if test="autoInfoName != null and autoInfoName != ''">
+                and t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%')
+              </if>
+              <if test="auctionType != null and auctionType != ''">
+                and t2.auction_type = #{auctionType}
+              </if>
+              <if test="statusList != null">
+                and t1.status in
+                <foreach collection="statusList" item="item" separator="," open="(" close=")">
+                  #{item}
+                </foreach>
+              </if>
+            </trim>
+            order by
+            <if test="statusListType == '1'.toString()"> t1.update_time DESC </if>
+            <if test="statusListType == '2'.toString() || statusListType == '3'.toString() || statusListType == '7'.toString()"> t5.time DESC </if>
+            <if test="statusListType == '4'.toString() || statusListType == '5'.toString()"> t2.auction_start_time DESC </if>
+            <if test="statusListType == '6'.toString()"> t4.auth_time DESC </if>
+    ) t
+    group by t.id
     <if test="endRowNum != null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
@@ -926,35 +942,45 @@
 
   <select id="selectCountById" resultType="java.lang.Integer" parameterType="java.lang.Long">
       SELECT
-          count(t1.id)
-      FROM
-          car_auto t1
-      INNER JOIN car_auto_log t2 ON t1.id = t2.auto_id
-      WHERE
-          (
-              t2.`status` = 2
-              OR t2.`status` = 4
-          )
-      AND t2.user_id = #{userId}
+	          count(1)
+        FROM
+            (
+                SELECT
+                    count(1)
+                FROM
+                    car_auto t1
+                INNER JOIN car_auto_log t2 ON t1.id = t2.auto_id
+                WHERE
+                    ( t2.`status` = 2  OR t2.`status` = 4 )
+                AND t2.user_id = '19'
+                GROUP BY t1.id
+            ) t
+        WHERE
+            1 = 1
   </select>
 
   <select id="selectUserOrderList" resultMap="BaseResultMap" parameterType="java.util.Map">
-    SELECT
-    t1.publish_user_name,
-    t1.auto_info_name,
-    t1.main_photo,
-    t2.time,
-    t1.id,
-    t1.`status`
+    SELECT *
     FROM
-    car_auto t1
-    INNER JOIN car_auto_log t2 ON t1.id = t2.auto_id
-    WHERE
     (
-    t2.`status` = 2
-    OR t2.`status` = 4
-    )
-    AND t2.user_id = #{userId}
+        SELECT
+        t1.auto_info_name,
+        t1.main_photo,
+        t2.time,
+        t1.id,
+        t1.`status`,
+        cmu.user_name log_user_name
+        FROM
+        car_auto t1
+        INNER JOIN car_auto_log t2 ON t1.id = t2.auto_id
+        INNER JOIN car_manager_user cmu ON cmu.id = t1.create_user
+        WHERE
+        ( t2.`status` = 2 OR t2.`status` = 4 )
+        AND t2.user_id = '19'
+        ORDER BY t2.time DESC
+    ) t
+    WHERE  1 = 1
+    GROUP BY  t.id
     <if test="startRowNum!=null and endRowNum!=null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
@@ -963,7 +989,8 @@
   <select id="selectCarAutoApprovalCount" resultType="java.lang.Integer" parameterType="java.util.Map">
     SELECT count(t1.id)
     FROM car_auto t1
-    WHERE (t1.`status` = 2 OR t1.`status` = 4 )
+    WHERE
+    (t1.`status` = 2 OR t1.`status` = 4 )
   </select>
 
   <select id="selectCarAutoApprovalList" resultMap="BaseResultMap" parameterType="java.util.Map">
@@ -972,12 +999,12 @@
     t1.auto_info_name,
     t1.main_photo,
     t1.update_time,
-    t1.publish_user_name,
+    cmu.user_name log_user_name,
     t1.`status`
-    FROM
-    car_auto t1
-    WHERE
-    (t1.`status` = 2 OR t1.`status` = 4 )
+    FROM car_auto t1 ,car_manager_user cmu
+    WHERE cmu.id = t1.create_user
+    and (t1.`status` = 2 OR t1.`status` = 4 )
+    ORDER BY t1.update_time DESC
     <if test="startRowNum!=null and endRowNum!=null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>

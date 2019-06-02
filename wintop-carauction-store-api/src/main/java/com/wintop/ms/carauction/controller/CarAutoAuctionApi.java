@@ -86,10 +86,10 @@ public class CarAutoAuctionApi {
     @AuthUserToken
     @AppApiVersion(value = "2.0")
     public ResponseEntity<ResultModel> saveTransferFlag(@RequestBody JSONObject object,@CurrentUserId Long managerId) {
-        if (object.getString("autoId") == null) {
+        if (object.getString("carId") == null) {
             return new ResponseEntity<>(new ResultModel(false, 101, "缺少参数", null), HttpStatus.OK);
         }
-        object.put("managerId", managerId);
+        object.put("userId", managerId);
         logger.info("保存车辆转渠道");
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity

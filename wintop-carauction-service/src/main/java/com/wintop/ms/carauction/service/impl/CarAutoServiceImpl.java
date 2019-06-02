@@ -157,6 +157,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
             autoLog.setAutoId(record.getId());
             autoLog.setTime(new Date());
             autoLog.setUserType("2");
+            autoLog.setUserId(record.getUpdateUser());
             autoLog.setUserMobile(record.getLogUserMobile());
             autoLog.setUserName(record.getLogUserName());
             logModel.insert(autoLog);
@@ -220,16 +221,13 @@ public class CarAutoServiceImpl implements ICarAutoService {
                 record.setStoreId(carStore.getId());
                 record.setStoreName(carStore.getName());
             }
-
             record.setAutoAuctionId(autoAuction.getId());
-
             //手续信息
             CarAutoProcedures autoProcedures = new CarAutoProcedures();
             autoProcedures.setId(idWorker.nextId());
             autoProcedures.setAutoId(record.getId());
             autoProcedures.setCreateUser(record.getCreateUser());
             autoProcedures.setCreateTime(new Date());
-
             //增加车辆日志
             CarAutoLog autoLog = new CarAutoLog();
             autoLog.setId(idWorker.nextId());
@@ -289,7 +287,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
         }else if("2".equals(carAuto.getTransferFee())){
             sellerBear+="过户费;";
         }
-        if(carAuto.getIllegalScore()>0){
+        if(carAuto.getIllegalScore() != null && carAuto.getIllegalScore()>0){
             if("1".equals(carAuto.getIllegalWho())){
                 buyerBear+=("违法扣分"+carAuto.getIllegalScore()+"分;");
             }else{

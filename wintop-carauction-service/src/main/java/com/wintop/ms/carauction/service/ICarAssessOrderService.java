@@ -1,6 +1,9 @@
 package com.wintop.ms.carauction.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarAssessOrder;
+import com.wintop.ms.carauction.util.utils.IdWorker;
 
 import java.util.List;
 import java.util.Map;
@@ -58,4 +61,8 @@ public interface ICarAssessOrderService
 	int selectCountById(Long userId);
 
 	public List<CarAssessOrder> selectUserOrderList(Map<String,Object> map);
+
+    ServiceResult<Map<String, Object>> createAssessOrder(JSONObject obj, IdWorker idWorker);
+
+	ServiceResult<Map<String, Object>> editStatus(JSONObject obj,IdWorker idWorker);
 }

@@ -34,12 +34,12 @@ public class CarAssessServiceImpl implements ICarAssessService {
     /**
      * 查询车辆评估信息
      *
-     * @param id 车辆评估ID
+     * @param carAssess 车辆评估信息
      * @return 车辆评估信息
      */
     @Override
-    public CarAssess selectCarAssessById(Long id) {
-        return carAssessModel.selectCarAssessById(id);
+    public CarAssess selectCarAssessById(CarAssess carAssess) {
+        return carAssessModel.selectCarAssessById(carAssess);
     }
 
     /**
