@@ -151,7 +151,7 @@ public class CarAssessApi {
         map.put("managerId",managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/carAssess/edit"))
+                        .post(URI.create(Constants.ROOT+"/service"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);

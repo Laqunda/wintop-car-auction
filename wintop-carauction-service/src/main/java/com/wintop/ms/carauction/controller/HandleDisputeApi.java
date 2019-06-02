@@ -163,8 +163,6 @@ public class HandleDisputeApi {
             if(carAuto1 != null ){
                 //
                 autoCount =  iCarAutoService.updateByIdSelective(carAuto);
-                // 修改已转换标识
-                count = iCarAutoAuctionService.updateByPrimaryKeySelective(carAutoAuction).getResult();
                 // 日志信息记录
                 CarManagerUser user = userService.selectByPrimaryKey(userId, false);
                 CarAutoLog carAutoLog = new CarAutoLog();

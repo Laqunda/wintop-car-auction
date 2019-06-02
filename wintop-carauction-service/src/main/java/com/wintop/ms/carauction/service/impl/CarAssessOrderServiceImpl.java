@@ -1,12 +1,11 @@
 package com.wintop.ms.carauction.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wintop.ms.carauction.core.config.CarStatusEnum;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
-import com.wintop.ms.carauction.model.CarAssessModel;
-import com.wintop.ms.carauction.model.CarAssessOrderModel;
-import com.wintop.ms.carauction.model.CarStoreModel;
+import com.wintop.ms.carauction.model.*;
 import com.wintop.ms.carauction.service.*;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,30 +32,30 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
     private CarStoreModel carStoreModel;
 
     @Autowired
-    private ICarAssessOrderService carAssessOrderService;
-    @Autowired
-    private ICarAssessFollowDataService followDataService;
-    @Autowired
-    private ICarAssessService assessService;
+    private CarAssessFollowDataModel followDataModel;
+
     @Autowired
     private ICarAssessOrderLogService orderLogService;
 
     @Autowired
     private ICarAssessLogService logService;
     @Autowired
-    private ICarManagerUserService managerUserService;
+    private CarManagerUserModel userModel;
 
     @Autowired
-    private ICarAutoService carAutoService;
+    private CarAutoModel carAutoModel;
 
     @Autowired
-    private ICarAutoAuctionService auctionService;
+    private CarAutoAuctionModel auctionModel;
 
     @Autowired
-    private ICarAutoInfoDetailService autoInfoDetailService;
+    private CarAutoInfoDetailModel autoInfoDetailModel;
 
     @Autowired
     private ICarAutoLogService autoLogService;
+
+    @Autowired
+    private CarAutoProceduresModel proceduresModel;
 
     /**
      * 查询评估采购单信息
@@ -149,7 +148,7 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
                 carAssessOrder = new CarAssessOrder();
             }
 
-            CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
+            CarManagerUser managerUser = userModel.selectByPrimaryKey(obj.getLong("managerId"));
 
             CarAssessFollowData follow = carAssessOrder.getFollow();
             long followId = idWorker.nextId();
@@ -161,20 +160,20 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
                 //存评估跟进
                 follow.setId(followId);
                 follow.setFollowUser(managerUser.getId());
-                followDataService.insertCarAssessFollowData(follow);
+                followDataModel.insertCarAssessFollowData(follow);
 
                 //存储采购订单
                 carAssessOrder.setId(order_id);
                 carAssessOrder.setCreateTime(new Date());
                 carAssessOrder.setFollowId(followId);
                 carAssessOrder.setStatus("1");//待审核
-                code = carAssessOrderService.insertCarAssessOrder(carAssessOrder);
+                code = model.insertCarAssessOrder(carAssessOrder);
                 if (code > 0) {
                     //更改评估状态 为 3:提交审核（确认采购）
                     CarAssess assess = new CarAssess();
                     assess.setId(carAssessOrder.getAssessId());
                     assess.setStatus("3");
-                    assessService.updateCarAssess(assess);
+                    carAssessModel.updateCarAssess(assess);
 
                     //评估日志
                     logService.saveLog(managerUser, "申请采购", idWorker.nextId(), carAssessOrder.getAssessId());
@@ -201,10 +200,10 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
     @Override
     public ServiceResult<Map<String, Object>> editStatus(JSONObject obj, IdWorker idWorker) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
-        CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
+        CarManagerUser managerUser = userModel.selectByPrimaryKey(obj.getLong("managerId"));
 
         CarAssessOrder carAssessOrder = JSONObject.toJavaObject(obj, CarAssessOrder.class);
-        CarAssessOrder old = carAssessOrderService.selectCarAssessOrderById(carAssessOrder.getId());
+        CarAssessOrder old = model.selectCarAssessOrderById(carAssessOrder.getId());
         if (carAssessOrder == null) {
             carAssessOrder = new CarAssessOrder();
         }
@@ -216,14 +215,12 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
             //审核不通过
             //评估日志
             logService.saveLog(managerUser, "申请通过", idWorker.nextId(), old.getAssessId());
-
             //修改评估状态为 审核通过
             CarAssess assess = new CarAssess();
             assess.setId(old.getAssessId());
             assess.setStatus("5");
             assess.setRejectReason(obj.getString("rejectReason"));
-            assessService.updateCarAssess(assess);
-
+            carAssessModel.updateCarAssess(assess);
         } else if ("-1".equals(carAssessOrder.getStatus())) {
             logMsg = "审核不通过";
             //评估日志
@@ -234,19 +231,17 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
             assess.setId(old.getAssessId());
             assess.setStatus("4");
             assess.setRejectReason(obj.getString("rejectReason"));
-            assessService.updateCarAssess(assess);
+            carAssessModel.updateCarAssess(assess);
         } else if ("4".equals(carAssessOrder.getStatus())) {
             logMsg = "已付全款";
         }
-        int code = carAssessOrderService.updateCarAssessOrder(carAssessOrder);
+        int code = model.updateCarAssessOrder(carAssessOrder);
         if (code > 0) {
             //写入订单记录表
             orderLogService.saveOrderLog(managerUser, logMsg, carAssessOrder.getStatus(), idWorker.nextId(), carAssessOrder.getId());
             if ("2".equals(carAssessOrder.getStatus())) {
                 /*写入库存 car_auto car_auto_auction ...*/
                 int backCode = writeAuto(old.getAssessId(), carAssessOrder.getId(), idWorker.nextId(), managerUser,idWorker);
-
-
             }
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } else {
@@ -268,56 +263,18 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
         CarAssess t = new CarAssess();
         t.setId(assessId);
         t.setAutoId(autoId);
-
-        assessService.updateCarAssess(t);
+        carAssessModel.updateCarAssess(t);
         t.setAutoId(null);
-
-        CarAssess a = assessService.selectCarAssessById(t);
-        CarAssessOrder oreder = carAssessOrderService.selectCarAssessOrderById(orderId);
-        CarManagerUser user = managerUserService.selectByPrimaryKey(a.getCreateUser(), true);
-
+        CarAssess a = carAssessModel.selectCarAssessById(t);
+        CarAssessOrder oreder = model.selectCarAssessOrderById(orderId);
+        CarManagerUser user = userModel.selectByPrimaryKey(a.getCreateUser());
+        //拍卖信息id
+        Long autoAuctionId = idWorker.nextId();
         /*写入car_auto*/
-        CarAuto auto = new CarAuto();
-        auto.setId(autoId);
-        auto.setPublishUserId(a.getCreateUser());
-        auto.setPublishUserName(user.getUserName());
-        auto.setPublishUserMobile(user.getUserPhone());
-        auto.setAutoInfoName(a.getAutoBrandCn() + " " + a.getAutoSeriesCn() + " " + a.getAutoStyleCn());//车辆名称=品牌+车系+车型
-        auto.setStoreId(oreder.getStoreId());
-        auto.getStoreName();
-        auto.setReportColligationRanks(a.getReportColligationRanks());
-        auto.setPublishTime(new Date());
-        auto.setCreateUser(a.getCreateUser());
-        auto.setCreateTime(new Date());
-        auto.setAuctionNum(0);
-        if (a.getRegionId() != null) {
-            auto.setRegionId(Long.parseLong(a.getRegionId()));
-        }
-
-        auto.setMainPhoto(a.getCarPhoto());
-        auto.setStatus("5");//等待上拍
-        carAutoService.insert(auto);
-
+        saveCarAuto(autoId,a,oreder,autoAuctionId);
         /*写入car_auto_auction*/
-        CarAutoAuction auction = new CarAutoAuction();
-        auction.setId(idWorker.nextId());
-        auction.setAutoId(autoId);
-        auction.setCreatePerson(a.getCreateUser());
-        auction.setCreateTime(new Date());
-
-        Long roleTypeId = user.getRoleTypeId();
-
-        if (roleTypeId == 2) {
-            auction.setAuctionType("2");//线下
-        }
-        if (roleTypeId == 3) {
-            auction.setAuctionType("1");//线上
-        }
-        auction.setRemark(a.getRemark());
-        auctionService.insert(auction);
-
+        saveAution(autoAuctionId,autoId,user);
         /*car_auto_info_detail*/
-
         CarAutoInfoDetail detail = new CarAutoInfoDetail();
         detail.setId(idWorker.nextId());
         detail.setAutoId(autoId);
@@ -332,10 +289,8 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
         detail.setMileage(a.getMileage());
         detail.setColor(a.getColor());
         detail.setColorCn(a.getColorCn());
-
         detail.setManufactureDate(a.getManufactureDate());
         detail.setBeginRegisterDate(a.getBeginRegisterDate());
-
         detail.setLicenseNumber(a.getPlateNum());
         detail.setCarNature(a.getAutoNature());//Nature CN
         detail.setUseNature(a.getFunction());//Function CN
@@ -345,21 +300,77 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
         detail.setRemarkPhoto(a.getOtherPhoto());
         detail.setCreateTime(new Date());
         detail.setCreateUser(a.getCreateUser() + "");
-        autoInfoDetailService.insert(detail);
+        autoInfoDetailModel.insert(detail);
         /* car auto log*/
-
         CarAutoLog log = new CarAutoLog();
         log.setId(idWorker.nextId());
         log.setAutoId(autoId);
-        log.setMsg("评估车辆审核通过，入库操作");
-        log.setStatus("5");//等待上架
+        log.setMsg("车辆采购审核通过，创建草稿车辆");
+        log.setStatus(CarStatusEnum.DRAFT.value());
         log.setTime(new Date());
-        log.setUserType("2");//TODO '操作人类型  1买家 2管理员 3代办'???,
-        log.setUserId(managerUser.getId());
-        log.setUserMobile(managerUser.getUserPhone());
-        log.setUserName(managerUser.getUserName());
+        log.setUserType("2");//'操作人类型  1买家 2管理员 3代办',
+        log.setUserId(user.getId());
+        log.setUserMobile(user.getUserPhone());
+        log.setUserName(user.getUserName());
         autoLogService.insert(log);
-
         return 1;
     }
+
+    /**
+     * 保存car_auto
+     */
+    private int saveCarAuto(Long autoId,CarAssess a ,CarAssessOrder oreder, Long autoAuctionId){
+        CarAuto auto = new CarAuto();
+        auto.setId(autoId);
+        auto.setAutoInfoName(a.getAutoBrandCn() + " " + a.getAutoSeriesCn() + " " + a.getAutoStyleCn());//车辆名称=品牌+车系+车型
+        auto.setStoreId(oreder.getStoreId());
+        auto.getStoreName();
+        auto.setReportColligationRanks(a.getReportColligationRanks());
+        auto.setCreateUser(a.getCreateUser());
+        auto.setCreateTime(new Date());
+        auto.setAuctionNum(0);
+        if (a.getRegionId() != null) {
+            auto.setRegionId(Long.parseLong(a.getRegionId()));
+        }
+        auto.setMainPhoto(a.getCarPhoto());
+        auto.setStatus(CarStatusEnum.DRAFT.value());//草稿
+        auto.setAutoAuctionId(autoAuctionId);
+        return carAutoModel.insert(auto);
+    }
+
+    /**
+     * 保存 car_auto_auction
+     */
+    private int saveAution(Long autoAuctionId,Long autoId,CarManagerUser user){
+        CarAutoAuction auction = new CarAutoAuction();
+        auction.setId(autoAuctionId);
+        auction.setAutoId(autoId);
+        auction.setCreatePerson(user.getId());
+        auction.setCreateTime(new Date());
+        Long roleTypeId = user.getRoleTypeId();
+        if (roleTypeId == 2) {
+            auction.setAuctionType("2");//线下
+        }
+        if (roleTypeId == 3) {
+            auction.setAuctionType("1");//线上
+        }
+        auction.setStatus("1");
+        auction.setDelFlag("0");
+        auction.setBidsCount(0);
+        auction.setBidersCount(0);
+        return auctionModel.insert(auction);
+    }
+
+    /**
+     * 手续信息
+     */
+    private int saveProcedures(Long autoId,IdWorker idWorker,Long userId){
+        CarAutoProcedures autoProcedures = new CarAutoProcedures();
+        autoProcedures.setId(idWorker.nextId());
+        autoProcedures.setAutoId(autoId);
+        autoProcedures.setCreateUser(userId);
+        autoProcedures.setCreateTime(new Date());
+        return proceduresModel.insert(autoProcedures);
+    }
+
 }

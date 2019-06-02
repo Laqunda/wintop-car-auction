@@ -221,16 +221,13 @@ public class CarAutoServiceImpl implements ICarAutoService {
                 record.setStoreId(carStore.getId());
                 record.setStoreName(carStore.getName());
             }
-
             record.setAutoAuctionId(autoAuction.getId());
-
             //手续信息
             CarAutoProcedures autoProcedures = new CarAutoProcedures();
             autoProcedures.setId(idWorker.nextId());
             autoProcedures.setAutoId(record.getId());
             autoProcedures.setCreateUser(record.getCreateUser());
             autoProcedures.setCreateTime(new Date());
-
             //增加车辆日志
             CarAutoLog autoLog = new CarAutoLog();
             autoLog.setId(idWorker.nextId());

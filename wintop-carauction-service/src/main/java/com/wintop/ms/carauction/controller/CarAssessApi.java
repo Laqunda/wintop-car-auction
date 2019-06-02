@@ -291,13 +291,11 @@ public class CarAssessApi {
             if (carAssess == null) {
                 carAssess = new CarAssess();
             }
-            int code = carAssessService.updateCarAssess(carAssess);
             carAssess.setName(carAssess.getAutoBrandCn() + " " + carAssess.getAutoSeriesCn() + " " + carAssess.getAutoStyleCn());//车辆名称=品牌+车系+车型
+            int code = carAssessService.updateCarAssess(carAssess);
 
-            if (code > 0) {
-                if (carAssess.getOrder() != null && carAssess.getOrder().getId() != null) {
-                    orderService.updateCarAssessOrder(carAssess.getOrder());
-                }
+            if (code > 0 && carAssess.getOrder() != null && carAssess.getOrder().getId() != null) {
+                orderService.updateCarAssessOrder(carAssess.getOrder());
                 //评估创建日志
                 logService.saveLog(managerUser, "申请采购", idWorker.nextId(), carAssess.getId());
                 //写入订单记录表
