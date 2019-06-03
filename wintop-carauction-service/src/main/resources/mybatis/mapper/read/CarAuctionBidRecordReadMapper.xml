@@ -95,12 +95,6 @@
         <if test="auctionId != null">
             AND t1.auction_id=#{auctionId}
         </if>
-        <if test="carId != null">
-            AND t1.car_id=#{carId}
-        </if>
-        <if test="customerId != null">
-            AND t1.customer_id=#{carId}
-        </if>
     </select>
   <!--根据条件查询用户出价的车辆列表-->
   <select id="queryUserBidList" resultMap="BaseResultMap">

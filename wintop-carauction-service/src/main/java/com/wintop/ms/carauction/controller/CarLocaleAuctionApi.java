@@ -892,10 +892,8 @@ public class CarLocaleAuctionApi {
             return new ServiceResult<>(false,"最高出价不能为空！","101");
         }
         Map<String, Object> paramMap = Maps.newHashMap();
-        paramMap.put("auctionId", obj.getLong("auctionId"));
         paramMap.put("auctionCarId", obj.getLong("auctionCarId"));
         paramMap.put("carId", obj.getLong("carId"));
-        paramMap.put("customerId", obj.getLong("customerId"));
         List<CarAuctionBidRecord> recordList = carAuctionBidRecordService.selectPriceList(paramMap);
         if (CollectionUtils.isNotEmpty(recordList)) {
             List<BigDecimal> priceList = recordList.stream().map(a -> a.getBidFee()).collect(Collectors.toList());

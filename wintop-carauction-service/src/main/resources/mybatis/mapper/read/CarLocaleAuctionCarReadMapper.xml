@@ -137,7 +137,7 @@
     <!--查询某个场次最近的正在竞拍的车辆的排序号-->
     <select id="getMinSortForActionCar" resultType="java.lang.Integer" parameterType="java.lang.Long" >
         select
-        MIN(t1.sort)
+        IFNULL(MIN(t1.sort),0) sort
         from car_locale_auction_car t1
         where t1.auction_id = #{auction_id} AND t1.auction_status='1'
     </select>

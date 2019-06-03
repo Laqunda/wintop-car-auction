@@ -54,7 +54,7 @@
     <if test="carId != null and carId != ''">
      AND l.auto_id=#{carId}
     </if>
-    order by l.time DESC
+    order by l.time asc
   </select>
 
   <select id="selectCarLog" resultMap="BaseResultMap" parameterType="java.util.Map" >
