@@ -62,7 +62,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
      * @return 查博士日志集合
      */
     @Override
-    public List<CarChaboshiLog> selectCarChaboshiLogList(Map<String,Object> map) {
+    public List<CarChaboshiLog> selectCarChaboshiLogList(Map<String, Object> map) {
         List<CarChaboshiLog> logList = model.selectCarChaboshiLogList(map);
         for (CarChaboshiLog log : logList) {
 
@@ -70,7 +70,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                 WtAppUser wtAppUser = appUserModel.findById(log.getUserId());
                 log.setWtAppUser(wtAppUser);
             } else {
-                CarManagerUser carManagerUser =  carManagerUserModel.selectByPrimaryKey(log.getUserId());
+                CarManagerUser carManagerUser = carManagerUserModel.selectByPrimaryKey(log.getUserId());
                 log.setCarManagerUser(carManagerUser);
                 CarStore carStore = carStoreModel.selectByPrimaryKey(log.getStoreId());
                 log.setCarStore(carStore);
@@ -109,7 +109,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
      * @return 结果
      */
     @Override
-    public int updateCarChaboshiLog(Map<String,Object> map) {
+    public int updateCarChaboshiLog(Map<String, Object> map) {
         return model.updateCarChaboshiLog(map);
     }
 
@@ -125,7 +125,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     }
 
     @Override
-    public int selectCount(Map<String,Object> map) {
+    public int selectCount(Map<String, Object> map) {
         return model.selectCount(map);
     }
 
@@ -136,7 +136,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
      * @return
      */
     @Override
-    public CarChaboshiLog selectCarChaboshiLog(Map<String,Object> map) {
+    public CarChaboshiLog selectCarChaboshiLog(Map<String, Object> map) {
         List<CarChaboshiLog> logs = selectCarChaboshiLogList(map);
         if (logs != null && logs.size() > 0) {
             return logs.get(0);
@@ -348,6 +348,35 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
 
                 result.setResult(cbs);
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+                //如果当时的log状态为查询中 则需要更新状态
+
+                if ("3".equals(log.getResponseResult())) {
+                    //获取url
+                    Map chaboshi = ChaboshiUtils.reportDetail(log.getOrderId());
+                    String pcUrl = "" + chaboshi.get("pcUrl");
+                    String mobileUrl = "" + chaboshi.get("mobileUrl");
+                    //获取json
+                    JSONObject object = ChaboshiUtils.reportJson(log.getOrderId());
+
+                    if (object != null) {
+                        log.setResponseMsg(object.toJSONString());
+                        if ("1104".equals(object.getString("Code"))) {
+
+                            String brand = object.getString("brand");
+                            String modelName = object.getString("modelName");
+                            String seriesName = object.getString("seriesName");
+
+                            log.setVehicleType(brand + "-" + seriesName + "-" + modelName);
+                        }
+                    }
+
+                    log.setResponseResult("1");
+                    log.setFinishTime(new Date());
+                    log.setPc_url(pcUrl);
+                    log.setApp_url(mobileUrl);
+                    //TODO 无车型信息情况下 获取车型信息
+                    updateCarChaboshiLog(JSONObject.parseObject(JSONObject.toJSON(log).toString(), Map.class));
+                }
             } else if ("1102".equals(orderStatus.get("code"))) {
                 /*查询中*/
                 result.setSuccess(ResultCode.FAIL.strValue(), "订单正在查询中！");

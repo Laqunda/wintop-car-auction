@@ -132,9 +132,9 @@ public class CarSaleOrderListApi {
             }
             paramMap.put("customerId",customerId);
             int count = iCarSaleOrderService.selectCarSaleOrderCount(paramMap);
-            List<CarSaleOrder> carSaleOrders = iCarSaleOrderService.selectCarSaleOrder(paramMap);
+            List<CarOrderRetail> carSaleOrders = iCarSaleOrderService.selectCarSaleOrder(paramMap);
             List<Map<String,Object>> list = new ArrayList<>();
-            for (CarSaleOrder carSaleOrder : carSaleOrders){
+            for (CarOrderRetail carSaleOrder : carSaleOrders){
                 Map<String,Object> map = new HashMap<>();
                 map.put("id",carSaleOrder.getId());
                 map.put("earnestMoney",carSaleOrder.getEarnestMoney());
