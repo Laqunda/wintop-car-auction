@@ -211,6 +211,13 @@ public class CarAuto implements Serializable {
     private Date dealTime;
     private Date passInTime;
 
+    // 车辆明细
+    private CarAutoInfoDetail carAutoInfoDetail;
+    // 车辆手续信息
+    private CarAutoProcedures carAutoProcedures;
+    // 车辆配置明细
+    private List<CarAutoConfDetail> carAutoConfDetailList;
+
     public String getMaxPriceUserId() {
         return maxPriceUserId;
     }
@@ -1188,5 +1195,29 @@ public class CarAuto implements Serializable {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public CarAutoInfoDetail getCarAutoInfoDetail() {
+        return carAutoInfoDetail;
+    }
+
+    public void setCarAutoInfoDetail(CarAutoInfoDetail carAutoInfoDetail) {
+        this.carAutoInfoDetail = carAutoInfoDetail;
+    }
+
+    public CarAutoProcedures getCarAutoProcedures() {
+        return carAutoProcedures;
+    }
+
+    public void setCarAutoProcedures(CarAutoProcedures carAutoProcedures) {
+        this.carAutoProcedures = carAutoProcedures;
+    }
+
+    public List<CarAutoConfDetail> getCarAutoConfDetailList() {
+        return carAutoConfDetailList;
+    }
+
+    public void setCarAutoConfDetailList(List<CarAutoConfDetail> carAutoConfDetailList) {
+        this.carAutoConfDetailList = carAutoConfDetailList;
     }
 }

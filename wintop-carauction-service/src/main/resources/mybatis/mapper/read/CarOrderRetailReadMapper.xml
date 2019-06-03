@@ -40,6 +40,7 @@
         <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
         <result column="mortgage_plan" property="mortgagePlan" jdbcType="VARCHAR" />
         <result column="main_photo" property="mainPhoto" jdbcType="VARCHAR" />
+        <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
         <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
         <result column="report_colligation_ranks" property="reportColligationRanks" jdbcType="VARCHAR" />
         <result column="report_servicing_ranks" property="reportServicingRanks" jdbcType="VARCHAR" />
@@ -47,6 +48,8 @@
         <result column="mileage" property="mileage" jdbcType="DECIMAL" />
         <result column="store_name" property="storeName" jdbcType="VARCHAR" />
         <result column="user_name" property="managerName" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="VARCHAR" />
 
     </resultMap>
     <sql id="Base_Column_List" >
@@ -92,7 +95,7 @@
     <select id="selectCarSaleRetail" resultMap="BaseResultMap" parameterType="java.util.Map" >
         select
         <include refid="Base_Column_List"/>
-        ,t2.user_name
+        ,t2.user_name managerName
         FROM car_order_retail t1
         INNER JOIN car_manager_user t2 ON t1.create_user = t2.id
         WHERE t1.create_user=#{customerId}
@@ -102,13 +105,8 @@
     </select>
 
     <select id="selectCarSaleOrder" resultMap="BaseResultMap" parameterType="java.util.Map" >
-        select t1.id
-               ,t1.name
-               ,t1.sales_date
-               ,t1.sales_type
-               ,t1.sales_consultant
-               ,t1.earnest_money
-               ,t1.transaction_fee
+        select <include refid="Base_Column_List"/>
+               ,t2.car_auto_no
                ,t2.auto_info_name
                ,t2.store_name
                ,t2.main_photo
@@ -130,6 +128,14 @@
                 and t1.create_user = #{customerId}
             </otherwise>
         </choose>
+        <if test="searchName != null and searchName != ''">
+            and (
+            t1.order_no LIKE CONCAT('%', #{searchName}, '%')
+            and t1.name LIKE CONCAT('%', #{searchName}, '%')
+            and t1.phone LIKE CONCAT('%', #{searchName}, '%')
+            and t2.car_auto_no LIKE CONCAT('%', #{searchName}, '%')
+            )
+        </if>
         ORDER BY t1.create_date DESC
         <if test="startRowNum!=null and endRowNum!=null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
@@ -150,5 +156,13 @@
                 and t1.create_user = #{customerId}
             </otherwise>
         </choose>
+        <if test="searchName != null and searchName != ''">
+            and (
+            t1.order_no LIKE CONCAT('%', #{searchName}, '%')
+            and t1.name LIKE CONCAT('%', #{searchName}, '%')
+            and t1.phone LIKE CONCAT('%', #{searchName}, '%')
+            and t2.car_auto_no LIKE CONCAT('%', #{searchName}, '%')
+            )
+        </if>
     </select>
 </mapper>

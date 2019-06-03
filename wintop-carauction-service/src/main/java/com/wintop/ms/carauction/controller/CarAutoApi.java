@@ -2,6 +2,7 @@ package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.domain.Car;
+import com.google.common.base.Predicates;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -1070,6 +1071,32 @@ public class CarAutoApi {
             e.printStackTrace();
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
 
+        }
+        return result;
+    }
+
+
+    /**
+     * 查询车辆详情
+     */
+    @ApiOperation(value = "查询车辆详情")
+    @RequestMapping(value = "/detail",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> detail(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+        try {
+
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
+            CarAuto carAuto = carAutoService.selectCarDetailCondition(param);
+            result.setResult(Collections.singletonMap("data",carAuto));
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询车辆评估详情", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
         }
         return result;
     }

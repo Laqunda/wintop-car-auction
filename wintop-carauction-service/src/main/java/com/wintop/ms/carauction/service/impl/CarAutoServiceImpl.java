@@ -23,6 +23,7 @@ import com.wintop.ms.carauction.util.utils.IdWorker;
 import com.wintop.ms.carauction.util.utils.RedisAutoManager;
 import io.swagger.models.auth.In;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -73,6 +74,10 @@ public class CarAutoServiceImpl implements ICarAutoService {
     private RedisAutoManager redisAutoManager;
     @Autowired
     private CarLocaleAuctionCarModel carLocaleAuctionCarModel;
+    @Autowired
+    private CarAutoProceduresModel carAutoProceduresModel;
+    @Autowired
+    private CarAutoConfDetailModel carAutoConfDetailModel;
 
     private static Map<String,  List<Integer>> auctionTypeMap = getAuctionTypeMap();
 
@@ -988,4 +993,23 @@ public class CarAutoServiceImpl implements ICarAutoService {
         return carAutoModel.selectCarAutoApprovalList(map);
     }
 
+
+    @Override
+    public CarAuto selectCarDetailCondition(Map<String, Object> map) {
+        CarAuto carAuto = carAutoModel.selectByExample(map).stream().findFirst().orElse(new CarAuto());
+        // 车辆详情信息
+        CarAutoInfoDetail carAutoInfoDetail = autoInfoDetailModel.selectDetailByCarId(carAuto.getId());
+        carAuto.setCarAutoInfoDetail(carAutoInfoDetail);
+        // 车辆手续信息
+        Criteria criteria = new Criteria();
+        criteria.put("autoId", carAuto.getId());
+        CarAutoProcedures carAutoProcedures = carAutoProceduresModel.selectByExample(criteria).stream().findFirst().orElse(new CarAutoProcedures());
+        carAuto.setCarAutoProcedures(carAutoProcedures);
+        // 配置信息
+        List<CarAutoConfDetail> carAutoConfDetailList = carAutoConfDetailModel.selectByExample(Collections.singletonMap("autoId", carAuto.getId()));
+        carAuto.setCarAutoConfDetailList(carAutoConfDetailList);
+        // TODO 其它参数
+
+        return carAuto;
+    }
 }

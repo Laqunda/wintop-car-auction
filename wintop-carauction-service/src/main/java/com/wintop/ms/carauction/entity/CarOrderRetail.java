@@ -94,6 +94,9 @@ public class CarOrderRetail {
     private String storeName;
     //销售员
     private String managerName;
+    //车辆编号
+    private String carAutoNo;
+
 
     public Long getId() {
         return id;
@@ -453,5 +456,13 @@ public class CarOrderRetail {
 
     public void setManagerName(String managerName) {
         this.managerName = managerName;
+    }
+
+    public String getCarAutoNo() {
+        return carAutoNo;
+    }
+
+    public void setCarAutoNo(String carAutoNo) {
+        this.carAutoNo = carAutoNo;
     }
 }

@@ -107,6 +107,9 @@
     <include refid="Base_Column_List" />
     from car_auto t1
     WHERE t1.status != '0'
+    <if test="carAutoNo != null and carAutoNo != ''">
+      and t1.car_auto_no != #{carAutoNo}
+    </if>
     <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>

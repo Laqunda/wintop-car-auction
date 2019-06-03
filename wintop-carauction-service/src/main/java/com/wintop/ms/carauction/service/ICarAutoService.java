@@ -169,4 +169,11 @@ public interface ICarAutoService {
      * @return
      */
     List<CarAuto> selectCarAutoApprovalList(Map<String, Object> map);
+
+    /**
+     * 通过条件进行查询
+     * @param map
+     * @return
+     */
+    CarAuto selectCarDetailCondition(Map<String, Object> map);
 }

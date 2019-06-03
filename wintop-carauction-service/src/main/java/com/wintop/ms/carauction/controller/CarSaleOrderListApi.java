@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/service/carSaleOrder")
@@ -45,6 +42,9 @@ public class CarSaleOrderListApi {
             CarManagerUser carManagerUser = iCarManagerUserService.selectByPrimaryKey(customerId,true);
             paramMap.put("userId",carManagerUser.getId());
             //如果用户是中心店管理员
+            if (object.getString("searchName") != null) {
+                paramMap.put("searchName", object.getString("searchName"));
+            }
             if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
 //                paramMap.put("auctionType","2");//现场车辆
 //                paramMap.put("roleTyped","2");//中心店
@@ -79,7 +79,13 @@ public class CarSaleOrderListApi {
                 map.put("transactionFee",carSaleOrder.getTransactionFee());
                 map.put("storeName",carSaleOrder.getStoreName());
                 map.put("saleDate",carSaleOrder.getSalesDate());
-                map.put("salesType",carSaleOrder.getSalesType());
+                map.put("carAutoNo",carSaleOrder.getCarAutoNo());
+                map.put("orderNo",carSaleOrder.getOrderNo());
+                map.put("carId",carSaleOrder.getCarId());
+                map.put("vehicleOwnerType",carSaleOrder.getVehicleOwnerType());
+                map.put("phone",carSaleOrder.getPhone());
+                map.put("paymentType",carSaleOrder.getPaymentType());
+                map.put("createDate",carSaleOrder.getCreateDate());
                 map.put("managerName",carSaleOrder.getManagerName());
                 map.put("salesConsultant",carSaleOrder.getSalesConsultant());
                 list.add(map);
@@ -88,6 +94,72 @@ public class CarSaleOrderListApi {
             listEntity.setList(list);
             listEntity.setCount(count);
             result.setResult(listEntity);
+            result.setSuccess("0","成功");
+        }catch(Exception e){
+            logger.info("查询零售订单信息失败",e);
+            result.setError("-1","异常");
+        }
+        return result;
+
+    }
+
+    @ApiOperation(value = "查询零售订单")
+    @PostMapping(value = "getCarSaleOrderRetailAllList", produces="application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> getCarSaleOrderRetailAllList(@RequestBody JSONObject object){
+        ServiceResult<Map<String,Object>> result=new ServiceResult<>();
+        try{
+            Map paramMap = new HashMap();
+            Long customerId = object.getLong("customerId");
+            //查询用户权限
+            CarManagerUser carManagerUser = iCarManagerUserService.selectByPrimaryKey(customerId,true);
+            paramMap.put("userId",carManagerUser.getId());
+            //如果用户是中心店管理员
+            if (object.getString("searchName") != null) {
+                paramMap.put("searchName", object.getString("searchName"));
+            }
+            if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
+//                paramMap.put("auctionType","2");//现场车辆
+//                paramMap.put("roleTyped","2");//中心店
+                paramMap.put("departmentId",carManagerUser.getDepartmentId());
+                paramMap.put("managerRole",carManagerUser.getRoleId());
+            }
+            //如果用户是店铺管理员
+            if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
+//                paramMap.put("auctionType","1");//线上车辆
+//                paramMap.put("roleTyped","3");//店铺
+                paramMap.put("departmentId",carManagerUser.getDepartmentId());
+                paramMap.put("managerRole",carManagerUser.getRoleId());
+            }
+            paramMap.put("customerId",customerId);
+            int count = iCarSaleOrderService.selectCarSaleOrderCount(paramMap);
+            List<CarSaleOrder> carSaleOrders = iCarSaleOrderService.selectCarSaleOrder(paramMap);
+            List<Map<String,Object>> list = new ArrayList<>();
+            for (CarSaleOrder carSaleOrder : carSaleOrders){
+                Map<String,Object> map = new HashMap<>();
+                map.put("id",carSaleOrder.getId());
+                map.put("earnestMoney",carSaleOrder.getEarnestMoney());
+                map.put("name", carSaleOrder.getName());
+                map.put("autoInfoName", carSaleOrder.getAutoInfoName());
+                map.put("vehicleAttributionCityCN",carSaleOrder.getVehicleAttributionCityCN());
+                map.put("mileage",carSaleOrder.getMileage());
+                map.put("reportColligationRanks",carSaleOrder.getReportColligationRanks());
+                map.put("reportServicingRanks",carSaleOrder.getReportServicingRanks());
+                map.put("mainPhoto",carSaleOrder.getMainPhoto());
+                map.put("transactionFee",carSaleOrder.getTransactionFee());
+                map.put("storeName",carSaleOrder.getStoreName());
+                map.put("saleDate",carSaleOrder.getSalesDate());
+                map.put("carAutoNo",carSaleOrder.getCarAutoNo());
+                map.put("orderNo",carSaleOrder.getOrderNo());
+                map.put("carId",carSaleOrder.getCarId());
+                map.put("vehicleOwnerType",carSaleOrder.getVehicleOwnerType());
+                map.put("phone",carSaleOrder.getPhone());
+                map.put("paymentType",carSaleOrder.getPaymentType());
+                map.put("createDate",carSaleOrder.getCreateDate());
+                map.put("managerName",carSaleOrder.getManagerName());
+                map.put("salesConsultant",carSaleOrder.getSalesConsultant());
+                list.add(map);
+            }
+            result.setResult(Collections.singletonMap("list",list));
             result.setSuccess("0","成功");
         }catch(Exception e){
             logger.info("查询零售订单信息失败",e);
