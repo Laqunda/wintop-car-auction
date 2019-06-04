@@ -64,7 +64,7 @@
       <if test="delPerson != null" >
         del_person = #{delPerson},
       </if>
-      <if test="region_id != null" >
+      <if test="regionId != null" >
         region_id = #{regionId},
       </if>
     </set>

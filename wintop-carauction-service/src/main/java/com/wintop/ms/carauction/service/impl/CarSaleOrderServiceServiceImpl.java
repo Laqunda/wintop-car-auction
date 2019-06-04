@@ -3,7 +3,6 @@ package com.wintop.ms.carauction.service.impl;
 
 import com.wintop.ms.carauction.entity.CarOrderRetail;
 import com.wintop.ms.carauction.entity.CarAuto;
-import com.wintop.ms.carauction.entity.CarSaleOrder;
 import com.wintop.ms.carauction.model.CarAutoModel;
 import com.wintop.ms.carauction.model.CarSaleOrderModel;
 import com.wintop.ms.carauction.service.ICarSaleOrderService;
@@ -21,17 +20,17 @@ public class CarSaleOrderServiceServiceImpl implements ICarSaleOrderService {
     private CarSaleOrderModel carSaleOrderModel;
 
     @Override
-    public List<CarOrderRetail> selectCarSaleOrder(Map<String,Object> paramMap) {
+    public List<CarOrderRetail> selectCarSaleOrder(Map<String, Object> paramMap) {
         return carSaleOrderModel.selectCarSaleOrder(paramMap);
     }
 
     @Override
-    public CarOrderRetail selectCarSaleOrderRetail(Map<String,Object> paramMap) {
+    public CarOrderRetail selectCarSaleOrderRetail(Map<String, Object> paramMap) {
         return carSaleOrderModel.selectCarSaleRetail(paramMap);
     }
 
     @Override
-    public Integer selectCarSaleOrderCount(Map<String,Object> paramMap) {
+    public Integer selectCarSaleOrderCount(Map<String, Object> paramMap) {
         return carSaleOrderModel.selectCarSaleOrderCount(paramMap);
     }
 }
