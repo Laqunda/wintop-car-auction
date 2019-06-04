@@ -168,6 +168,7 @@ public class CarAutoApi {
             map.put("serviceTel",null);
             map.put("transferFlag",carAuto.getTransferFlag());
             map.put("agentFee", carAuto.getAgentFee());
+            map.put("agentPrice", carAuto.getAgentPrice());
             map.put("title", carAuto.getTitle());
             //判断当前车辆 状态和 登录人，获取登陆人应该显示的状态
             //1、未登录 + 待开拍 = 即将开始

@@ -22,10 +22,9 @@ public class BaseEntity implements Serializable
     private String searchValue;
 
     /** 创建时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
+
     /** 更新时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
     /** 备注 */
     private String remark;
