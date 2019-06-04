@@ -2,19 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAutoLogReadDao" >
   <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAutoLog" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="auto_id" property="autoId" jdbcType="BIGINT" />
-    <result column="msg" property="msg" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="VARCHAR" />
-    <result column="time" property="time" jdbcType="TIMESTAMP" />
-    <result column="user_type" property="userType" jdbcType="VARCHAR" />
-    <result column="user_id" property="userId" jdbcType="BIGINT" />
-    <result column="user_mobile" property="userMobile" jdbcType="VARCHAR" />
-    <result column="user_name" property="userName" jdbcType="VARCHAR" />
-    <result column="status_name" property="statusName" jdbcType="VARCHAR" />
-    <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
-    <result column="publish_user_name" property="publishUserName" jdbcType="VARCHAR" />
-    <result column="main_photo" property="mainPhoto" jdbcType="VARCHAR" />
+      <id column="id" property="id" jdbcType="BIGINT" />
+      <result column="auto_id" property="autoId" jdbcType="BIGINT" />
+      <result column="msg" property="msg" jdbcType="VARCHAR" />
+      <result column="status" property="status" jdbcType="VARCHAR" />
+      <result column="time" property="time" jdbcType="TIMESTAMP" />
+      <result column="user_type" property="userType" jdbcType="VARCHAR" />
+      <result column="user_id" property="userId" jdbcType="BIGINT" />
+      <result column="user_mobile" property="userMobile" jdbcType="VARCHAR" />
+      <result column="user_name" property="userName" jdbcType="VARCHAR" />
+      <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+      <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
+      <result column="publish_user_name" property="publishUserName" jdbcType="VARCHAR" />
+      <result column="main_photo" property="mainPhoto" jdbcType="VARCHAR" />
+      <result column="auction_type" property="auctionType" jdbcType="VARCHAR"/>
+      <result column="transfer_flag" property="transferFlag" jdbcType="VARCHAR" />
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -107,15 +109,19 @@
         t2.main_photo,
         t1.time,
         t2.id,
+        t2.transfer_flag,
+        caa.auction_type,
         t1.`status`,
         cmu.user_name
         FROM
         car_auto_log t1,
         car_auto t2,
+        car_auto_auction caa,
         car_manager_user cmu
         WHERE
         t1.auto_id = t2.id
         AND cmu.id = t2.create_user
+        AND caa.id = t2.auto_auction_id
         AND t1.user_id = #{userId}
         AND ( t1.`status` = '3'  OR t1.`status` = '5' OR t1.`status` = '6' )
         ORDER BY t1.time DESC

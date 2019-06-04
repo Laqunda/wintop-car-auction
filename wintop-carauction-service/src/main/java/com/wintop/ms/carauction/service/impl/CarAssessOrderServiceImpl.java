@@ -197,6 +197,7 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
     }
 
     @Override
+    @Transactional
     public ServiceResult<Map<String, Object>> editStatus(JSONObject obj, IdWorker idWorker) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         CarManagerUser managerUser = userModel.selectByPrimaryKey(obj.getLong("managerId"));
@@ -300,6 +301,8 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
         detail.setCreateTime(new Date());
         detail.setCreateUser(a.getCreateUser() + "");
         autoInfoDetailModel.insert(detail);
+        /* car_auto_procedures */
+        saveProcedures(autoId,idWorker,oreder,a.getCreateUser());
         /* car auto log*/
         CarAutoLog log = new CarAutoLog();
         log.setId(idWorker.nextId());
@@ -322,16 +325,20 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
         CarAuto auto = new CarAuto();
         auto.setId(autoId);
         auto.setAutoInfoName(a.getAutoBrandCn() + " " + a.getAutoSeriesCn() + " " + a.getAutoStyleCn());//车辆名称=品牌+车系+车型
+        if(a.getCarPhoto() != null){
+            String[] photoUrls = a.getCarPhoto().split(",");
+            auto.setMainPhoto( photoUrls.length > 0 ? photoUrls[0]:null);
+        }
         auto.setStoreId(oreder.getStoreId());
-        auto.getStoreName();
         auto.setReportColligationRanks(a.getReportColligationRanks());
         auto.setCreateUser(a.getCreateUser());
         auto.setCreateTime(new Date());
+        auto.setUpdateUser(a.getCreateUser());
+        auto.setUpdateTime(new Date());
         auto.setAuctionNum(0);
         if (a.getRegionId() != null) {
             auto.setRegionId(Long.parseLong(a.getRegionId()));
         }
-        auto.setMainPhoto(a.getCarPhoto());
         auto.setStatus(CarStatusEnum.DRAFT.value());//草稿
         auto.setAutoAuctionId(autoAuctionId);
         return carAutoModel.insert(auto);
@@ -363,10 +370,17 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
     /**
      * 手续信息
      */
-    private int saveProcedures(Long autoId,IdWorker idWorker,Long userId){
+    private int saveProcedures(Long autoId,IdWorker idWorker,CarAssessOrder order,Long userId){
         CarAutoProcedures autoProcedures = new CarAutoProcedures();
         autoProcedures.setId(idWorker.nextId());
         autoProcedures.setAutoId(autoId);
+        autoProcedures.setPurchaseTax(Long.valueOf(order.getPurchaseTax()));
+        autoProcedures.setRegistrationCertificate(order.getRegistrationCertificate());
+        autoProcedures.setMaintenanceManual(order.getMaintenanceManual());
+        autoProcedures.setCompulsoryInsurance(order.getSaliEndDate());
+        autoProcedures.setBusinessInsurance(order.getCommercialInsuranceEndDate());
+        autoProcedures.setNewCarInvoice(order.getNewCarInvoice());
+        autoProcedures.setCarKeys(order.getCarKeys());
         autoProcedures.setCreateUser(userId);
         autoProcedures.setCreateTime(new Date());
         return proceduresModel.insert(autoProcedures);

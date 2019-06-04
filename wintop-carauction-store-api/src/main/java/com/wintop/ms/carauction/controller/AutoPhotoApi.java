@@ -159,7 +159,7 @@ public class AutoPhotoApi {
         return ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
     }
 
-    @RequestMapping(value = "/getPhoto",
+    @RequestMapping(value = "/queryPhoto",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")

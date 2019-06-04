@@ -753,6 +753,17 @@ public class CarAutoServiceImpl implements ICarAutoService {
                 //如果审核不通过
             }else if ("2".equals(object.getString("status"))){
                 carAuto.setStatus("3");
+                //如果是转渠道车辆 回到 转渠道之前
+                if("1".equals(carAuto.getTransferFlag())){
+                    carAuto.setTransferFlag("0");
+                    CarAutoAuction autoAuctionParam = new CarAutoAuction();
+                    autoAuctionParam.setId(carAuto.getAutoAuctionId());
+                    autoAuctionParam.setAutoId(carAuto.getId());
+                    autoAuctionParam.setAuctionType("1");
+                    autoAuctionParam.setAuctionStartTime(null);
+                    autoAuctionParam.setAuctionEndTime(null);
+                    autoAuctionModel.updateByPrimaryKeySelective(autoAuctionParam);
+                }
             }else {
                 return result;
             }

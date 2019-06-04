@@ -202,11 +202,11 @@ public class CarAssessOrderApi {
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
             List<Map<String,Object>> list = new ArrayList<>();
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();
-            //待我审批 -- 店铺管理员可以审批采购申请
+            //待我审批 -- 管理员可以审批采购申请
             if(type.equals("1")){
                 CarManagerUser carManagerUser = iCarManagerUserService.selectByPrimaryKey(userId,true);
-                if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
-                    paramMap.put("storeId",carManagerUser.getDepartmentId());
+                if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId() || ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
+                    paramMap.put("departmentId",carManagerUser.getDepartmentId());
                     int count = orderLogService.selectCountWaitByParams(paramMap);
                     paramMap.put("count",count);
                     listEntity.setCount(count);

@@ -53,6 +53,10 @@ public class CarAutoLog implements Serializable {
 
     private String statusName;
 
+    private String auctionType;
+
+    private String transferFlag;
+
     public String getStatusName() {
         return statusName;
     }
@@ -224,5 +228,21 @@ public class CarAutoLog implements Serializable {
 
     public void setMainPhoto(String mainPhoto) {
         this.mainPhoto = mainPhoto;
+    }
+
+    public String getAuctionType() {
+        return auctionType;
+    }
+
+    public void setAuctionType(String auctionType) {
+        this.auctionType = auctionType;
+    }
+
+    public String getTransferFlag() {
+        return transferFlag;
+    }
+
+    public void setTransferFlag(String transferFlag) {
+        this.transferFlag = transferFlag;
     }
 }

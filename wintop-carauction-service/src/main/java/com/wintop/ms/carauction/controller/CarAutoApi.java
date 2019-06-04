@@ -1029,6 +1029,8 @@ public class CarAutoApi {
                     map.put("userName",carAuto.getLogUserName());
                     map.put("id",carAuto.getId());
                     map.put("status",carAuto.getStatus());
+                    map.put("auctionType",carAuto.getAuctionType());
+                    map.put("transferFlag",carAuto.getTransferFlag());
                     list.add(map);
                     listEntity.setList(list);
                 }
@@ -1045,6 +1047,8 @@ public class CarAutoApi {
                     map.put("userName",carAtuoLog.getUserName());
                     map.put("id",carAtuoLog.getId());
                     map.put("status",carAtuoLog.getStatus());
+                    map.put("auctionType",carAtuoLog.getAuctionType());
+                    map.put("transferFlag",carAtuoLog.getTransferFlag());
                     list.add(map);
                     listEntity.setList(list);
                 }
@@ -1061,6 +1065,8 @@ public class CarAutoApi {
                     map.put("userName",carAuto.getLogUserName());
                     map.put("id",carAuto.getId());
                     map.put("status",carAuto.getStatus());
+                    map.put("auctionType",carAuto.getAuctionType());
+                    map.put("transferFlag",carAuto.getTransferFlag());
                     list.add(map);
                     listEntity.setList(list);
                 }

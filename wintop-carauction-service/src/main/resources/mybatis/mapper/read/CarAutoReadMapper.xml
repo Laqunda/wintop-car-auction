@@ -339,13 +339,18 @@
                 </foreach>
               </if>
             </trim>
-            order by
-            <if test="statusListType == '1'.toString()"> t1.update_time DESC </if>
-            <if test="statusListType == '2'.toString() || statusListType == '3'.toString() || statusListType == '7'.toString()"> t5.time DESC </if>
-            <if test="statusListType == '4'.toString() || statusListType == '5'.toString()"> t2.auction_start_time DESC </if>
-            <if test="statusListType == '6'.toString()"> t4.auth_time DESC </if>
+          order by
+          <if test="statusListType == '1'.toString()"> t1.update_time DESC </if>
+          <if test="statusListType == '2'.toString() || statusListType == '3'.toString() || statusListType == '7'.toString()"> t5.time DESC </if>
+          <if test="statusListType == '4'.toString() || statusListType == '5'.toString()"> t2.auction_start_time DESC </if>
+          <if test="statusListType == '6'.toString()"> t4.auth_time DESC </if>
     ) t
     group by t.id
+    order by
+    <if test="statusListType == '1'.toString()"> t.create_time DESC </if>
+    <if test="statusListType == '2'.toString() || statusListType == '3'.toString() || statusListType == '7'.toString()"> t.pass_in_time DESC </if>
+    <if test="statusListType == '4'.toString() || statusListType == '5'.toString()"> t.auction_start_time DESC </if>
+    <if test="statusListType == '6'.toString()"> t.deal_time DESC </if>
     <if test="endRowNum != null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
@@ -992,10 +997,13 @@
         t2.time,
         t1.id,
         t1.`status`,
+        t1.transfer_flag,
+        caa.auction_type,
         cmu.user_name log_user_name
         FROM
         car_auto t1
         INNER JOIN car_auto_log t2 ON t1.id = t2.auto_id
+        INNER JOIN car_auto_auction caa ON caa.id = t1.auto_auction_id
         INNER JOIN car_manager_user cmu ON cmu.id = t1.create_user
         WHERE
         ( t2.`status` = 2 OR t2.`status` = 4 )
@@ -1023,9 +1031,12 @@
     t1.main_photo,
     t1.update_time,
     cmu.user_name log_user_name,
-    t1.`status`
-    FROM car_auto t1 ,car_manager_user cmu
+    t1.`status`,
+    t1.transfer_flag,
+    caa.auction_type
+    FROM car_auto t1 ,car_manager_user cmu ,car_auto_auction caa
     WHERE cmu.id = t1.create_user
+    AND caa.id = t1.auto_auction_id
     and (t1.`status` = 2 OR t1.`status` = 4 )
     ORDER BY t1.update_time DESC
     <if test="startRowNum!=null and endRowNum!=null">

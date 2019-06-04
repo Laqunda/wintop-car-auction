@@ -74,9 +74,12 @@
     </select>
 
     <select id="selectCountWaitByParams" resultType="java.lang.Integer" parameterType="java.lang.Long">
-        SELECT count(id)
-        FROM car_assess_order
-        WHERE status='1' and store_id = #{storeId}
+        SELECT count(o.id)
+        FROM car_assess_order o
+        INNER JOIN car_assess ca ON ca.id = o.assess_id
+        INNER JOIN car_manager_user cmu ON cmu.id = ca.create_user
+        WHERE o.status='1'
+        AND cmu.department_id  = #{departmentId}
     </select>
 
     <select id="selectCountEndByUserId" resultType="java.lang.Integer" parameterType="java.util.Map">
@@ -104,7 +107,9 @@
         t1.id assess_order_id
         FROM car_assess_order t1
         INNER JOIN car_assess t2 ON t1.assess_id = t2.id
-        WHERE t1.status = '1' and t1.store_id = #{storeId}
+        INNER JOIN car_manager_user cmu ON cmu.id = t2.create_user
+        WHERE t1.status = '1'
+        AND cmu.department_id  = #{departmentId}
         ORDER BY t1.create_time DESC
         <if test="startRowNum!=null and endRowNum!=null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
