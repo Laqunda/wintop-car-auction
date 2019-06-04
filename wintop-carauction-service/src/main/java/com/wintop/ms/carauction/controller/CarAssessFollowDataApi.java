@@ -132,7 +132,7 @@ public class CarAssessFollowDataApi {
             case "1":
                 return "评估中";
             case "2":
-                return "采购前科";
+                return "采购潜客";
             case "3":
                 return "战败";
             case "4":

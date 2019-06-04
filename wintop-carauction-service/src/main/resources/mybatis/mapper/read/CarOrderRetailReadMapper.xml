@@ -120,14 +120,7 @@
         INNER JOIN car_auto_info_detail t3 ON t1.car_id=t3.auto_id
         INNER JOIN car_manager_user t4 ON t1.create_user = t4.id
         where t2.sale_flag = '1'
-        <choose>
-            <when test="managerRole != null and managerRole != ''">
-                and t2.store_id  = #{departmentId}
-            </when>
-            <otherwise>
-                and t1.create_user = #{customerId}
-            </otherwise>
-        </choose>
+        and t1.create_user = #{customerId}
         <if test="searchName != null and searchName != ''">
             and (
             t1.order_no LIKE CONCAT('%', #{searchName}, '%')
@@ -148,14 +141,7 @@
         INNER JOIN car_auto t2 ON t1.car_id=t2.id
         INNER JOIN car_auto_info_detail t3 ON t2.id=t3.auto_id
         where t2.sale_flag = '1'
-        <choose>
-            <when test="managerRole != null and managerRole != ''">
-                and t2.store_id  = #{departmentId}
-            </when>
-            <otherwise>
-                and t1.create_user = #{customerId}
-            </otherwise>
-        </choose>
+        and t1.create_user = #{customerId}
         <if test="searchName != null and searchName != ''">
             and (
             t1.order_no LIKE CONCAT('%', #{searchName}, '%')

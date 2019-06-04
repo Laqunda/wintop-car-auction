@@ -1064,6 +1064,9 @@ public class CarAutoApi {
                     listEntity.setList(list);
                 }
             }
+            if (listEntity.getList() == null){
+                listEntity.setList(new ArrayList<>());
+            }
             result.setResult(listEntity);
             result.setSuccess("0","成功");
         } catch (Exception e) {
