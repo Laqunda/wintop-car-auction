@@ -166,26 +166,17 @@
   </select>
   
   <select id="selectCarAutoCount" resultType="java.lang.Integer" parameterType="java.util.Map">
-    select count(1)
-    from (
         select  count(t1.id)
         from car_auto t1
         inner join car_auto_auction t2 on  t2.id = t1.auto_auction_id
-    <if test="managerRole == 3">
-      inner join car_center_store ccs on ccs.store_id = t1.store_id
-      inner join car_center cc on cc.id = ccs.center_id
-      inner join car_manager_user cmu on cmu.department_id = cc.id
+    <if test="managerRole != null and managerRole != ''">
+      inner join car_manager_user cmu on cmu.id = t1.create_user
     </if>
         where t1.sale_flag = '0'
           and t2.auction_type = #{auctionType}
     <choose>
       <when test="managerRole != null and managerRole != ''">
-        <if test="managerRole == 3">
-          and (cmu.id = #{userId} or t1.create_user = #{userId})
-        </if>
-        <if test="managerRole == 8">
-          and t1.store_id  = #{departmentId}
-        </if>
+        and cmu.department_id = #{departmentId}
       </when>
       <otherwise>
         and t1.create_user = #{userId}
@@ -203,32 +194,21 @@
         #{item}
       </foreach>
     </if>
-    group by t1.id
-    ) t
   </select>
 
   <select id="selectCarAutoForSaleCount" resultType="java.lang.Integer" parameterType="java.util.Map">
-    select count(1)
-    from (
         select count(t1.id) num
           from car_order_retail t1
-        inner join car_auto t2 on t1.car_id = t2.id
-        inner join car_auto_auction caa on caa.id = t2.auto_auction_id
-    <if test="managerRole == 3">
-      inner join car_center_store ccs on ccs.store_id = t2.store_id
-      inner join car_center cc on cc.id = ccs.center_id
-      inner join car_manager_user cmu on cmu.department_id = cc.id
+   inner join car_auto t2 on t1.car_id = t2.id
+   inner join car_auto_auction caa on caa.id = t2.auto_auction_id
+    <if test="managerRole != null and managerRole != ''">
+      inner join car_manager_user cmu on cmu.id = t2.create_user
     </if>
         where
             t2.sale_flag = #{saleFlag}
         <choose>
           <when test="managerRole != null and managerRole != ''">
-            <if test="managerRole == 3">
-              and (cmu.id = #{userId} or t1.create_user = #{userId})
-            </if>
-            <if test="managerRole == 8">
-              and t1.store_id  = #{departmentId}
-            </if>
+            and cmu.department_id  = #{departmentId}
           </when>
           <otherwise>
             and t1.create_user = #{userId}
@@ -237,8 +217,6 @@
       <if test="autoInfoName != null and autoInfoName != ''">
          and t1.auto_info_name like '%{autoInfoName}%'
       </if>
-    group by t1.id
-    ) t
   </select>
 
 
@@ -332,21 +310,14 @@
             left join car_auto_transfer t4 on t4.order_id = t3.id
             left join car_auto_log t5 on t5.auto_id = t1.id
             left join car_auto_info_detail t8 on t8.auto_id=t1.id
-          <if test="managerRole == 3">
-            inner join car_center_store ccs on ccs.store_id = t1.store_id
-            inner join car_center cc on cc.id = ccs.center_id
-            inner join car_manager_user cmu on cmu.department_id = cc.id
+          <if test="managerRole != null and managerRole != ''">
+            inner join car_manager_user cmu on cmu.id = t1.create_user
           </if>
             <trim prefix="where" prefixOverrides="and">
               t1.sale_flag = '0'
               <choose>
                 <when test="managerRole != null and managerRole != ''">
-                  <if test="managerRole == 3">
-                    and (cmu.id = #{userId} or t1.create_user = #{userId})
-                  </if>
-                  <if test="managerRole == 8">
-                    and t1.store_id  = #{departmentId}
-                  </if>
+                  and cmu.department_id  = #{departmentId}
                 </when>
                 <otherwise>
                   and t1.create_user = #{userId}
@@ -949,11 +920,14 @@
     from car_auto t1
     inner join car_order_retail t2 on t1.id = t2.car_id
     inner join car_auto_auction caa on caa.id = t1.auto_auction_id
+    <if test="managerRole != null and managerRole != ''">
+      inner join car_manager_user cmu on cmu.id = t1.create_user
+    </if>
     <where>
       t1.sale_flag = '1'
       <choose>
         <when test="managerRole != null and managerRole != ''">
-          and t1.store_id = #{departmentId}
+          and cmu.department_id  = #{departmentId}
         </when>
         <otherwise>
           and t2.create_user = #{userId}

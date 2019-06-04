@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 查博士日志 信息操作处理
@@ -64,6 +65,9 @@ public class CarChaboshiLogAPi {
 
     @Autowired
     private ICarChaboshiStoreConfService carChaboshiStoreConfService;
+
+    @Autowired
+    private ICarFinancePayLogService carFinancePayLogService;
 
 
     /**
@@ -141,6 +145,34 @@ public class CarChaboshiLogAPi {
                 param.put("userId", assess.getCreateUser());
             }
             List<CarChaboshiLog> list = carChaboshiLogService.selectCarChaboshiLogList(param);
+            result.setResult(Collections.singletonMap("list", list));
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询查博士日志列表", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+
+        return result;
+    }
+
+
+    /**
+     * 买家端支付流水
+     */
+    @ApiOperation(value = "买家端支付流水")
+    @RequestMapping(value = "/buyerPayLog",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> buyerPayLog(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String,Object>> result =  new ServiceResult<>();
+        try {
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
+            List<CarChaboshiLog> chaboshiLogList = carChaboshiLogService.selectCarChaboshiLogList(param);
+            List<Long> idsList = chaboshiLogList.stream().map(carChaboshiLog -> carChaboshiLog.getPayLogId()).collect(Collectors.toList());
+            List<CarFinancePayLog> list = carFinancePayLogService.selectByExample(Collections.singletonMap("ids", idsList)).getResult();
             result.setResult(Collections.singletonMap("list", list));
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {

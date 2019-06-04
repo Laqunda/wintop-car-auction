@@ -149,7 +149,7 @@ public class CarSaleOrderListApi {
                 }
             }
         }
-        String filename = String.valueOf(ExcelUtil.processFileName(request, "零售车辆信息列表")).concat(".xls");
+        String filename = String.valueOf(ExcelUtil.processFileName(request, "零售订单信息列表")).concat(".xls");
         rep.setContentType("application/vnd.ms-excel;charset=utf-8");
         rep.setHeader("Content-disposition", "attachment;filename=" + filename);
         try {
