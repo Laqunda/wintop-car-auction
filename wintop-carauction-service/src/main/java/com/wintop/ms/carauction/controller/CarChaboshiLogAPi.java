@@ -1,11 +1,8 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alipay.api.domain.Car;
 import com.google.common.base.Predicates;
-import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -87,7 +84,7 @@ public class CarChaboshiLogAPi {
             Map param = JSONObject.toJavaObject(obj, Map.class);
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
             /*根据assessId查询其查博士的查询日志*/
-            if (obj.get("assessId")!=null && obj.getLong("assessId")> 0) {
+            if (obj.get("assessId") != null && obj.getLong("assessId") > 0) {
                 CarAssess carAssess = new CarAssess();
                 carAssess.setId(obj.getLong("assessId"));
                 CarAssess assess = assessService.selectCarAssessById(carAssess);
@@ -103,8 +100,8 @@ public class CarChaboshiLogAPi {
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
 //            carChaboshiLog.setStartRowNum(pageEntity.getStartRowNum());
 //            carChaboshiLog.setEndRowNum(pageEntity.getEndRowNum());
-            param.put("startRowNum",pageEntity.getStartRowNum());
-            param.put("endRowNum",pageEntity.getEndRowNum());
+            param.put("startRowNum", pageEntity.getStartRowNum());
+            param.put("endRowNum", pageEntity.getEndRowNum());
 
             List<CarChaboshiLog> list = carChaboshiLogService.selectCarChaboshiLogList(param);
             ListEntity<CarChaboshiLog> listEntity = new ListEntity<>();
@@ -129,14 +126,14 @@ public class CarChaboshiLogAPi {
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8")
-    public ServiceResult<Map<String,Object>> allList(@RequestBody JSONObject obj) {
-        ServiceResult<Map<String,Object>> result =  new ServiceResult<>();
+    public ServiceResult<Map<String, Object>> allList(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
 
             Map param = JSONObject.toJavaObject(obj, Map.class);
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
             /*根据assessId查询其查博士的查询日志*/
-            if (obj.get("assessId")!=null && obj.getLong("assessId")> 0) {
+            if (obj.get("assessId") != null && obj.getLong("assessId") > 0) {
                 CarAssess carAssess = new CarAssess();
                 carAssess.setId(obj.getLong("assessId"));
                 CarAssess assess = assessService.selectCarAssessById(carAssess);
@@ -531,87 +528,85 @@ public class CarChaboshiLogAPi {
     @PostMapping(value = "cbsCallback")
     @ApiOperation(value = "查博生成报告回掉，回调保存成功")
     @ResponseBody
-    public Map chaboshiCallback(@RequestParam String result, @RequestParam String message, @RequestParam String orderId) {
+    public Map chaboshiCallback(@RequestParam String result, @RequestParam String message, @RequestParam String orderid) {
         logger.info("查博生成报告回掉，回调成功");
         Map resultMap = new HashMap();
         resultMap.put("code", "0");
         resultMap.put("message", "success");
         try {
+            System.out.println("----------查博士回调成功--------------");
+            System.out.println("result：" + result + "\n" + "message:" + message + "\n" + "orderId:" + orderid);
 
             /*根据orderId获取log数据 */
-//            CarChaboshiLog log = new CarChaboshiLog();
-//            log.setResponseResult("3");
-//            log.setSourceType("1");
-//            log.setOrderId(orderId);
             Map<String, Object> param = Maps.newHashMap();
             param.put("responseResult", "3");
             param.put("sourceType", "1");
-            param.put("orderId", orderId);
+            param.put("orderId", orderid);
             CarChaboshiLog log = carChaboshiLogService.selectCarChaboshiLog(param);
 
-            if ("1".equals(result)) {
+            if (log == null) {
+                resultMap.put("code", "1");
+                resultMap.put("message", "未找到查询记录!");
+
+            } else if ("1".equals(result)) {
                 /*生成报告成功  并更新状态*/
-                if (log != null) {
-                    //获取url
-                    Map chaboshi = ChaboshiUtils.reportDetail(orderId);
-                    String pcUrl = (String) chaboshi.get("pcUrl");
-                    String mobileUrl = (String) chaboshi.get("mobileUrl");
-                    //获取json
+                //获取url
+                Map chaboshi = ChaboshiUtils.reportDetail(orderid);
+                String pcUrl = (String) chaboshi.get("pcUrl");
+                String mobileUrl = (String) chaboshi.get("mobileUrl");
+                //获取json
 
-                    JSONObject object = ChaboshiUtils.reportJson(orderId);
+                JSONObject object = ChaboshiUtils.reportJson(orderid);
 
-                    if (object != null) {
-                        log.setResponseMsg(object.toJSONString());
-                        if ("1104".equals(object.getString("Code"))) {
+                if (object != null) {
+                    log.setResponseMsg(object.toJSONString());
+                    if ("1104".equals(object.getString("Code"))) {
 
-                            String brand = object.getString("brand");
-                            String modelName = object.getString("modelName");
-                            String seriesName = object.getString("seriesName");
+                        String brand = object.getString("brand");
+                        String modelName = object.getString("modelName");
+                        String seriesName = object.getString("seriesName");
 
-                            log.setVehicleType(brand + "-" + seriesName + "-" + modelName);
-                        }
+                        log.setVehicleType(brand + "-" + seriesName + "-" + modelName);
                     }
-
-
-                    log.setResponseResult("1");
-                    log.setOrderMsg(message);
-                    log.setFinishTime(new Date());
-                    log.setPc_url(pcUrl);
-                    log.setApp_url(mobileUrl);
-                    //TODO 无车型信息情况下 获取车型信息
-                    Map<String, Object> logMap = Class2MapUtil.convertMap(log);
-                    carChaboshiLogService.updateCarChaboshiLog(logMap);
                 }
+                log.setResponseResult("1");
+                log.setOrderMsg(message);
+                log.setFinishTime(new Date());
+                log.setPc_url(pcUrl);
+                log.setApp_url(mobileUrl);
+                //TODO 无车型信息情况下 获取车型信息
+                Map<String, Object> logMap = Class2MapUtil.convertMap(log);
+                carChaboshiLogService.updateCarChaboshiLog(logMap);
             } else {
 
-                if (log != null) {
-                    log.setResponseResult("2");//失败
-                    log.setOrderMsg(message);
-                    Map<String, Object> logMap = Class2MapUtil.convertMap(log);
-                    carChaboshiLogService.updateCarChaboshiLog(logMap);
+                log.setResponseResult("2");//失败
+                log.setOrderMsg(message);
+                Map<String, Object> logMap = Class2MapUtil.convertMap(log);
+                carChaboshiLogService.updateCarChaboshiLog(logMap);
 
-                    /*退款*/
-                    if ("1".equals(log.getUserType())) {
-                        /*退款到个人支付宝*/
-                        CarFinancePayLog payLog = financePayLogModel.selectById(log.getPayLogId());
-                        Map map = AlipayUtil.refundOrder(payLog);
-                        if ("0".equals(map.get("code"))) {
-                            /*退款成功*/
-                            int c = carChaboshiLogService.savePayLog(payLog);
-                        } else {
-                            /*退款失败*/
-                        }
-                        //TODO 买家退款失败 --  状态提醒
-                    } else if ("2".equals(log.getUserType())) {
-                        /*退款到店铺资金流水表*/
-                        saveStoreAccountLog(log);
+                /*退款*/
+                if ("1".equals(log.getUserType())) {
+                    /*退款到个人支付宝*/
+                    CarFinancePayLog payLog = financePayLogModel.selectById(log.getPayLogId());
+                    Map map = AlipayUtil.refundOrder(payLog);
+                    if ("0".equals(map.get("code"))) {
+                        /*退款成功*/
+                        int c = carChaboshiLogService.savePayLog(payLog);
+                    } else {
+                        /*退款失败*/
                     }
-
+                    //TODO 买家退款失败 --  状态提醒
+                } else if ("2".equals(log.getUserType())) {
+                    /*退款到店铺资金流水表*/
+                    saveStoreAccountLog(log);
                 }
+
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            resultMap.put("code", "1");
+            resultMap.put("message",e.getMessage());
         }
         return resultMap;
 

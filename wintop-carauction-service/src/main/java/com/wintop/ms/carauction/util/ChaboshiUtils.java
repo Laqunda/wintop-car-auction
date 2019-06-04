@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChaboshiUtils {
-    static CBSBuilder cbs = CBSBuilder.newCBSBuilder(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret, false);
+    static CBSBuilder cbs = CBSBuilder.newCBSBuilder(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret, true);
 
     /**
      * 维保购买报告接口
@@ -23,20 +23,6 @@ public class ChaboshiUtils {
         param.put("callbackurl", Constants.CALLBACK_CHABOSHI);
         String str = cbs.sendPost("/report/buy_report", param);
         return JSONObject.parseObject(str);
-        /*String engino = "";//发动机号
-        String licenseplate = "";//车牌号
-        String buyReport = CBS.getInstance(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret, false).getBuyReport(vin, engino, licenseplate, Constants.CALLBACK_CHABOSHI);
-        JSONObject o = JSONObject.parseObject(buyReport);
-        //订单成功
-        if ("0".equals(o.getString("code"))) {
-            String message = o.getString("Message");
-            String orderId = o.getString("orderId");
-            System.out.println("message:" + message + "\norderId:" + orderId);
-        } else {
-            //订单失败
-        }
-        return o;*/
-
     }
 
 
@@ -112,11 +98,15 @@ public class ChaboshiUtils {
 
     //****************************************************************************************************************************
 
-
+//    {"Code":"0","Message":"成功","orderId":"d05c2d6b480940d6802665c0fc468312"}
+//综合版{"Code":"0","Message":"request success","data":{"orderId":"e888ca0b91fe4640a02879308ac0f595"}}
     public static void main(String[] args) {
 
-        System.out.println(repairReport("LSGWS52X67S050013"));
-        System.out.println(report("LSGWS52X67S050013"));
+//        System.out.println(repairReport("LGG7B2D14EZ103435"));
+//        System.out.println(report("LSGWS52X67S050013"));
+//        System.out.println(reportJson("d05c2d6b480940d6802665c0fc468312"));
+        System.out.println(orderStatus("e888ca0b91fe4640a02879308ac0f595"));
+//        System.out.println(reportDetail("d05c2d6b480940d6802665c0fc468312"));
 
     }
 }
