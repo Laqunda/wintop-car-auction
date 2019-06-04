@@ -31,6 +31,29 @@
         select
         <include refid="Base_Column_List" />
         from car_finance_pay_log
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="type != null and type != ''">
+              and type = #{type}
+            </if>
+            <if test="status != null and status != ''">
+              and status = #{status}
+            </if>
+            <if test="payType != null and payType != ''">
+              and pay_type = #{payType}
+            </if>
+            <if test="payWay != null and payWay != ''">
+              and pay_way = #{payWay}
+            </if>
+            <if test="createPersonType != null and createPersonType != ''">
+              and create_person_type = #{createPersonType}
+            </if>
+            <if test="ids != null">
+              and id in
+              <foreach collection="ids" item="item" open="(" close=")" separator=",">
+                #{item}
+              </foreach>
+            </if>
+        </trim>
         order by pay_time desc
         <if test="startRowNum != null and endRowNum != null ">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}

@@ -166,6 +166,22 @@ public class CarChaboshiLogApi {
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 
+    /**
+     * 查询查博士日志列表
+     */
+    @ApiOperation(value = "查询查博士日志列表")
+    @PostMapping(value = "/buyerPayLog",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @RequestAuth(value = false)
+    public ResultModel buyerPayLog(@RequestBody Map<String,Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carChaboshiLog/buyerPayLog"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
     @AuthPublic
     @PostMapping( value = "/export" )
     public void export(HttpServletRequest request, HttpServletResponse rep,
