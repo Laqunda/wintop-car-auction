@@ -9,7 +9,7 @@
         <result property="assessId" column="assess_id"/>
         <result property="content" column="content"/>
         <result property="followResult" column="follow_result"/>
-        <result property="createTime" column="create_time"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="followUser" column="follow_user"/>
         <result property="createUser" column="create_user"/>
     </resultMap>

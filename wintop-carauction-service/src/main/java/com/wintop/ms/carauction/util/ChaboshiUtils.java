@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChaboshiUtils {
+    static CBSBuilder cbs = CBSBuilder.newCBSBuilder(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret, false);
 
     /**
      * 维保购买报告接口
@@ -17,7 +18,6 @@ public class ChaboshiUtils {
      * @param vin
      */
     public static JSONObject report(String vin) {
-        CBSBuilder cbs = CBSBuilder.newCBSBuilder(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret, true);
         HashMap param = new HashMap();
         param.put("vin", vin);
         param.put("callbackurl", Constants.CALLBACK_CHABOSHI);
@@ -102,7 +102,6 @@ public class ChaboshiUtils {
      * @return]
      */
     public static JSONObject repairReport(String vin) {
-        CBSBuilder cbs = CBSBuilder.newCBSBuilder(ChaBoShiConfig.userId, ChaBoShiConfig.keySecret, true);
         HashMap param = new HashMap();
         param.put("vin", vin);
         param.put("callbackurl", Constants.CALLBACK_CHABOSHI);

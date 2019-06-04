@@ -169,11 +169,14 @@
         select  count(t1.id)
         from car_auto t1
         inner join car_auto_auction t2 on  t2.id = t1.auto_auction_id
+    <if test="managerRole != null and managerRole != ''">
+      inner join car_manager_user cmu on cmu.id = t1.create_user
+    </if>
         where t1.sale_flag = '0'
           and t2.auction_type = #{auctionType}
     <choose>
       <when test="managerRole != null and managerRole != ''">
-        and t1.store_id  = #{departmentId}
+        and cmu.department_id = #{departmentId}
       </when>
       <otherwise>
         and t1.create_user = #{userId}
@@ -194,22 +197,25 @@
   </select>
 
   <select id="selectCarAutoForSaleCount" resultType="java.lang.Integer" parameterType="java.util.Map">
-        SELECT count(t1.id) num
-          FROM car_order_retail t1
-        INNER JOIN car_auto t2 ON t1.car_id = t2.id
-        INNER JOIN car_auto_auction caa ON caa.id = t2.auto_auction_id
-        WHERE
+        select count(t1.id) num
+          from car_order_retail t1
+   inner join car_auto t2 on t1.car_id = t2.id
+   inner join car_auto_auction caa on caa.id = t2.auto_auction_id
+    <if test="managerRole != null and managerRole != ''">
+      inner join car_manager_user cmu on cmu.id = t2.create_user
+    </if>
+        where
             t2.sale_flag = #{saleFlag}
         <choose>
           <when test="managerRole != null and managerRole != ''">
-            AND t2.store_id  = #{departmentId}
+            and cmu.department_id  = #{departmentId}
           </when>
           <otherwise>
-            AND t1.create_user = #{userId}
+            and t1.create_user = #{userId}
           </otherwise>
         </choose>
       <if test="autoInfoName != null and autoInfoName != ''">
-         AND t1.auto_info_name like '%{autoInfoName}%'
+         and t1.auto_info_name like '%{autoInfoName}%'
       </if>
   </select>
 
@@ -279,6 +285,7 @@
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
   </select>
+
   <select id="selectCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
     select *
     from (
@@ -295,18 +302,22 @@
             t4.auth_time AS "deal_time",
             t5.time AS "pass_in_time",
             t5.msg auth_msg,
-            t1.create_time
+            t1.create_time,
+            t1.if_new
             from car_auto t1
             left join car_auto_auction t2 ON t1.auto_auction_id=t2.id
             left join car_order t3 on t1.id = t3.car_id
             left join car_auto_transfer t4 on t4.order_id = t3.id
             left join car_auto_log t5 on t5.auto_id = t1.id
             left join car_auto_info_detail t8 on t8.auto_id=t1.id
+          <if test="managerRole != null and managerRole != ''">
+            inner join car_manager_user cmu on cmu.id = t1.create_user
+          </if>
             <trim prefix="where" prefixOverrides="and">
               t1.sale_flag = '0'
               <choose>
                 <when test="managerRole != null and managerRole != ''">
-                  and t1.store_id = #{departmentId}
+                  and cmu.department_id  = #{departmentId}
                 </when>
                 <otherwise>
                   and t1.create_user = #{userId}
@@ -909,11 +920,14 @@
     from car_auto t1
     inner join car_order_retail t2 on t1.id = t2.car_id
     inner join car_auto_auction caa on caa.id = t1.auto_auction_id
+    <if test="managerRole != null and managerRole != ''">
+      inner join car_manager_user cmu on cmu.id = t1.create_user
+    </if>
     <where>
       t1.sale_flag = '1'
       <choose>
         <when test="managerRole != null and managerRole != ''">
-          and t1.store_id = #{departmentId}
+          and cmu.department_id  = #{departmentId}
         </when>
         <otherwise>
           and t2.create_user = #{userId}

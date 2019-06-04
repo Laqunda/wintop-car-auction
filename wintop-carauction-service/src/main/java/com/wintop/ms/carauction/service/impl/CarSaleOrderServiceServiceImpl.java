@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.service.impl;
 
 import com.wintop.ms.carauction.entity.CarOrderRetail;
 import com.wintop.ms.carauction.entity.CarAuto;
+import com.wintop.ms.carauction.entity.CarSaleOrder;
 import com.wintop.ms.carauction.model.CarAutoModel;
 import com.wintop.ms.carauction.model.CarSaleOrderModel;
 import com.wintop.ms.carauction.service.ICarSaleOrderService;
