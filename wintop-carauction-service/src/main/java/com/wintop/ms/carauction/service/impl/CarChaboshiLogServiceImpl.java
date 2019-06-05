@@ -174,7 +174,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
      * @param obj
      * @return
      */
-    @Autowired
+    @Override
     @Transactional
     public ServiceResult vinSearchForBuyer(JSONObject obj) {
         ServiceResult result = new ServiceResult();
