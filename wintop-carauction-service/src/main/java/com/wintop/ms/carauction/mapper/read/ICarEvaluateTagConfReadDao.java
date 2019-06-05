@@ -16,4 +16,12 @@ public interface ICarEvaluateTagConfReadDao {
      * 查询评价标签配置列表
      */
     public List<CarEvaluateTagConf> queryCarEvaluateTagConfList(Map<String, Object> map);
+
+    /**
+     * 通过id进行查询
+     *
+     * @param id
+     * @return
+     */
+    CarEvaluateTagConf selectByPrimaryKey(Long id);
 }

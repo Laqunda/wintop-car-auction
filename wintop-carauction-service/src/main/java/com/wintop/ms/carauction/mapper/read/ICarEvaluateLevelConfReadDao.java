@@ -11,5 +11,7 @@ public interface ICarEvaluateLevelConfReadDao {
     /**
      * 查询星级评价列表
      */
-    public List<CarEvaluateLevelConf> queryCarEvaluateLevelConfList(Map<String, Object> map);
+    List<CarEvaluateLevelConf> queryCarEvaluateLevelConfList(Map<String, Object> map);
+
+
 }
