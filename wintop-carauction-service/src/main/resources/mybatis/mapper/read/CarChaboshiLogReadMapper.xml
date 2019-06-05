@@ -135,6 +135,7 @@
     <select id="selectCarChaboshiLogById" parameterType="Long" resultMap="CarChaboshiLogResult">
         select
         <include refid="selectCarChaboshiLogVo"/>
+        from car_chaboshi_log ccl
         where id = #{id}
     </select>
 

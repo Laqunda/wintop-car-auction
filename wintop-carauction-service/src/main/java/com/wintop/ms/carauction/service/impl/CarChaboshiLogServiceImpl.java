@@ -11,6 +11,7 @@ import com.wintop.ms.carauction.util.ChaboshiUtils;
 import com.wintop.ms.carauction.util.Class2MapUtil;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.httpclient.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -383,37 +384,23 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
             result.setSuccess(ResultCode.FAIL.strValue(), "未发现查博士订单！");
         } else {
             JSONObject orderStatus = ChaboshiUtils.orderStatus(log.getOrderId());
-
-            log.setId(idWorker.nextId());
-            log.setMoney(new BigDecimal(0));
-            log.setSourceType("2");
-            log.setUserId(userId);
-            log.setUserName(userName);
-            log.setCreateTime(new Date());
-
-
-            if ("1104".equals(orderStatus.get("code"))) {
+            if ("1104".equals(orderStatus.get("Code"))) {
                 /*已出报告*/
                 Map cbs = ChaboshiUtils.reportDetail(log.getOrderId());
-
-                log.setResponseResult("1");
-
                 result.setResult(cbs);
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
                 //如果当时的log状态为查询中 则需要更新状态
 
                 if ("3".equals(log.getResponseResult())) {
                     //获取url
-                    Map chaboshi = ChaboshiUtils.reportDetail(log.getOrderId());
-                    String pcUrl = "" + chaboshi.get("pcUrl");
-                    String mobileUrl = "" + chaboshi.get("mobileUrl");
+                    String pcUrl = "" + cbs.get("pcUrl");
+                    String mobileUrl = "" + cbs.get("mobileUrl");
                     //获取json
                     JSONObject object = ChaboshiUtils.reportJson(log.getOrderId());
 
                     if (object != null) {
                         log.setResponseMsg(object.toJSONString());
                         if ("1104".equals(object.getString("Code"))) {
-
                             String brand = object.getString("brand");
                             String modelName = object.getString("modelName");
                             String seriesName = object.getString("seriesName");
@@ -427,9 +414,13 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                     log.setPc_url(pcUrl);
                     log.setApp_url(mobileUrl);
                     //TODO 无车型信息情况下 获取车型信息
-                    updateCarChaboshiLog(JSONObject.parseObject(JSONObject.toJSON(log).toString(), Map.class));
+                    Map logMap = JSONObject.parseObject(JSONObject.toJSON(log).toString(), Map.class);
+                    logMap.remove("createTime");
+                    logMap.put("finishTime", DateUtil.formatDate(new Date(),"yyyy-MM-dd hh:mm:ss"));
+
+                    updateCarChaboshiLog(logMap);
                 }
-            } else if ("1102".equals(orderStatus.get("code"))) {
+            } else if ("1102".equals(orderStatus.get("Code"))) {
                 /*查询中*/
                 result.setSuccess(ResultCode.FAIL.strValue(), "订单正在查询中！");
                 log.setResponseResult("3");
@@ -437,10 +428,15 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                 /*其他情况*/
                 log.setResponseResult("2");
                 log.setOrderMsg(orderStatus.getString("Message"));
-
                 result.setSuccess(ResultCode.FAIL.strValue(), orderStatus.getString("Message"));
-                log.setResponseResult("3");
             }
+
+            log.setId(idWorker.nextId());
+            log.setMoney(new BigDecimal(0));
+            log.setSourceType("2");
+            log.setUserId(userId);
+            log.setUserName(userName);
+            log.setCreateTime(new Date());
 
             /*写入日志*/
             insertCarChaboshiLog(log);

@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into car_chaboshi_log
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">id,</if>
-			<if test="createTime != null  ">create_time,</if>
+            create_time,
 			<if test="userType != null  and userType != ''  ">user_type,</if>
 			<if test="userId != null  ">user_id,</if>
 			<if test="vin != null  and vin != ''  ">vin,</if>
@@ -26,10 +26,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="vehicleType != null  and vehicleType != ''  ">vehicle_type,</if>
 			<if test="photo != null  and photo != ''  ">photo,</if>
 			<if test="engineNum != null  and engineNum != ''  ">engine_num,</if>
+            <if test="pc_url != null  and pc_url != ''  ">pc_url,</if>
+            <if test="app_url != null  and app_url != ''  ">app_url,</if>
+            <if test="finishTime != null">finish_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
-			<if test="createTime != null  ">#{createTime},</if>
+			now(),
 			<if test="userType != null  and userType != ''  ">#{userType},</if>
 			<if test="userId != null  ">#{userId},</if>
 			<if test="vin != null  and vin != ''  ">#{vin},</if>
@@ -48,6 +51,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vehicleType != null  and vehicleType != ''  ">#{vehicleType},</if>
             <if test="photo != null  and photo != ''  ">#{photo},</if>
             <if test="engineNum != null  and engineNum != ''  ">#{engineNum},</if>
+            <if test="pc_url != null  and pc_url != ''  ">#{pc_url},</if>
+            <if test="app_url != null  and app_url != ''  ">#{app_url},</if>
+            <if test="finishTime != null">now(),</if>
          </trim>
     </insert>
 	 
