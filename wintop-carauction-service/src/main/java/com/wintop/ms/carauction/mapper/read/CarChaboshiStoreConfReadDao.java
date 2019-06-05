@@ -30,4 +30,11 @@ public interface CarChaboshiStoreConfReadDao
 
 
 	int selectCount(CarChaboshiStoreConf bean);
+
+	/**
+	 * 查询查博士店铺设置
+	 * @param carChaboshiStoreConf
+	 * @return
+	 */
+	public CarChaboshiStoreConf selectCarChaboshiStoreConfByParams(CarChaboshiStoreConf carChaboshiStoreConf);
 }

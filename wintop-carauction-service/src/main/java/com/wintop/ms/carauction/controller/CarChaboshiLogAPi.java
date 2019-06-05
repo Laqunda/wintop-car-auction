@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.ResultCode;
+import com.wintop.ms.carauction.core.entity.CarManagerUser;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
@@ -290,28 +291,24 @@ public class CarChaboshiLogAPi {
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8")
     public ServiceResult<Map<String, Object>> vinSearch(@RequestBody JSONObject obj) {
-
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
             String vin = obj.getString("vin");
-            Long userId = obj.getLong("userId");
-            String userName = obj.getString("userName");
-            Long storeId = obj.getLong("storeId");
             /*1:普通用户 2：店铺人员*/
             String userType = obj.getString("userType");
             /*1:历史单查询 2：新的查询*/
             String searchType = obj.getString("searchType");
             /*查询版本 1维修版 2综合版*/
             String edition = obj.getString("edition");
-
+            //历史订单查询
             if ("1".equals(searchType)) {
                 /*历史订单查询*/
                 CarChaboshiLog log = carChaboshiLogService.selectCarChaboshiLogById(obj.getLong("logId"));
-                result = searChForOrder(log, userId, userName);
+                result = searChForOrder(log, obj.getLong("userId"), obj.getString("userName"));
             } else if ("2".equals(searchType)) {
                 /*新建查询订单 此处只允许店铺用户*/
                 if ("2".equals(userType)) {
-                    result = searchForStore(obj);
+                    result = carChaboshiLogService.searchForStore(obj);
                 } else {
                     result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_PARAM.getRemark());
                 }
@@ -323,62 +320,6 @@ public class CarChaboshiLogAPi {
             e.printStackTrace();
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
 
-        }
-        return result;
-    }
-
-
-    /**
-     * 店铺用户查询 其中需要验证 查博士支付的金额配置 以及余额是否足够
-     *
-     * @return
-     */
-    private ServiceResult<Map<String, Object>> searchForStore(JSONObject obj) {
-        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
-        //查找store信息
-        CarChaboshiStoreConf storeConf = new CarChaboshiStoreConf();
-        storeConf.setStoreId(obj.getLong("storeId"));
-        List<CarChaboshiStoreConf> storeConfs = storeConfService.selectCarChaboshiStoreConfList(storeConf);
-
-        if (storeConfs != null && storeConfs.size() > 0) {
-            /*查找店铺配置金额*/
-            CarChaboshiStoreConf c = storeConfs.get(0);
-            BigDecimal balance = c.getBalance();
-            BigDecimal payment = c.getPayment();
-            BigDecimal paymentComposite = c.getPaymentComposite();
-
-            /*没有设置支付金额 则返回错误*/
-            if (payment == null || paymentComposite == null) {
-                result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
-                return result;
-            }
-
-            if ("1".equals(obj.get("edition"))) {
-                /*维修版本*/
-
-                if (balance == null || balance.compareTo(payment) == -1) {
-                    result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.LOW_BALANCE.getRemark());
-                } else {
-                    /* 查询--支付--生成查询记录*/
-                    result = carChaboshiLogService.chaboshiStore(payment, obj);
-                }
-
-            } else if ("2".equals(obj.get("edition"))) {
-                /*综合版本*/
-
-                if (balance == null || balance.compareTo(paymentComposite) == -1) {
-                    result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.LOW_BALANCE.getRemark());
-                } else {
-                    /* 查询--支付--生成查询记录*/
-                    result = carChaboshiLogService.chaboshiStore(payment, obj);
-                }
-            } else {
-                result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_PARAM.getRemark());
-            }
-
-
-        } else {
-            result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_OBJECT.getRemark());
         }
         return result;
     }
@@ -436,10 +377,8 @@ public class CarChaboshiLogAPi {
         try {
             //写入支付日志表
             CarFinancePayLog payLog = new CarFinancePayLog();
-
             Long payLogId = idWorker.nextId();
             payLog.setId(payLogId);
-
             payLog.setCreatePersonType(obj.getString("userType"));
             payLog.setCreatePerson(obj.getLong("userId"));
             payLog.setCreateTime(new Date());
@@ -455,7 +394,6 @@ public class CarChaboshiLogAPi {
             payLog.setPayFee(obj.getBigDecimal("money"));
             payLog.setRemark(obj.getString("passbackParams"));
             payLog.setUserId(obj.getLong("userId"));
-
             if (financePayLogModel.insert(payLog) > 0) {
                 //写入查询日志
                 Long logId = idWorker.nextId();

@@ -120,6 +120,7 @@
     </select>
 
     <select id="selectCarChaboshiLogById" parameterType="Long" resultMap="CarChaboshiLogResult">
+        select
         <include refid="selectCarChaboshiLogVo"/>
         where id = #{id}
     </select>

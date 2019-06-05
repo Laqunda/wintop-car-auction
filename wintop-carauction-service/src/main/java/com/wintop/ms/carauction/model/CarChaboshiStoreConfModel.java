@@ -46,6 +46,13 @@ public class CarChaboshiStoreConfModel {
     }
 
     /**
+     * 查博士店铺设置
+     */
+    public CarChaboshiStoreConf selectCarChaboshiStoreConfByParams(CarChaboshiStoreConf carChaboshiStoreConf) {
+        return readDao.selectCarChaboshiStoreConfByParams(carChaboshiStoreConf);
+    }
+
+    /**
      * 新增查博士店铺设置
      *
      * @param carChaboshiStoreConf 查博士店铺设置信息

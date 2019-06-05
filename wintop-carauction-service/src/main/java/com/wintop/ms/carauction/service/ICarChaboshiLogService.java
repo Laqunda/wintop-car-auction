@@ -31,7 +31,6 @@ public interface ICarChaboshiLogService
      * @param map 查博士日志信息
      * @return 查博士日志集合
      */
-//	public List<CarChaboshiLog> selectCarChaboshiLogList(CarChaboshiLog carChaboshiLog);
 	public List<CarChaboshiLog> selectCarChaboshiLogList(Map<String,Object> map);
 	/**
      * 新增查博士日志
@@ -57,7 +56,6 @@ public interface ICarChaboshiLogService
      */
 	public int deleteCarChaboshiLogByIds(String ids);
 
-	//	int selectCount(CarChaboshiLog carChaboshiLog);
 	int selectCount(Map<String,Object> map);
 
     ServiceResult<Map<String, Object>> chaboshi(Long userId,String userName, String edition, Long logId, String vin);
@@ -66,8 +64,12 @@ public interface ICarChaboshiLogService
 
 	ServiceResult<Map<String, Object>> chaboshiOrder(CarChaboshiLog log,Long userId, String userName);
 
-	//	CarChaboshiLog selectCarChaboshiLog(CarChaboshiLog log);
 	CarChaboshiLog selectCarChaboshiLog(Map<String, Object> map);
 
 	int savePayLog(CarFinancePayLog payLog);
+
+	/**
+	 * 店铺查询查博士
+	 */
+	ServiceResult<Map<String, Object>> searchForStore(JSONObject obj);
 }

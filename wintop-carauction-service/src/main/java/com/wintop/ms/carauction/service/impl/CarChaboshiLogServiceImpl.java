@@ -41,6 +41,9 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     private CarManagerUserModel carManagerUserModel;
     @Autowired
     private CarStoreModel carStoreModel;
+    @Autowired
+    private CarChaboshiStoreConfModel storeConfModel;
+
     private IdWorker idWorker = new IdWorker(10);
 
 
@@ -158,6 +161,55 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     }
 
     /**
+     * 卖家查询 需要验证 查博士支付的金额配置 以及余额是否足够
+     * @param obj
+     * @return
+     */
+    @Override
+    public ServiceResult<Map<String, Object>> searchForStore(JSONObject obj) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
+        //查找store信息
+        CarChaboshiStoreConf storeConf = new CarChaboshiStoreConf();
+        storeConf.setStoreId(obj.getLong("storeId"));
+        CarChaboshiStoreConf storeConfDao = storeConfModel.selectCarChaboshiStoreConfByParams(storeConf);
+        if (storeConfDao != null) {
+            /*查找店铺配置金额*/
+            BigDecimal balance = storeConfDao.getBalance();
+            BigDecimal payment = storeConfDao.getPayment();
+            BigDecimal paymentComposite = storeConfDao.getPaymentComposite();
+            /*没有设置支付金额 则返回错误*/
+            if (payment == null || paymentComposite == null) {
+                result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+                return result;
+            }
+            if ("1".equals(obj.get("edition"))) {
+                /*维修版本*/
+                if (balance == null || balance.compareTo(payment) == -1) {
+                    result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.LOW_BALANCE.getRemark());
+                } else {
+                    /* 查询--支付--生成查询记录*/
+                    result = chaboshiStore(payment, obj);
+                }
+            } else if ("2".equals(obj.get("edition"))) {
+                /*综合版本*/
+                if (balance == null || balance.compareTo(paymentComposite) == -1) {
+                    result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.LOW_BALANCE.getRemark());
+                } else {
+                    /* 查询--支付--生成查询记录*/
+                    result = chaboshiStore(payment, obj);
+                }
+            } else {
+                result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_PARAM.getRemark());
+            }
+
+
+        } else {
+            result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_OBJECT.getRemark());
+        }
+        return result;
+    }
+
+    /**
      * 买家查询
      *
      * @param userId
@@ -235,9 +287,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
         ServiceResult result = new ServiceResult();
         Map data = new HashMap();
         JSONObject object = null;
-
         object = cha(edition, vin, result);
-
         /*log 创建存储*/
         CarChaboshiLog log = new CarChaboshiLog();
         log.setId(idWorker.nextId());
@@ -256,8 +306,6 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
         log.setVehicleType(obj.getString("vehicleType"));
         log.setPhoto(obj.getString("photo"));
         log.setEngineNum(obj.getString("engineNum"));
-
-
         if (object != null) {
             if ("0".equals(object.get("code"))) {
                 data.put("orderId", object.getString("orderId"));
@@ -276,12 +324,10 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                     CarChaboshiStoreAccount c = accounts.get(0);
                     c.setId(idWorker.nextId());
                     c.setBalance(c.getBalance().subtract(payment));
-
                     /*小于零 扣款失败*/
                     if (c.getBalance().compareTo(BigDecimal.ZERO) == -1) {
                         log.setResponseResult("2");//失败
                         result.setSuccess(ResultCode.FAIL.strValue(), "扣款失败！");
-
                     } else {
                         c.setUserName(userName);
                         c.setUserId(userId);
@@ -291,7 +337,6 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                         /*插入流水记录*/
                         storeAccountModel.insertCarChaboshiStoreAccount(c);
                     }
-
                 } else {
                     /*没有找到流水记录*/
                     log.setResponseResult("2");//失败
@@ -301,7 +346,6 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                 /*查博士查找失败*/
                 log.setResponseResult("2");
                 log.setOrderMsg(object.getString("Message"));
-
                 result.setSuccess(ResultCode.FAIL.strValue(), object.getString("Message"));
             }
         } else {

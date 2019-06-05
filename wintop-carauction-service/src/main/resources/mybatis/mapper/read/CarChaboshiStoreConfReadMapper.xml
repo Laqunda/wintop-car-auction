@@ -35,6 +35,7 @@
             </if>
         </where>
     </select>
+
     <select id="selectCount" parameterType="com.wintop.ms.carauction.entity.CarChaboshiStoreConf"
             resultType="java.lang.Integer">
         select count(*) from car_chaboshi_store_conf
@@ -52,4 +53,12 @@
         <include refid="selectCarChaboshiStoreConfVo"/>
         where id = #{id}
     </select>
+
+    <select id="selectCarChaboshiStoreConfByParams" parameterType="com.wintop.ms.carauction.entity.CarChaboshiStoreConf" resultMap="CarChaboshiStoreConfResult">
+        <include refid="selectCarChaboshiStoreConfVo"/>
+        where if_open = '1'
+            <if test="id != null ">and id = #{id}</if>
+            <if test="storeId != null ">and store_id = #{storeId}</if>
+    </select>
+
 </mapper>
