@@ -14,6 +14,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.httpclient.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -377,6 +378,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
      */
 
     @Override
+    @Transactional
     public ServiceResult<Map<String, Object>> chaboshiOrder(CarChaboshiLog log, Long userId, String userName) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
 
@@ -413,10 +415,10 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                     log.setFinishTime(new Date());
                     log.setPc_url(pcUrl);
                     log.setApp_url(mobileUrl);
-                    //TODO 无车型信息情况下 获取车型信息
+
                     Map logMap = JSONObject.parseObject(JSONObject.toJSON(log).toString(), Map.class);
                     logMap.remove("createTime");
-                    logMap.put("finishTime", DateUtil.formatDate(new Date(),"yyyy-MM-dd hh:mm:ss"));
+                    logMap.put("finishTime", DateUtil.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"));
 
                     updateCarChaboshiLog(logMap);
                 }
@@ -426,6 +428,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                 log.setResponseResult("3");
             } else {
                 /*其他情况*/
+                //TODO 这里不做退款处理，退款的处理在查博士回调后
                 log.setResponseResult("2");
                 log.setOrderMsg(orderStatus.getString("Message"));
                 result.setSuccess(ResultCode.FAIL.strValue(), orderStatus.getString("Message"));
