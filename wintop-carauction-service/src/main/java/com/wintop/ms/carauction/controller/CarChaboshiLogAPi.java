@@ -14,7 +14,6 @@ import com.wintop.ms.carauction.util.ChaboshiUtils;
 import com.wintop.ms.carauction.util.Class2MapUtil;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
-import com.wintop.ms.carauction.util.utils.RandCodeUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -349,31 +348,7 @@ public class CarChaboshiLogAPi {
         return result;
     }
 
-    /**
-     * 个人用户查询 其中需要验证
-     * 查博士支付的金额配置
-     * 是否已经支付该查询的费用--在cahboshilog中存在记录
-     *
-     * @param userId
-     * @param edition
-     * @return
-     */
-    private ServiceResult<Map<String, Object>> searchForCustomer(Long userId, String userName, String edition, Long logId, String vin) {
-        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
-        /*查找查博士log*/
-        CarChaboshiLog log = carChaboshiLogService.selectCarChaboshiLogById(logId);
-       /*
-        查询结果 1查询成功，2查询失败，3，查询中
-        类型：1店铺，2个人
-        条件：钱必须支付，必须是个人用户，状态必须是查询中
-        */
-        if (log != null && log.getMoney() != null && "2".equals(log.getUserType()) && "3".equals(log.getResponseResult())) {
-            result = carChaboshiLogService.chaboshi(userId, userName, edition, logId, vin);
-        } else {
-            result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_ORDER.getRemark());
-        }
-        return result;
-    }
+
 
     /**
      * 历史订单查询
@@ -400,65 +375,17 @@ public class CarChaboshiLogAPi {
         logger.info("支付成功后，回调保存成功");
         ServiceResult result = new ServiceResult();
         try {
-            //写入支付日志表
-            CarFinancePayLog payLog = new CarFinancePayLog();
-            Long payLogId = idWorker.nextId();
-            payLog.setId(payLogId);
-            payLog.setCreatePersonType(obj.getString("userType"));
-            payLog.setCreatePerson(obj.getLong("userId"));
-            payLog.setCreateTime(new Date());
-            payLog.setOrderNo(RandCodeUtil.getOrderNumber());
-            payLog.setPayTime(new Date());
-            payLog.setStatus("1");
-            payLog.setType("4");//查博士
-            payLog.setBankOrderNo(obj.getString("bankOrderNo"));
-            payLog.setBankOrderLog(obj.getString("bankOrderLog"));
-            payLog.setPayType(obj.getString("payType"));
-            payLog.setPayWay(obj.getString("payWay"));
-            payLog.setLogNo(obj.getString("payLogNo"));
-            payLog.setPayFee(obj.getBigDecimal("money"));
-            payLog.setRemark(obj.getString("passbackParams"));
-            payLog.setUserId(obj.getLong("userId"));
-            if (financePayLogModel.insert(payLog) > 0) {
-                //写入查询日志
-                Long logId = idWorker.nextId();
-                CarChaboshiLog log = new CarChaboshiLog();
-
-                log.setId(logId);
-                log.setPayLogId(payLogId);
-                log.setUserId(obj.getLong("userId"));
-                log.setEdition(obj.getString("edition"));
-                log.setUserType(obj.getString("userType"));
-                log.setCreateTime(new Date());
-                log.setVin(obj.getString("vin"));
-                log.setSourceType("1");//查博士
-                log.setMoney(obj.getBigDecimal("money"));
-                log.setUserName(obj.getString("userName"));
-                log.setStoreId(obj.getLong("storeId"));
-                log.setResponseResult("3");//查询中
-
-                /*车型信息*/
-                log.setVehicleId(obj.getLong("vehicleId"));
-                log.setVehicleType(obj.getString("vehicleType"));
-                log.setPhoto(obj.getString("photo"));
-                log.setEngineNum(obj.getString("engineNum"));
-
-                carChaboshiLogService.insertCarChaboshiLog(log);
-
-                /*去查询 并更新查博士日志*/
-                result = searchForCustomer(obj.getLong("userId"), obj.getString("userName"), obj.getString("edition"), logId, obj.getString("vin"));
-
-            } else {
-                result.setError("-1", "查博士支付失败");
-            }
+            result = carChaboshiLogService.vinSearchForBuyer(obj);
         } catch (Exception e) {
             e.printStackTrace();
-            result.setError("-1", "查博士支付失败");
+            result.setError("-1", e.getMessage());
         } finally {
             return result;
         }
 
     }
+
+
 
     /**
      * 商家 查博士存钱 设置支付成功后，回调保存成功

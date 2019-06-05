@@ -72,4 +72,6 @@ public interface ICarChaboshiLogService
 	 * 店铺查询查博士
 	 */
 	ServiceResult<Map<String, Object>> searchForStore(JSONObject obj);
+
+	ServiceResult vinSearchForBuyer(JSONObject obj);
 }

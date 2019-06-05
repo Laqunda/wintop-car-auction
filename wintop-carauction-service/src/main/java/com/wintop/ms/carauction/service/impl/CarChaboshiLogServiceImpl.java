@@ -10,6 +10,7 @@ import com.wintop.ms.carauction.util.AlipayUtil;
 import com.wintop.ms.carauction.util.ChaboshiUtils;
 import com.wintop.ms.carauction.util.Class2MapUtil;
 import com.wintop.ms.carauction.util.utils.IdWorker;
+import com.wintop.ms.carauction.util.utils.RandCodeUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.httpclient.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,6 +163,169 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
         return financePayLogModel.insert(payLog);
     }
 
+
+    /*******************************************************************************************
+     ************************************买家查询************************************************
+     *******************************************************************************************/
+
+    /**
+     * 买家查询（支付成功后 开始查询）
+     *
+     * @param obj
+     * @return
+     */
+    @Autowired
+    @Transactional
+    public ServiceResult vinSearchForBuyer(JSONObject obj) {
+        ServiceResult result = new ServiceResult();
+        //写入支付日志表
+        CarFinancePayLog payLog = new CarFinancePayLog();
+        Long payLogId = idWorker.nextId();
+        payLog.setId(payLogId);
+        payLog.setCreatePersonType(obj.getString("userType"));
+        payLog.setCreatePerson(obj.getLong("userId"));
+        payLog.setCreateTime(new Date());
+        payLog.setOrderNo(RandCodeUtil.getOrderNumber());
+        payLog.setPayTime(new Date());
+        payLog.setStatus("1");
+        payLog.setType("4");//查博士
+        payLog.setBankOrderNo(obj.getString("bankOrderNo"));
+        payLog.setBankOrderLog(obj.getString("bankOrderLog"));
+        payLog.setPayType(obj.getString("payType"));
+        payLog.setPayWay(obj.getString("payWay"));
+        payLog.setLogNo(obj.getString("payLogNo"));
+        payLog.setPayFee(obj.getBigDecimal("money"));
+        payLog.setRemark(obj.getString("passbackParams"));
+        payLog.setUserId(obj.getLong("userId"));
+
+
+        //保存支付日志
+
+        financePayLogModel.insert(payLog);
+
+        //写入查询日志
+        Long logId = idWorker.nextId();
+        CarChaboshiLog log = new CarChaboshiLog();
+
+        log.setId(logId);
+        log.setPayLogId(payLogId);
+        log.setUserId(obj.getLong("userId"));
+        log.setEdition(obj.getString("edition"));
+        log.setUserType(obj.getString("userType"));
+        log.setCreateTime(new Date());
+        log.setVin(obj.getString("vin"));
+        log.setSourceType("1");//查博士
+        log.setMoney(obj.getBigDecimal("money"));
+        log.setUserName(obj.getString("userName"));
+        log.setStoreId(obj.getLong("storeId"));
+        log.setResponseResult("3");//查询中
+
+        /*车型信息*/
+        log.setVehicleId(obj.getLong("vehicleId"));
+        log.setVehicleType(obj.getString("vehicleType"));
+        log.setPhoto(obj.getString("photo"));
+        log.setEngineNum(obj.getString("engineNum"));
+
+        insertCarChaboshiLog(log);
+
+        /*去查询 并更新查博士日志*/
+        result = searchForCustomer(obj.getLong("userId"), obj.getString("userName"), obj.getString("edition"), logId, obj.getString("vin"));
+
+        return result;
+    }
+
+    /**
+     * 个人用户查询 其中需要验证
+     * 查博士支付的金额配置
+     * 是否已经支付该查询的费用--在cahboshilog中存在记录
+     *
+     * @param userId
+     * @param edition
+     * @return
+     */
+    private ServiceResult<Map<String, Object>> searchForCustomer(Long userId, String userName, String edition, Long logId, String vin) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
+        /*查找查博士log*/
+        CarChaboshiLog log = selectCarChaboshiLogById(logId);
+       /*
+        查询结果 1查询成功，2查询失败，3，查询中
+        类型：1店铺，2个人
+        条件：钱必须支付，必须是个人用户，状态必须是查询中
+        */
+        if (log != null && log.getMoney() != null && "2".equals(log.getUserType()) && "3".equals(log.getResponseResult())) {
+            result = chaboshi(userId, userName, edition, logId, vin);
+        } else {
+            result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_ORDER.getRemark());
+        }
+        return result;
+    }
+
+    /**
+     * 买家查询
+     *
+     * @param userId
+     * @param userName
+     * @param edition
+     * @param logId
+     * @param vin
+     * @return
+     */
+    @Override
+    public ServiceResult<Map<String, Object>> chaboshi(Long userId, String userName, String edition, Long logId, String vin) {
+        ServiceResult result = new ServiceResult();
+        Map data = new HashMap();
+        JSONObject object = null;
+        object = cha(edition, vin, result);
+
+        CarChaboshiLog log = selectCarChaboshiLogById(logId);
+        boolean isSuccess = false;
+        if (object != null) {
+
+            if ("0".equals(object.get("Code"))) {
+                /*查询成功*/
+                data.put("orderId", object.getString("orderId"));
+                result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+                result.setResult(data);
+
+                log.setOrderId(object.getString("orderId"));
+                log.setOrderMsg(object.getString("Message"));
+                log.setResponseResult("3");//查询中
+                isSuccess = true;
+            } else {
+                /*查询失败*/
+                log.setOrderMsg(object.getString("Message"));
+                log.setResponseResult("2");
+                result.setSuccess(ResultCode.FAIL.strValue(), object.getString("Message"));
+            }
+        } else {
+            log.setResponseResult("2");
+            result.setSuccess(ResultCode.FAIL.strValue(), "查询失败！");
+        }
+        /*更新日志*/
+        Map<String, Object> param = Class2MapUtil.convertMap(log);
+        int code = updateCarChaboshiLog(param);
+        if (!isSuccess) {
+            /*退款到个人支付宝*/
+            CarFinancePayLog payLog = financePayLogModel.selectById(log.getPayLogId());
+            Map map = AlipayUtil.refundOrder(payLog);
+            if ("0".equals(map.get("code"))) {
+                /*退款成功*/
+                int c = savePayLog(payLog);
+            } else {
+                /*退款失败*/
+                Map m = new HashMap();
+                m.put("msg", "退款失败");
+                result.setResult(m);
+            }
+            //TODO 买家退款失败 --  状态提醒
+        }
+        return result;
+    }
+
+    /*******************************************************************************************
+     ************************************店铺查询************************************************
+     *******************************************************************************************/
+
     /**
      * 卖家查询 需要验证 查博士支付的金额配置 以及余额是否足够
      *
@@ -169,6 +333,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
      * @return
      */
     @Override
+    @Transactional
     public ServiceResult<Map<String, Object>> searchForStore(JSONObject obj) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         //查找store信息
@@ -208,66 +373,6 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
 
         } else {
             result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_OBJECT.getRemark());
-        }
-        return result;
-    }
-
-    /**
-     * 买家查询
-     *
-     * @param userId
-     * @param userName
-     * @param edition
-     * @param logId
-     * @param vin
-     * @return
-     */
-    @Override
-    public ServiceResult<Map<String, Object>> chaboshi(Long userId, String userName, String edition, Long logId, String vin) {
-        ServiceResult result = new ServiceResult();
-        Map data = new HashMap();
-        JSONObject object = null;
-        object = cha(edition, vin, result);
-
-        CarChaboshiLog log = selectCarChaboshiLogById(logId);
-        boolean isSuccess = false;
-        if (object != null) {
-
-            if ("0".equals(object.get("code"))) {
-                /*查询成功*/
-                data.put("orderId", object.getString("orderId"));
-                result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
-                result.setResult(data);
-
-                log.setOrderId(object.getString("orderId"));
-                log.setOrderMsg(object.getString("Message"));
-                log.setResponseResult("1");
-                isSuccess = true;
-            } else {
-                /*查询失败*/
-                log.setOrderMsg(object.getString("Message"));
-                log.setResponseResult("2");
-                result.setSuccess(ResultCode.FAIL.strValue(), object.getString("Message"));
-            }
-        } else {
-            log.setResponseResult("2");
-            result.setSuccess(ResultCode.FAIL.strValue(), "查找失败！");
-        }
-        /*更新日志*/
-        Map<String, Object> param = Class2MapUtil.convertMap(log);
-        int code = updateCarChaboshiLog(param);
-        if (!isSuccess) {
-            /*退款到个人支付宝*/
-            CarFinancePayLog payLog = financePayLogModel.selectById(log.getPayLogId());
-            Map map = AlipayUtil.refundOrder(payLog);
-            if ("0".equals(map.get("code"))) {
-                /*退款成功*/
-                int c = savePayLog(payLog);
-            } else {
-
-                /*退款失败*/
-            }
-            //TODO 买家退款失败 --  状态提醒
         }
         return result;
     }
@@ -367,6 +472,8 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
         insertCarChaboshiLog(log);
         return result;
     }
+
+    /******************************************end******************************************/
 
     /**
      * 根据您历史--订单查找
