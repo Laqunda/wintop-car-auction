@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.ResultCode;
-import com.wintop.ms.carauction.core.entity.CarManagerUser;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
@@ -82,10 +81,7 @@ public class CarChaboshiLogAPi {
     public ServiceResult<ListEntity<CarChaboshiLog>> list(@RequestBody JSONObject obj) {
         ServiceResult<ListEntity<CarChaboshiLog>> result = null;
         try {
-//            CarChaboshiLog carChaboshiLog = JSONObject.toJavaObject(obj, CarChaboshiLog.class);
-//            if (carChaboshiLog == null) {
-//                carChaboshiLog = new CarChaboshiLog();
-//            }
+
             Map param = JSONObject.toJavaObject(obj, Map.class);
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
             /*根据assessId查询其查博士的查询日志*/
@@ -93,8 +89,6 @@ public class CarChaboshiLogAPi {
                 CarAssess carAssess = new CarAssess();
                 carAssess.setId(obj.getLong("assessId"));
                 CarAssess assess = assessService.selectCarAssessById(carAssess);
-//                carChaboshiLog.setVin(assess.getVin());
-//                carChaboshiLog.setUserId(assess.getCreateUser());
                 param.put("vin", assess.getVin());
                 param.put("userId", assess.getCreateUser());
             }
@@ -103,8 +97,6 @@ public class CarChaboshiLogAPi {
             int count = carChaboshiLogService.selectCount(param);
 
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
-//            carChaboshiLog.setStartRowNum(pageEntity.getStartRowNum());
-//            carChaboshiLog.setEndRowNum(pageEntity.getEndRowNum());
             param.put("startRowNum", pageEntity.getStartRowNum());
             param.put("endRowNum", pageEntity.getEndRowNum());
 
@@ -166,8 +158,8 @@ public class CarChaboshiLogAPi {
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8")
-    public ServiceResult<Map<String,Object>> buyerPayLog(@RequestBody JSONObject obj) {
-        ServiceResult<Map<String,Object>> result =  new ServiceResult<>();
+    public ServiceResult<Map<String, Object>> buyerPayLog(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
             Map param = JSONObject.toJavaObject(obj, Map.class);
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
@@ -274,6 +266,39 @@ public class CarChaboshiLogAPi {
             }
         } catch (Exception e) {
             logger.info("删除查博士日志", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+
+        }
+        return result;
+    }
+
+    /**
+     * 检查vin码是否支持查询
+     */
+    @ApiOperation(value = "检查vin码是否支持查询")
+    @RequestMapping(value = "/isSupportVin",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String, Object>> vinisSupportVinSearch(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
+        try {
+            String vin = obj.getString("vin");
+//            {"Code":"1106","Message":"品牌可查询"}
+            JSONObject jback = ChaboshiUtils.isSupport(vin);
+            Map m = new HashMap();
+            if ("1106".equals(jback.getString("Code"))) {
+                m.put("code", "0");
+                m.put("msg", jback.getString("Message"));
+            } else {
+                m.put("code", "1");
+                m.put("msg", jback.getString("Message"));
+            }
+            result.setSuccess(true);
+            result.setResult(m);
+        } catch (Exception e) {
+            logger.info("查博士查询", e);
             e.printStackTrace();
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
 
@@ -576,7 +601,7 @@ public class CarChaboshiLogAPi {
         } catch (Exception e) {
             e.printStackTrace();
             resultMap.put("code", "1");
-            resultMap.put("message",e.getMessage());
+            resultMap.put("message", e.getMessage());
         }
         return resultMap;
 

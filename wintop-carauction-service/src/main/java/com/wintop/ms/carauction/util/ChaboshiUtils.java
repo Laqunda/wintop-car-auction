@@ -92,21 +92,26 @@ public class ChaboshiUtils {
         param.put("vin", vin);
         param.put("callbackurl", Constants.CALLBACK_CHABOSHI);
         String str = cbs.sendPost("/new_report/buy", param);
-        return JSONObject.parseObject(str);
+        JSONObject result = JSONObject.parseObject(str);
+        if ("0".equals(result.get("Code"))) {
+            String orderId = result.getJSONObject("data").getString("orderId");
+            result.put("orderId", orderId);
+        }
+        return result;
     }
 
 
     //****************************************************************************************************************************
 
-//    {"Code":"0","Message":"成功","orderId":"d05c2d6b480940d6802665c0fc468312"}
+    //    {"Code":"0","Message":"成功","orderId":"d05c2d6b480940d6802665c0fc468312"}
 //综合版{"Code":"0","Message":"request success","data":{"orderId":"e888ca0b91fe4640a02879308ac0f595"}}
     public static void main(String[] args) {
 
 //        System.out.println(repairReport("LGG7B2D14EZ103435"));
 //        System.out.println(report("LSGWS52X67S050013"));
 //        System.out.println(reportJson("d05c2d6b480940d6802665c0fc468312"));
-        System.out.println(orderStatus("e888ca0b91fe4640a02879308ac0f595"));
-//        System.out.println(reportDetail("d05c2d6b480940d6802665c0fc468312"));
+//        System.out.println(orderStatus("c87160d345904506b974a75b8c65f2d9"));
+        System.out.println(isSupport("LGG7B2D14EZ103435"));
 
     }
 }

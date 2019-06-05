@@ -72,11 +72,24 @@
                 and (ccl.user_name like CONCAT(CONCAT('%',#{sellerSearchName}),'%')
                 or cs.name like CONCAT(CONCAT('%',#{sellerSearchName}),'%'))
             </if>
+
+            <if test="fs != null ">
+                and a.finish_time &gt;= #{fs}
+            </if>
+
+            <if test="fe != null ">
+                and a.finish_time &lt;= #{fe}
+            </if>
+
             <if test="storeIds != null">
                 and store_id in
                 <foreach collection="storeIds" item="item" open="(" separator="," close=")">
                     #{item}
                 </foreach>
+            </if>
+
+            <if test="includeShare != null and includeShare = '1'">
+                or is_open = '1'
             </if>
         </where>
         order by create_time desc

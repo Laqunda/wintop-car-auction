@@ -162,6 +162,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
 
     /**
      * 卖家查询 需要验证 查博士支付的金额配置 以及余额是否足够
+     *
      * @param obj
      * @return
      */
@@ -286,6 +287,25 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
 
         ServiceResult result = new ServiceResult();
         Map data = new HashMap();
+
+        //校验账户余额
+        CarChaboshiStoreAccount account = new CarChaboshiStoreAccount();
+        account.setStoreId(storeId);
+        List<CarChaboshiStoreAccount> accounts = storeAccountModel.selectCarChaboshiStoreAccountList(account);
+        if (accounts != null && accounts.size() > 0) {
+            CarChaboshiStoreAccount c = accounts.get(0);
+            c.setBalance(c.getBalance().subtract(payment));
+            /*小于零 余额不足*/
+            if (c.getBalance().compareTo(BigDecimal.ZERO) == -1) {
+                result.setSuccess(ResultCode.FAIL.strValue(), "余额不足！");
+                return result;
+            }
+        } else {
+            /*没有找到流水记录*/
+            result.setSuccess(ResultCode.FAIL.strValue(), "没有找到流水记录");
+            return result;
+        }
+
         JSONObject object = null;
         object = cha(edition, vin, result);
         /*log 创建存储*/
@@ -307,41 +327,29 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
         log.setPhoto(obj.getString("photo"));
         log.setEngineNum(obj.getString("engineNum"));
         if (object != null) {
-            if ("0".equals(object.get("code"))) {
+            if ("0".equals(object.get("Code"))) {
                 data.put("orderId", object.getString("orderId"));
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
                 result.setResult(data);
 
                 log.setOrderId(object.getString("orderId"));
                 log.setOrderMsg(object.getString("Message"));
-                log.setResponseResult("1");
+                log.setResponseResult("3");//查询中
                 /*扣款*/
-                CarChaboshiStoreAccount account = new CarChaboshiStoreAccount();
-                account.setStoreId(storeId);
-                List<CarChaboshiStoreAccount> accounts = storeAccountModel.selectCarChaboshiStoreAccountList(account);
 
-                if (accounts != null && accounts.size() > 0) {
-                    CarChaboshiStoreAccount c = accounts.get(0);
-                    c.setId(idWorker.nextId());
-                    c.setBalance(c.getBalance().subtract(payment));
-                    /*小于零 扣款失败*/
-                    if (c.getBalance().compareTo(BigDecimal.ZERO) == -1) {
-                        log.setResponseResult("2");//失败
-                        result.setSuccess(ResultCode.FAIL.strValue(), "扣款失败！");
-                    } else {
-                        c.setUserName(userName);
-                        c.setUserId(userId);
-                        c.setCreateTime(new Date());
-                        c.setServiceType("2");//查询报告
-                        c.setType("2");//出账
-                        /*插入流水记录*/
-                        storeAccountModel.insertCarChaboshiStoreAccount(c);
-                    }
-                } else {
-                    /*没有找到流水记录*/
-                    log.setResponseResult("2");//失败
-                    result.setSuccess(ResultCode.FAIL.strValue(), "扣款失败！");
-                }
+                CarChaboshiStoreAccount c = accounts.get(0);
+                c.setId(idWorker.nextId());
+                c.setPayment(payment);
+                c.setBalance(c.getBalance().subtract(payment));
+                c.setUserName(userName);
+                c.setUserId(userId);
+                c.setCreateTime(new Date());
+                c.setServiceType("2");//查询报告
+                c.setType("2");//出账
+                /*插入流水记录*/
+                storeAccountModel.insertCarChaboshiStoreAccount(c);
+
+
             } else {
                 /*查博士查找失败*/
                 log.setResponseResult("2");

@@ -11,6 +11,7 @@ import com.wintop.ms.carauction.core.entity.CarManagerUser;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -58,6 +60,30 @@ public class CarChaboshiLogApi {
                         .body(map),JSONObject.class);
         return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
+
+    /**
+     * 查询查博士近30天成功数据
+     */
+    @ApiOperation(value = "查询查博士近30天成功数据")
+    @PostMapping(value = "/recentPayed",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResultModel list30(@RequestBody Map<String,Object> map) {
+        if(map.get("page")==null || map.get("limit")==null){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+
+        map.put("fs", DateUtils.addMonths(new Date(),-1));
+        map.put("responseResult", "1");
+
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carChaboshiLog/list"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
 
     /**
      * 查询查博士日志列表
