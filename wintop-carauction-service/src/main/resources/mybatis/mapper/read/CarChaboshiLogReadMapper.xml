@@ -86,7 +86,10 @@
 
                 <if test="fs != null ">
                     and ccl.finish_time &gt;= #{fs}
-                </if>)
+                </if>
+                <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
+                )
+
             </if>
 
             <if test="storeIds != null">
@@ -147,7 +150,11 @@
                 or (is_open = '1'
                 <if test="fs != null ">
                     and ccl.finish_time &gt;= #{fs}
-                </if>)
+
+                </if>
+                <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
+                )
+
             </if>
 
             <if test="storeIds != null">
