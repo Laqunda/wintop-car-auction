@@ -191,5 +191,25 @@ public class CarChaboshiLogApi {
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
+    /**
+     * 检查vin码是否支持查询
+     */
+    @ApiOperation(value = "检查vin码是否支持查询")
+    @RequestMapping(value = "/isSupportVin",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResultModel isSupportVin(@RequestBody Map<String, Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/carChaboshiLog/isSupportVin"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
+
 
 }
