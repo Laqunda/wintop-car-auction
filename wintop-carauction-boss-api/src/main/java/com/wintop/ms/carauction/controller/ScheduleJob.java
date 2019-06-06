@@ -5,12 +5,13 @@ import com.wintop.ms.carauction.core.config.Constants;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.HashMap;
 
-//@Controller
+@Controller
 public class ScheduleJob {
 
     private final RestTemplate restTemplate;
@@ -18,7 +19,7 @@ public class ScheduleJob {
         this.restTemplate = restTemplate;
     }
 
-    //@Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 1000)
     public void redisAutoDataJob() {
         //System.out.println("--------2------");
         this.restTemplate.exchange(
