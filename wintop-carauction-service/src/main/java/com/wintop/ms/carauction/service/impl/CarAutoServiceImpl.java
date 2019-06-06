@@ -1,15 +1,8 @@
 package com.wintop.ms.carauction.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.primitives.Ints;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.RedisAutoData;
@@ -21,10 +14,6 @@ import com.wintop.ms.carauction.service.ICarAutoAuctionService;
 import com.wintop.ms.carauction.service.ICarAutoService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import com.wintop.ms.carauction.util.utils.RedisAutoManager;
-import io.swagger.models.auth.In;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
@@ -34,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -590,6 +578,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
      *@date 2018/3/23
      *@param:
      */
+    @Override
     @Transactional
     public Integer revokeApprove(JSONObject object){
         Integer result=0;
@@ -677,6 +666,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
      *@date 2018/3/23
      *@param:
      */
+    @Override
     @Transactional
     public Integer approveCarAuto(JSONObject object){
         Integer result=0;
