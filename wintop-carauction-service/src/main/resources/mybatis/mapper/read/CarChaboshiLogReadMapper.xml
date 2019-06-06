@@ -27,10 +27,11 @@
         <result property="pc_url" column="pc_url"/>
         <result property="app_url" column="app_url"/>
         <result property="finishTime" column="finish_time"/>
+        <result property="is_open" column="is_open"/>
     </resultMap>
 
     <sql id="selectCarChaboshiLogVo">
-        ccl.pc_url,ccl.app_url,ccl.finish_time,ccl.vehicle_id,ccl.vehicle_type,ccl.photo,ccl.engine_num,ccl.id,ccl.paylog_id,ccl.store_id,ccl.create_time,ccl.user_type,ccl.user_id,ccl.vin,ccl.response_msg,ccl.source_type,ccl.response_result,ccl.money,ccl.edition,ccl.order_id,ccl.order_msg,ccl.user_name
+        ccl.is_open,ccl.pc_url,ccl.app_url,ccl.finish_time,ccl.vehicle_id,ccl.vehicle_type,ccl.photo,ccl.engine_num,ccl.id,ccl.paylog_id,ccl.store_id,ccl.create_time,ccl.user_type,ccl.user_id,ccl.vin,ccl.response_msg,ccl.source_type,ccl.response_result,ccl.money,ccl.edition,ccl.order_id,ccl.order_msg,ccl.user_name
     </sql>
 
     <select id="selectCarChaboshiLogList" parameterType="java.util.Map"

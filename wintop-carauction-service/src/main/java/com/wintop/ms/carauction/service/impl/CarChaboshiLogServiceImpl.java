@@ -163,6 +163,10 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
         return financePayLogModel.insert(payLog);
     }
 
+    @Override
+    public void updateIsOpen(Map map) {
+        model.updateIsOpen(map);
+    }
 
     /*******************************************************************************************
      ************************************买家查询************************************************

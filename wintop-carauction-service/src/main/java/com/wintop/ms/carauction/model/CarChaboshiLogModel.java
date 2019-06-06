@@ -79,4 +79,7 @@ public class CarChaboshiLogModel {
     }
 
 
+    public int updateIsOpen(Map map) {
+        return writeDao.updateIsOpen(map);
+    }
 }

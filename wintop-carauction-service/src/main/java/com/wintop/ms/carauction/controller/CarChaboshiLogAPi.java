@@ -3,6 +3,8 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
+import com.wintop.ms.carauction.core.annotation.AppApiVersion;
+import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -305,6 +307,38 @@ public class CarChaboshiLogAPi {
         return result;
     }
 
+    /**
+     * 更新店铺 vin 是否公开
+     */
+    @ApiOperation(value = "更新店铺 vin 是否公开")
+    @RequestMapping(value = "/updateIsOpen",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ServiceResult<Map<String, Object>> updateIsOpen(@RequestBody Map<String, Object> map) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
+        try {
+
+            if (map.get("is_open") == null || map.get("vin") == null || map.get("storeId") == null) {
+                result.setError(ResultCode.NO_PARAM.strValue(), ResultCode.NO_PARAM.getRemark());
+            } else {
+
+                Map m = new HashMap();
+                carChaboshiLogService.updateIsOpen(map);
+                result.setSuccess(true);
+                result.setResult(m);
+            }
+        } catch (Exception e) {
+            logger.info("查博士查询", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+
+        }
+        return result;
+    }
+
 
     /**
      * 查博士查询
@@ -349,7 +383,6 @@ public class CarChaboshiLogAPi {
     }
 
 
-
     /**
      * 历史订单查询
      *
@@ -384,7 +417,6 @@ public class CarChaboshiLogAPi {
         }
 
     }
-
 
 
     /**

@@ -74,4 +74,6 @@ public interface ICarChaboshiLogService
 	ServiceResult<Map<String, Object>> searchForStore(JSONObject obj);
 
 	ServiceResult vinSearchForBuyer(JSONObject obj);
+
+    void updateIsOpen(Map map);
 }
