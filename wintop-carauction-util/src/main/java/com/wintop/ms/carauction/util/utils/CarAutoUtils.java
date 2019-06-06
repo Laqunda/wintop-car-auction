@@ -94,7 +94,7 @@ public class CarAutoUtils {
         Date[] dates = new Date[2];
         Calendar calendar =Calendar.getInstance(Locale.CHINA);
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(day,Calendar.DAY_OF_MONTH);
+        calendar.add(Calendar.DATE,day);
         dates[0]=format2.parse(format1.format(calendar.getTime())+" 00:00:00");
         dates[1]=format2.parse(format1.format(calendar.getTime())+" 23:59:59");
         return dates;
@@ -105,20 +105,10 @@ public class CarAutoUtils {
         return format.format(date);
     }
 
-    public static String getDayOfWeek(Date date){
-        Map<Integer, String> weekMap = new HashMap<Integer, String>(){{
-            put(1,"星期日");
-            put(2,"星期一");
-            put(3,"星期二");
-            put(4,"星期三");
-            put(5,"星期四");
-            put(6,"星期五");
-            put(7,"星期六");
-        }};
+    public static int getDayOfWeek(Date date){
         Calendar calendar = Calendar.getInstance(Locale.CHINA);
         calendar.setTime(date);
-        int week = calendar.get(Calendar.DAY_OF_WEEK);
-        return weekMap.get(week);
+        return calendar.get(Calendar.DAY_OF_WEEK);
     }
 
     /**

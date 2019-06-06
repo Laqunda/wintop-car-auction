@@ -898,4 +898,20 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
     public CarLocaleAuction selectByStationRealId(String stationRealId,String auctionDate){
         return model.selectByStationRealId(stationRealId,auctionDate);
     }
+
+    @Override
+    public ServiceResult<List<CarLocaleAuction>> queryAuctionListByParams(Map<String, Object> map) {
+        ServiceResult<List<CarLocaleAuction>> result=new ServiceResult<>();
+        List<CarLocaleAuction> carAuctions = model.queryAuctionListByParams(map);
+        for(CarLocaleAuction carAuction:carAuctions){
+            map = new HashMap<>();
+            map.put("auctionId",carAuction.getId());
+            map.put("auctionStatusArr","'0','1','2'");
+            int carNum = carAuctionCarModel.selectCarNumByAuction(map);
+            carAuction.setCarNum(carNum);
+        }
+        result.setSuccess(true);
+        result.setResult(carAuctions);
+        return result;
+    }
 }

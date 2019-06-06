@@ -32,6 +32,7 @@
     <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="create_person_name" property="createPersonName" jdbcType="VARCHAR" />
+    <result column="locale_auction_template_id" property="localeAuctionTemplateId" jdbcType="BIGINT" />
 
     <result column="transaction_fee" property="transactionFee" jdbcType="DECIMAL" />
     <result column="publish_user_name" property="publishUserName" jdbcType="VARCHAR" />
@@ -67,7 +68,8 @@
     t1.modify_time,
     t1.del_person,
     t1.del_time,
-    t1.del_flag
+    t1.del_flag,
+    t1.locale_auction_template_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
@@ -373,5 +375,35 @@
     where t1.station_real_id = #{stationRealId}
     and DATE_FORMAT(t1.start_time,'%Y%m%d')=#{auctionDate}
     order by t1.start_time desc limit 1
+  </select>
+
+  <select id="queryAuctionListByParams" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM car_locale_auction t1
+    inner join car_locale_auction_template clat on clat.id = t1.locale_auction_template_id
+    WHERE 1=1
+    <if test="regionId != null">
+      AND t1.city_id=#{regionId}
+    </if>
+    <if test="regionIds != null">
+      AND t1.city_id in
+      <foreach collection="regionIds" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="title != null">
+      AND t1.title like CONCAT(CONCAT('%', #{title}),'%')
+    </if>
+    <if test="statusList != null">
+      AND t1.status in
+      <foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="beginTime != null">
+      AND date(t1.start_time) = date(NOW())
+    </if>
+    ORDER BY t1.status DESC ,t1.start_time ASC
   </select>
 </mapper>

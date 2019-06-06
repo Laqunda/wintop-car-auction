@@ -181,4 +181,11 @@ public interface ICarLocaleAuctionService {
      * @return
      */
     CarLocaleAuction selectByStationRealId(String stationRealId,String auctionDate);
+
+    /**
+     * 查询竞拍列表
+     * @param map
+     * @return
+     */
+    ServiceResult<List<CarLocaleAuction>> queryAuctionListByParams(Map<String, Object> map);
 }

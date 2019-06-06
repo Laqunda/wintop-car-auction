@@ -149,4 +149,13 @@ public class CarLocaleAuctionModel {
     public CarLocaleAuction selectByStationRealId(String stationRealId,String auctionDate){
         return readDao.selectByStationRealId(stationRealId, auctionDate);
     }
+
+    /**
+     * 获取场次列表
+     * @param map
+     * @return
+     */
+    public List<CarLocaleAuction> queryAuctionListByParams(Map<String,Object> map){
+        return readDao.queryAuctionListByParams(map);
+    }
 }
