@@ -5,6 +5,7 @@ import com.wintop.ms.carauction.entity.CommonNameVo;
 import com.wintop.ms.carauction.entity.Criteria;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,12 @@ public interface ICarAutoAuctionReadDao {
      *
      */
     CarAutoAuction selectByPrimaryKey(Long id);
+
+    /**
+     * 查询-填充使用,最近的开拍时间
+     * @return
+     */
+    String selectForToday(Map<String,Object> map);
 
     /**
      * 获取车辆拍卖活动

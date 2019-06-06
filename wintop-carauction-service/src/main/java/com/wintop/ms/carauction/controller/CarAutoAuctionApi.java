@@ -400,4 +400,25 @@ public class CarAutoAuctionApi {
             return result;
         }
     }
+
+    /**
+     * 查询-填充使用,最近的开拍时间
+     */
+    @ApiOperation(value = "最近的开拍时间")
+    @RequestMapping(value = "/selectForToday",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> detail(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+        try {
+            result.setResult(Collections.singletonMap("data",this.carAutoAuctionService.selectForToday()));
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询车辆评估详情", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
 }
