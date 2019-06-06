@@ -25,6 +25,25 @@
       <if test="type != null and type != ''">
         and `type` = #{type}
       </if>
+      <if test="pId != null and pId != ''">
+        and p_id = #{pId}
+      </if>
     </where>
+  </select>
+  <select id="selectChildrenTagConfList" parameterType="java.util.Map" resultType="java.lang.String">
+    select
+        group_concat(concat_ws('_',`type`,star,p_id,id,title))
+    from car_evaluate_tag_conf
+    where p_id != -1
+    <if test="type != null and type != ''">
+      and `type` = #{type}
+    </if>
+    <if test="pId != null and pId != ''">
+      and p_id = #{pId}
+    </if>
+    <if test="star != null and star != ''">
+      and star = #{star}
+    </if>
+    group by type,p_id,star
   </select>
 </mapper>

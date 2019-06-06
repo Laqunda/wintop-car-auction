@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -141,5 +143,13 @@ public class CarAutoAuctionModel {
      */
     public List<CarAutoAuction> selectAutoAuctionBylocale(Map<String,Object> map){
         return readDao.selectAutoAuctionBylocale(map);
+    }
+
+    /**
+     * 查询-填充使用,最近的开拍时间
+     * @return
+     */
+    public String selectForToday(){
+        return readDao.selectForToday(Collections.singletonMap("date",new Date()));
     }
 }

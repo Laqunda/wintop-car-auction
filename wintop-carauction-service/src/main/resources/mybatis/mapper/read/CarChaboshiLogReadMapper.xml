@@ -86,7 +86,11 @@
 
                 <if test="fs != null ">
                     and ccl.finish_time &gt;= #{fs}
-                </if>)
+                </if>
+                <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
+                <if test="responseResult != null  and responseResult != '' ">and response_result = #{responseResult}</if>
+                )
+
             </if>
 
             <if test="storeIds != null">
@@ -147,7 +151,12 @@
                 or (is_open = '1'
                 <if test="fs != null ">
                     and ccl.finish_time &gt;= #{fs}
-                </if>)
+
+                </if>
+                <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
+                <if test="responseResult != null  and responseResult != '' ">and response_result = #{responseResult}</if>
+                )
+
             </if>
 
             <if test="storeIds != null">

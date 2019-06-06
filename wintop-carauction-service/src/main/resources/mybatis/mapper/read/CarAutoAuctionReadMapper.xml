@@ -68,6 +68,24 @@
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
   </select>
+
+  <select id="selectForToday" resultType="java.lang.String" parameterType="java.util.Map">
+      select * from (
+          select * from (
+                  select
+                      cast(timestampadd(MINUTE,5,auction_start_time) as char)
+                  from car_auto_auction
+                  where auction_type = 1
+                  and date_format(auction_start_time,'%Y-%m-%d')= date_format(now(),'%Y-%m-%d')
+                  order by auction_start_time desc
+                  limit 0,1
+              ) a
+              union
+                  select date_format(date_add(#{date},interval 5 MINUTE),'%Y-%m-%d %H:%i:%s')
+      ) b
+      limit 0,1
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
