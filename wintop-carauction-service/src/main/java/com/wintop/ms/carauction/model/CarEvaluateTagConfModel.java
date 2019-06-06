@@ -36,6 +36,15 @@ public class CarEvaluateTagConfModel {
     }
 
     /**
+     * 查询子节点数据
+     * @param map
+     * @return
+     */
+    public List<String> selectChildrenTagConfList(Map<String, Object> map) {
+        return readDao.selectChildrenTagConfList(map);
+    }
+
+    /**
      * 插入数据
      * @param carEvaluateTagConf
      * @return

@@ -24,4 +24,11 @@ public interface ICarEvaluateTagConfReadDao {
      * @return
      */
     CarEvaluateTagConf selectByPrimaryKey(Long id);
+
+    /**
+     * 查询子节点数据
+     * @param map
+     * @return
+     */
+    List<String> selectChildrenTagConfList(Map<String, Object> map);
 }

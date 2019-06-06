@@ -18,6 +18,16 @@
     values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{pId,jdbcType=BIGINT}, 
       #{type,jdbcType=VARCHAR}, #{star,jdbcType=DECIMAL})
   </insert>
+  <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    <selectKey resultType="long" keyProperty="id" order="AFTER">
+      SELECT
+      LAST_INSERT_ID()
+    </selectKey>
+    insert into car_evaluate_tag_conf (id, title, p_id, type, star) values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.id}, #{item.title}, #{item.pId}, #{item.type}, #{item.star})
+    </foreach>
+  </insert>
   <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarEvaluateTagConf">
     insert into car_evaluate_tag_conf
     <trim prefix="(" suffix=")" suffixOverrides=",">
