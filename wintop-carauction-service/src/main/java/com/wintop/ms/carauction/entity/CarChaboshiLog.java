@@ -81,6 +81,8 @@ public class CarChaboshiLog extends BaseEntity
 	/*店铺信息*/
 	private CarStore carStore;
 
+	private String is_open;
+
 	public void setId(Long id) 
 	{
 		this.id = id;
@@ -320,4 +322,12 @@ public class CarChaboshiLog extends BaseEntity
             .append("userName", getUserName())
             .toString();
     }
+
+	public String getIs_open() {
+		return is_open;
+	}
+
+	public void setIs_open(String is_open) {
+		this.is_open = is_open;
+	}
 }
