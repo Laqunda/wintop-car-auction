@@ -534,4 +534,20 @@ public class CarLocaleAuction implements Serializable {
     public void setCityName(String cityName) {
         this.cityName = cityName;
     }
+
+    public Long getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(Long templateId) {
+        this.templateId = templateId;
+    }
+
+    public Long getLocaleAuctionTemplateId() {
+        return localeAuctionTemplateId;
+    }
+
+    public void setLocaleAuctionTemplateId(Long localeAuctionTemplateId) {
+        this.localeAuctionTemplateId = localeAuctionTemplateId;
+    }
 }
