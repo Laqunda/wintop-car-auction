@@ -56,13 +56,13 @@ public class CarLocaleAuctionApi {
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
-    public ResponseEntity<ResultModel> selectAuctionTotalList(@RequestBody Map<String,Object> map) {
+    public ResponseEntity<ResultModel> selectAuctionTotalList(@RequestHeader Map<String,String> headers,@RequestBody Map<String,Object> map) {
         map.put("clientType","app");
-        Object version = map.get("version");
+        Object version = headers.get("version");
         if ("2.0".equals(version + "")) {
             ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                     RequestEntity
-                            .post(URI.create(Constants.ROOT+"/service/carLocaleAuction/selectAuctionTotalList2"))
+                            .post(URI.create(Constants.ROOT+"/service/template/selectAuctionTotalList"))
                             .contentType(MediaType.APPLICATION_JSON)
                             .body(map),JSONObject.class);
             return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);

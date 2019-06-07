@@ -79,6 +79,10 @@ public class CarLocaleAuctionTemplateModel {
         return 0;
     }
 
+    public List<CarLocaleAuctionTemplate> selectAuctionListForApp(Map<String, Object> map){
+        return readDao.selectAuctionListForApp(map);
+    }
+
     private static <T> boolean isNotEmpty(T t) {
         return Optional.ofNullable(t).isPresent();
     }

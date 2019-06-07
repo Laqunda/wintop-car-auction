@@ -87,4 +87,11 @@ public interface ICarLocaleAuctionReadDao {
      * @return
      */
     CarLocaleAuction selectByStationRealId(@Param("stationRealId") String stationRealId, @Param("auctionDate") String auctionDate);
+
+    /**
+     * 获取场次列表
+     * @param map
+     * @return
+     */
+    List<CarLocaleAuction> queryAuctionListByParams(Map<String,Object> map);
 }

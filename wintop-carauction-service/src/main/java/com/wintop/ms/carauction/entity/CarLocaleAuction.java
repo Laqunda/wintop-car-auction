@@ -158,6 +158,11 @@ public class CarLocaleAuction implements Serializable {
      */
     private Long templateId;
 
+    /**
+     * 主题id
+     */
+    private Long localeAuctionTemplateId;
+
     public BigDecimal getTransactionFee() {
         return transactionFee;
     }
@@ -528,13 +533,5 @@ public class CarLocaleAuction implements Serializable {
 
     public void setCityName(String cityName) {
         this.cityName = cityName;
-    }
-
-    public Long getTemplateId() {
-        return templateId;
-    }
-
-    public void setTemplateId(Long templateId) {
-        this.templateId = templateId;
     }
 }

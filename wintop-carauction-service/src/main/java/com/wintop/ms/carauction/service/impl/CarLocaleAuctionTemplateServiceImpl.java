@@ -2,6 +2,8 @@ package com.wintop.ms.carauction.service.impl;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.wintop.ms.carauction.core.entity.ServiceResult;
+import com.wintop.ms.carauction.entity.CarLocaleAuction;
 import com.wintop.ms.carauction.entity.CarLocaleAuctionTemplate;
 import com.wintop.ms.carauction.entity.CarLocaleAuctionWeek;
 import com.wintop.ms.carauction.model.CarLocaleAuctionTemplateModel;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -138,6 +141,15 @@ public class CarLocaleAuctionTemplateServiceImpl implements ICarLocaleAuctionTem
         int code = carLocaleAuctionTemplateModel.delete(id);
         carLocaleAuctionWeekModel.batchRemove(Collections.singletonMap("templateId", id));
         return code;
+    }
+
+    @Override
+    public ServiceResult<List<CarLocaleAuctionTemplate>> selectAuctionListForApp(Map<String, Object> map) {
+        ServiceResult<List<CarLocaleAuctionTemplate>> result=new ServiceResult<>();
+        List<CarLocaleAuctionTemplate> carLocaleAuctionTemplates = carLocaleAuctionTemplateModel.selectAuctionListForApp(map);
+        result.setSuccess(true);
+        result.setResult(carLocaleAuctionTemplates);
+        return result;
     }
 
     private static <T> boolean isNotEmpty(T t) {

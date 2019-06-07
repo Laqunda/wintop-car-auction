@@ -1,5 +1,7 @@
 package com.wintop.ms.carauction.service;
 
+import com.wintop.ms.carauction.core.entity.ServiceResult;
+import com.wintop.ms.carauction.entity.CarLocaleAuction;
 import com.wintop.ms.carauction.entity.CarLocaleAuctionTemplate;
 import com.wintop.ms.carauction.entity.CarLocaleAuctionWeek;
 import org.apache.ibatis.annotations.Param;
@@ -56,5 +58,12 @@ public interface ICarLocaleAuctionTemplateService {
      * @return
      */
     public int delete(Long id);
+
+    /**
+     * 查询场次列表
+     * @param map
+     * @return
+     */
+    ServiceResult<List<CarLocaleAuctionTemplate>> selectAuctionListForApp(Map<String, Object> map);
 
 }

@@ -87,4 +87,19 @@
 		  		</where>
 	</select>
 
+    <select id="selectAuctionListForApp" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        clat.id,
+        clat.title,
+        clat.region_id,
+        clat.start_time,
+        clat.poster
+        from  car_locale_auction_template clat
+        ,car_locale_auction_week claw
+        where clat.id = claw.template_id
+        and (date(#{beginTime}) <![CDATA[ < ]]> date(clat.stop_start_time) or date(clat.stop_end_time) <![CDATA[ < ]]> DATE(#{beginTime}))
+        and  claw.theme_week = #{week}
+        <if test="regionId != null and regionId != ''"> and clat.region_id = #{regionId} </if>
+        order by clat.start_time ASC
+    </select>
 </mapper>

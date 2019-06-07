@@ -21,4 +21,6 @@ public interface ICarLocaleAuctionTemplateReadDao {
 	
 	int count(CarLocaleAuctionTemplate carLocaleAuctionTemplate);
 
+	List<CarLocaleAuctionTemplate> selectAuctionListForApp(Map<String,Object> map);
+
 }
