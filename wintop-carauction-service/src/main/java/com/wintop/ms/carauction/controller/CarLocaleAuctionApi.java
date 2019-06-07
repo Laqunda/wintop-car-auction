@@ -449,6 +449,7 @@ public class CarLocaleAuctionApi {
             produces="application/json; charset=UTF-8")
     @ApiOperation(value = "保存竞拍场次",notes = "")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "templateId",value = "模板id",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "title",value = "场次主题",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "regionId",value = "可见范围，客户组id",required = true,paramType = "body",dataType = "long"),
             @ApiImplicitParam(name = "cityId",value = "场次所在城市",required = true,paramType = "body",dataType = "long"),
@@ -521,6 +522,12 @@ public class CarLocaleAuctionApi {
             result.setError("101","创建人不能为空！");
             return result;
         }
+        if (obj.getString("templateId") != null) {
+            carLocaleAuction.setTemplateId(obj.getLong("templateId"));
+        }else{
+            result.setError("101","模板id不能为空！");
+            return result;
+        }
         carLocaleAuction.setDelFlag("0");
         carLocaleAuction.setStatus("1");
         carLocaleAuction.setCreateTime(new Date());
@@ -554,6 +561,7 @@ public class CarLocaleAuctionApi {
     @ApiOperation(value = "更新竞拍场次",notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id",value = "场次主键",required = true,paramType = "body",dataType = "string"),
+            @ApiImplicitParam(name = "templateId",value = "模板id",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "code",value = "场次编号",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "title",value = "场次主题",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "regionId",value = "可见范围，客户组id",required = true,paramType = "body",dataType = "long"),
@@ -617,6 +625,9 @@ public class CarLocaleAuctionApi {
         }
         if(obj.getString("modifyPerson")!=null){
             carLocaleAuction.setModifyPerson(obj.getLong("modifyPerson"));
+        }
+        if (obj.getString("templateId") != null) {
+            carLocaleAuction.setTemplateId(obj.getLong("templateId"));
         }
         carLocaleAuction.setModifyTime(new Date());
         result = carLocaleAuctionService.updateByIdSelective(carLocaleAuction);

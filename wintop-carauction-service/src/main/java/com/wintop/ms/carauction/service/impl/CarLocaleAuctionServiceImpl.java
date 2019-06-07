@@ -403,6 +403,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
             resultMap.put("seeCarPhone",carLocaleAuction.getSeeCarPhone());
             resultMap.put("seeCarTime",carLocaleAuction.getSeeCarTime());
             resultMap.put("stationRealId",carLocaleAuction.getStationRealId());
+            resultMap.put("templateId", carLocaleAuction.getTemplateId());
         }
         result.setResult(resultMap);
         return result;

@@ -379,6 +379,25 @@ public class CarAutoApi {
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
+    /**
+     * 查询车辆信息
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/detail",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthPublic
+    @RequestAuth(false)
+    public ResultModel detail(@RequestBody Map<String,Object> map){
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAuto/detail"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
 
     /**
      * 查询车辆基本信息

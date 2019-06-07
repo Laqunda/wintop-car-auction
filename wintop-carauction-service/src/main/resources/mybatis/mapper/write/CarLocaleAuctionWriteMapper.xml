@@ -29,7 +29,8 @@
     modify_time,
     del_person,
     del_time,
-    del_flag
+    del_flag,
+    template_id
     )
     values (
     #{id},
@@ -54,7 +55,8 @@
     #{modifyTime},
     #{delPerson},
     #{delTime},
-    #{delFlag}
+    #{delFlag},
+    #{templateId}
     )
   </insert>
   <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuction" >
@@ -126,6 +128,9 @@
       <if test="delFlag != null" >
         del_flag = #{delFlag},
       </if>
+      <if test="templateId != null" >
+        template_id = #{templateId},
+      </if>
     </set>
     where id = #{id}
   </update>
@@ -151,7 +156,8 @@
       modify_time = #{modifyTime},
       del_person = #{delPerson},
       del_time = #{delTime},
-      del_flag = #{delFlag}
+      del_flag = #{delFlag},
+      template_id = #{templateId}
     where id = #{id}
   </update>
 </mapper>
