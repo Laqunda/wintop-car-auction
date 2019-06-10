@@ -17,11 +17,6 @@
 	<dependencies>
 
         <dependency>
-            <groupId>com.chaboshi.api</groupId>
-            <artifactId>sign</artifactId>
-            <version>0.0.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
@@ -36,7 +31,6 @@
             <artifactId>sign</artifactId>
             <version>0.0.2</version>
         </dependency>
-       <!-- &lt;!&ndash; 开启eureka客户端注册依赖 &ndash;&gt;
         <!-- 开启eureka客户端注册依赖 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
