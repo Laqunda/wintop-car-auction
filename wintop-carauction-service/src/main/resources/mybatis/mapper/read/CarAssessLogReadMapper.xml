@@ -11,10 +11,11 @@
         <result property="createTime" column="create_time"/>
         <result property="createPerson" column="create_person"/>
         <result property="userName" column="user_name"/>
+        <result property="autoId" column="auto_id"/>
     </resultMap>
 
     <sql id="selectCarAssessLogVo">
-        select id, assess_id, log_msg, create_time, create_person, user_name from car_assess_log
+        select auto_id,id, assess_id, log_msg, create_time, create_person, user_name from car_assess_log
     </sql>
 
     <select id="selectCarAssessLogList" parameterType="com.wintop.ms.carauction.entity.CarAssessLog"
@@ -27,6 +28,7 @@
             <if test="createTime != null ">and create_time = #{createTime}</if>
             <if test="createPerson != null ">and create_person = #{createPerson}</if>
             <if test="userName != null  and userName != '' ">and user_name = #{userName}</if>
+            <if test="autoId != null  and autoId != '' ">and auto_id = #{autoId}</if>
         </where>
         order by create_time
         <if test="endRowNum != null">
@@ -44,6 +46,7 @@
             <if test="createTime != null ">and create_time = #{createTime}</if>
             <if test="createPerson != null ">and create_person = #{createPerson}</if>
             <if test="userName != null  and userName != '' ">and user_name = #{userName}</if>
+            <if test="autoId != null  and autoId != '' ">and auto_id = #{autoId}</if>
         </where>
         order by create_time
         <if test="endRowNum != null">

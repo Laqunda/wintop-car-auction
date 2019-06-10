@@ -12,6 +12,7 @@
             <if test="createTime != null  ">create_time,</if>
             <if test="createPerson != null  ">create_person,</if>
             <if test="userName != null  and userName != ''  ">user_name,</if>
+            <if test="autoId != null  and autoId != ''  ">auto_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null  ">#{id},</if>
@@ -20,6 +21,7 @@
             <if test="createTime != null  ">#{createTime},</if>
             <if test="createPerson != null  ">#{createPerson},</if>
             <if test="userName != null  and userName != ''  ">#{userName},</if>
+            <if test="autoId != null  and autoId != ''  ">#{autoId},</if>
         </trim>
     </insert>
 
@@ -31,6 +33,7 @@
             <if test="createTime != null  ">create_time = #{createTime},</if>
             <if test="createPerson != null  ">create_person = #{createPerson},</if>
             <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+            <if test="autoId != null  and autoId != ''  ">auto_id = #{autoId},</if>
         </trim>
         where id = #{id}
     </update>
