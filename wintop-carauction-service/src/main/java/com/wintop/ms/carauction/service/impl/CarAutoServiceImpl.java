@@ -66,6 +66,10 @@ public class CarAutoServiceImpl implements ICarAutoService {
     private CarAutoProceduresModel carAutoProceduresModel;
     @Autowired
     private CarAutoConfDetailModel carAutoConfDetailModel;
+    @Autowired
+    private CarAssessModel carAssessModel;
+    @Autowired
+    private CarAutoAuctionModel carAutoAuctionModel;
 
     private static Map<String,  List<Integer>> auctionTypeMap = getAuctionTypeMap();
 
@@ -1002,14 +1006,19 @@ public class CarAutoServiceImpl implements ICarAutoService {
         CarAutoInfoDetail carAutoInfoDetail = autoInfoDetailModel.selectDetailByCarId(carAuto.getId());
         carAuto.setCarAutoInfoDetail(carAutoInfoDetail);
         // 车辆手续信息
-        Criteria criteria = new Criteria();
-        criteria.put("autoId", carAuto.getId());
-        CarAutoProcedures carAutoProcedures = carAutoProceduresModel.selectByExample(criteria).stream().findFirst().orElse(new CarAutoProcedures());
+        CarAutoProcedures carAutoProcedures = carAutoProceduresModel.getAutoProceduresByCarId(carAuto.getId());
         carAuto.setCarAutoProcedures(carAutoProcedures);
+        CarAssess paramAssess = new CarAssess();
+        paramAssess.setAutoId(carAuto.getId());
+        // 车辆零售信息
+        CarAssess carAssess = carAssessModel.selectCarAssessById(paramAssess);
+        carAuto.setCarAssess(carAssess);
         // 配置信息
         List<CarAutoConfDetail> carAutoConfDetailList = carAutoConfDetailModel.selectByExample(Collections.singletonMap("autoId", carAuto.getId()));
         carAuto.setCarAutoConfDetailList(carAutoConfDetailList);
-        // TODO 其它参数
+        // 竞拍信息
+        CarAutoAuction carAutoAuction = carAutoAuctionModel.selectAuctionInformation(carAuto.getId());
+        carAuto.setCarAutoAuction(carAutoAuction);
 
         return carAuto;
     }

@@ -217,6 +217,10 @@ public class CarAuto implements Serializable {
     private CarAutoProcedures carAutoProcedures;
     // 车辆配置明细
     private List<CarAutoConfDetail> carAutoConfDetailList;
+    // 车辆采购单
+    private CarAssess carAssess;
+    // 竞拍信息
+    private CarAutoAuction carAutoAuction;
 
     public String getMaxPriceUserId() {
         return maxPriceUserId;
@@ -1219,5 +1223,21 @@ public class CarAuto implements Serializable {
 
     public void setCarAutoConfDetailList(List<CarAutoConfDetail> carAutoConfDetailList) {
         this.carAutoConfDetailList = carAutoConfDetailList;
+    }
+
+    public CarAssess getCarAssess() {
+        return carAssess;
+    }
+
+    public void setCarAssess(CarAssess carAssess) {
+        this.carAssess = carAssess;
+    }
+
+    public CarAutoAuction getCarAutoAuction() {
+        return carAutoAuction;
+    }
+
+    public void setCarAutoAuction(CarAutoAuction carAutoAuction) {
+        this.carAutoAuction = carAutoAuction;
     }
 }

@@ -70,7 +70,7 @@
     t1.del_person,
     t1.del_time,
     t1.del_flag,
-    t1.template_id
+    t1.template_id,
     t1.del_flag
 --     t1.locale_auction_template_id
   </sql>

@@ -130,7 +130,7 @@
           t1.owner_price,
           t1.move_to_where
       from car_auto_auction t1
-      left  JOIN car_auto t2 on t2.id = t1.auction_end_time
+      left  JOIN car_auto t2 on t2.id = t1.auto_id
       left  join car_store t3 on t2.store_id = t3.id
       where t1.auto_id = #{carId}
   </select>
