@@ -5,12 +5,12 @@ import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.model.*;
 import com.wintop.ms.carauction.service.ICarLocaleAuctionCarService;
+import com.wintop.ms.carauction.service.ICarLocaleAuctionService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
@@ -25,8 +25,6 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
     private CarLocaleAuctionCarModel model;
     @Autowired
     private CarLocaleAuctionModel carLocaleAuctionModel;
-    @Autowired
-    private CarLocaleAuctionCarModel carLocaleAuctionCarModel;
     @Autowired
     private CarAuctionBidRecordModel carAuctionBidRecordModel;
     @Autowired
@@ -47,6 +45,8 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
     private CarOrderModel carOrderModel;
     @Autowired
     private AppUserModel appUserModel;
+    @Autowired
+    private ICarLocaleAuctionService carLocaleAuctionService;
 
 
     private IdWorker idWorker = new IdWorker(10);
@@ -203,6 +203,10 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
             }
             List<CarLocaleAuctionCar> updateList=new ArrayList<>();
             CarLocaleAuction carLocaleAuction =carLocaleAuctionModel.selectById(auctionId);
+            ServiceResult<Map<String, Object>> priceResult = carLocaleAuctionService.selectLocaleAuctionInfo(carLocaleAuction);
+            if(!priceResult.getSuccess()){
+                return priceResult;
+            }
             for(String carIdStr:carIdArray){
                 maxSort++;
                 CarLocaleAuctionCar carLocaleAuctionCar =new CarLocaleAuctionCar();
@@ -213,6 +217,12 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
                 carLocaleAuctionCar.setAuctionId(auctionId);
                 if(carAuto==null||carAuto.getAutoAuctionId()==null){
                     return new ServiceResult<>(false,"","101");
+                }
+                if(carAuto.getStartingPrice() == null || carAuto.getReservePrice() == null){
+                    return new ServiceResult<>(false,"起拍价或保留价为空","101");
+                }
+                if(carAuto.getReservePrice().compareTo(carAuto.getStartingPrice()) == -1){
+                    return new ServiceResult<>(false,"保留价小于起拍价","101");
                 }
                 carLocaleAuctionCar.setAutoAuctionId(carAuto.getAutoAuctionId());
                 carLocaleAuctionCar.setSort(maxSort);

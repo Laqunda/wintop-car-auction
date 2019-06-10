@@ -122,55 +122,55 @@
     <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer">
     select count(t1.id) from car_auto t1 WHERE t1.status != '0'
   </select>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
-        select
-        <include refid="Base_Column_List"/>,
-        t2.auction_start_time
-        FROM
-        car_auto t1
-        left join car_auto_auction t2 on t1.auto_auction_id = t2.id
-        WHERE
-        t1.`status` != '0'
-        AND t1.id = #{id}
-    </select>
-    <select id="selectByCarId" resultMap="BaseResultMap" parameterType="java.util.Map">
-        SELECT
-        t1.id,t1.store_id,t1.store_name,t1.if_new,t1.auto_info_name,t1.report_colligation_ranks,t1.report_servicing_ranks,t1.views,t1.car_auto_no,t1.status,
-        t1.publish_user_name,
-        t2.vehicle_attribution_city_cn,t2.begin_register_date,t2.mileage,t2.remark,t2.environment_cn,
-        t3.auction_type,t3.starting_price,t3.service_price,t1.auction_num,
-        t3.auction_start_time,t3.auction_end_time,
-        t3.link_man_name,t3.link_man_mobile,t1.auto_auction_id,t1.region_id,
-        t5.`name` AS carStoreName,t8.auction_code,t3.top_pricer_id maxPriceUserId,
-        t5.latitude AS storeLatitude,t5.longitude AS storeLongitude,
-        t3.move_to_where,t6.transfer_fee,t6.cost_price,t6.illegal_price,t6.illegal_score,t6.illegal_who,
-        (CASE WHEN t7.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow,t3.if_agent,t3.link_man_mobile,
-        t9.start_time,
-        t1.transfer_flag,
-        t3.agent_price,
-        t9.title
-        FROM car_auto t1
-        INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
-        LEFT JOIN car_auto_auction t3 on t1.auto_auction_id=t3.id
-        LEFT JOIN car_store t5 on t1.store_id=t5.id
-        LEFT JOIN car_auto_procedures t6 on t1.id=t6.auto_id
-        LEFT JOIN car_customer_follow_auto t7 ON (t1.id=t7.auto_id AND t7.user_id=#{customerId} AND t7.status='1')
-        LEFT JOIN (SELECT * FROM car_locale_auction_car WHERE car_id=#{carId} GROUP BY auto_auction_id ORDER BY
-        create_time DESC LIMIT 1) t8 ON (t8.auto_auction_id=t1.auto_auction_id AND t8.auction_status !='4' AND
-        t8.auction_status!='3')
-        LEFT JOIN car_locale_auction t9 ON t9.id=t8.auction_id
-        where t1.status != '0'
-        <if test="carId!=null">
-            AND t1.id=#{carId}
-        </if>
-        <if test="auctionId!=null">
-            AND t3.id = #{auctionId}
-        </if>
-        limit 1
-    </select>
-
-    <select id="selectCarAutoCount" resultType="java.lang.Integer" parameterType="java.util.Map">
-        select count(t1.id)
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />,
+    t2.auction_start_time,
+    t2.starting_price,
+    t2.reserve_price
+    FROM
+    car_auto t1
+    left join car_auto_auction t2  on t1.auto_auction_id = t2.id
+    WHERE
+    t1.`status` != '0'
+    AND t1.id = #{id}
+  </select>
+  <select id="selectByCarId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+    t1.id,t1.store_id,t1.store_name,t1.if_new,t1.auto_info_name,t1.report_colligation_ranks,t1.report_servicing_ranks,t1.views,t1.car_auto_no,t1.status,
+    t1.publish_user_name,
+    t2.vehicle_attribution_city_cn,t2.begin_register_date,t2.mileage,t2.remark,t2.environment_cn,
+    t3.auction_type,t3.starting_price,t3.service_price,t1.auction_num,
+    t3.auction_start_time,t3.auction_end_time,
+    t3.link_man_name,t3.link_man_mobile,t1.auto_auction_id,t1.region_id,
+    t5.`name` AS carStoreName,t8.auction_code,t3.top_pricer_id maxPriceUserId,
+    t5.latitude AS storeLatitude,t5.longitude AS storeLongitude,
+    t3.move_to_where,t6.transfer_fee,t6.cost_price,t6.illegal_price,t6.illegal_score,t6.illegal_who,
+    (CASE WHEN t7.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow,t3.if_agent,t3.link_man_mobile,
+    t9.start_time,
+    t1.transfer_flag,
+    t3.agent_price,
+    t9.title
+    FROM car_auto t1
+    INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
+    LEFT JOIN car_auto_auction t3 on t1.auto_auction_id=t3.id
+    LEFT JOIN car_store t5 on t1.store_id=t5.id
+    LEFT JOIN car_auto_procedures t6 on t1.id=t6.auto_id
+    LEFT JOIN car_customer_follow_auto t7 ON (t1.id=t7.auto_id AND t7.user_id=#{customerId} AND t7.status='1')
+    LEFT JOIN (SELECT * FROM car_locale_auction_car WHERE car_id=#{carId} GROUP BY auto_auction_id ORDER BY create_time DESC LIMIT 1) t8 ON (t8.auto_auction_id=t1.auto_auction_id AND t8.auction_status !='4' AND t8.auction_status!='3')
+    LEFT JOIN car_locale_auction t9 ON t9.id=t8.auction_id
+    where t1.status != '0'
+    <if test="carId!=null">
+      AND t1.id=#{carId}
+    </if>
+    <if test="auctionId!=null">
+      AND t3.id = #{auctionId}
+    </if>
+    limit 1
+  </select>
+  
+  <select id="selectCarAutoCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select  count(t1.id)
         from car_auto t1
         inner join car_auto_auction t2 on t2.id = t1.auto_auction_id
         <if test="managerRole != null and managerRole != ''">
@@ -655,30 +655,29 @@
         </if>
     </select>
 
-    <!--查询可以参与现场拍的车辆 Author 付陈林，2018-3-28-->
-    <select id="getLocaleAuctionCar" resultMap="BaseResultMap" parameterType="java.lang.String">
-        select
-        t1.id,
-        t1.car_auto_no,
-        t1.auto_info_name,
-        t2.starting_price,
-        t2.reserve_price,
-        t3.begin_register_date,
-        t1.source_type,
-        t1.auction_num,
-        t1.publish_user_name,
-        t2.auction_type,
-        t3.license_number,
-        t1.store_name storeName
-        from car_auto t1
-        left join car_auto_auction t2 on t2.id=t1.auto_auction_id
-        left join car_auto_info_detail t3 on t3.auto_id=t1.id
-        where t2.auction_type='2' and t1.status='5' AND t1.status != '0'
-        <if test="searchParam!=null">
-            AND (t1.auto_info_name like CONCAT(CONCAT('%', #{searchParam}),'%') or t1.car_auto_no like
-            CONCAT(CONCAT('%', #{searchParam}),'%'))
-        </if>
-    </select>
+  <!--查询可以参与现场拍的车辆 Author 付陈林，2018-3-28-->
+  <select id="getLocaleAuctionCar" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    t1.id,
+    t1.car_auto_no,
+    t1.auto_info_name,
+    t2.starting_price,
+    t2.reserve_price,
+    t3.begin_register_date,
+    t1.source_type,
+    t1.auction_num,
+    t1.publish_user_name,
+    t2.auction_type,
+    t3.license_number,
+    t1.store_name storeName
+    from car_auto t1
+    left join car_auto_auction t2 on t2.id=t1.auto_auction_id
+    left join car_auto_info_detail t3 on t3.auto_id=t1.id
+    where t2.auction_type='2' and t1.status='5' AND t1.status != '0'
+    <if test="searchParam!=null">
+      AND (t1.auto_info_name like CONCAT(CONCAT('%', #{searchParam}),'%') or t1.car_auto_no like CONCAT(CONCAT('%', #{searchParam}),'%'))
+    </if>
+  </select>
 
     <!--根据参数查询所有的车辆列表 zhangzijuan-->
     <select id="getAllCarAutoList" resultMap="BaseResultMap" parameterType="java.util.Map">
@@ -1041,13 +1040,13 @@
                SELECT count(t1.id)
                  FROM car_auto t1
           INNER JOIN car_auto_auction caa ON caa.id = t1.auto_auction_id
-          INNER JOIN car_manager_user cmu ON cmu.id = t1.create_user
           <if test="auctionType == '1'.toString()">
-            INNER JOIN car_store cs ON cs.id = cmu.department_id
+            INNER JOIN car_store cs ON cs.id = t1.store_id
             INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = cs.region_id
           </if>
           <if test="auctionType == '2'.toString()">
-            INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = cmu.department_id
+            INNER JOIN car_center_store ccs ON ccs.store_id = t1.store_id
+            INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = ccs.center_id
           </if>
                 WHERE (t1.`status` = 2 OR t1.`status` = 4 )
                   and caa.auction_type = #{auctionType}
@@ -1069,11 +1068,12 @@
     INNER JOIN car_auto_auction caa ON caa.id = t1.auto_auction_id
     INNER JOIN car_manager_user cmu ON cmu.id = t1.create_user
     <if test="auctionType == '1'.toString()">
-      INNER JOIN car_store cs ON cs.id = cmu.department_id
+      INNER JOIN car_store cs ON cs.id = t1.store_id
       INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = cs.region_id
     </if>
     <if test="auctionType == '2'.toString()">
-      INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = cmu.department_id
+      INNER JOIN car_center_store ccs ON ccs.store_id = t1.store_id
+      INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = ccs.center_id
     </if>
     WHERE (t1.`status` = 2 OR t1.`status` = 4 )
     and caa.auction_type = #{auctionType}
