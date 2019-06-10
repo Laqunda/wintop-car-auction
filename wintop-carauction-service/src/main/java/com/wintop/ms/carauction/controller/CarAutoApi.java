@@ -1017,6 +1017,11 @@ public class CarAutoApi {
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();
             if(type.equals("1")){
                 //待我审批 -- 线上车辆分配到城市，现场车辆分配到中心
+                if(null == object.getString("auctionType") || "".equals(object.getString("auctionType"))){
+                    paramMap.put("auctionType","1");
+                }else{
+                    paramMap.put("auctionType",object.getString("auctionType"));
+                }
                 Integer count = carAutoService.selectCarAutoApprovalCount(paramMap);
                 paramMap.put("count",count);
                 listEntity.setCount(count);
