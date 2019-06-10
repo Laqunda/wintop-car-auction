@@ -113,6 +113,7 @@ public class CarOrder implements Serializable {
     private Integer unPay;
     private Integer dealing;
     private Integer finish;
+    private Integer unEvaluated;
     /**
      * 违约类型，0未违约，1买家违约，2卖家违约
      */
@@ -329,6 +330,14 @@ public class CarOrder implements Serializable {
 
     public void setAgentFee(BigDecimal agentFee) {
         this.agentFee = agentFee;
+    }
+
+    public Integer getUnEvaluated() {
+        return unEvaluated;
+    }
+
+    public void setUnEvaluated(Integer unEvaluated) {
+        this.unEvaluated = unEvaluated;
     }
 
     /**

@@ -125,7 +125,7 @@ public class CarOrderBossApi {
             if(obj.get("searchName")!=null){
                 paramMap.put("searchName",obj.getString("searchName"));
             }
-            if(obj.get("orderStatus")!=null){
+            if(obj.get("orderStatus")!=null &&  StringUtils.isNotEmpty(obj.getString("orderStatus"))){
                 paramMap.put("orderStatus",obj.getString("orderStatus"));
             }
             if(obj.get("auctionType")!=null){
@@ -167,6 +167,71 @@ public class CarOrderBossApi {
             listEntity.setList(list);
             listEntity.setCount(count);
             result.setResult(listEntity);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("查询订单列表失败",e);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /***
+     * 订单列表
+     * @param obj
+     * @return
+     */
+    @RequestMapping(value = "/selectOrderAllList",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> selectOrderAllList(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+        try {
+            Map<String,Object> paramMap = new HashMap<>();
+            Long userId=obj.getLong("userId");
+            if(userId!=null){
+                List<Long> storeIds = managerUserService.queryStoreScope(userId);
+                paramMap.put("storeIds",storeIds);
+            }
+            if(obj.get("searchName")!=null){
+                paramMap.put("searchName",obj.getString("searchName"));
+            }
+            if(obj.get("orderStatus")!=null &&  StringUtils.isNotEmpty(obj.getString("orderStatus"))){
+                paramMap.put("orderStatus",obj.getString("orderStatus"));
+            }
+            if(obj.get("auctionType")!=null){
+                paramMap.put("auctionType",obj.getString("auctionType"));
+            }
+            List<CarOrder> carOrders = carOrderService.selectByExample(paramMap);
+            List<Map<String,Object>> list = new ArrayList<>();
+            for(CarOrder carOrder:carOrders){
+                Map<String,Object> map = new HashMap<>();
+                map.put("id",carOrder.getId());
+                map.put("status",carOrder.getStatus());
+                map.put("statusName", OrderStatusEnum.getDetailRemark(carOrder.getStatus()));
+                map.put("transactionFee",carOrder.getTransactionFee());
+                map.put("amountFee",carOrder.getAmountFee());
+                map.put("orderNo",carOrder.getOrderNo());
+                map.put("autoInfoName",carOrder.getAutoInfoName());
+                map.put("payFee",carOrder.getPayFee());
+                map.put("auctionType",carOrder.getAuctionType());
+                map.put("payWay",carOrder.getPayWay());
+                map.put("createTime",carOrder.getCreateTime());
+                map.put("mainPhoto",carOrder.getMainPhoto());
+                if (StringUtils.isNotBlank(carOrder.getAuctionCode())){
+                    map.put("carAutoNo",carOrder.getAuctionCode());
+                }else {
+                    map.put("carAutoNo",carOrder.getCarAutoNo());
+                }
+                map.put("userName",carOrder.getUserName());
+                map.put("mobile",carOrder.getMobile());
+                map.put("auctionName",carOrder.getAuctionName());
+                map.put("auctionPlateNum",carOrder.getAuctionPlateNum());
+                map.put("userNum",carOrder.getUserNum());
+                list.add(map);
+            }
+            result.setResult(Collections.singletonMap("list",list));
             result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
         }catch (Exception e){
             e.printStackTrace();

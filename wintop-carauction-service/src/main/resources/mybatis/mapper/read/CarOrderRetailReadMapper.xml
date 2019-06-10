@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarSaleOrderReadDAO" >
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarOrderRetail" >
+        <result column="id" property="id" jdbcType="BIGINT" />
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+        <result column="car_id" property="carId" jdbcType="BIGINT" />
+        <result column="transaction_fee" property="transactionFee" jdbcType="DECIMAL" />
+        <result column="earnest_money" property="earnestMoney" jdbcType="DECIMAL" />
+        <result column="payment_type" property="paymentType" jdbcType="VARCHAR" />
+        <result column="down_payments" property="downPayments" jdbcType="DECIMAL" />
+        <result column="mortgage_amount" property="mortgageAmount" jdbcType="DECIMAL" />
+        <result column="mortgage_period" property="mortgagePeriod" jdbcType="BIGINT" />
+        <result column="monthly_repayment" property="monthlyRepayment" jdbcType="DECIMAL" />
+        <result column="transfer" property="transfer" jdbcType="VARCHAR" />
+        <result column="sales_type" property="salesType" jdbcType="VARCHAR" />
+        <result column="sales_consultant" property="salesConsultant" jdbcType="VARCHAR" />
+        <result column="sales_date" property="salesDate" jdbcType="DATE" />
+        <result column="insurance_company" property="insuranceCompany" jdbcType="VARCHAR" />
+        <result column="commercial_insurance_expires" property="commercialInsuranceExpires" jdbcType="DATE" />
+        <result column="compulsory_insurance_expires" property="compulsoryInsuranceExpires" jdbcType="DATE" />
+        <result column="mortgage_charges" property="mortgageCharges" jdbcType="DECIMAL" />
+        <result column="insurance_rebate" property="insuranceRebate" jdbcType="DECIMAL" />
+        <result column="boutique_profit" property="boutiqueProfit" jdbcType="DECIMAL" />
+        <result column="guaranteed_profit" property="guaranteedProfit" jdbcType="DECIMAL" />
+        <result column="add_profits" property="addProfits" jdbcType="DECIMAL" />
+        <result column="other_expenses" property="otherExpenses" jdbcType="DECIMAL" />
+        <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="vehicle_owner_type" property="vehicleOwnerType" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="source" property="source" jdbcType="VARCHAR" />
+        <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="drawee" property="drawee" jdbcType="VARCHAR" />
+        <result column="opening_bank" property="openingBank" jdbcType="VARCHAR" />
+        <result column="bank_account" property="bankAccount" jdbcType="VARCHAR" />
+        <result column="other_accounts" property="otherAccounts" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" jdbcType="BIGINT" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="mortgage_plan" property="mortgagePlan" jdbcType="VARCHAR" />
+        <result column="main_photo" property="mainPhoto" jdbcType="VARCHAR" />
+        <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
+        <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
+        <result column="report_colligation_ranks" property="reportColligationRanks" jdbcType="VARCHAR" />
+        <result column="report_servicing_ranks" property="reportServicingRanks" jdbcType="VARCHAR" />
+        <result column="vehicle_attribution_city_cn" property="vehicleAttributionCityCN" jdbcType="VARCHAR" />
+        <result column="mileage" property="mileage" jdbcType="DECIMAL" />
+        <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+        <result column="user_name" property="managerName" jdbcType="VARCHAR" />
+        <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+
+    </resultMap>
+    <sql id="Base_Column_List" >
+          t1.`id`,
+          t1.`order_no`,
+          t1.`car_id`,
+          t1.`transaction_fee`,
+          t1.`earnest_money`,
+          t1.`payment_type`,
+          t1.`down_payments`,
+          t1.`mortgage_amount`,
+          t1.`mortgage_period`,
+          t1.`monthly_repayment`,
+          t1.`transfer`,
+          t1.`sales_type`,
+          t1.`sales_consultant`,
+          t1.`sales_date`,
+          t1.`insurance_company`,
+          t1.`commercial_insurance_expires`,
+          t1.`compulsory_insurance_expires`,
+          t1.`mortgage_charges`,
+          t1.`insurance_rebate`,
+          t1.`boutique_profit`,
+          t1.`guaranteed_profit`,
+          t1.`add_profits`,
+          t1.`other_expenses`,
+          t1.`remarks`,
+          t1.`vehicle_owner_type`,
+          t1.`phone`,
+          t1.`name`,
+          t1.`source`,
+          t1.`id_card`,
+          t1.`address`,
+          t1.`drawee`,
+          t1.`opening_bank`,
+          t1.`bank_account`,
+          t1.`other_accounts`,
+          t1.`create_user`,
+          t1.`create_date`,
+          t1.`mortgage_plan`
+    </sql>
+
+    <select id="selectCarSaleRetail" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List"/>
+        ,t2.user_name managerName
+        FROM car_order_retail t1
+        INNER JOIN car_manager_user t2 ON t1.create_user = t2.id
+        WHERE t1.create_user=#{customerId}
+        <if test="id != null ">
+            and t1.id = #{id}
+        </if>
+    </select>
+
+    <select id="selectCarSaleOrder" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select <include refid="Base_Column_List"/>
+               ,t2.car_auto_no
+               ,t2.auto_info_name
+               ,t2.store_name
+               ,t2.main_photo
+               ,t2.report_colligation_ranks
+               ,t2.report_servicing_ranks
+               ,t3.mileage
+               ,t3.vehicle_attribution_city_cn
+               ,t4.user_name
+        FROM car_order_retail t1
+        INNER JOIN car_auto t2 ON t1.car_id=t2.id
+        INNER JOIN car_auto_info_detail t3 ON t1.car_id=t3.auto_id
+        INNER JOIN car_manager_user t4 ON t1.create_user = t4.id
+        where t2.sale_flag = '1'
+        and t1.create_user = #{customerId}
+        <if test="searchName != null and searchName != ''">
+            and (
+            t1.order_no LIKE CONCAT('%', #{searchName}, '%')
+            and t1.name LIKE CONCAT('%', #{searchName}, '%')
+            and t1.phone LIKE CONCAT('%', #{searchName}, '%')
+            and t2.car_auto_no LIKE CONCAT('%', #{searchName}, '%')
+            )
+        </if>
+        ORDER BY t1.create_date DESC
+        <if test="startRowNum!=null and endRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="selectCarSaleOrderCount" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT count(t1.id)
+        FROM car_order_retail t1
+        INNER JOIN car_auto t2 ON t1.car_id=t2.id
+        INNER JOIN car_auto_info_detail t3 ON t2.id=t3.auto_id
+        where t2.sale_flag = '1'
+        and t1.create_user = #{customerId}
+        <if test="searchName != null and searchName != ''">
+            and (
+            t1.order_no LIKE CONCAT('%', #{searchName}, '%')
+            and t1.name LIKE CONCAT('%', #{searchName}, '%')
+            and t1.phone LIKE CONCAT('%', #{searchName}, '%')
+            and t2.car_auto_no LIKE CONCAT('%', #{searchName}, '%')
+            )
+        </if>
+    </select>
+</mapper>

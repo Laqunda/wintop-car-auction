@@ -4,6 +4,7 @@ import com.wintop.ms.carauction.entity.CommonNameVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ICarCenterStoreReadDao {
 
@@ -18,5 +19,10 @@ public interface ICarCenterStoreReadDao {
      */
     List<Long> selectAllStoreIds(Long centId);
 
-
+    /**
+     * 根据条件查询出结果
+     * @param map
+     * @return
+     */
+    List<CommonNameVo> selectByCondition(Map<String, Object> map);
 }

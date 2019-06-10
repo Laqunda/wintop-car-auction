@@ -33,6 +33,10 @@ public class CarAssessOrder extends BaseEntity {
      */
     private BigDecimal price;
     /**
+     * 采购价格
+     */
+    private BigDecimal paidPrice;
+    /**
      * 采购日期
      */
     private Date procurementDate;
@@ -40,6 +44,10 @@ public class CarAssessOrder extends BaseEntity {
      * 所属店铺
      */
     private Long storeId;
+    /**
+     * 店铺名称
+     */
+    private String storeName;
     /**
      * 是否新车置换：1是，2否
      */
@@ -133,8 +141,13 @@ public class CarAssessOrder extends BaseEntity {
      */
     private String status;
 
+    private CarAssess carAssess;
+
+    private CarStore carStore;
 
     private CarAssessFollowData follow;
+
+    private String regionId;
 
     public void setId(Long id) {
         this.id = id;
@@ -190,6 +203,14 @@ public class CarAssessOrder extends BaseEntity {
 
     public Long getStoreId() {
         return storeId;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
     public void setIfOldNew(String ifOldNew) {
@@ -382,5 +403,68 @@ public class CarAssessOrder extends BaseEntity {
 
     public void setFollow(CarAssessFollowData follow) {
         this.follow = follow;
+    }
+
+    private String mainPhoto;
+
+    private String createUser;
+
+
+    public String getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public void setMainPhoto(String mainPhoto) {
+        this.mainPhoto = mainPhoto;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    private String autoInfoName;
+
+    public String getAutoInfoName() {
+        return autoInfoName;
+    }
+
+    public void setAutoInfoName(String autoInfoName) {
+        this.autoInfoName = autoInfoName;
+    }
+
+    public BigDecimal getPaidPrice() {
+        return paidPrice;
+    }
+
+    public void setPaidPrice(BigDecimal paidPrice) {
+        this.paidPrice = paidPrice;
+    }
+
+    public CarAssess getCarAssess() {
+        return carAssess;
+    }
+
+    public void setCarAssess(CarAssess carAssess) {
+        this.carAssess = carAssess;
+    }
+
+    public CarStore getCarStore() {
+        return carStore;
+    }
+
+    public void setCarStore(CarStore carStore) {
+        this.carStore = carStore;
+    }
+
+    public String getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(String regionId) {
+        this.regionId = regionId;
     }
 }

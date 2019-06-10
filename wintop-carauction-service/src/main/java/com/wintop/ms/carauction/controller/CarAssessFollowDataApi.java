@@ -54,23 +54,17 @@ public class CarAssessFollowDataApi {
     public ServiceResult<ListEntity<CarAssessFollowData>> list(@RequestBody JSONObject obj) {
         ServiceResult<ListEntity<CarAssessFollowData>> result = null;
         try {
-            //TODO 赋值参数
             CarAssessFollowData carAssessFollowData = JSONObject.toJavaObject(obj, CarAssessFollowData.class);
             if (carAssessFollowData == null) {
                 carAssessFollowData = new CarAssessFollowData();
             }
             result = new ServiceResult<>();
-
             int count = carAssessFollowDataService.selectAssessFollowDataCount(carAssessFollowData);
-
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             carAssessFollowData.setStartRowNum(pageEntity.getStartRowNum());
             carAssessFollowData.setEndRowNum(pageEntity.getEndRowNum());
-
-
             result = new ServiceResult<>();
             List<CarAssessFollowData> list = carAssessFollowDataService.selectCarAssessFollowDataList(carAssessFollowData);
-
             ListEntity<CarAssessFollowData> listEntity = new ListEntity<>();
             listEntity.setList(list);
             listEntity.setCount(count);
@@ -101,7 +95,6 @@ public class CarAssessFollowDataApi {
         try {
             CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
 
-            //TODO 赋值参数
             CarAssessFollowData carAssessFollowData = JSONObject.toJavaObject(obj, CarAssessFollowData.class);
             if (carAssessFollowData == null) {
                 carAssessFollowData = new CarAssessFollowData();
@@ -139,7 +132,7 @@ public class CarAssessFollowDataApi {
             case "1":
                 return "评估中";
             case "2":
-                return "采购前科";
+                return "采购潜客";
             case "3":
                 return "战败";
             case "4":
@@ -161,7 +154,6 @@ public class CarAssessFollowDataApi {
 
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-            //TODO 赋值参数
             CarAssessFollowData carAssessFollowData = JSONObject.toJavaObject(obj, CarAssessFollowData.class);
             if (carAssessFollowData == null) {
                 carAssessFollowData = new CarAssessFollowData();

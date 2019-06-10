@@ -32,10 +32,13 @@
     <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="create_person_name" property="createPersonName" jdbcType="VARCHAR" />
+    <result column="locale_auction_template_id" property="localeAuctionTemplateId" jdbcType="BIGINT" />
+    <result column="template_id" property="templateId" jdbcType="BIGINT" />
 
     <result column="transaction_fee" property="transactionFee" jdbcType="DECIMAL" />
     <result column="publish_user_name" property="publishUserName" jdbcType="VARCHAR" />
     <result column="auction_end_time" property="auctionEndTime" jdbcType="TIMESTAMP" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR"/>
   </resultMap>
   <resultMap id="AuctionResultMap" type="com.wintop.ms.carauction.entity.CommonNameVo">
     <result column="id" property="id" jdbcType="BIGINT" />
@@ -66,7 +69,10 @@
     t1.modify_time,
     t1.del_person,
     t1.del_time,
+    t1.del_flag,
+    t1.template_id,
     t1.del_flag
+--     t1.locale_auction_template_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
@@ -89,12 +95,19 @@
 
   <select id="selectAuctionList" resultMap="BaseResultMap" parameterType="java.util.Map">
     SELECT
-    <include refid="Base_Column_List" />,t2.user_name as create_person_name
+    <include refid="Base_Column_List" />,t2.user_name as create_person_name,t3.city_name
     FROM car_locale_auction t1
     left join car_manager_user t2 on t1.create_person=t2.id
+    left join wt_city t3 on t1.city_id = t3.city_id
     WHERE 1=1
     <if test="regionId != null">
       AND t1.city_id=#{regionId}
+    </if>
+    <if test="regionIds != null">
+      AND t1.city_id in
+      <foreach collection="regionIds" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
     <if test="title != null">
       AND t1.title like CONCAT(CONCAT('%', #{title}),'%')
@@ -311,6 +324,12 @@
     <if test="cityId != null">
       AND t1.city_id=#{cityId}
     </if>
+    <if test="cityIds != null">
+      AND t1.city_id in
+      <foreach collection="cityIds" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
   </select>
 
   <!--首页获取场次数量-->
@@ -324,7 +343,12 @@
     <if test="cityId != null">
       AND t1.city_id=#{cityId}
     </if>
-
+    <if test="cityIds != null">
+      AND t1.city_id in
+      <foreach collection="cityIds" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
   </select>
   <!--首页开拍场次时间查询-->
   <select id="queryCarLocaleAuctionList" resultMap="BaseResultMap" parameterType="java.util.Map">
@@ -338,6 +362,12 @@
     <if test="cityId != null">
       AND t1.city_id=#{cityId}
     </if>
+    <if test="cityIds != null">
+      AND t1.city_id in
+      <foreach collection="cityIds" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
     ORDER BY t1.start_time DESC
   </select>
 
@@ -348,5 +378,35 @@
     where t1.station_real_id = #{stationRealId}
     and DATE_FORMAT(t1.start_time,'%Y%m%d')=#{auctionDate}
     order by t1.start_time desc limit 1
+  </select>
+
+  <select id="queryAuctionListByParams" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM car_locale_auction t1
+    inner join car_locale_auction_template clat on clat.id = t1.locale_auction_template_id
+    WHERE 1=1
+    <if test="regionId != null">
+      AND t1.city_id=#{regionId}
+    </if>
+    <if test="regionIds != null">
+      AND t1.city_id in
+      <foreach collection="regionIds" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="title != null">
+      AND t1.title like CONCAT(CONCAT('%', #{title}),'%')
+    </if>
+    <if test="statusList != null">
+      AND t1.status in
+      <foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="beginTime != null">
+      AND date(t1.start_time) = date(NOW())
+    </if>
+    ORDER BY t1.status DESC ,t1.start_time ASC
   </select>
 </mapper>

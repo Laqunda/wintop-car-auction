@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.service;
 import com.wintop.ms.carauction.entity.CarAssess;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 车辆评估 服务层
@@ -14,11 +15,12 @@ public interface ICarAssessService
 {
 	/**
      * 查询车辆评估信息
-     * 
-     * @param id 车辆评估ID
+     *
+	 *
+	 * @param carAssess 车辆评估信息
      * @return 车辆评估信息
      */
-	public CarAssess selectCarAssessById(Long id);
+	public CarAssess selectCarAssessById(CarAssess carAssess);
 	
 	/**
      * 查询车辆评估列表
@@ -58,4 +60,17 @@ public interface ICarAssessService
 	 * @return
 	 */
 	int selectAssessCount(CarAssess carAssess);
+
+	/**
+	 * 根据车辆id查询车辆详情
+	 *
+	 * @param autoId
+	 * @return
+	 */
+	public CarAssess selectCarAssessDetailById(Long autoId);
+
+	/**
+	 * 采购审批详情
+	 */
+	public Map<String, Object> selectAccessAuditDetail(Long carId);
 }

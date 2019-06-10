@@ -39,4 +39,6 @@ public interface ICarStoreReadDao {
      * @return
      */
     List<Long> selectAllStoreIds();
+
+    Long idByExample(Map<String, Object> map);
 }

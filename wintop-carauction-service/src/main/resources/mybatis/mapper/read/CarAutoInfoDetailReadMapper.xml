@@ -54,6 +54,7 @@
     <result column="report_servicing_ranks" property="reportServicingRanks" jdbcType="VARCHAR"/>
     <result column="status" property="status" jdbcType="VARCHAR"/>
     <result column="if_new" property="ifNew" jdbcType="VARCHAR"/>
+    <result column="main_photo" property="mainPhoto" jdbcType="VARCHAR"/>
 
   </resultMap>
   <sql id="Base_Column_List" >
@@ -90,7 +91,7 @@
 
   <select id="selectDetailByCarId" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" />
-    ,t2.car_auto_no,t2.auto_info_name,t2.report_colligation_ranks,t2.report_servicing_ranks,t2.status,t2.if_new
+    ,t2.car_auto_no,t2.auto_info_name,t2.report_colligation_ranks,t2.report_servicing_ranks,t2.status,t2.if_new,t2.main_photo
     FROM car_auto_info_detail t1
     INNER JOIN car_auto t2 ON t1.auto_id=t2.id
     WHERE t1.auto_id=#{carId}

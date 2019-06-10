@@ -1,6 +1,10 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Maps;
+import com.wintop.ms.carauction.core.annotation.AppApiVersion;
+import com.wintop.ms.carauction.core.annotation.CurrentUser;
 import com.wintop.ms.carauction.core.config.CarStatusEnum;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
@@ -14,14 +18,19 @@ import com.wintop.ms.carauction.util.utils.RedisAutoManager;
 import com.wintop.ms.carauction.util.utils.RedisManagerTemplate;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.*;
 
 /**
@@ -31,6 +40,9 @@ import java.util.*;
 @RequestMapping("/service/carAutoAuction")
 public class CarAutoAuctionApi {
     private static final Logger logger = LoggerFactory.getLogger(CarAutoAuctionApi.class);
+    private static final String TRANSFER = "1";
+    private static final String YES = "1";
+    private static final String UNDER_LINE = "2";
     @Autowired
     private ICarAutoAuctionService carAutoAuctionService;
     @Autowired
@@ -40,9 +52,15 @@ public class CarAutoAuctionApi {
     @Autowired
     private ICarAuctionSettingService auctionSettingService;
     @Autowired
+    private ICarManagerUserService carManagerUserService;
+    @Autowired
     private RedisAutoManager redisAutoManager;
     @Autowired
     private RedisManagerTemplate redisManagerTemplate;
+    @Autowired
+    private CarAutoApi carAutoApi;
+    @Autowired
+    private ICarAutoLogService carAutoLogService;
 
     private IdWorker idWorker = new IdWorker(10);
 
@@ -80,6 +98,57 @@ public class CarAutoAuctionApi {
         }
         return result;
     }
+
+   /* *//**
+     * 查询车辆评估列表
+     *//*
+    @ApiOperation(value = "车辆转渠道")
+    @RequestMapping(value = "/saveTransferFlag",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String, Object>> saveTransferFlag(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
+        JSONObject object = new JSONObject();
+        CarManagerUser carManagerUser = carManagerUserService.selectByPrimaryKey(obj.getLong("managerId"), false);
+        Long autoId = obj.getLong("autoId");
+        object.put("autoId",autoId);
+        object.put("roleTypeId",carManagerUser.getRoleTypeId());
+        Map<String, Object> checkUpMap = carAutoApi.getAutoPublishStatus(object).getResult();
+        checkUpMap = Maps.filterValues(checkUpMap, Predicates.equalTo(YES));
+        if (MapUtils.isNotEmpty(checkUpMap)) {
+            CarAutoAuction info = carAutoAuctionService.selectByAutoId(autoId);
+            if (!TRANSFER.equals(info.getTransferFlag())){
+                CarAutoAuction carAutoAuction = new CarAutoAuction();
+                // 线下
+                carAutoAuction.setAuctionType(UNDER_LINE);
+                // 已转渠道
+                carAutoAuction.setTransferFlag(TRANSFER);
+                carAutoAuction.setAutoId(obj.getLong("autoId"));
+                try {
+                    carAutoAuctionService.updateAuctionEndTime(carAutoAuction);
+                    //增加车辆日志
+                    CarAutoLog autoLog = new CarAutoLog();
+                    autoLog.setId(idWorker.nextId());
+                    autoLog.setStatus(CarStatusEnum.WAITING_AUDITOR.value());
+                    autoLog.setMsg("线上车辆申请现场拍卖");
+                    autoLog.setAutoId(obj.getLong("autoId"));
+                    autoLog.setTime(new Date());
+                    autoLog.setUserType("2");
+                    autoLog.setUserMobile(carManagerUser.getUserPhone());
+                    autoLog.setUserName(carManagerUser.getUserName());
+                    autoLog.setUserId(obj.getLong("managerId"));
+                    carAutoLogService.insert(autoLog);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } else {
+            result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());
+        }
+        return result;
+    }*/
 
     /***
      * 获取车辆拍卖最高价信息
@@ -330,5 +399,26 @@ public class CarAutoAuctionApi {
         }finally {
             return result;
         }
+    }
+
+    /**
+     * 查询-填充使用,最近的开拍时间
+     */
+    @ApiOperation(value = "最近的开拍时间")
+    @RequestMapping(value = "/selectForToday",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> detail(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+        try {
+            result.setResult(Collections.singletonMap("data",this.carAutoAuctionService.selectForToday()));
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询车辆评估详情", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
     }
 }

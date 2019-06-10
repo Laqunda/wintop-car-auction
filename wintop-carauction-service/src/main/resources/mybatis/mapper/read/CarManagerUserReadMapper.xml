@@ -37,17 +37,34 @@
     t1.modify_time, t1.del_time, t1.del_person, t1.remark,t1.region_id
   </sql>
   <select id="selectByExample" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select * from (
     select
-    <include refid="Base_Column_List" />,
-    t2.type_name AS role_type_name,t3.role_name
+    <include refid="Base_Column_List"/>,
+    t2.type_name AS role_type_name,t3.role_name,
+    (case when t1.role_type_id = 1 then
+            '平台'
+           when t1.role_type_id = 2 then
+            cc.center_name
+          when t1.role_type_id = 3 then
+            cs.name
+          when t1.role_type_id = 4 then
+            cac.company_name
+          end
+    ) store_name
     from car_manager_user t1
     inner join car_manager_role_type t2 on t1.role_type_id=t2.id
     inner join car_manager_role t3 on t1.role_id=t3.id
+    left join  car_center cc on cc.id = t1.department_id
+    left join  car_store cs on cs.id = t1.department_id
+    left join  car_agent_company cac on cac.id = t1.department_id
+    ) t1
     where 1=1
     <if test="searchName != null ">
       and (t1.user_name LIKE CONCAT(CONCAT('%', #{searchName}),'%') or
       t1.user_key LIKE CONCAT(CONCAT('%', #{searchName}),'%') or
-      t1.user_phone LIKE CONCAT(CONCAT('%', #{searchName}),'%'))
+      t1.user_phone LIKE CONCAT(CONCAT('%', #{searchName}),'%') or
+      t1.store_name LIKE CONCAT(CONCAT('%', #{searchName}),'%')
+      )
     </if>
     <if test="roleTypeId != null ">
       and t1.role_type_id=#{roleTypeId}

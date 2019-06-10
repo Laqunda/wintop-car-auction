@@ -24,4 +24,11 @@ public interface ICarAutoConfDetailService {
     ServiceResult<Integer> insertSelective(CarAutoConfDetail record);
 
     Integer insertArr(List<CarAutoConfDetail> recordArr,Long autoId);
+
+    /**
+     * 通过车辆id 进行查询
+     * @param autoId
+     * @return
+     */
+    public List<CarAutoConfDetail> selectConfigsByCarId(Long autoId);
 }

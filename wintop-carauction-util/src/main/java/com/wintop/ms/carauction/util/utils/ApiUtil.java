@@ -71,9 +71,9 @@ public class ApiUtil {
                 }
                 resultModel = new ResultModel(success,code,obj.getString("message"),null);
             }
-            return new ResponseEntity<>(resultModel, HttpStatus.OK);
+            return new ResponseEntity<ResultModel>(resultModel, HttpStatus.OK);
         }else{
-            return new ResponseEntity<>(resultModel, response.getStatusCode());
+            return new ResponseEntity<ResultModel>(resultModel, response.getStatusCode());
         }
     }
 

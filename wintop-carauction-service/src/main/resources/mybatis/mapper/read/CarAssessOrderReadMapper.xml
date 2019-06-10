@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="followId"    column="follow_id"    />
         <result property="procurementType"    column="procurement_type"    />
         <result property="price"    column="price"    />
+        <result property="paidPrice"    column="paid_price"    />
         <result property="procurementDate"    column="procurement_date"    />
         <result property="storeId"    column="store_id"    />
         <result property="ifOldNew"    column="if_old_new"    />
@@ -36,20 +37,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="customerSource"    column="customer_source"    />
         <result property="remark"    column="remark"    />
         <result property="status"    column="status"    />
+        <result property="mainPhoto"   column="mian_photo" />
+        <result property="createUser"  column="create_user" />
+        <result property="createTime"  column="create_time" />
+        <result property="autoInfoName"  column="auto_info_name" />
+        <result property="regionId"  column="region_id" />
     </resultMap>
 	
 	<sql id="selectCarAssessOrderVo">
-        select id, assess_id, follow_id, procurement_type, price, procurement_date, store_id, if_old_new, entirety_price, new_car_price, car_address, purchase_tax, driving_license, registration_certificate, if_add, car_keys, new_car_invoice, quality_guarantee, maintenance_manual, sali, sali_end_date, commercial_insurance, commercial_insurance_end_date, commercial_insurance_price, transport_tax, transport_tax_end_date, customer_name, customer_tel, customer_source, remark, status from car_assess_order
+        cas.id, cas.assess_id, cas.follow_id, cas.procurement_type, cas.price, cas.procurement_date, cas.store_id, cas.if_old_new, cas.entirety_price, cas.new_car_price, cas.car_address, cas.purchase_tax, cas.driving_license, cas.registration_certificate, cas.if_add, cas.car_keys, cas.new_car_invoice, cas.quality_guarantee, cas.maintenance_manual, cas.sali, cas.sali_end_date, cas.commercial_insurance, cas.commercial_insurance_end_date, cas.commercial_insurance_price, cas.transport_tax, cas.transport_tax_end_date, cas.customer_name, cas.customer_tel, cas.customer_source, cas.remark, cas.status
     </sql>
 	
     <select id="selectCarAssessOrderList" parameterType="com.wintop.ms.carauction.entity.CarAssessOrder" resultMap="CarAssessOrderResult">
-        <include refid="selectCarAssessOrderVo"/>
+        select
+          <include refid="selectCarAssessOrderVo"/>
+        from car_assess_order cas
+        left join car_assess ca on cas.assess_id = ca.id
         <where>  
-            <if test="id != null "> and id = #{id}</if>
+            <if test="id != null "> and cas.id = #{id}</if>
              <if test="assessId != null "> and assess_id = #{assessId}</if>
              <if test="followId != null "> and follow_id = #{followId}</if>
              <if test="procurementType != null  and procurementType != '' "> and procurement_type = #{procurementType}</if>
              <if test="price != null "> and price = #{price}</if>
+             <if test="paidPrice != null "> and paid_price = #{paidPrice}</if>
              <if test="procurementDate != null "> and procurement_date = #{procurementDate}</if>
              <if test="storeId != null "> and store_id = #{storeId}</if>
              <if test="ifOldNew != null  and ifOldNew != '' "> and if_old_new = #{ifOldNew}</if>
@@ -75,19 +85,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="customerTel != null  and customerTel != '' "> and customer_tel = #{customerTel}</if>
              <if test="customerSource != null  and customerSource != '' "> and customer_source = #{customerSource}</if>
              <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
-             <if test="status != null  and status != '' "> and status = #{status}</if>
+             <if test="status != null  and status != '' "> and cas.status = #{status}</if>
+             <if test="searchName != null and searchName != ''">
+                 and (ca.name like CONCAT(CONCAT('%',#{searchName}),'%')
+                 or cas.customer_name like CONCAT(CONCAT('%',#{searchName}),'%')
+                 or ca.vin like CONCAT(CONCAT('%',#{searchName}),'%'))
+             </if>
+            <if test="startTime != null">
+                and cas.procurement_date &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and cas.procurement_date &lt;= #{endTime}
+            </if>
+            <if test="createUser != null and createUser != ''">
+                and createUser like CONCAT(CONCAT('%',#{createUser}),'%')
+            </if>
          </where>
-
-        order by id desc
+        order by cas.id desc
         <if test="endRowNum != null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
         </if>
     </select>
 
     <select id="selectAssessOrderCount" parameterType="com.wintop.ms.carauction.entity.CarAssessOrder" resultType="java.lang.Integer">
-        select count(*) from car_assess_order
+        select count(*)
+        from car_assess_order cas
+        left join car_assess ca on cas.assess_id = ca.id
         <where>
-            <if test="id != null "> and id = #{id}</if>
+            <if test="id != null "> and cas.id = #{id}</if>
              <if test="assessId != null "> and assess_id = #{assessId}</if>
              <if test="followId != null "> and follow_id = #{followId}</if>
              <if test="procurementType != null  and procurementType != '' "> and procurement_type = #{procurementType}</if>
@@ -117,14 +142,53 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="customerTel != null  and customerTel != '' "> and customer_tel = #{customerTel}</if>
              <if test="customerSource != null  and customerSource != '' "> and customer_source = #{customerSource}</if>
              <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
-             <if test="status != null  and status != '' "> and status = #{status}</if>
+             <if test="status != null  and status != '' "> and cas.status = #{status}</if>
+            <if test="searchName != null and searchName != ''">
+                and (ca.name like CONCAT(CONCAT('%',#{searchName}),'%')
+                or cas.customer_name like CONCAT(CONCAT('%',#{searchName}),'%')
+                or ca.vin like CONCAT(CONCAT('%',#{searchName}),'%'))
+            </if>
+            <if test="startTime != null">
+                and cas.procurement_date &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and cas.procurement_date &lt;= #{endTime}
+            </if>
+            <if test="createUser != null and createUser != ''">
+                and createUser like CONCAT(CONCAT('%',#{createUser}),'%')
+            </if>
          </where>
     </select>
     
     <select id="selectCarAssessOrderById" parameterType="Long" resultMap="CarAssessOrderResult">
+        select
         <include refid="selectCarAssessOrderVo"/>
-        where id = #{id}
+        from car_assess_order cas
+        where cas.id = #{id}
+    </select>
+    <select id="selectCountById" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT count(t1.id)
+        FROM car_assess_order t1
+        INNER JOIN car_assess t2 ON t1.assess_id=t2.id
+        WHERE t2.create_user=#{userId}
     </select>
 
-    
+    <select id="selectUserOrderList" resultMap="CarAssessOrderResult" parameterType="java.util.Map">
+        SELECT
+        t2.create_user_name create_user,
+        t2.`name` auto_info_name,
+        t2.car_photo mian_photo,
+        t1.create_time,
+        t1.`status`,
+        t1.id,
+        t1.assess_id
+        FROM car_assess_order t1
+        INNER JOIN car_assess t2 ON t1.assess_id = t2.id
+        WHERE t2.create_user=#{userId}
+        ORDER BY t1.create_time DESC
+        <if test="startRowNum!=null and endRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
 </mapper>

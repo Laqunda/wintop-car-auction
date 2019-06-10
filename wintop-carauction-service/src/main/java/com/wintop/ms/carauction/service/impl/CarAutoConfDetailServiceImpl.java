@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +62,22 @@ public class CarAutoConfDetailServiceImpl implements ICarAutoConfDetailService {
             result.setError("-1","异常");
         }finally {
             return result;
+        }
+    }
+
+    /**
+     * 通过车辆id 进行查询
+     * @param autoId
+     * @return
+     */
+    public List<CarAutoConfDetail> selectConfigsByCarId(Long autoId) {
+        List<CarAutoConfDetail> list = null;
+        try {
+            list = this.carAutoConfDetailModel.selectConfigsByCarId(autoId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            return list;
         }
     }
 

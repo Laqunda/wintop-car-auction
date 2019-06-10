@@ -1,13 +1,18 @@
 package com.wintop.ms.carauction.service.impl;
 
 import com.wintop.ms.carauction.entity.CarBidRecord;
+import com.wintop.ms.carauction.entity.CommonNameVo;
 import com.wintop.ms.carauction.model.CarBidRecordModel;
+import com.wintop.ms.carauction.model.CarCenterStoreModel;
 import com.wintop.ms.carauction.service.ICarBidRecordService;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +27,8 @@ import java.util.Map;
 public class CarBidRecordServiceImpl implements ICarBidRecordService{
     @Resource
     private CarBidRecordModel carBidRecordModel;
+    @Autowired
+    private CarCenterStoreModel carCenterStoreModel;
     private static final Logger logger = LoggerFactory.getLogger(CarBidRecordServiceImpl.class);
 
     /**
@@ -30,6 +37,14 @@ public class CarBidRecordServiceImpl implements ICarBidRecordService{
     @Override
     public List<CarBidRecord> queryCarBidRecordRecordList(Map<String, Object> map) {
         List<CarBidRecord> list=carBidRecordModel.queryCarBidRecordList(map);
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (int i = 0; i < list.size(); i++) {
+                List<CommonNameVo> storeVoList = carCenterStoreModel.selectByCondition(Collections.singletonMap("storeId", list.get(i).getStoreId()));
+                if (CollectionUtils.isNotEmpty(storeVoList)) {
+                    list.get(i).setCenterName(storeVoList.get(0).getName());
+                }
+            }
+        }
         return list;
     }
 

@@ -9,6 +9,7 @@ import com.wintop.ms.carauction.entity.CommonNameVo;
 import com.wintop.ms.carauction.entity.ListEntity;
 import com.wintop.ms.carauction.entity.WtAppUser;
 import com.wintop.ms.carauction.service.ICarManagerUserService;
+import com.wintop.ms.carauction.service.ICarStoreService;
 import com.wintop.ms.carauction.service.IWtAppUserService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
@@ -38,6 +39,8 @@ public class CarManagerUserApi {
 
     @Autowired
     private ICarManagerUserService managerUserService;
+    @Autowired
+    private ICarStoreService iCarStoreService;
 
     private IdWorker idWorker = new IdWorker(10);
 
@@ -380,6 +383,12 @@ public class CarManagerUserApi {
             }
             if(obj.get("roleId")!=null){
                 map.put("roleId",obj.getLong("roleId"));
+            }
+            if(obj.get("name")!=null){
+                Map<String,Object> storeMap = new HashMap<>();
+                storeMap.put("name",obj.get("storeName"));
+                Long storeId = iCarStoreService.idByExample(storeMap);
+                map.put("department_id",storeId);
             }
             int count = managerUserService.countByExample(map);
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);

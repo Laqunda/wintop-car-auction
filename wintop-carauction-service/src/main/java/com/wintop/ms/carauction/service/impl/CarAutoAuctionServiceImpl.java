@@ -513,4 +513,13 @@ public class CarAutoAuctionServiceImpl implements ICarAutoAuctionService {
         }
         return count;
     }
+
+    /**
+     * 查询-填充使用,最近的开拍时间
+     * @return
+     */
+    @Override
+    public String selectForToday() {
+        return autoAuctionModel.selectForToday();
+    }
 }

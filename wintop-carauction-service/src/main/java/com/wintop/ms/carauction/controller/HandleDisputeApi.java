@@ -155,6 +155,7 @@ public class HandleDisputeApi {
             CarAutoAuction carAutoAuction = new CarAutoAuction();
             carAutoAuction.setId(carAuto1.getAutoAuctionId());
             carAutoAuction.setAuctionType(OFFLINE);
+            carAutoAuction.setAuctionStartTime(null);
             //更新车辆信息
             CarAuto carAuto = new CarAuto();
             carAuto.setId(id);
@@ -171,7 +172,7 @@ public class HandleDisputeApi {
                 IdWorker idWorker=new IdWorker(10);
                 carAutoLog.setId(idWorker.nextId());
                 carAutoLog.setAutoId(id);
-                carAutoLog.setMsg("线上转现场-审核中");
+                carAutoLog.setMsg("线上拍转现场拍申请");
                 carAutoLog.setUserMobile(user.getUserKey());
                 carAutoLog.setUserName(user.getUserName());
                 carAutoLog.setStatus(AUDIT);

@@ -1,5 +1,7 @@
 package com.wintop.ms.carauction.entity;
 
+import java.util.Date;
+
 public class CarAssessLog extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -25,6 +27,13 @@ public class CarAssessLog extends BaseEntity {
      * 操作人姓名
      */
     private String userName;
+
+    /**
+     * 时间
+     */
+    private Date createTime;
+
+    private String autoId;
 
     public void setId(Long id) {
         this.id = id;
@@ -67,4 +76,48 @@ public class CarAssessLog extends BaseEntity {
         return userName;
     }
 
+    private String mainPhoto;
+
+    private String createUser;
+
+    public String getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public void setMainPhoto(String mainPhoto) {
+        this.mainPhoto = mainPhoto;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    private String autoInfoName;
+
+    public String getAutoInfoName() {
+        return autoInfoName;
+    }
+
+    public void setAutoInfoName(String autoInfoName) {
+        this.autoInfoName = autoInfoName;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getAutoId() {
+        return autoId;
+    }
+
+    public void setAutoId(String autoId) {
+        this.autoId = autoId;
+    }
 }

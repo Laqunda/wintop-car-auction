@@ -1,7 +1,7 @@
 package com.wintop.ms.carauction.model;
 
 import com.wintop.ms.carauction.entity.CarAssess;
-import com.wintop.ms.carauction.mapper.read.CarAssessReadDao;
+import com.wintop.ms.carauction.mapper.write.CarAssessReadDao;
 import com.wintop.ms.carauction.mapper.write.CarAssessWriteDao;
 import com.wintop.ms.carauction.util.Convert;
 import org.springframework.stereotype.Repository;
@@ -23,12 +23,12 @@ public class CarAssessModel {
     /**
      * 查询车辆评估信息
      *
-     * @param id 车辆评估ID
+     * @param carAssess 车辆评估信息
      * @return 车辆评估信息
      */
-    public CarAssess selectCarAssessById(Long id)
+    public CarAssess selectCarAssessById(CarAssess carAssess)
     {
-        return readDao.selectCarAssessById(id);
+        return readDao.selectCarAssessById(carAssess);
     }
 
     /**
@@ -82,5 +82,15 @@ public class CarAssessModel {
      */
     public int selectCarAssessCount(CarAssess carAssess) {
        return readDao.selectCarAssessCount(carAssess);
+    }
+
+    /**
+     * 根据车辆id查询车辆详情
+     *
+     * @param autoId
+     * @return
+     */
+    public CarAssess selectCarAssessDetailById(Long autoId) {
+        return readDao.selectCarAssessDetailById(autoId);
     }
 }

@@ -149,6 +149,19 @@ public class CarLocaleAuction implements Serializable {
     private BigDecimal transactionFee;
     private String publishUserName;
     private Date auctionEndTime;
+    /**
+     * 城市名称
+     * */
+    private String cityName;
+    /**
+     *
+     */
+    private Long templateId;
+
+    /**
+     * 主题id
+     */
+    private Long localeAuctionTemplateId;
 
     public BigDecimal getTransactionFee() {
         return transactionFee;
@@ -512,5 +525,29 @@ public class CarLocaleAuction implements Serializable {
 
     public void setStationRealId(String stationRealId) {
         this.stationRealId = stationRealId;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public Long getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(Long templateId) {
+        this.templateId = templateId;
+    }
+
+    public Long getLocaleAuctionTemplateId() {
+        return localeAuctionTemplateId;
+    }
+
+    public void setLocaleAuctionTemplateId(Long localeAuctionTemplateId) {
+        this.localeAuctionTemplateId = localeAuctionTemplateId;
     }
 }

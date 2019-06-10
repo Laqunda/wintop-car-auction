@@ -50,4 +50,17 @@ public class CarAutoLogModel {
         return readDao.selectCarLog(map);
     }
 
+    public int selectCountEndByUserId(Long userId){
+        return readDao.selectCountEndByUserId(userId);
+    }
+
+    public List<CarAutoLog> selectWaitOrderList(Map<String,Object> map){
+        return readDao.selectWaitOrderList(map);
+    }
+
+    public List<CarAutoLog> selectEndOrderList(Map<String,Object> map){
+        return readDao.selectEndOrderList(map);
+    }
+
+
 }

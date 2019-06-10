@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.read.CarChaboshiLogReadDao">
+
+    <resultMap type="com.wintop.ms.carauction.entity.CarChaboshiLog" id="CarChaboshiLogResult">
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="userType" column="user_type"/>
+        <result property="userId" column="user_id"/>
+        <result property="vin" column="vin"/>
+        <result property="responseMsg" column="response_msg"/>
+        <result property="sourceType" column="source_type"/>
+        <result property="responseResult" column="response_result"/>
+        <result property="money" column="money"/>
+        <result property="edition" column="edition"/>
+        <result property="orderId" column="order_id"/>
+        <result property="orderMsg" column="order_msg"/>
+        <result property="userName" column="user_name"/>
+        <result property="storeId" column="store_id"/>
+        <result property="payLogId" column="paylog_id"/>
+        <result property="vehicleId" column="vehicle_id"/>
+        <result property="vehicleType" column="vehicle_type"/>
+        <result property="photo" column="photo"/>
+        <result property="engineNum" column="engine_num"/>
+        <result property="pc_url" column="pc_url"/>
+        <result property="app_url" column="app_url"/>
+        <result property="finishTime" column="finish_time"/>
+        <result property="is_open" column="is_open"/>
+    </resultMap>
+
+    <sql id="selectCarChaboshiLogVo">
+        ccl.is_open,ccl.pc_url,ccl.app_url,ccl.finish_time,ccl.vehicle_id,ccl.vehicle_type,ccl.photo,ccl.engine_num,ccl.id,ccl.paylog_id,ccl.store_id,ccl.create_time,ccl.user_type,ccl.user_id,ccl.vin,ccl.response_msg,ccl.source_type,ccl.response_result,ccl.money,ccl.edition,ccl.order_id,ccl.order_msg,ccl.user_name
+    </sql>
+
+    <select id="selectCarChaboshiLogList" parameterType="java.util.Map"
+            resultMap="CarChaboshiLogResult">
+        select
+        <include refid="selectCarChaboshiLogVo"/>
+        from car_chaboshi_log ccl
+        <if test='userType != null and userType == "1"'>
+            left join wt_app_user wau on ccl.user_id = wau.id and ccl.user_type = '1'
+        </if>
+        <if test='userType != null and userType == "2"'>
+            left join car_store cs on ccl.store_id = cs.id
+        </if>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="userType != null  and userType != '' ">and user_type = #{userType}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
+            <if test="responseMsg != null  and responseMsg != '' ">and response_msg = #{responseMsg}</if>
+            <if test="sourceType != null  and sourceType != '' ">and source_type = #{sourceType}</if>
+            <if test="responseResult != null  and responseResult != '' ">and response_result = #{responseResult}</if>
+            <if test="money != null ">and money = #{money}</if>
+            <if test="edition != null  and edition != '' ">and edition = #{edition}</if>
+            <if test="orderId != null  and orderId != '' ">and order_id = #{orderId}</if>
+            <if test="orderMsg != null  and orderMsg != '' ">and order_msg = #{orderMsg}</if>
+            <if test="userName != null  and userName != '' ">and user_name = #{userName}</if>
+            <if test="storeId != null  and storeId != '' ">and store_id = #{storeId}</if>
+            <if test="payLogId != null  and payLogId != '' ">and paylog_id = #{payLogId}</if>
+            <if test="vehicleId != null  and vehicleId != ''  ">and vehicle_id = #{vehicleId},</if>
+            <if test="vehicleType != null  and vehicleType != ''  ">and vehicle_type = #{vehicleType},</if>
+            <if test="photo != null  and photo != ''  ">and photo = #{photo},</if>
+            <if test="engineNum != null  and engineNum != ''  ">and engine_num = #{engineNum},</if>
+            <if test="buyerSearchName != null and buyerSearchName != ''">
+                and (wau.name like CONCAT(CONCAT('%',#{buyerSearchName}),'%')
+                or wau.mobile like CONCAT(CONCAT('%',#{buyerSearchName}),'%'))
+            </if>
+            <if test="sellerSearchName != null and sellerSearchName != ''">
+                and (ccl.user_name like CONCAT(CONCAT('%',#{sellerSearchName}),'%')
+                or cs.name like CONCAT(CONCAT('%',#{sellerSearchName}),'%'))
+            </if>
+
+            <if test="fs != null ">
+                and ccl.finish_time &gt;= #{fs}
+            </if>
+
+            <if test="fe != null ">
+                and ccl.finish_time &lt;= #{fe}
+            </if>
+            <if test="includeShare != null and includeShare = '1'">
+                or (is_open = '1'
+
+                <if test="fs != null ">
+                    and ccl.finish_time &gt;= #{fs}
+                </if>
+                <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
+                <if test="responseResult != null  and responseResult != '' ">and response_result = #{responseResult}</if>
+                )
+
+            </if>
+
+            <if test="storeIds != null">
+                and store_id in
+                <foreach collection="storeIds" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+
+        </where>
+        order by create_time desc
+        <if test="startRowNum != null and endRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+
+    <select id="selectCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select count(*) from car_chaboshi_log ccl
+        <if test='userType != null and userType == "1"'>
+            left join wt_app_user wau on ccl.user_id = wau.id and ccl.user_type = '1'
+        </if>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="userType != null  and userType != '' ">and user_type = #{userType}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
+            <if test="responseMsg != null  and responseMsg != '' ">and response_msg = #{responseMsg}</if>
+            <if test="sourceType != null  and sourceType != '' ">and source_type = #{sourceType}</if>
+            <if test="responseResult != null  and responseResult != '' ">and response_result = #{responseResult}</if>
+            <if test="money != null ">and money = #{money}</if>
+            <if test="edition != null  and edition != '' ">and edition = #{edition}</if>
+            <if test="orderId != null  and orderId != '' ">and order_id = #{orderId}</if>
+            <if test="orderMsg != null  and orderMsg != '' ">and order_msg = #{orderMsg}</if>
+            <if test="userName != null  and userName != '' ">and user_name = #{userName}</if>
+            <if test="storeId != null  and storeId != '' ">and store_id = #{storeId}</if>
+            <if test="payLogId != null  and payLogId != '' ">and paylog_id = #{payLogId}</if>
+            <if test="vehicleId != null  and vehicleId != ''  ">and vehicle_id = #{vehicleId},</if>
+            <if test="vehicleType != null  and vehicleType != ''  ">and vehicle_type = #{vehicleType},</if>
+            <if test="photo != null  and photo != ''  ">and photo = #{photo},</if>
+            <if test="engineNum != null  and engineNum != ''  ">and engine_num = #{engineNum},</if>
+            <if test="buyerSearchName != null and buyerSearchName != ''">
+                and (wau.name like CONCAT(CONCAT('%',#{buyerSearchName}),'%')
+                or wau.mobile like CONCAT(CONCAT('%',#{buyerSearchName}),'%'))
+            </if>
+
+            <if test="fs != null ">
+                and ccl.finish_time &gt;= #{fs}
+            </if>
+
+            <if test="fe != null ">
+                and ccl.finish_time &lt;= #{fe}
+            </if>
+            <if test="includeShare != null and includeShare = '1'">
+                or (is_open = '1'
+                <if test="fs != null ">
+                    and ccl.finish_time &gt;= #{fs}
+
+                </if>
+                <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
+                <if test="responseResult != null  and responseResult != '' ">and response_result = #{responseResult}</if>
+                )
+
+            </if>
+
+            <if test="storeIds != null">
+                and store_id in
+                <foreach collection="storeIds" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCarChaboshiLogById" parameterType="Long" resultMap="CarChaboshiLogResult">
+        select
+        <include refid="selectCarChaboshiLogVo"/>
+        from car_chaboshi_log ccl
+        where id = #{id}
+    </select>
+
+</mapper>

@@ -26,4 +26,10 @@ public interface ICarAutoLogService {
      List<CarAutoLog> selectCarLogByCarId(Map<String,Object> map);
 
      CarAutoLog selectCarLog(Map<String,Object> map);
+
+    int selectCountEndByUserId(Long userId);
+
+    List<CarAutoLog> selectWaitOrderList(Map<String,Object> map);
+
+    List<CarAutoLog> selectEndOrderList(Map<String,Object> map);
 }

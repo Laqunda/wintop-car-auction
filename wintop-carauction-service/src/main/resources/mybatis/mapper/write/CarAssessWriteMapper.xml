@@ -1,76 +1,82 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wintop.ms.carauction.mapper.write.CarAssessWriteDao">
-   <insert id="insertCarAssess" parameterType="com.wintop.ms.carauction.entity.CarAssess">
+    <insert id="insertCarAssess" parameterType="com.wintop.ms.carauction.entity.CarAssess">
         insert into car_assess
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="vin != null  and vin != ''  ">vin,</if>
-			<if test="mileage != null  ">mileage,</if>
-			<if test="name != null  and name != ''  ">name,</if>
-			<if test="beginRegisterDate != null  ">begin_register_date,</if>
-			<if test="color != null  and color != ''  ">color,</if>
-			<if test="engineCapacity != null  ">engine_capacity,</if>
-			<if test="function != null  and function != ''  ">function,</if>
-			<if test="engineNumber != null  and engineNumber != ''  ">engine_number,</if>
-			<if test="manufactureDate != null  ">manufacture_date,</if>
-			<if test="yearInsurance != null  ">year_insurance,</if>
-			<if test="plateNum != null  and plateNum != ''  ">plate_num,</if>
-			<if test="transferNumber != null  ">transfer_number,</if>
-			<if test="autoNature != null  and autoNature != ''  ">auto_nature,</if>
-			<if test="createTime != null  ">create_time,</if>
-			<if test="createUser != null  ">create_user,</if>
-			<if test="status != null  and status != ''  ">status,</if>
-			<if test="carPhoto != null  and carPhoto != ''  ">car_photo,</if>
-			<if test="certificatePhoto != null  and certificatePhoto != ''  ">certificate_photo,</if>
-			<if test="otherPhoto != null  and otherPhoto != ''  ">other_photo,</if>
-			<if test="colorCn != null  and colorCn != ''  ">color_cn,</if>
-			<if test="regionId != null  and regionId != ''  ">region_id,</if>
-			<if test="autoBrand != null  and autoBrand != ''  ">auto_brand,</if>
-			<if test="autoBrandCn != null  and autoBrandCn != ''  ">auto_brand_cn,</if>
-			<if test="autoStyle != null  and autoStyle != ''  ">auto_style,</if>
-			<if test="autoStyleCn != null  and autoStyleCn != ''  ">auto_style_cn,</if>
-			<if test="autoSeries != null  and autoSeries != ''  ">auto_series,</if>
-			<if test="autoSeriesCn != null  and autoSeriesCn != ''  ">auto_series_cn,</if>
-			<if test="editTime != null  ">edit_time,</if>
-			<if test="carAutoNo != null  ">car_auto_no,</if>
-         </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="vin != null  and vin != ''  ">vin,</if>
+            <if test="mileage != null  ">mileage,</if>
+            <if test="name != null  and name != ''  ">name,</if>
+            <if test="beginRegisterDate != null  ">begin_register_date,</if>
+            <if test="color != null  and color != ''  ">color,</if>
+            <if test="engineCapacity != null  ">engine_capacity,</if>
+            <if test="function != null  and function != ''  ">function,</if>
+            <if test="engineNumber != null  and engineNumber != ''  ">engine_number,</if>
+            <if test="manufactureDate != null  ">manufacture_date,</if>
+            <if test="yearInsurance != null  ">year_insurance,</if>
+            <if test="plateNum != null  and plateNum != ''  ">plate_num,</if>
+            <if test="transferNumber != null  ">transfer_number,</if>
+            <if test="autoNature != null  and autoNature != ''  ">auto_nature,</if>
+            create_time,
+            <if test="createUser != null  ">create_user,</if>
+            <if test="createUserName != null  ">create_user_name,</if>
+            <if test="status != null  and status != ''  ">status,</if>
+            <if test="carPhoto != null  and carPhoto != ''  ">car_photo,</if>
+            <if test="certificatePhoto != null  and certificatePhoto != ''  ">certificate_photo,</if>
+            <if test="otherPhoto != null  and otherPhoto != ''  ">other_photo,</if>
+            <if test="colorCn != null  and colorCn != ''  ">color_cn,</if>
+            <if test="regionId != null  and regionId != ''  ">region_id,</if>
+            <if test="autoBrand != null  and autoBrand != ''  ">auto_brand,</if>
+            <if test="autoBrandCn != null  and autoBrandCn != ''  ">auto_brand_cn,</if>
+            <if test="autoStyle != null  and autoStyle != ''  ">auto_style,</if>
+            <if test="autoStyleCn != null  and autoStyleCn != ''  ">auto_style_cn,</if>
+            <if test="autoSeries != null  and autoSeries != ''  ">auto_series,</if>
+            <if test="autoSeriesCn != null  and autoSeriesCn != ''  ">auto_series_cn,</if>
+            edit_time,
+            <if test="rejectReason != null  ">reject_reason,</if>
+            <if test="functionCn != null  ">function_cn,</if>
+            <if test="autoNatureCn != null  ">autonature_cn,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="vin != null  and vin != ''  ">#{vin},</if>
-			<if test="mileage != null  ">#{mileage},</if>
-			<if test="name != null  and name != ''  ">#{name},</if>
-			<if test="beginRegisterDate != null  ">#{beginRegisterDate},</if>
-			<if test="color != null  and color != ''  ">#{color},</if>
-			<if test="engineCapacity != null  ">#{engineCapacity},</if>
-			<if test="function != null  and function != ''  ">#{function},</if>
-			<if test="engineNumber != null  and engineNumber != ''  ">#{engineNumber},</if>
-			<if test="manufactureDate != null  ">#{manufactureDate},</if>
-			<if test="yearInsurance != null  ">#{yearInsurance},</if>
-			<if test="plateNum != null  and plateNum != ''  ">#{plateNum},</if>
-			<if test="transferNumber != null  ">#{transferNumber},</if>
-			<if test="autoNature != null  and autoNature != ''  ">#{autoNature},</if>
-			<if test="createTime != null  ">#{createTime},</if>
-			<if test="createUser != null  ">#{createUser},</if>
-			<if test="status != null  and status != ''  ">#{status},</if>
-			<if test="carPhoto != null  and carPhoto != ''  ">#{carPhoto},</if>
-			<if test="certificatePhoto != null  and certificatePhoto != ''  ">#{certificatePhoto},</if>
-			<if test="otherPhoto != null  and otherPhoto != ''  ">#{otherPhoto},</if>
-			<if test="colorCn != null  and colorCn != ''  ">#{colorCn},</if>
-			<if test="regionId != null  and regionId != ''  ">#{regionId},</if>
-			<if test="autoBrand != null  and autoBrand != ''  ">#{autoBrand},</if>
-			<if test="autoBrandCn != null  and autoBrandCn != ''  ">#{autoBrandCn},</if>
-			<if test="autoStyle != null  and autoStyle != ''  ">#{autoStyle},</if>
-			<if test="autoStyleCn != null  and autoStyleCn != ''  ">#{autoStyleCn},</if>
-			<if test="autoSeries != null  and autoSeries != ''  ">#{autoSeries},</if>
-			<if test="autoSeriesCn != null  and autoSeriesCn != ''  ">#{autoSeriesCn},</if>
-			<if test="editTime != null  ">#{editTime},</if>
-			<if test="carAutoNo != null  ">#{carAutoNo},</if>
-         </trim>
+            <if test="id != null  ">#{id},</if>
+            <if test="vin != null  and vin != ''  ">#{vin},</if>
+            <if test="mileage != null  ">#{mileage},</if>
+            <if test="name != null  and name != ''  ">#{name},</if>
+            <if test="beginRegisterDate != null  ">#{beginRegisterDate},</if>
+            <if test="color != null  and color != ''  ">#{color},</if>
+            <if test="engineCapacity != null  ">#{engineCapacity},</if>
+            <if test="function != null  and function != ''  ">#{function},</if>
+            <if test="engineNumber != null  and engineNumber != ''  ">#{engineNumber},</if>
+            <if test="manufactureDate != null  ">#{manufactureDate},</if>
+            <if test="yearInsurance != null  ">#{yearInsurance},</if>
+            <if test="plateNum != null  and plateNum != ''  ">#{plateNum},</if>
+            <if test="transferNumber != null  ">#{transferNumber},</if>
+            <if test="autoNature != null  and autoNature != ''  ">#{autoNature},</if>
+            now(),
+            <if test="createUser != null  ">#{createUser},</if>
+            <if test="createUserName != null  ">#{createUserName},</if>
+            <if test="status != null  and status != ''  ">#{status},</if>
+            <if test="carPhoto != null  and carPhoto != ''  ">#{carPhoto},</if>
+            <if test="certificatePhoto != null  and certificatePhoto != ''  ">#{certificatePhoto},</if>
+            <if test="otherPhoto != null  and otherPhoto != ''  ">#{otherPhoto},</if>
+            <if test="colorCn != null  and colorCn != ''  ">#{colorCn},</if>
+            <if test="regionId != null  and regionId != ''  ">#{regionId},</if>
+            <if test="autoBrand != null  and autoBrand != ''  ">#{autoBrand},</if>
+            <if test="autoBrandCn != null  and autoBrandCn != ''  ">#{autoBrandCn},</if>
+            <if test="autoStyle != null  and autoStyle != ''  ">#{autoStyle},</if>
+            <if test="autoStyleCn != null  and autoStyleCn != ''  ">#{autoStyleCn},</if>
+            <if test="autoSeries != null  and autoSeries != ''  ">#{autoSeries},</if>
+            <if test="autoSeriesCn != null  and autoSeriesCn != ''  ">#{autoSeriesCn},</if>
+            now(),
+            <if test="rejectReason != null  ">#{rejectReason},</if>
+            <if test="functionCn != null  ">#{functionCn},</if>
+            <if test="autoNatureCn != null  ">#{autoNatureCn},</if>
+        </trim>
     </insert>
-	 
+
     <update id="updateCarAssess" parameterType="com.wintop.ms.carauction.entity.CarAssess">
         update car_assess
         <trim prefix="SET" suffixOverrides=",">
@@ -89,9 +95,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="autoNature != null  and autoNature != ''  ">auto_nature = #{autoNature},</if>
             <if test="createTime != null  ">create_time = #{createTime},</if>
             <if test="createUser != null  ">create_user = #{createUser},</if>
+            <if test="createUserName != null  ">create_user_name = #{createUserName},</if>
             <if test="status != null  and status != ''  ">status = #{status},</if>
             <if test="carPhoto != null  and carPhoto != ''  ">car_photo = #{carPhoto},</if>
-            <if test="certificatePhoto != null  and certificatePhoto != ''  ">certificate_photo = #{certificatePhoto},</if>
+            <if test="certificatePhoto != null  and certificatePhoto != ''  ">certificate_photo = #{certificatePhoto},
+            </if>
             <if test="otherPhoto != null  and otherPhoto != ''  ">other_photo = #{otherPhoto},</if>
             <if test="colorCn != null  and colorCn != ''  ">color_cn = #{colorCn},</if>
             <if test="regionId != null  and regionId != ''  ">region_id = #{regionId},</if>
@@ -101,21 +109,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="autoStyleCn != null  and autoStyleCn != ''  ">auto_style_cn = #{autoStyleCn},</if>
             <if test="autoSeries != null  and autoSeries != ''  ">auto_series = #{autoSeries},</if>
             <if test="autoSeriesCn != null  and autoSeriesCn != ''  ">auto_series_cn = #{autoSeriesCn},</if>
-            <if test="editTime != null  ">edit_time = #{editTime},</if>
-            <if test="carAutoNo != null  ">car_auto_no = #{carAutoNo},</if>
+            edit_time = now(),
+            <if test="autoId != null  ">auto_id = #{autoId},</if>
+            <if test="rejectReason != null  ">reject_reason = #{rejectReason},</if>
+            <if test="functionCn != null  ">function_cn = #{functionCn},</if>
+            <if test="autoNatureCn != null  ">autonature_cn = #{autoNatureCn},</if>
         </trim>
         where id = #{id}
     </update>
 
-	<delete id="deleteCarAssessById" parameterType="Long">
+    <delete id="deleteCarAssessById" parameterType="Long">
         delete from car_assess where id = #{id}
     </delete>
-	
+
     <delete id="deleteCarAssessByIds" parameterType="String">
-        delete from car_assess where id in 
+        delete from car_assess where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

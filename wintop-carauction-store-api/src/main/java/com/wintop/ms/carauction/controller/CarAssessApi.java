@@ -11,6 +11,7 @@ import com.wintop.ms.carauction.util.utils.ApiUtil;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +47,8 @@ public class CarAssessApi {
     @PostMapping(value = "/list",produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResultModel list(@RequestBody Map<String,Object> map) {
+    public ResultModel list(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) {
+        map.put("customerId",userId);
         if(map.get("page")==null || map.get("limit")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
@@ -73,6 +75,45 @@ public class CarAssessApi {
                         .body(map),JSONObject.class);
         return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
+
+
+    /**
+     * 库存管理-线上车辆详情
+     */
+    @ApiOperation(value = "查询采购审批详情")
+    @PostMapping(value = "/purchaseAuditDetail",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResultModel purchaseAuditDetail(@RequestBody Map<String,Object> map) {
+        if (map.get("autoId") == null) {
+            return new ResultModel(false, 101, "缺少参数", null);
+        }
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAssess/purchaseAuditDetail"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
+    /**
+     * 库存管理-线上车辆详情
+     */
+    /*@ApiOperation(value = "库存管理-线上车辆详情") 接口错误 不使用
+    @PostMapping(value = "/onlineDetail",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResultModel onlineDetail(@RequestBody Map<String,Object> map) {
+        if (map.get("autoId") == null) {
+            return new ResultModel(false, 101, "缺少参数", null);
+        }
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAssess/onlineDetail"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }*/
 
     /**
      * 新增保存车辆评估
@@ -129,7 +170,7 @@ public class CarAssessApi {
     public ResultModel cancelCarAssess(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         Map params = new HashMap();
         params.put("id",map.get("id"));
-        params.put("status","1");
+        params.put("status","2");
         params.put("managerId",managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity

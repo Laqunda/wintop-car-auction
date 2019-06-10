@@ -239,6 +239,8 @@ public class CarAutoInfoDetail implements Serializable {
     private String status;
     /**是否新车：1二手车，2新车*/
     private String ifNew;
+    /**车辆首图*/
+    private String mainPhoto;
 
     private List<CarAutoConfDetail> confDetails;
 
@@ -874,5 +876,13 @@ public class CarAutoInfoDetail implements Serializable {
 
     public void setIfNew(String ifNew) {
         this.ifNew = ifNew;
+    }
+
+    public String getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public void setMainPhoto(String mainPhoto) {
+        this.mainPhoto = mainPhoto;
     }
 }

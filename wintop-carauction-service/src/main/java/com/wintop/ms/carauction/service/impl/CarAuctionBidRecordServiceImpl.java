@@ -1,5 +1,8 @@
 package com.wintop.ms.carauction.service.impl;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.core.entity.AppUser;
 import com.wintop.ms.carauction.core.entity.RedisAutoData;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -11,9 +14,11 @@ import com.wintop.ms.carauction.util.utils.RedisAutoManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordService {
@@ -165,6 +170,17 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
     @Override
     public BigDecimal selectMaxPrice(Map<String,Object> map){
         return model.selectMaxPrice(map);
+    }
+
+
+    /**
+     * 获取出价列表
+     * @param map
+     * @return
+     */
+    @Override
+    public List<CarAuctionBidRecord> selectPriceList(Map<String,Object> map) {
+        return model.selectPriceList(map);
     }
 
     /**
@@ -368,5 +384,24 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
     public int insertAuto(Long carId){
         CarCustomerEntrustCar entrustCar = entrustCarModel.selectMaxEntrustByCarId(carId);
         return 0;
+    }
+
+    public List<Map<String,Object>> getBidPriceList(Long autoId) {
+        List<Map<String,Object>> resultList = Lists.newArrayList();
+        List<CarAuctionBidRecord> bidRecordList = model.getCustomerBidPriceList(Collections.singletonMap("carId", autoId));
+        for (int i = 0; i < bidRecordList.size();i++){
+            CarAuctionBidRecord record = bidRecordList.get(i);
+            if(record.getCustomerId() != null){
+                WtAppUser appUser = appUserModel.getUserInfoById(record.getCustomerId());
+                Map<String, Object> resultMap = Maps.newHashMap();
+                resultMap.put("customerName", appUser.getName());
+                resultMap.put("mobile", appUser.getMobile());
+                resultMap.put("customerId", appUser.getId());
+                resultMap.put("bidFee", record.getBidFee());
+                resultMap.put("bidTime", record.getBidTime());
+                resultList.add(resultMap);
+            }
+        }
+        return resultList;
     }
 }

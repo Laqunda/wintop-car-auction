@@ -42,6 +42,17 @@ public class CarAssessOrderLog extends BaseEntity {
      */
     private String userName;
 
+    private String mainPhoto;
+
+    private String autoInfoName;
+
+    private String createUser;
+
+    /**
+     * 评估id
+     */
+    private String assessId;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -106,4 +117,37 @@ public class CarAssessOrderLog extends BaseEntity {
         return userName;
     }
 
+
+    public String getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public void setMainPhoto(String mainPhoto) {
+        this.mainPhoto = mainPhoto;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+
+    public String getAutoInfoName() {
+        return autoInfoName;
+    }
+
+    public void setAutoInfoName(String autoInfoName) {
+        this.autoInfoName = autoInfoName;
+    }
+
+    public String getAssessId() {
+        return assessId;
+    }
+
+    public void setAssessId(String assessId) {
+        this.assessId = assessId;
+    }
 }

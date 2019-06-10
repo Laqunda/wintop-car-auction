@@ -15,7 +15,6 @@ import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.RandCodeUtil;
 import com.wintop.ms.carauction.util.utils.RedisAppUserManager;
 import com.wintop.ms.carauction.util.utils.RedisManager;
-import com.wintop.ms.carauction.util.utils.RedisManagerTemplate;
 import com.wintop.ms.carauction.util.utils.pay.ali.AlipayUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -51,61 +50,64 @@ public class AliPayApi {
     private RedisAppUserManager appUserManager;
     private ResultModel resultModel;
     private final RestTemplate restTemplate;
+
     AliPayApi(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    /**根据用户等级获取该用户所需缴纳的保证金金额
-     * */
-    private String getDepositAmountByCustomerLevelId_URL = Constants.ROOT+"/service/carCustomerDeposit/getDepositAmountByCustomerLevelId";
+    /**
+     * 根据用户等级获取该用户所需缴纳的保证金金额
+     */
+    private String getDepositAmountByCustomerLevelId_URL = Constants.ROOT + "/service/carCustomerDeposit/getDepositAmountByCustomerLevelId";
 
-    /**支付成功通知保证金接口
-     * */
-    private String payDepositAmountCallback_URL = Constants.ROOT+"/service/carCustomerDeposit/payDepositAmountCallback";
+    /**
+     * 支付成功通知保证金接口
+     */
+    private String payDepositAmountCallback_URL = Constants.ROOT + "/service/carCustomerDeposit/payDepositAmountCallback";
 
 
     @ApiOperation(value = "支付保证金")
     @PostMapping("payDeposit")
     @AuthUserToken
-    public ResponseEntity<ResultModel> payDeposit(@CurrentUser AppUser user){
+    public ResponseEntity<ResultModel> payDeposit(@CurrentUser AppUser user) {
         logger.info("创建支付宝订单--支付保证金");
         try {
             Map map = new HashMap();
-            map.put("customerLevelId",user.getUserRankId());
+            map.put("customerLevelId", user.getUserRankId());
             //1、根据用户获取此用户需要支付的保证金金额
             ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                     RequestEntity
                             .post(URI.create(getDepositAmountByCustomerLevelId_URL))
                             .contentType(MediaType.APPLICATION_JSON)
-                            .body(map),JSONObject.class);
+                            .body(map), JSONObject.class);
             BigDecimal depositMoney = response.getBody().getJSONObject("result").getBigDecimal("depositMoney");
             //2、封装支付所需对象
             AlipayRequestModel alipayRequestModel = new AlipayRequestModel();
             alipayRequestModel.setBody("柠檬竞拍保证金缴纳");//描述
-            alipayRequestModel.setPassbackParams(user.getId()+"");//附加字段
+            alipayRequestModel.setPassbackParams(user.getId() + "");//附加字段
             alipayRequestModel.setOutTradeNo(RandCodeUtil.getOrderNumber());//单号
             alipayRequestModel.setPayNotifyUrl(Constants.ALIPAY_NOTIFY_URL);//回调通知地址
             alipayRequestModel.setSubject("保证金缴纳");//标题
             alipayRequestModel.setTimeoutExpress("30m");//支付有效期30分钟
-            alipayRequestModel.setTotalAmount(depositMoney+"");//付款金额
+            alipayRequestModel.setTotalAmount(depositMoney + "");//付款金额
 //            alipayRequestModel.setTotalAmount("0.01");//付款金额
             //3、将保证金支付对象放入redis，用于通知回调时 取出 做对应业务处理
-            redisManager.setKeyValue(alipayRequestModel.getOutTradeNo(),JSONObject.toJSONString(alipayRequestModel),Constants.PAY_EXPIRES_HOUR,TimeUnit.HOURS);
+            redisManager.setKeyValue(alipayRequestModel.getOutTradeNo(), JSONObject.toJSONString(alipayRequestModel), Constants.PAY_EXPIRES_HOUR, TimeUnit.HOURS);
             //4、初始化封装好的支付宝sdk---调用创建订单方法
             AlipayConfig alipayConfig = new AlipayConfig();
-            String orderString = AlipayUtil.createPayOrder(alipayConfig,alipayRequestModel);
-            if (orderString!=null && orderString!=""){
+            String orderString = AlipayUtil.createPayOrder(alipayConfig, alipayRequestModel);
+            if (orderString != null && orderString != "") {
                 Map payMap = new HashMap();
-                payMap.put("orderString",orderString);
+                payMap.put("orderString", orderString);
                 resultModel = ResultModel.ok(payMap);
-            }else {
+            } else {
                 resultModel = ResultModel.error(ResultStatus.UNSUCCESS);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             resultModel = ResultModel.error(ResultStatus.UNSUCCESS);
-        }finally {
+        } finally {
             return new ResponseEntity<>(resultModel, HttpStatus.OK);
         }
     }
@@ -113,38 +115,38 @@ public class AliPayApi {
     @AuthPublic
     @ApiOperation(value = "保证金支付通知")
     @PostMapping("payNotifyDeposit")
-    public String payNotifyDeposit(HttpServletRequest request){
+    public String payNotifyDeposit(HttpServletRequest request) {
         Map requestMap = request.getParameterMap();
         logger.info("保证金支付通知");
-        logger.info("通知内容："+JSONObject.toJSONString(requestMap));
+        logger.info("通知内容：" + JSONObject.toJSONString(requestMap));
         String result = "error";
         try {
             //1、通过支付宝工具类解析支付通知结果
             AlipayConfig alipayConfig = new AlipayConfig();
-            AlipayResponseModel alipayResponseModel = AlipayUtil.aliPayNotify(alipayConfig,requestMap);
+            AlipayResponseModel alipayResponseModel = AlipayUtil.aliPayNotify(alipayConfig, requestMap);
             //2、根据结果处理保证金业务
-            if (alipayResponseModel!=null){
+            if (alipayResponseModel != null) {
                 String alipayRequestModelJsonStr = redisManager.getKeyValue(alipayResponseModel.getOutTradeNo());
                 JSONObject requestModel = JSONObject.parseObject(alipayRequestModelJsonStr);
 
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("depositAmount",alipayResponseModel.getAmount());//支付金额
-                jsonObject.put("payLogNo",alipayResponseModel.getOutTradeNo());//平台支付流水号
-                jsonObject.put("bankOrderNo",alipayResponseModel.getTradeNo());//银行交易流水号
-                jsonObject.put("payType","1");//支付方式1线上，2线下
-                jsonObject.put("payWay","3");//支付渠道：3支付宝
-                jsonObject.put("bankOrderLog",alipayResponseModel.getLog());//支付银行订单日至
-                jsonObject.put("userId",requestModel.getString("passbackParams"));//支付人-通过附加字段回传
-                jsonObject.put("passbackParams",requestModel.getString("passbackParams"));//附加字段
-                jsonObject.put("userType","1");
+                jsonObject.put("depositAmount", alipayResponseModel.getAmount());//支付金额
+                jsonObject.put("payLogNo", alipayResponseModel.getOutTradeNo());//平台支付流水号
+                jsonObject.put("bankOrderNo", alipayResponseModel.getTradeNo());//银行交易流水号
+                jsonObject.put("payType", "1");//支付方式1线上，2线下
+                jsonObject.put("payWay", "3");//支付渠道：3支付宝
+                jsonObject.put("bankOrderLog", alipayResponseModel.getLog());//支付银行订单日至
+                jsonObject.put("userId", requestModel.getString("passbackParams"));//支付人-通过附加字段回传
+                jsonObject.put("passbackParams", requestModel.getString("passbackParams"));//附加字段
+                jsonObject.put("userType", "1");
                 ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                         RequestEntity
                                 .post(URI.create(payDepositAmountCallback_URL))
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .body(jsonObject),JSONObject.class);
-                if (response.getStatusCode()==HttpStatus.OK){
+                                .body(jsonObject), JSONObject.class);
+                if (response.getStatusCode() == HttpStatus.OK) {
                     JSONObject object = response.getBody();
-                    if ("0".equals(object.getString("code"))){
+                    if ("0".equals(object.getString("code"))) {
                         //支付成功业务处理完成，将redis中的待支付对象清理掉
                         redisManager.delKeyValue(alipayResponseModel.getOutTradeNo());
                         result = "success";
@@ -154,11 +156,148 @@ public class AliPayApi {
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             result = "error";
             logger.error("支付成功通知处理失败！");
-        }finally {
+        } finally {
+            return result;
+        }
+
+
+    }
+
+    //***************查博士支付*******************
+    @ApiOperation(value = "查博士支付")
+    @PostMapping("payChaBoShi")
+    @AuthUserToken
+    public ResponseEntity<ResultModel> payChaBoShi(@CurrentUser AppUser user, @RequestBody Map<String, Object> map) {
+        logger.info("创建支付宝订单--查博士支付");
+        try {
+            //1、查找需要支付的查询费用
+            ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                    RequestEntity
+                            .post(URI.create(Constants.ROOT + "/service/carChaboshiPaymentConf/detail"))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(map), JSONObject.class);
+            BigDecimal count = null;
+
+            //            查询版本 1维修版 2综合版
+            if ("1".equals(map.get("edition"))) {
+                response.getBody().getJSONObject("result").getBigDecimal("payment");
+            } else if ("2".equals(map.get("edition"))) {
+                response.getBody().getJSONObject("result").getBigDecimal("paymentComposite");
+            } else {
+                resultModel = ResultModel.error(ResultStatus.PARAMETERS_ERROR);
+                return new ResponseEntity<>(resultModel, HttpStatus.OK);
+            }
+
+            //TODO count 金额校验
+            //2、封装支付所需对象
+            AlipayRequestModel alipayRequestModel = new AlipayRequestModel();
+            alipayRequestModel.setBody("查博士查询消费");//描述
+            alipayRequestModel.setPassbackParams(user.getId() + "");//附加字段
+            alipayRequestModel.setOutTradeNo(RandCodeUtil.getOrderNumber());//单号
+            alipayRequestModel.setPayNotifyUrl(Constants.ALIPAY_NOTIFY_URL);//回调通知地址
+            alipayRequestModel.setSubject("查博士查询");//标题
+            alipayRequestModel.setTimeoutExpress("30m");//支付有效期30分钟
+            alipayRequestModel.setTotalAmount(count + "");//付款金额
+//            alipayRequestModel.setTotalAmount("0.01");//付款金额
+            //3、将支付对象放入redis，用于通知回调时 取出 做对应业务处理
+            JSONObject jo = JSONObject.parseObject(JSONObject.toJSONString(alipayRequestModel));
+            jo.put("edition", map.get("edition"));
+            jo.put("vin", map.get("vin"));
+            jo.put("userName", user.getUserName());
+            /*车型信息*/
+            jo.put("vehicleId", map.get("vehicleId"));
+            jo.put("vehicleType", map.get("vehicleType"));
+            jo.put("photo", map.get("photo"));
+            jo.put("engineNum", map.get("engineNum"));
+
+            redisManager.setKeyValue(alipayRequestModel.getOutTradeNo(), jo.toJSONString(), Constants.PAY_EXPIRES_HOUR, TimeUnit.HOURS);
+            //4、初始化封装好的支付宝sdk---调用创建订单方法
+            AlipayConfig alipayConfig = new AlipayConfig();
+            String orderString = AlipayUtil.createPayOrder(alipayConfig, alipayRequestModel);
+            if (orderString != null && orderString != "") {
+                Map payMap = new HashMap();
+                payMap.put("orderString", orderString);
+                resultModel = ResultModel.ok(payMap);
+            } else {
+                resultModel = ResultModel.error(ResultStatus.UNSUCCESS);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultModel = ResultModel.error(ResultStatus.UNSUCCESS);
+        } finally {
+            return new ResponseEntity<>(resultModel, HttpStatus.OK);
+        }
+    }
+
+    @AuthPublic
+    @ApiOperation(value = "查博士支付通知")
+    @PostMapping("payChaboshiAmountCallback")
+    public String payNotifyChaBoShi(HttpServletRequest request) {
+        Map requestMap = request.getParameterMap();
+        logger.info("查博士支付通知");
+        logger.info("通知内容：" + JSONObject.toJSONString(requestMap));
+        String result = "error";
+        try {
+            //1、通过支付宝工具类解析支付通知结果
+            AlipayConfig alipayConfig = new AlipayConfig();
+            AlipayResponseModel alipayResponseModel = AlipayUtil.aliPayNotify(alipayConfig, requestMap);
+            //2、根据结果处理查博士业务
+            if (alipayResponseModel != null) {
+                String alipayRequestModelJsonStr = redisManager.getKeyValue(alipayResponseModel.getOutTradeNo());
+                JSONObject requestModel = JSONObject.parseObject(alipayRequestModelJsonStr);
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("money", alipayResponseModel.getAmount());//支付金额
+                jsonObject.put("type", "4");//查博士
+                jsonObject.put("payLogNo", alipayResponseModel.getOutTradeNo());//平台支付流水号
+                jsonObject.put("bankOrderNo", alipayResponseModel.getTradeNo());//银行交易流水号
+                jsonObject.put("payType", "1");//支付方式1线上，2线下
+                jsonObject.put("payWay", "3");//支付渠道：3支付宝
+                jsonObject.put("bankOrderLog", alipayResponseModel.getLog());//支付银行订单日至
+
+                jsonObject.put("userId", requestModel.getString("passbackParams"));//支付人-通过附加字段回传
+                jsonObject.put("passbackParams", requestModel.getString("passbackParams"));//附加字段
+
+                jsonObject.put("edition", requestModel.getString("edition"));
+                jsonObject.put("vin", requestModel.getString("vin"));
+                jsonObject.put("userName", requestModel.getString("userName"));
+                jsonObject.put("edition", requestModel.getString("edition"));
+                jsonObject.put("userType", "1");//个人
+
+                /*车型信息*/
+                jsonObject.put("vehicleId", requestModel.get("vehicleId"));
+                jsonObject.put("vehicleType", requestModel.get("vehicleType"));
+                jsonObject.put("photo", requestModel.get("photo"));
+                jsonObject.put("engineNum", requestModel.get("engineNum"));
+
+                ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                        RequestEntity
+                                .post(URI.create(Constants.ROOT + "/service//payChaboshiAmountCallback"))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(jsonObject), JSONObject.class);
+
+                if (response.getStatusCode() == HttpStatus.OK) {
+                    JSONObject object = response.getBody();
+                    if ("0".equals(object.getString("code"))) {
+                        //支付成功业务处理完成，将redis中的待支付对象清理掉
+                        redisManager.delKeyValue(alipayResponseModel.getOutTradeNo());
+                        result = "success";
+                        logger.info("支付成功通知处理完成，返回支付宝success");
+                        //更新redis中用户的状态
+                        appUserManager.updateUserStatus(requestModel.getString("passbackParams"), AppUserStatusEnum.SIG_ING.value());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = "error";
+            logger.error("支付成功通知处理失败！");
+        } finally {
             return result;
         }
     }

@@ -2,6 +2,7 @@ package com.wintop.ms.carauction.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 车辆评估表 car_assess
@@ -18,7 +19,7 @@ public class CarAssess extends BaseEntity
 	/** 车辆VIN码 */
 	private String vin;
 	/** 表现里程单位KM */
-	private Integer mileage;
+	private Long mileage;
 	/** 车辆品牌车型车系名称 */
 	private String name;
 	/** 初次上牌日期 */
@@ -29,6 +30,8 @@ public class CarAssess extends BaseEntity
 	private BigDecimal engineCapacity;
 	/** 使用性质：1运营，2非运营，3营转非，4租赁营运，5租赁非营运 */
 	private String function;
+
+	private String functionCn;
 	/** 发动机号 */
 	private String engineNumber;
 	/** 出厂日期 */
@@ -41,8 +44,11 @@ public class CarAssess extends BaseEntity
 	private Integer transferNumber;
 	/** 车辆性质：1公户，2私户，3外事车 */
 	private String autoNature;
+	private String autoNatureCn;
 	/** 评估人 */
 	private Long createUser;
+	/** 评估人姓名 */
+	private String createUserName;
 	/** 状态：1草稿，2，完成评估，3提交审核 */
 	private String status;
 	/** 车辆照片 */
@@ -70,8 +76,22 @@ public class CarAssess extends BaseEntity
 	/** 编辑时间 */
 	private Date editTime;
 	/** 车辆编码 */
-	private Long carAutoNo;
-
+	private Long autoId;
+	/*审核不通过原因*/
+	private String rejectReason;
+	/******************************* 关联字段 *******************************/
+	/** 店铺名称 */
+	private String storeName;
+	/** 评估结果：1评估中，2采购前科，3战败，4确认采购 */
+	private String followResult;
+	/** 代办状态：1过户事宜确定中、2出牌确认中、3交档确认中、4提档确认中、5手续上传中、6手续回传确认中、7手续回传不通过、8代办完结、9争议处理中、10.交易关闭 */
+	private String transferStatus;
+	/** 质检报告综合等级：A,B,C.. */
+	private String reportColligationRanks;
+	/** 参数配置 */
+	private Map<String,Object> ParamConf;
+	/** 车主 */
+	private String ownerName;
 	private CarAssessOrder order;
 
 	public void setId(Long id) 
@@ -92,12 +112,12 @@ public class CarAssess extends BaseEntity
 	{
 		return vin;
 	}
-	public void setMileage(Integer mileage) 
+	public void setMileage(Long mileage)
 	{
 		this.mileage = mileage;
 	}
 
-	public Integer getMileage() 
+	public Long getMileage()
 	{
 		return mileage;
 	}
@@ -254,12 +274,12 @@ public class CarAssess extends BaseEntity
 	{
 		return colorCn;
 	}
-	public void setRegionId(String regionId) 
+	public void setRegionId(String regionId)
 	{
 		this.regionId = regionId;
 	}
 
-	public String getRegionId() 
+	public String getRegionId()
 	{
 		return regionId;
 	}
@@ -326,14 +346,13 @@ public class CarAssess extends BaseEntity
 	{
 		return editTime;
 	}
-	public void setCarAutoNo(Long carAutoNo) 
-	{
-		this.carAutoNo = carAutoNo;
+
+	public Long getAutoId() {
+		return autoId;
 	}
 
-	public Long getCarAutoNo() 
-	{
-		return carAutoNo;
+	public void setAutoId(Long autoId) {
+		this.autoId = autoId;
 	}
 
 	public CarAssessOrder getOrder() {
@@ -342,5 +361,85 @@ public class CarAssess extends BaseEntity
 
 	public void setOrder(CarAssessOrder order) {
 		this.order = order;
+	}
+
+	public String getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
+
+	public String getFollowResult() {
+		return followResult;
+	}
+
+	public void setFollowResult(String followResult) {
+		this.followResult = followResult;
+	}
+
+	public String getTransferStatus() {
+		return transferStatus;
+	}
+
+	public void setTransferStatus(String transferStatus) {
+		this.transferStatus = transferStatus;
+	}
+
+	public String getReportColligationRanks() {
+		return reportColligationRanks;
+	}
+
+	public void setReportColligationRanks(String reportColligationRanks) {
+		this.reportColligationRanks = reportColligationRanks;
+	}
+
+	public Map<String, Object> getParamConf() {
+		return ParamConf;
+	}
+
+	public void setParamConf(Map<String, Object> paramConf) {
+		ParamConf = paramConf;
+	}
+
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
+	}
+
+	public String getRejectReason() {
+		return rejectReason;
+	}
+
+	public void setRejectReason(String rejectReason) {
+		this.rejectReason = rejectReason;
+	}
+
+	public String getFunctionCn() {
+		return functionCn;
+	}
+
+	public void setFunctionCn(String functionCn) {
+		this.functionCn = functionCn;
+	}
+
+	public String getAutoNatureCn() {
+		return autoNatureCn;
+	}
+
+	public void setAutoNatureCn(String autoNatureCn) {
+		this.autoNatureCn = autoNatureCn;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
 	}
 }

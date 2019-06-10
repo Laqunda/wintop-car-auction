@@ -1,6 +1,10 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -13,14 +17,20 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.*;
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: 付陈林.
@@ -366,6 +376,7 @@ public class CarLocaleAuctionApi {
             produces="application/json; charset=UTF-8")
     @ApiOperation(value = "保存竞拍场次",notes = "")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "templateId",value = "模板id",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "title",value = "场次主题",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "regionId",value = "可见范围，客户组id",required = true,paramType = "body",dataType = "long"),
             @ApiImplicitParam(name = "cityId",value = "场次所在城市",required = true,paramType = "body",dataType = "long"),
@@ -438,6 +449,12 @@ public class CarLocaleAuctionApi {
             result.setError("101","创建人不能为空！");
             return result;
         }
+        if (obj.getString("templateId") != null) {
+            carLocaleAuction.setTemplateId(obj.getLong("templateId"));
+        }else{
+            result.setError("101","模板id不能为空！");
+            return result;
+        }
         carLocaleAuction.setDelFlag("0");
         carLocaleAuction.setStatus("1");
         carLocaleAuction.setCreateTime(new Date());
@@ -471,6 +488,7 @@ public class CarLocaleAuctionApi {
     @ApiOperation(value = "更新竞拍场次",notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id",value = "场次主键",required = true,paramType = "body",dataType = "string"),
+            @ApiImplicitParam(name = "templateId",value = "模板id",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "code",value = "场次编号",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "title",value = "场次主题",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "regionId",value = "可见范围，客户组id",required = true,paramType = "body",dataType = "long"),
@@ -534,6 +552,9 @@ public class CarLocaleAuctionApi {
         }
         if(obj.getString("modifyPerson")!=null){
             carLocaleAuction.setModifyPerson(obj.getLong("modifyPerson"));
+        }
+        if (obj.getString("templateId") != null) {
+            carLocaleAuction.setTemplateId(obj.getLong("templateId"));
         }
         carLocaleAuction.setModifyTime(new Date());
         result = carLocaleAuctionService.updateByIdSelective(carLocaleAuction);
@@ -805,9 +826,18 @@ public class CarLocaleAuctionApi {
         if(obj.getLong("customerId")!=null&&obj.getLong("customerId")!=0){
             carAuctionBidRecord.setCustomerId(obj.getLong("customerId"));
         }
-
         if(obj.getLong("lastAmount")==null){
             return new ServiceResult<>(false,"最高出价不能为空！","101");
+        }
+        Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put("auctionCarId", obj.getLong("auctionCarId"));
+        paramMap.put("carId", obj.getLong("carId"));
+        List<CarAuctionBidRecord> recordList = carAuctionBidRecordService.selectPriceList(paramMap);
+        if (CollectionUtils.isNotEmpty(recordList)) {
+            List<BigDecimal> priceList = recordList.stream().map(a -> a.getBidFee()).collect(Collectors.toList());
+            if (priceList.contains(obj.getBigDecimal("lastAmount"))) {
+                return new ServiceResult<>(false,"不可重复出价！","101");
+            }
         }
         CarLocaleAuctionCar carLocaleAuctionCar = carLocaleAuctionCarService.selectById(obj.getLong("auctionCarId"));
         if(carLocaleAuctionCar==null||!"1".equals(carLocaleAuctionCar.getAuctionStatus())){
