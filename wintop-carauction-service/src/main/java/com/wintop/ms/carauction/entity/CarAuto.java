@@ -231,6 +231,7 @@ public class CarAuto implements Serializable {
     private String orderId;
 
 
+    private String managerEvaluate;
     public String getMaxPriceUserId() {
         return maxPriceUserId;
     }
@@ -1274,4 +1275,11 @@ public class CarAuto implements Serializable {
         this.orderId = orderId;
     }
 
+    public String getManagerEvaluate() {
+        return managerEvaluate;
+    }
+
+    public void setManagerEvaluate(String managerEvaluate) {
+        this.managerEvaluate = managerEvaluate;
+    }
 }
