@@ -56,4 +56,6 @@ public interface ICarStoreService {
      */
     public int updateStoreDel(Long delPerson,Long id);
 
+    Long idByExample(Map<String,Object> map);
+
 }

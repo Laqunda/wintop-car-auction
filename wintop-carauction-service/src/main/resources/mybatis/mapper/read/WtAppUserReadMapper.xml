@@ -237,6 +237,12 @@
         WHERE a.user_num=#{userNum} and a.id!=#{userId}
     </select>
 
+    <select id="selectAuctionPlateNumIsRepeat" resultType="java.lang.Integer">
+        select count(1)
+        from wt_app_user a
+        WHERE a.mobile=#{mobile} and a.auction_plate_num=#{auctionPlateNum}
+    </select>
+
     <!--查询会员详情信息 zhangzijuan-->
     <select id="getUserInfoById" resultMap="BaseResultMap" parameterType="java.lang.Long">
         SELECT a.id,a.user_name,a.mobile,a.user_num,a.is_share,a.remark,a.tel_2,a.tel_1,a.user_level_id,a.status,a.store_id,a.name,
@@ -272,6 +278,9 @@
         where auction_plate_num=#{auctionPlateNum}
         <if test="userId!=null and userId!=''">
             AND id != #{userId}
+        </if>
+        <if test="mobile != null">
+            AND mobile = #{mobile}
         </if>
     </select>
 

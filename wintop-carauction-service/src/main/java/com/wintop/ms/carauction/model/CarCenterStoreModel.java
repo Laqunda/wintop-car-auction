@@ -5,11 +5,15 @@ import com.wintop.ms.carauction.entity.CommonNameVo;
 import com.wintop.ms.carauction.mapper.read.ICarCenterStoreReadDao;
 import com.wintop.ms.carauction.mapper.write.ICarCenterStoreWriteDao;
 import com.wintop.ms.carauction.util.utils.IdWorker;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CarCenterStoreModel {
@@ -25,6 +29,18 @@ public class CarCenterStoreModel {
      */
     public List<CommonNameVo> selectAllStore(Long centerId){
         return readDao.selectAllStore(centerId);
+    }
+
+    /**
+     * 根据条件查询出结果
+     * @param map
+     * @return
+     */
+    public List<CommonNameVo> selectByCondition(Map<String, Object> map) {
+        if (MapUtils.isEmpty(map)) {
+            return Collections.emptyList();
+        }
+        return readDao.selectByCondition(map);
     }
 
     /**

@@ -223,6 +223,12 @@
       <if test="autoAuctionId != null">
         auto_auction_id = #{autoAuctionId},
       </if>
+      <if test="saleFlag != null">
+        sale_flag = #{saleFlag},
+      </if>
+      <if test="transferFlag != null">
+        transfer_flag = #{transferFlag},
+      </if>
     </set>
     where id = #{id}
   </update>
@@ -250,7 +256,8 @@
       update_time = #{updateTime},
       auction_num = #{auctionNum},
       region_id = #{regionId},
-      auto_auction_id = #{autoAuctionId}
+      auto_auction_id = #{autoAuctionId},
+      transfer_flag = #{transferFlag}
     where id = #{id}
   </update>
 </mapper>

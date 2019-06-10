@@ -1,7 +1,5 @@
 package com.wintop.ms.carauction.entity;
 
-import com.alibaba.fastjson.serializer.BigDecimalCodec;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;

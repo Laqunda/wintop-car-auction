@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.read.CarAssessOrderLogReadDao">
+
+    <resultMap type="com.wintop.ms.carauction.entity.CarAssessOrderLog" id="CarAssessOrderLogResult">
+        <result property="id" column="id"/>
+        <result property="assessOrderId" column="assess_order_id"/>
+        <result property="status" column="status"/>
+        <result property="statusCn" column="status_cn"/>
+        <result property="logMsg" column="log_msg"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createPerson" column="create_person"/>
+        <result property="userMobile" column="user_mobile"/>
+        <result property="userName" column="user_name"/>
+        <result property="mainPhoto"   column="mian_photo" />
+        <result property="createUser"  column="create_user" />
+        <result property="autoInfoName"  column="auto_info_name" />
+        <result property="assessId"  column="assess_id" />
+        </resultMap>
+
+
+    <sql id="selectCarAssessOrderLogVo">
+        select id, assess_order_id, status, status_cn, log_msg, create_time, create_person, user_mobile, user_name from car_assess_order_log
+    </sql>
+
+    <select id="selectCarAssessOrderLogList" parameterType="com.wintop.ms.carauction.entity.CarAssessOrderLog"
+            resultMap="CarAssessOrderLogResult">
+        <!--<include refid="selectCarAssessOrderLogVo"/>-->
+        select id, assess_order_id, status, status_cn, log_msg, create_time, create_person, user_mobile, user_name from
+        (select id, assess_order_id, status, status_cn, log_msg, create_time, create_person, user_mobile, user_name from car_assess_order_log order by create_time desc) t
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="assessOrderId != null ">and assess_order_id = #{assessOrderId}</if>
+            <if test="status != null  and status != '' ">and status = #{status}</if>
+            <if test="statusCn != null  and statusCn != '' ">and status_cn = #{statusCn}</if>
+            <if test="logMsg != null  and logMsg != '' ">and log_msg = #{logMsg}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="createPerson != null ">and create_person = #{createPerson}</if>
+            <if test="userMobile != null  and userMobile != '' ">and user_mobile = #{userMobile}</if>
+            <if test="userName != null  and userName != '' ">and user_name = #{userName}</if>
+        </where>
+        group by `status`
+        order by status
+        <if test="endRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="selectAssessOrderCount" parameterType="com.wintop.ms.carauction.entity.CarAssessOrderLog"
+            resultType="java.lang.Integer">
+        select count(*) from car_assess_order_log
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="assessOrderId != null ">and assess_order_id = #{assessOrderId}</if>
+            <if test="status != null  and status != '' ">and status = #{status}</if>
+            <if test="statusCn != null  and statusCn != '' ">and status_cn = #{statusCn}</if>
+            <if test="logMsg != null  and logMsg != '' ">and log_msg = #{logMsg}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="createPerson != null ">and create_person = #{createPerson}</if>
+            <if test="userMobile != null  and userMobile != '' ">and user_mobile = #{userMobile}</if>
+            <if test="userName != null  and userName != '' ">and user_name = #{userName}</if>
+        </where>
+        order by id desc
+        <if test="endRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="selectCarAssessOrderLogById" parameterType="Long" resultMap="CarAssessOrderLogResult">
+        <include refid="selectCarAssessOrderLogVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCountWaitByParams" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT count(o.id)
+        FROM car_assess_order o
+        INNER JOIN car_assess ca ON ca.id = o.assess_id
+        INNER JOIN car_manager_user cmu ON cmu.id = ca.create_user
+        WHERE o.status='1'
+        AND cmu.department_id  = #{departmentId}
+    </select>
+
+    <select id="selectCountEndByUserId" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+            count(cao.id)
+        FROM
+            car_assess_order cao,
+            car_assess_order_log caol
+        WHERE
+            cao.id = caol.assess_order_id
+        AND (
+                caol.`status` = '2'
+                OR caol.`status` = '-1'
+              )
+        AND caol.create_person = #{userId}
+    </select>
+
+    <select id="selectWaitOrderList" resultMap="CarAssessOrderLogResult" parameterType="java.util.Map">
+        SELECT
+        t2.id assess_id,
+        t2.create_user_name user_name,
+        t2.name auto_info_name,
+        t2.car_photo mian_photo,
+        t1.create_time,
+        t1.id assess_order_id
+        FROM car_assess_order t1
+        INNER JOIN car_assess t2 ON t1.assess_id = t2.id
+        INNER JOIN car_manager_user cmu ON cmu.id = t2.create_user
+        WHERE t1.status = '1'
+        AND cmu.department_id  = #{departmentId}
+        ORDER BY t1.create_time DESC
+        <if test="startRowNum!=null and endRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="selectEndOrderList" resultMap="CarAssessOrderLogResult" parameterType="java.util.Map">
+        SELECT
+        t2.create_user_name create_user,
+        t2.name auto_info_name,
+        t2.car_photo mian_photo,
+        t1.create_time,
+        t4.`status`
+        FROM car_assess_order t1
+        INNER JOIN car_assess t2 ON t1.assess_id = t2.id
+        INNER JOIN car_assess_order_log t4 ON t4.assess_order_id = t1.id
+        WHERE ( t4.`status` = '2'  OR t4.`status` = '-1' )
+          AND t4.create_person = #{userId}
+        ORDER BY t1.create_time DESC
+        <if test="startRowNum!=null and endRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+</mapper>

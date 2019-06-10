@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarLocaleAuctionWeekWriteDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarLocaleAuctionWeek" >
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="template_id" property="templateId" jdbcType="BIGINT" />
+    <result column="theme_week" property="themeWeek" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuctionWeek" >
+    insert into car_locale_auction_week
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="templateId != null" >
+        template_id,
+      </if>
+      <if test="themeWeek != null" >
+        theme_week,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null" >
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="themeWeek != null" >
+        #{themeWeek,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertBatch" parameterType="java.util.List" >
+    insert into car_locale_auction_week (id, template_id, theme_week) values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id},#{item.templateId},#{item.themeWeek})
+    </foreach>
+  </insert>
+  <update id="update" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuctionWeek">
+    update car_locale_auction_week
+    <set>
+      <if test="templateId != null">`template_id` = #{templateId}, </if>
+      <if test="themeWeek != null">`theme_week` = #{themeWeek}</if>
+    </set>
+    where id = #{id}
+  </update>
+  <delete id="remove">
+		delete from car_locale_auction_week where id = #{value}
+	</delete>
+
+  <delete id="batchRemove" parameterType="java.util.HashMap">
+    delete from car_locale_auction_week
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="id != null">
+        AND id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+          #{id}
+        </foreach>
+      </if>
+      <if test="templateId != null and templateId != ''">
+        AND template_id = #{templateId}
+      </if>
+    </trim>
+  </delete>
+</mapper>

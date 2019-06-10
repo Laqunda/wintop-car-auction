@@ -35,6 +35,7 @@ public class CarAuctionSettingServiceImpl implements ICarAuctionSettingService {
     /**
      * 根据主键查询记录
      */
+    @Override
     public CarAuctionSetting selectByRegionId(Long regionId){
         return model.selectByRegionId(regionId);
     }

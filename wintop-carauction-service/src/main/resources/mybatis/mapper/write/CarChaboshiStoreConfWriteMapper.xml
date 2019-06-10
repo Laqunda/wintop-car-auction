@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.write.CarChaboshiStoreConfWriteDao">
+   <insert id="insertCarChaboshiStoreConf" parameterType="com.wintop.ms.carauction.entity.CarChaboshiStoreConf">
+        insert into car_chaboshi_store_conf
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="storeId != null  ">store_id,</if>
+			<if test="ifOpen != null  and ifOpen != ''  ">if_open,</if>
+			<if test="balance != null  ">balance,</if>
+			<if test="payment != null  ">payment,</if>
+			<if test="paymentComposite != null  ">payment_composite,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="storeId != null  ">#{storeId},</if>
+			<if test="ifOpen != null  and ifOpen != ''  ">#{ifOpen},</if>
+			<if test="balance != null  ">#{balance},</if>
+			<if test="payment != null  ">#{payment},</if>
+			<if test="paymentComposite != null  ">#{paymentComposite},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCarChaboshiStoreConf" parameterType="com.wintop.ms.carauction.entity.CarChaboshiStoreConf">
+        update car_chaboshi_store_conf
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storeId != null  ">store_id = #{storeId},</if>
+            <if test="ifOpen != null  and ifOpen != ''  ">if_open = #{ifOpen},</if>
+            <if test="balance != null  ">balance = #{balance},</if>
+            <if test="payment != null  ">payment = #{payment},</if>
+            <if test="paymentComposite != null  ">payment_composite = #{paymentComposite},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCarChaboshiStoreConfById" parameterType="Long">
+        delete from car_chaboshi_store_conf where id = #{id}
+    </delete>
+	
+    <delete id="deleteCarChaboshiStoreConfByIds" parameterType="String">
+        delete from car_chaboshi_store_conf where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

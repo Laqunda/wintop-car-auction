@@ -1,14 +1,15 @@
 package com.wintop.ms.carauction.util.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class CarAutoUtils {
 
@@ -81,6 +82,33 @@ public class CarAutoUtils {
         dates[0]=format2.parse(format1.format(calendar.getTime())+" 00:00:00");
         dates[1]=format2.parse(format1.format(calendar.getTime())+" 23:59:59");
         return dates;
+    }
+
+    /**
+     * 获取当日的开始时间和结束时间
+     * @return
+     */
+    public static Date[] getCurrentAfterDays(Integer day) throws ParseException{
+        SimpleDateFormat format1=new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA);
+        SimpleDateFormat format2=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.CHINA);
+        Date[] dates = new Date[2];
+        Calendar calendar =Calendar.getInstance(Locale.CHINA);
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.DATE,day);
+        dates[0]=format2.parse(format1.format(calendar.getTime())+" 00:00:00");
+        dates[1]=format2.parse(format1.format(calendar.getTime())+" 23:59:59");
+        return dates;
+    }
+
+    public static String getMonthAndDay(Date date) {
+        SimpleDateFormat format=new SimpleDateFormat("M月d日",Locale.CHINA);
+        return format.format(date);
+    }
+
+    public static int getDayOfWeek(Date date){
+        Calendar calendar = Calendar.getInstance(Locale.CHINA);
+        calendar.setTime(date);
+        return calendar.get(Calendar.DAY_OF_WEEK);
     }
 
     /**

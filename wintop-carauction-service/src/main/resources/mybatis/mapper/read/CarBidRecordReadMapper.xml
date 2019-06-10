@@ -15,6 +15,8 @@
         <result column="starting_price" property="startingPrice" jdbcType="DECIMAL" />
         <result column="bid_time" property="bidTime" jdbcType="TIMESTAMP" />
         <result column="bid_fee" property="bidFee" jdbcType="DECIMAL" />
+        <result column="auction_status" property="auctionStatus" jdbcType="VARCHAR" />
+        <!--<result column="store_id" property="storeId" jdbcType="BIGINT" />-->
     </resultMap>
     <!--根据条件查询车辆出价记录列表-->
     <select id="queryCarBidRecordList" resultMap="BaseResultMap" parameterType="java.util.Map">
@@ -31,7 +33,9 @@
         t4.auction_type,
         t4.starting_price,
         t1.bid_time,
-        t1.bid_fee
+        t1.bid_fee,
+        t4.status auction_status,
+        t3.store_id as storeId
         from car_auction_bid_record t1
         INNER JOIN wt_app_user t2 ON t1.customer_id = t2.id
         INNER JOIN car_auto t3 ON t1.car_id = t3.id
@@ -52,6 +56,9 @@
         <if test="customerStoreId!=null and customerStoreId!=''">
             AND t2.store_id=#{customerStoreId}
         </if>
+        <if test="cityId != null and cityId != ''">
+            AND t3.region_id = #{cityId}
+        </if>
         <if test="carStoreId!=null and carStoreId!=''">
             AND t3.store_id=#{carStoreId}
         </if>
@@ -66,6 +73,12 @@
         </if>
         <if test="carId!=null and carId!=''">
             AND t1.car_id=#{carId}
+        </if>
+        <if test="carIds != null and carIds.size!=0">
+            AND t1.car_id in
+            <foreach item="item" index="index" collection="carIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="storeIds != null and storeIds.size!=0">
             and t3.store_id in

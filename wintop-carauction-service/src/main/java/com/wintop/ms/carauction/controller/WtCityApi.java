@@ -41,8 +41,7 @@ public class WtCityApi {
      * @return
      */
     @RequestMapping(value = "getAll",method = RequestMethod.POST)
-    public ServiceResult<List<WtCity>> findAll(){
-        Map map = new HashMap();
+    public ServiceResult<List<WtCity>> findAll(@RequestBody Map map){
         map.put("delFlag","0");
         return cityService.findAll(map);
     }
@@ -52,7 +51,7 @@ public class WtCityApi {
      * @return
      */
     @RequestMapping(value = "getByProvince",method = RequestMethod.POST)
-    public ServiceResult<List<WtCity>> findAll(@RequestBody Map map){
+    public ServiceResult<List<WtCity>> getByProvince(@RequestBody Map map){
         map.put("delFlag","0");
         return cityService.findAll(map);
     }

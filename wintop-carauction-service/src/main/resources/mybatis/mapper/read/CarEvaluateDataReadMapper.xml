@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarEvaluateDataReadDao">
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarEvaluateData">
+    <id column="id" property="id" jdbcType="BIGINT"/>
+    <result column="obj_id" property="objId" jdbcType="BIGINT"/>
+    <result column="content" property="content" jdbcType="VARCHAR"/>
+    <result column="type" property="type" jdbcType="BIGINT"/>
+    <result column="star_level" property="starLevel" jdbcType="DECIMAL"/>
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="create_person" property="createPerson" jdbcType="BIGINT"/>
+    <result column="role" property="role" jdbcType="VARCHAR"/>
+    <result column="tags" property="tags" jdbcType="VARCHAR"/>
+    <result column="tag_ids" property="tagIds" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    d.id, d.obj_id, d.content, d.type, d.star_level, d.create_time, d.create_person, d.role, d.tags, d.tag_ids
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    <include refid="Base_Column_List"/>
+    from car_evaluate_data d
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="list" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List"/>
+    from car_evaluate_data d
+    <if test="type != null and type == 1">
+      left join car_auto_detection_data dd on d.id = d.obj_id
+      left join car_auto a on dd.auto_id = a.id
+    </if>
+    <if test="type != null and type == 2">
+      left join car_locale_auction au on au.id = d.obj_id
+    </if>
+    <if test="type != null and type == 3">
+      left join car_order o on o.id = d.obj_id
+      left join car_auto a on a.id = o.car_id
+      left join car_auto_auction aa on aa.auto_id = a.id
+    </if>
+    <if test="type != null and type == 4">
+      left join car_auto a on a.id = d.obj_id
+      left join car_auto_auction aa on aa.auto_id = a.id
+    </if>
+    <trim prefix="where" prefixOverrides="and">
+        <if test="type != null and type != ''">
+          and  d.`type` = #{type}
+        </if>
+        <if test="objId != null and objId != ''">
+          and d.`objId` = #{objId}
+        </if>
+        <if test="storeName != null and storeName != ''">
+          and a.store_name like CONCAT(CONCAT('%',#{storeName}),'%')
+        </if>
+        <if test="title != null and title != ''">
+          and au.title like CONCAT(CONCAT('%',#{title}),'%')
+        </if>
+        <if test="beginTime != null">
+          and au.start_time &gt;= str_to_date(#{beginTime},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="endTime != null">
+          and au.start_time &lt;= str_to_date(#{endTime},'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="auctionType != null and auctionType != ''">
+          and aa.auction_type = #{auctionType}
+        </if>
+    </trim>
+    <if test="startRowNum != null and endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="count" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+      count(*)
+    <if test="type != null and type == 1">
+      inner join car_auto_detection_data dd on d.id = d.obj_id
+      left join car_auto a on dd.auto_id = a.id
+    </if>
+    <if test="type != null and type == 2">
+      left join car_locale_auction au on au.id = d.obj_id
+    </if>
+    <if test="type != null and type == 3">
+      left join car_order o on o.id = d.obj_id
+      left join car_auto a on a.id = o.car_id
+    </if>
+    <if test="type != null and type == 4">
+      left join car_auto a on dd.auto_id = a.id
+    </if>
+    from car_evaluate_data
+    <trim prefix="where" prefixOverrides="and">
+      <if test="type != null and type != ''">
+        and  d.`type` = #{type}
+      </if>
+      <if test="objId != null and objId != ''">
+        and d.`objId` = #{objId}
+      </if>
+      <if test="storeName != null and storeName != ''">
+        and a.store_name like CONCAT(CONCAT('%',#{storeName}),'%')
+      </if>
+      <if test="title != null and title != ''">
+        and au.title like CONCAT(CONCAT('%',#{title}),'%')
+      </if>
+      <if test="beginTime != null">
+        and au.start_time &gt;= str_to_date(#{beginTime},'%Y-%m-%d %H:%i:%s')
+      </if>
+      <if test="endTime != null">
+        and au.start_time &lt;= str_to_date(#{endTime},'%Y-%m-%d %H:%i:%s')
+      </if>
+      <if test="auctionType != null and auctionType != ''">
+        and aa.auction_type = #{auctionType}
+      </if>
+    </trim>
+  </select>
+</mapper>

@@ -120,6 +120,14 @@ public class CarAuto implements Serializable {
     //***区域ID
     private Long regionId;
 
+    // 代办费
+    private BigDecimal agentPrice;
+
+    // 销售状态 0拍卖,1零售
+    private String saleFlag;
+
+    //时间
+    private Date time;
     /**
      * VO字段
      */
@@ -156,7 +164,7 @@ public class CarAuto implements Serializable {
     private String buyerBear;
     private String costPrice;
     private BigDecimal illegalPrice;
-    private int illegalScore;
+    private Integer illegalScore;
     private String illegalWho;
 
     /**
@@ -194,6 +202,25 @@ public class CarAuto implements Serializable {
 
     private String auctionCode;
     private String maxPriceUserId;
+    private String transferFlag;
+
+    private Date submitTime;
+    private Date authTime;
+    private String authMsg;
+    private Date auctionStarTime;
+    private Date dealTime;
+    private Date passInTime;
+
+    // 车辆明细
+    private CarAutoInfoDetail carAutoInfoDetail;
+    // 车辆手续信息
+    private CarAutoProcedures carAutoProcedures;
+    // 车辆配置明细
+    private List<CarAutoConfDetail> carAutoConfDetailList;
+    // 车辆采购单
+    private CarAssess carAssess;
+    // 竞拍信息
+    private CarAutoAuction carAutoAuction;
 
     public String getMaxPriceUserId() {
         return maxPriceUserId;
@@ -994,11 +1021,11 @@ public class CarAuto implements Serializable {
         this.illegalPrice = illegalPrice;
     }
 
-    public int getIllegalScore() {
+    public Integer getIllegalScore() {
         return illegalScore;
     }
 
-    public void setIllegalScore(int illegalScore) {
+    public void setIllegalScore(Integer illegalScore) {
         this.illegalScore = illegalScore;
     }
 
@@ -1073,5 +1100,144 @@ public class CarAuto implements Serializable {
 
     public void setTransferFee(String transferFee) {
         this.transferFee = transferFee;
+    }
+
+    public String getTransferFlag() {
+        return transferFlag;
+    }
+
+    public void setTransferFlag(String transferFlag) {
+        this.transferFlag = transferFlag;
+    }
+
+    public BigDecimal getAgentPrice() {
+        return agentPrice;
+    }
+
+    public void setAgentPrice(BigDecimal agentPrice) {
+        this.agentPrice = agentPrice;
+    }
+
+    public String getSaleFlag() {
+        return saleFlag;
+    }
+
+    public void setSaleFlag(String saleFlag) {
+        this.saleFlag = saleFlag;
+    }
+
+    public Date getSubmitTime() {
+        return submitTime;
+    }
+
+    public void setSubmitTime(Date submitTime) {
+        this.submitTime = submitTime;
+    }
+
+    public Date getAuthTime() {
+        return authTime;
+    }
+
+    public void setAuthTime(Date authTime) {
+        this.authTime = authTime;
+    }
+
+    public String getAuthMsg() {
+        return authMsg;
+    }
+
+    public void setAuthMsg(String authMsg) {
+        this.authMsg = authMsg;
+    }
+
+    public Date getAuctionStarTime() {
+        return auctionStarTime;
+    }
+
+    public void setAuctionStarTime(Date auctionStarTime) {
+        this.auctionStarTime = auctionStarTime;
+    }
+
+    public Date getDealTime() {
+        return dealTime;
+    }
+
+    public void setDealTime(Date dealTime) {
+        this.dealTime = dealTime;
+    }
+
+    public Date getPassInTime() {
+        return passInTime;
+    }
+
+    public void setPassInTime(Date passInTime) {
+        this.passInTime = passInTime;
+    }
+    private List<CarAutoLog> carAutoLog;
+
+    private List<TblAuctionLog> tblAuctionLog;
+
+    public List<CarAutoLog> getCarAutoLog() {
+        return carAutoLog;
+    }
+
+    public void setCarAutoLog(List<CarAutoLog> carAutoLog) {
+        this.carAutoLog = carAutoLog;
+    }
+
+    public List<TblAuctionLog> getTblAuctionLog() {
+        return tblAuctionLog;
+    }
+
+    public void setTblAuctionLog(List<TblAuctionLog> tblAuctionLog) {
+        this.tblAuctionLog = tblAuctionLog;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public CarAutoInfoDetail getCarAutoInfoDetail() {
+        return carAutoInfoDetail;
+    }
+
+    public void setCarAutoInfoDetail(CarAutoInfoDetail carAutoInfoDetail) {
+        this.carAutoInfoDetail = carAutoInfoDetail;
+    }
+
+    public CarAutoProcedures getCarAutoProcedures() {
+        return carAutoProcedures;
+    }
+
+    public void setCarAutoProcedures(CarAutoProcedures carAutoProcedures) {
+        this.carAutoProcedures = carAutoProcedures;
+    }
+
+    public List<CarAutoConfDetail> getCarAutoConfDetailList() {
+        return carAutoConfDetailList;
+    }
+
+    public void setCarAutoConfDetailList(List<CarAutoConfDetail> carAutoConfDetailList) {
+        this.carAutoConfDetailList = carAutoConfDetailList;
+    }
+
+    public CarAssess getCarAssess() {
+        return carAssess;
+    }
+
+    public void setCarAssess(CarAssess carAssess) {
+        this.carAssess = carAssess;
+    }
+
+    public CarAutoAuction getCarAutoAuction() {
+        return carAutoAuction;
+    }
+
+    public void setCarAutoAuction(CarAutoAuction carAutoAuction) {
+        this.carAutoAuction = carAutoAuction;
     }
 }

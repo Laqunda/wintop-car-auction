@@ -50,6 +50,14 @@ public interface IWtAppUserReadDao {
      * @return
      */
     Integer selectUserNumIsRepeat(@Param(value = "userId") Long userId,@Param(value = "userNum") String userNum);
+    /**
+     * 查询会员车拍牌号是否重复
+     * @Author:zhangzijuan
+     * @param mobile
+     * @param auctionPlateNum
+     * @return
+     */
+    Integer selectAuctionPlateNumIsRepeat(@Param(value = "mobile") String mobile,@Param(value = "auctionPlateNum") String auctionPlateNum);
 
     WtAppUser getUserInfoById(@Param("userId") Long userId);
 

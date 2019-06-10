@@ -81,4 +81,8 @@ public class CarStoreModel {
     public List<CommonNameVo> selectByCenter(Long centerId){
         return storeReadDao.selectByCenter(centerId);
     }
+
+    public Long idByExample(Map<String, Object> map){
+        return storeReadDao.idByExample(map);
+    }
 }

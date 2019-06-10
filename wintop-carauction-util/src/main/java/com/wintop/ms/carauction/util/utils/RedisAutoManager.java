@@ -84,7 +84,7 @@ public class RedisAutoManager {
      * @return
      */
     public List<RedisAutoData> getRedisAutoDataList(String pattern){
-        List<RedisAutoData> list = new ArrayList<>();
+        List<RedisAutoData> list = new ArrayList<RedisAutoData>();
         Set<String> keysSet = redisManagerTemplate.getRedisTemplate().keys(pattern);
         for(String key:keysSet){
             RedisAutoData redisAutoData = this.getAutoByKey(key);

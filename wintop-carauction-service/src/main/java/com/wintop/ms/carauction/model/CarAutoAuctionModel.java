@@ -4,6 +4,7 @@ import com.wintop.ms.carauction.core.entity.RedisAutoData;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.mapper.read.*;
 import com.wintop.ms.carauction.mapper.write.ICarAutoAuctionWriteDao;
+import com.wintop.ms.carauction.mapper.write.ICarAutoLogWriteDao;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -133,5 +136,20 @@ public class CarAutoAuctionModel {
      */
     public int updateAuctionEndTime(CarAutoAuction record){
         return writeDao.updateAuctionEndTime(record);
+    }
+
+    /**
+     * 获取场次中车辆竞拍信息
+     */
+    public List<CarAutoAuction> selectAutoAuctionBylocale(Map<String,Object> map){
+        return readDao.selectAutoAuctionBylocale(map);
+    }
+
+    /**
+     * 查询-填充使用,最近的开拍时间
+     * @return
+     */
+    public String selectForToday(){
+        return readDao.selectForToday(Collections.singletonMap("date",new Date()));
     }
 }

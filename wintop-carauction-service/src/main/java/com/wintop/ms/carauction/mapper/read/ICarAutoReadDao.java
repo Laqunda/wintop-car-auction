@@ -27,6 +27,11 @@ public interface ICarAutoReadDao {
     List<CarAuto> selectAuctionCarList(Map<String,Object> map);
 
     /**
+     * 查询线上车辆管理列表
+     */
+    List<CarAuto> selectCarList(Map<String, Object> map);
+
+    /**
      * 查询总数量
      * @param map
      * @return
@@ -93,4 +98,42 @@ public interface ICarAutoReadDao {
      * 查询当日上新车辆数
      */
     Integer selectDayCarCount(Map<String,Object> map);
+
+    /**
+     * 库存管理--（零售[已售]）
+     */
+    Integer selectCarAutoForSaleCount(Map<String, Object> map);
+
+    /**
+     * 库存管理--（线上拍[车辆库存、审批状态、竞价状态、竞价结果]、现场拍[车辆库存、审批状态、竞价状态、竞价结果]）
+     */
+    Integer selectCarAutoCount(Map<String, Object> map);
+
+    /**
+     * 零售订单列表
+     */
+    List<CarAuto> selectRetailForExample(Map<String, Object> map);
+
+    /**
+     * 零售订单列表总数量
+     */
+    Integer selectRetailForCount(Map<String, Object> map);
+
+    List<CarAuto> selectUserOrderList(Map<String, Object> map);
+
+    int selectCountById(Long userId);
+
+    /**
+     * 待审批车辆列表条数
+     * @param map
+     * @return
+     */
+    int selectCarAutoApprovalCount(Map<String, Object> map);
+
+    /**
+     * 待审批车辆列表
+     * @param map
+     * @return
+     */
+    List<CarAuto> selectCarAutoApprovalList(Map<String, Object> map);
 }

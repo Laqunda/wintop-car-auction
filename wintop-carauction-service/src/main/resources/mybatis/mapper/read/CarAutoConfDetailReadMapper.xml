@@ -16,6 +16,11 @@
     select
     <include refid="Base_Column_List" />
     from car_auto_conf_detail t1
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="autoId != null and autoId != ''">
+        and t1.auto_id = #{autoId}
+      </if>
+    </trim>
     <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>

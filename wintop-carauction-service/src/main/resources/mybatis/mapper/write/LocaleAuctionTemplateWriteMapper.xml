@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarLocaleAuctionTemplateWriteDao">
+
+    <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuctionTemplate" >
+        insert into car_locale_auction_template
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="type != null" >
+                type,
+            </if>
+            <if test="poster != null" >
+                poster,
+            </if>
+            <if test="title != null" >
+                title,
+            </if>
+            <if test="regionId != null" >
+                region_id,
+            </if>
+            <if test="address != null" >
+                address,
+            </if>
+            <if test="gpsLongitude != null" >
+                gps_longitude,
+            </if>
+            <if test="gpsLatitude != null" >
+                gps_latitude,
+            </if>
+            <if test="startTime != null" >
+                start_time,
+            </if>
+            <if test="corporateAgent != null" >
+                corporate_agent,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="describe != null" >
+                describe,
+            </if>
+            <if test="seeCarMan != null" >
+                see_car_man,
+            </if>
+            <if test="seeCarPhone != null" >
+                see_car_phone,
+            </if>
+            <if test="seeCarTime != null" >
+                see_car_time,
+            </if>
+            <if test="editor != null" >
+                editor,
+            </if>
+            <if test="editTime != null" >
+                edit_time,
+            </if>
+            <if test="endTime != null" >
+                end_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="poster != null" >
+                #{poster,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null" >
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="regionId != null" >
+                #{regionId,jdbcType=BIGINT},
+            </if>
+            <if test="address != null" >
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="gpsLongitude != null" >
+                #{gpsLongitude,jdbcType=DECIMAL},
+            </if>
+            <if test="gpsLatitude != null" >
+                #{gpsLatitude,jdbcType=DECIMAL},
+            </if>
+            <if test="startTime != null" >
+                #{startTime,jdbcType=VARCHAR},
+            </if>
+            <if test="corporateAgent != null" >
+                #{corporateAgent,jdbcType=BIGINT},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="describe != null" >
+                #{describe,jdbcType=VARCHAR},
+            </if>
+            <if test="seeCarMan != null" >
+                #{seeCarMan,jdbcType=VARCHAR},
+            </if>
+            <if test="seeCarPhone != null" >
+                #{seeCarPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="seeCarTime != null" >
+                #{seeCarTime,jdbcType=VARCHAR},
+            </if>
+            <if test="editor != null" >
+                #{editor,jdbcType=VARCHAR},
+            </if>
+            <if test="editTime != null" >
+                #{editTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarLocaleAuctionTemplate" >
+        update car_locale_auction_template
+        <set >
+            <if test="type != null" >
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="poster != null" >
+                poster = #{poster,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null" >
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="regionId != null" >
+                region_id = #{regionId,jdbcType=BIGINT},
+            </if>
+            <if test="address != null" >
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="gpsLongitude != null" >
+                gps_longitude = #{gpsLongitude,jdbcType=DECIMAL},
+            </if>
+            <if test="gpsLatitude != null" >
+                gps_latitude = #{gpsLatitude,jdbcType=DECIMAL},
+            </if>
+            <if test="startTime != null" >
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="corporateAgent != null" >
+                corporate_agent = #{corporateAgent,jdbcType=BIGINT},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="describe != null" >
+                describe = #{describe,jdbcType=VARCHAR},
+            </if>
+            <if test="seeCarMan != null" >
+                see_car_man = #{seeCarMan,jdbcType=VARCHAR},
+            </if>
+            <if test="seeCarPhone != null" >
+                see_car_phone = #{seeCarPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="seeCarTime != null" >
+                see_car_time = #{seeCarTime,jdbcType=VARCHAR},
+            </if>
+            <if test="editor != null" >
+                editor = #{editor,jdbcType=VARCHAR},
+            </if>
+            <if test="editTime != null" >
+                edit_time = #{editTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="stopStartTime != null" >
+                stop_start_time = #{stopStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="stopEndTime != null" >
+                stop_end_time = #{stopEndTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <delete id="delete" parameterType="java.lang.Long" >
+        delete from car_locale_auction_template
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+</mapper>

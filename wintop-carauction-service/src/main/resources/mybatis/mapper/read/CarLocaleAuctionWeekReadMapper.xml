@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarLocaleAuctionWeekReadDao">
+
+	<select id="get" resultType="com.wintop.ms.carauction.entity.CarLocaleAuctionWeek">
+		select `id`,`template_id`,`theme_week` from car_locale_auction_week where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.wintop.ms.carauction.entity.CarLocaleAuctionWeek">
+		select `id`,`template_id`,`theme_week` from car_locale_auction_week
+        <where>  
+			<if test="id != null and id != ''"> and id = #{id} </if>
+			<if test="templateId != null and templateId != ''"> and template_id = #{templateId} </if>
+			<if test="themeWeek != null and themeWeek != ''"> and theme_week = #{themeWeek} </if>
+		</where>
+
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from car_locale_auction_week
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="templateId != null and templateId != ''"> and template_id = #{templateId} </if>
+		  		  <if test="themeWeek != null and themeWeek != ''"> and theme_week = #{themeWeek} </if>
+		  		</where>
+	</select>
+	 
+
+
+
+
+</mapper>

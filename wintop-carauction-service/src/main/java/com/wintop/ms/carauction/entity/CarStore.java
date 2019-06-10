@@ -78,7 +78,10 @@ public class CarStore implements Serializable {
     private String remark;
 
     private Long regionId;
-
+    /**
+     * 所属地区
+     */
+    private String area;
     /**
      * @return id
      */
@@ -306,5 +309,13 @@ public class CarStore implements Serializable {
 
     public void setRegionId(Long regionId) {
         this.regionId = regionId;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 }
