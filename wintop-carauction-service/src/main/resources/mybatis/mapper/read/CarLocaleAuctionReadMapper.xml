@@ -32,7 +32,6 @@
     <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="create_person_name" property="createPersonName" jdbcType="VARCHAR" />
-    <result column="locale_auction_template_id" property="localeAuctionTemplateId" jdbcType="BIGINT" />
     <result column="template_id" property="templateId" jdbcType="BIGINT" />
 
     <result column="transaction_fee" property="transactionFee" jdbcType="DECIMAL" />
@@ -71,8 +70,8 @@
     t1.del_time,
     t1.del_flag,
     t1.template_id,
-    t1.del_flag
---     t1.locale_auction_template_id
+    t1.del_flag,
+    t1.template_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
@@ -384,7 +383,7 @@
     SELECT
     <include refid="Base_Column_List" />
     FROM car_locale_auction t1
-    inner join car_locale_auction_template clat on clat.id = t1.locale_auction_template_id
+    inner join car_locale_auction_template clat on clat.id = t1.template_id
     WHERE 1=1
     <if test="regionId != null">
       AND t1.city_id=#{regionId}

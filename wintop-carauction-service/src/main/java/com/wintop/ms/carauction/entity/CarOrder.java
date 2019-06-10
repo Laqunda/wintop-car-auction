@@ -188,6 +188,12 @@ public class CarOrder implements Serializable {
     //车辆初次上牌日期
     private Date beginRegisterDate;
 
+    /*卖家有无评价1：已评价 0：未评价*/
+    private String managerEvaluate;
+    /*买家有无评价1：已评价 0：未评价*/
+    private String userEvaluate;
+
+
     public String getCustomerName() {
         return customerName;
     }
@@ -988,5 +994,21 @@ public class CarOrder implements Serializable {
 
     public void setBeginRegisterDate(Date beginRegisterDate) {
         this.beginRegisterDate = beginRegisterDate;
+    }
+
+    public String getManagerEvaluate() {
+        return managerEvaluate;
+    }
+
+    public void setManagerEvaluate(String managerEvaluate) {
+        this.managerEvaluate = managerEvaluate;
+    }
+
+    public String getUserEvaluate() {
+        return userEvaluate;
+    }
+
+    public void setUserEvaluate(String userEvaluate) {
+        this.userEvaluate = userEvaluate;
     }
 }

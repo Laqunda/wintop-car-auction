@@ -8,10 +8,10 @@
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarOrder" >
     insert into car_order (id, auction_id, order_no, car_id, customer_id, transaction_fee,bargain_fee,
       service_fee, pay_time, pay_fee, pay_auth_time, pay_auth_manager, status, 
-      lock_fee, create_time, pay_end_time,auto_auction_id,remark,agent_fee,amount_fee,auction_bid_record_id)
+      lock_fee, create_time, pay_end_time,auto_auction_id,remark,agent_fee,amount_fee,auction_bid_record_id,manager_evaluate,user_evaluate)
     values (#{id}, #{auctionId}, #{orderNo}, #{carId}, #{customerId}, #{transactionFee}, #{bargainFee},
       #{serviceFee}, #{payTime}, #{payFee}, #{payAuthTime}, #{payAuthManager}, #{status}, 
-      #{lockFee}, #{createTime}, #{payEndTime},#{autoAuctionId},#{remark},#{agentFee},#{amountFee},#{auctionBidRecordId})
+      #{lockFee}, #{createTime}, #{payEndTime},#{autoAuctionId},#{remark},#{agentFee},#{amountFee},#{auctionBidRecordId},#{managerEvaluate},#{userEvaluate})
   </insert>
   <update id="updateByIdSelective" parameterType="com.wintop.ms.carauction.entity.CarOrder" >
     update car_order
@@ -76,6 +76,13 @@
       <if test="auctionBidRecordId != null" >
         auction_bid_record_id = #{auctionBidRecordId},
       </if>
+
+      <if test="managerEvaluate != null">
+        manager_evaluate = #{managerEvaluate},
+      </if>
+      <if test="userEvaluate != null">
+        user_evaluate = #{userEvaluate},
+      </if>
     </set>
     where id = #{id}
   </update>
@@ -94,7 +101,9 @@
       status = #{status},
       lock_fee = #{lockFee},
       create_time = #{createTime},
-      pay_end_time = #{payEndTime}
+      pay_end_time = #{payEndTime},
+      manager_evaluate =  #{managerEvaluate},
+      user_evaluate =  #{userEvaluate}
     where id = #{id}
   </update>
   <update id="updateOrderUser" >

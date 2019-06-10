@@ -227,6 +227,10 @@ public class CarAuto implements Serializable {
     // 检测信息标题
     Map<String, List<CarAutoDetectionClass>> classList;
 
+    /*订单id*/
+    private String orderId;
+
+
     public String getMaxPriceUserId() {
         return maxPriceUserId;
     }
@@ -1261,4 +1265,13 @@ public class CarAuto implements Serializable {
     public void setClassList(Map<String, List<CarAutoDetectionClass>> classList) {
         this.classList = classList;
     }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
 }

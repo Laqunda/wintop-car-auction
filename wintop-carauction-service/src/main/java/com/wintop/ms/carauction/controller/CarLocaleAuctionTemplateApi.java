@@ -289,11 +289,11 @@ public class CarLocaleAuctionTemplateApi {
                     for(CarLocaleAuction carAuction: carAuctions){
                         for(int t = 0 ; t < templates.size(); t++){
                             //如果是主题id相同 或者 匹配到最后没有相同的主题id
-                            if(carAuction.getLocaleAuctionTemplateId().equals(templates.get(t).getId())
+                            if(carAuction.getTemplateId().equals(templates.get(t).getId())
                             || templates.size() == t){
                                 Map<String,Object> map = new HashMap<>();
                                 map.put("id",carAuction.getId());
-                                map.put("templateId",carAuction.getLocaleAuctionTemplateId());
+                                map.put("templateId",carAuction.getTemplateId());
                                 map.put("title",carAuction.getTitle());
                                 map.put("localStartTime",new SimpleDateFormat("HH:mm").format(carAuction.getStartTime()));
                                 map.put("poster",carAuction.getPoster());
@@ -306,7 +306,7 @@ public class CarLocaleAuctionTemplateApi {
                                 }
                             }
                             //主题相同的将 主题模板集合移除并跳过此次循环
-                            if(carAuction.getLocaleAuctionTemplateId().equals(templates.get(t).getId())){
+                            if(carAuction.getTemplateId().equals(templates.get(t).getId())){
                                 templates.remove(templates.get(t));
                                 continue;
                             }

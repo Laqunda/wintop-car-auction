@@ -1,974 +1,994 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAutoReadDao" >
-  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAuto" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="publish_user_id" property="publishUserId" jdbcType="BIGINT" />
-    <result column="publish_user_name" property="publishUserName" jdbcType="VARCHAR" />
-    <result column="publish_user_mobile" property="publishUserMobile" jdbcType="VARCHAR" />
-    <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR" />
-    <result column="store_id" property="storeId" jdbcType="BIGINT" />
-    <result column="storeName" property="storeName" jdbcType="VARCHAR" />
-    <result column="source_type" property="sourceType" jdbcType="VARCHAR" />
-    <result column="views" property="views" jdbcType="BIGINT" />
-    <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
-    <result column="report_score" property="reportScore" jdbcType="DECIMAL" />
-    <result column="report_colligation_ranks" property="reportColligationRanks" jdbcType="VARCHAR" />
-    <result column="report_servicing_ranks" property="reportServicingRanks" jdbcType="VARCHAR" />
-    <result column="report_time" property="reportTime" jdbcType="TIMESTAMP" />
-    <result column="status" property="status" jdbcType="VARCHAR" />
-    <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR" />
-    <result column="main_photo" property="mainPhoto" jdbcType="VARCHAR" />
-    <result column="if_new" property="ifNew" jdbcType="VARCHAR" />
-    <result column="create_user" property="createUser" jdbcType="BIGINT" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_user" property="updateUser" jdbcType="BIGINT" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="auction_num" jdbcType="INTEGER" property="auctionNum" />
-    <result column="region_id" jdbcType="BIGINT" property="regionId" />
-    <result column="vehicle_attribution_city_cn" property="vehicleAttributionCity" jdbcType="VARCHAR"/>
-    <result column="auction_type" property="auctionType" jdbcType="VARCHAR"/>
-    <result column="begin_register_date" property="beginRegisterDate" jdbcType="VARCHAR"/>
-    <result column="mileage" property="mileage" jdbcType="DECIMAL"/>
-    <result column="starting_price" property="startingPrice" jdbcType="DECIMAL"/>
-    <result column="reserve_price" property="reservePrice" jdbcType="DECIMAL"/>
-    <result column="service_price" property="servicePrice" jdbcType="DECIMAL"/>
-    <result column="auction_start_time" property="auctionStartTime" jdbcType="TIMESTAMP"/>
-    <result column="auction_end_time" property="auctionEndTime" jdbcType="TIMESTAMP"/>
-    <result column="carStoreName" property="carStoreName" jdbcType="VARCHAR"/>
-    <result column="link_man_name" property="linkManName" jdbcType="VARCHAR"/>
-    <result column="link_man_mobile" property="linkManMobile" jdbcType="VARCHAR"/>
-    <result column="remark" property="remark" jdbcType="VARCHAR"/>
-    <result column="move_to_where" property="moveToWhere" jdbcType="VARCHAR"/>
-    <result column="views" property="views" jdbcType="BIGINT"/>
-    <result column="address" property="address" jdbcType="VARCHAR"/>
-    <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
-    <result column="engine_capacity" property="engineCapacity" jdbcType="VARCHAR" />
-    <result column="engine_capacity_unit" property="engineCapacityUnit" jdbcType="VARCHAR" />
-    <result column="isFollow" property="isFollow" jdbcType="VARCHAR" />
-    <result column="environment_cn" property="environment" jdbcType="VARCHAR" />
-    <result column="isEntrust" property="isEntrust" jdbcType="VARCHAR" />
-    <result column="cost_price" property="costPrice" jdbcType="VARCHAR" />
-    <result column="illegal_price" property="illegalPrice" jdbcType="DECIMAL" />
-    <result column="illegal_score" property="illegalScore" jdbcType="INTEGER" />
-    <result column="illegal_who" property="illegalWho" jdbcType="VARCHAR" />
-    <result column="transaction_fee" property="transactionFee" jdbcType="DECIMAL" />
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarAutoReadDao">
+    <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarAuto">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="publish_user_id" property="publishUserId" jdbcType="BIGINT"/>
+        <result column="publish_user_name" property="publishUserName" jdbcType="VARCHAR"/>
+        <result column="publish_user_mobile" property="publishUserMobile" jdbcType="VARCHAR"/>
+        <result column="auto_info_name" property="autoInfoName" jdbcType="VARCHAR"/>
+        <result column="store_id" property="storeId" jdbcType="BIGINT"/>
+        <result column="storeName" property="storeName" jdbcType="VARCHAR"/>
+        <result column="source_type" property="sourceType" jdbcType="VARCHAR"/>
+        <result column="views" property="views" jdbcType="BIGINT"/>
+        <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP"/>
+        <result column="report_score" property="reportScore" jdbcType="DECIMAL"/>
+        <result column="report_colligation_ranks" property="reportColligationRanks" jdbcType="VARCHAR"/>
+        <result column="report_servicing_ranks" property="reportServicingRanks" jdbcType="VARCHAR"/>
+        <result column="report_time" property="reportTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="car_auto_no" property="carAutoNo" jdbcType="VARCHAR"/>
+        <result column="main_photo" property="mainPhoto" jdbcType="VARCHAR"/>
+        <result column="if_new" property="ifNew" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="BIGINT"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="auction_num" jdbcType="INTEGER" property="auctionNum"/>
+        <result column="region_id" jdbcType="BIGINT" property="regionId"/>
+        <result column="vehicle_attribution_city_cn" property="vehicleAttributionCity" jdbcType="VARCHAR"/>
+        <result column="auction_type" property="auctionType" jdbcType="VARCHAR"/>
+        <result column="begin_register_date" property="beginRegisterDate" jdbcType="VARCHAR"/>
+        <result column="mileage" property="mileage" jdbcType="DECIMAL"/>
+        <result column="starting_price" property="startingPrice" jdbcType="DECIMAL"/>
+        <result column="reserve_price" property="reservePrice" jdbcType="DECIMAL"/>
+        <result column="service_price" property="servicePrice" jdbcType="DECIMAL"/>
+        <result column="auction_start_time" property="auctionStartTime" jdbcType="TIMESTAMP"/>
+        <result column="auction_end_time" property="auctionEndTime" jdbcType="TIMESTAMP"/>
+        <result column="carStoreName" property="carStoreName" jdbcType="VARCHAR"/>
+        <result column="link_man_name" property="linkManName" jdbcType="VARCHAR"/>
+        <result column="link_man_mobile" property="linkManMobile" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="move_to_where" property="moveToWhere" jdbcType="VARCHAR"/>
+        <result column="views" property="views" jdbcType="BIGINT"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="engine_capacity" property="engineCapacity" jdbcType="VARCHAR"/>
+        <result column="engine_capacity_unit" property="engineCapacityUnit" jdbcType="VARCHAR"/>
+        <result column="isFollow" property="isFollow" jdbcType="VARCHAR"/>
+        <result column="environment_cn" property="environment" jdbcType="VARCHAR"/>
+        <result column="isEntrust" property="isEntrust" jdbcType="VARCHAR"/>
+        <result column="cost_price" property="costPrice" jdbcType="VARCHAR"/>
+        <result column="illegal_price" property="illegalPrice" jdbcType="DECIMAL"/>
+        <result column="illegal_score" property="illegalScore" jdbcType="INTEGER"/>
+        <result column="illegal_who" property="illegalWho" jdbcType="VARCHAR"/>
+        <result column="transaction_fee" property="transactionFee" jdbcType="DECIMAL"/>
 
-    <result column="vin" property="vin" jdbcType="VARCHAR" />
-    <result column="vehicle_driver_cn" property="vehicleDriver" jdbcType="VARCHAR" />
-    <result column="manufacture_date" property="manufactureDate" jdbcType="DATE" />
-    <result column="license_number" property="licenseNumber" jdbcType="VARCHAR" />
-    <result column="car_nature" property="carNature" jdbcType="VARCHAR" />
-    <result column="use_nature" property="useNature" jdbcType="VARCHAR" />
-    <result column="title" property="title" jdbcType="VARCHAR"/>
-    <result column="carStoreNme" property="carStoreNme" jdbcType="VARCHAR"/>
-    <result column="if_agent" property="ifAgent" jdbcType="VARCHAR"/>
-    <result column="service_fee" property="serviceFee" jdbcType="DECIMAL"/>
-    <result column="agent_fee" property="agentFee" jdbcType="DECIMAL"/>
-    <result column="maxBidFee" property="maxBidFee" jdbcType="DECIMAL"/>
-    <result column="orderStatus" property="orderStatus" jdbcType="VARCHAR"/>
-    <result column="status_name" property="statusName" jdbcType="VARCHAR"/>
-    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="owner_price" property="ownerPrice" jdbcType="DECIMAL" />
-    <result column="logMsg" property="logMsg" jdbcType="VARCHAR" />
-    <result column="owner_name" property="ownerName" jdbcType="VARCHAR" />
-    <result column="owner_mobile" property="ownerMobile" jdbcType="VARCHAR" />
-    <result column="bid_time" property="bidTime" jdbcType="TIMESTAMP" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
-    <result column="expected_feedback_time" property="expectedFeedbackTime" jdbcType="TIMESTAMP" />
-    <result column="log_user_name" property="logUserName" jdbcType="VARCHAR" />
-    <result column="log_user_mobile" property="logUserMobile" jdbcType="VARCHAR" />
-    <result column="auto_auction_Id" property="autoAuctionId" jdbcType="BIGINT" />
-    <result column="auction_code" property="auctionCode" jdbcType="VARCHAR" />
-    <result column="maxPriceUserId" property="maxPriceUserId" jdbcType="BIGINT" />
-    <result column="storeLatitude" property="storeLatitude" jdbcType="VARCHAR" />
-    <result column="storeLongitude" property="storeLongitude" jdbcType="VARCHAR" />
-    <result column="transfer_fee" property="transferFee" jdbcType="VARCHAR" />
-    <result column="transfer_flag" property="transferFlag" jdbcType="VARCHAR" />
-    <result column="agent_price" property="agentPrice" jdbcType="DECIMAL"/>
-    <result column="sale_flag" property="saleFlag" jdbcType="VARCHAR"/>
-    <result column="submit_time" property="submitTime" jdbcType="TIMESTAMP"/>
-    <result column="auth_time" property="authTime" jdbcType="TIMESTAMP"/>
-    <result column="auth_msg" property="authMsg" jdbcType="VARCHAR"/>
-    <result column="auction_start_time" property="auctionStarTime" jdbcType="TIMESTAMP"/>
-    <result column="deal_time" property="dealTime" jdbcType="TIMESTAMP"/>
-    <result column="pass_in_time" property="passInTime" jdbcType="TIMESTAMP"/>
-    <result column="time" property="time" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+        <result column="vin" property="vin" jdbcType="VARCHAR"/>
+        <result column="vehicle_driver_cn" property="vehicleDriver" jdbcType="VARCHAR"/>
+        <result column="manufacture_date" property="manufactureDate" jdbcType="DATE"/>
+        <result column="license_number" property="licenseNumber" jdbcType="VARCHAR"/>
+        <result column="car_nature" property="carNature" jdbcType="VARCHAR"/>
+        <result column="use_nature" property="useNature" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="carStoreNme" property="carStoreNme" jdbcType="VARCHAR"/>
+        <result column="if_agent" property="ifAgent" jdbcType="VARCHAR"/>
+        <result column="service_fee" property="serviceFee" jdbcType="DECIMAL"/>
+        <result column="agent_fee" property="agentFee" jdbcType="DECIMAL"/>
+        <result column="maxBidFee" property="maxBidFee" jdbcType="DECIMAL"/>
+        <result column="orderStatus" property="orderStatus" jdbcType="VARCHAR"/>
+        <result column="status_name" property="statusName" jdbcType="VARCHAR"/>
+        <result column="create_user_name" property="createUserName" jdbcType="VARCHAR"/>
+        <result column="owner_price" property="ownerPrice" jdbcType="DECIMAL"/>
+        <result column="logMsg" property="logMsg" jdbcType="VARCHAR"/>
+        <result column="owner_name" property="ownerName" jdbcType="VARCHAR"/>
+        <result column="owner_mobile" property="ownerMobile" jdbcType="VARCHAR"/>
+        <result column="bid_time" property="bidTime" jdbcType="TIMESTAMP"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="expected_feedback_time" property="expectedFeedbackTime" jdbcType="TIMESTAMP"/>
+        <result column="log_user_name" property="logUserName" jdbcType="VARCHAR"/>
+        <result column="log_user_mobile" property="logUserMobile" jdbcType="VARCHAR"/>
+        <result column="auto_auction_Id" property="autoAuctionId" jdbcType="BIGINT"/>
+        <result column="auction_code" property="auctionCode" jdbcType="VARCHAR"/>
+        <result column="maxPriceUserId" property="maxPriceUserId" jdbcType="BIGINT"/>
+        <result column="storeLatitude" property="storeLatitude" jdbcType="VARCHAR"/>
+        <result column="storeLongitude" property="storeLongitude" jdbcType="VARCHAR"/>
+        <result column="transfer_fee" property="transferFee" jdbcType="VARCHAR"/>
+        <result column="transfer_flag" property="transferFlag" jdbcType="VARCHAR"/>
+        <result column="agent_price" property="agentPrice" jdbcType="DECIMAL"/>
+        <result column="sale_flag" property="saleFlag" jdbcType="VARCHAR"/>
+        <result column="submit_time" property="submitTime" jdbcType="TIMESTAMP"/>
+        <result column="auth_time" property="authTime" jdbcType="TIMESTAMP"/>
+        <result column="auth_msg" property="authMsg" jdbcType="VARCHAR"/>
+        <result column="auction_start_time" property="auctionStarTime" jdbcType="TIMESTAMP"/>
+        <result column="deal_time" property="dealTime" jdbcType="TIMESTAMP"/>
+        <result column="pass_in_time" property="passInTime" jdbcType="TIMESTAMP"/>
+        <result column="time" property="time" jdbcType="TIMESTAMP"/>
+        <result column="orderd" property="orderId" />
+
+    </resultMap>
+    <sql id="Base_Column_List">
     t1.id, t1.publish_user_id, t1.publish_user_name, t1.publish_user_mobile, t1.auto_info_name, t1.store_id,t1.store_name,
     t1.source_type, t1.views, t1.publish_time, t1.report_score, t1.report_colligation_ranks,t1.report_servicing_ranks, t1.report_time, t1.`status`,
     t1.car_auto_no, t1.main_photo, t1.if_new, t1.create_user, t1.create_time, t1.update_user, t1.update_time,
     t1.auction_num, t1.region_id,t1.auto_auction_id,t1.transfer_flag
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
-    select
-    <include refid="Base_Column_List" />
-    from car_auto t1
-    WHERE t1.status != '0'
-    <if test="carAutoNo != null and carAutoNo != ''">
-      and t1.car_auto_no != #{carAutoNo}
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-    <if test="endRowNum != null">
-      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
-    </if>
-  </select>
-  <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from car_auto t1
+        WHERE t1.status != '0'
+        <if test="carAutoNo != null and carAutoNo != ''">
+            and t1.car_auto_no != #{carAutoNo}
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="endRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+    <select id="countByExample" parameterType="java.util.Map" resultType="java.lang.Integer">
     select count(t1.id) from car_auto t1 WHERE t1.status != '0'
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />,
-    t2.auction_start_time
-    FROM
-    car_auto t1
-    left join car_auto_auction t2  on t1.auto_auction_id = t2.id
-    WHERE
-    t1.`status` != '0'
-    AND t1.id = #{id}
-  </select>
-  <select id="selectByCarId" resultMap="BaseResultMap" parameterType="java.util.Map" >
-    SELECT
-    t1.id,t1.store_id,t1.store_name,t1.if_new,t1.auto_info_name,t1.report_colligation_ranks,t1.report_servicing_ranks,t1.views,t1.car_auto_no,t1.status,
-    t1.publish_user_name,
-    t2.vehicle_attribution_city_cn,t2.begin_register_date,t2.mileage,t2.remark,t2.environment_cn,
-    t3.auction_type,t3.starting_price,t3.service_price,t1.auction_num,
-    t3.auction_start_time,t3.auction_end_time,
-    t3.link_man_name,t3.link_man_mobile,t1.auto_auction_id,t1.region_id,
-    t5.`name` AS carStoreName,t8.auction_code,t3.top_pricer_id maxPriceUserId,
-    t5.latitude AS storeLatitude,t5.longitude AS storeLongitude,
-    t3.move_to_where,t6.transfer_fee,t6.cost_price,t6.illegal_price,t6.illegal_score,t6.illegal_who,
-    (CASE WHEN t7.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow,t3.if_agent,t3.link_man_mobile,
-    t9.start_time,
-    t1.transfer_flag,
-    t3.agent_price,
-    t9.title
-    FROM car_auto t1
-    INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
-    LEFT JOIN car_auto_auction t3 on t1.auto_auction_id=t3.id
-    LEFT JOIN car_store t5 on t1.store_id=t5.id
-    LEFT JOIN car_auto_procedures t6 on t1.id=t6.auto_id
-    LEFT JOIN car_customer_follow_auto t7 ON (t1.id=t7.auto_id AND t7.user_id=#{customerId} AND t7.status='1')
-    LEFT JOIN (SELECT * FROM car_locale_auction_car WHERE car_id=#{carId} GROUP BY auto_auction_id ORDER BY create_time DESC LIMIT 1) t8 ON (t8.auto_auction_id=t1.auto_auction_id AND t8.auction_status !='4' AND t8.auction_status!='3')
-    LEFT JOIN car_locale_auction t9 ON t9.id=t8.auction_id
-    where t1.status != '0'
-    <if test="carId!=null">
-      AND t1.id=#{carId}
-    </if>
-    <if test="auctionId!=null">
-      AND t3.id = #{auctionId}
-    </if>
-    limit 1
-  </select>
-  
-  <select id="selectCarAutoCount" resultType="java.lang.Integer" parameterType="java.util.Map">
-        select  count(t1.id)
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>,
+        t2.auction_start_time
+        FROM
+        car_auto t1
+        left join car_auto_auction t2 on t1.auto_auction_id = t2.id
+        WHERE
+        t1.`status` != '0'
+        AND t1.id = #{id}
+    </select>
+    <select id="selectByCarId" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        t1.id,t1.store_id,t1.store_name,t1.if_new,t1.auto_info_name,t1.report_colligation_ranks,t1.report_servicing_ranks,t1.views,t1.car_auto_no,t1.status,
+        t1.publish_user_name,
+        t2.vehicle_attribution_city_cn,t2.begin_register_date,t2.mileage,t2.remark,t2.environment_cn,
+        t3.auction_type,t3.starting_price,t3.service_price,t1.auction_num,
+        t3.auction_start_time,t3.auction_end_time,
+        t3.link_man_name,t3.link_man_mobile,t1.auto_auction_id,t1.region_id,
+        t5.`name` AS carStoreName,t8.auction_code,t3.top_pricer_id maxPriceUserId,
+        t5.latitude AS storeLatitude,t5.longitude AS storeLongitude,
+        t3.move_to_where,t6.transfer_fee,t6.cost_price,t6.illegal_price,t6.illegal_score,t6.illegal_who,
+        (CASE WHEN t7.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow,t3.if_agent,t3.link_man_mobile,
+        t9.start_time,
+        t1.transfer_flag,
+        t3.agent_price,
+        t9.title
+        FROM car_auto t1
+        INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
+        LEFT JOIN car_auto_auction t3 on t1.auto_auction_id=t3.id
+        LEFT JOIN car_store t5 on t1.store_id=t5.id
+        LEFT JOIN car_auto_procedures t6 on t1.id=t6.auto_id
+        LEFT JOIN car_customer_follow_auto t7 ON (t1.id=t7.auto_id AND t7.user_id=#{customerId} AND t7.status='1')
+        LEFT JOIN (SELECT * FROM car_locale_auction_car WHERE car_id=#{carId} GROUP BY auto_auction_id ORDER BY
+        create_time DESC LIMIT 1) t8 ON (t8.auto_auction_id=t1.auto_auction_id AND t8.auction_status !='4' AND
+        t8.auction_status!='3')
+        LEFT JOIN car_locale_auction t9 ON t9.id=t8.auction_id
+        where t1.status != '0'
+        <if test="carId!=null">
+            AND t1.id=#{carId}
+        </if>
+        <if test="auctionId!=null">
+            AND t3.id = #{auctionId}
+        </if>
+        limit 1
+    </select>
+
+    <select id="selectCarAutoCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(t1.id)
         from car_auto t1
-        inner join car_auto_auction t2 on  t2.id = t1.auto_auction_id
-    <if test="managerRole != null and managerRole != ''">
-      inner join car_manager_user cmu on cmu.id = t1.create_user
-    </if>
+        inner join car_auto_auction t2 on t2.id = t1.auto_auction_id
+        <if test="managerRole != null and managerRole != ''">
+            inner join car_manager_user cmu on cmu.id = t1.create_user
+        </if>
         where t1.sale_flag = '0'
-          and t2.auction_type = #{auctionType}
-    <choose>
-      <when test="managerRole != null and managerRole != ''">
-        and cmu.department_id = #{departmentId}
-      </when>
-      <otherwise>
-        and t1.create_user = #{userId}
-      </otherwise>
-    </choose>
-    <if test="status != null and status != ''">
-      and t1.status = #{status}
-    </if>
-    <if test="autoInfoName != null and autoInfoName != ''">
-      and t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%')
-    </if>
-    <if test="statusList != null">
-      and t1.status in
-      <foreach collection="statusList" item="item" separator="," open="(" close=")">
-        #{item}
-      </foreach>
-    </if>
-  </select>
-
-  <select id="selectCarAutoForSaleCount" resultType="java.lang.Integer" parameterType="java.util.Map">
-        select count(t1.id) num
-          from car_order_retail t1
-   inner join car_auto t2 on t1.car_id = t2.id
-   inner join car_auto_auction caa on caa.id = t2.auto_auction_id
-    <if test="managerRole != null and managerRole != ''">
-      inner join car_manager_user cmu on cmu.id = t2.create_user
-    </if>
-        where
-            t2.sale_flag = #{saleFlag}
+        and t2.auction_type = #{auctionType}
         <choose>
-          <when test="managerRole != null and managerRole != ''">
-            and cmu.department_id  = #{departmentId}
-          </when>
-          <otherwise>
-            and t1.create_user = #{userId}
-          </otherwise>
+            <when test="managerRole != null and managerRole != ''">
+                and cmu.department_id = #{departmentId}
+            </when>
+            <otherwise>
+                and t1.create_user = #{userId}
+            </otherwise>
         </choose>
-      <if test="autoInfoName != null and autoInfoName != ''">
-         and t1.auto_info_name like '%{autoInfoName}%'
-      </if>
-  </select>
+        <if test="status != null and status != ''">
+            and t1.status = #{status}
+        </if>
+        <if test="autoInfoName != null and autoInfoName != ''">
+            and t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%')
+        </if>
+        <if test="statusList != null">
+            and t1.status in
+            <foreach collection="statusList" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectCarAutoForSaleCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(t1.id) num
+        from car_order_retail t1
+        inner join car_auto t2 on t1.car_id = t2.id
+        inner join car_auto_auction caa on caa.id = t2.auto_auction_id
+        <if test="managerRole != null and managerRole != ''">
+            inner join car_manager_user cmu on cmu.id = t2.create_user
+        </if>
+        where
+        t2.sale_flag = #{saleFlag}
+        <choose>
+            <when test="managerRole != null and managerRole != ''">
+                and cmu.department_id = #{departmentId}
+            </when>
+            <otherwise>
+                and t1.create_user = #{userId}
+            </otherwise>
+        </choose>
+        <if test="autoInfoName != null and autoInfoName != ''">
+            and t1.auto_info_name like '%{autoInfoName}%'
+        </if>
+    </select>
 
 
-  <select id="selectCarAutoAuctionList" resultMap="BaseResultMap" parameterType="java.util.Map">
+    <select id="selectCarAutoAuctionList" resultMap="BaseResultMap" parameterType="java.util.Map">
     SELECT t1.id FROM car_auto t1
   </select>
 
-  <!--现场拍卖车辆列表-->
-  <select id="selectAuctionCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
-    SELECT t3.id,t3.main_photo,t3.auto_info_name,t3.car_auto_no,t3.status,
-    t4.vehicle_attribution_city_cn,t4.mileage,t4.engine_capacity,t4.engine_capacity_unit,
-    t4.environment_cn,t4.begin_register_date,t5.starting_price,t2.auction_code,
-    t1.address,t1.start_time,(CASE WHEN t6.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow,
-    t3.auto_auction_id
-    FROM car_locale_auction_car t2
-    LEFT JOIN car_locale_auction t1 on t1.id=t2.auction_id
-    LEFT JOIN car_auto t3 on t2.car_id=t3.id
-    LEFT JOIN car_auto_info_detail t4 on t3.id=t4.auto_id
-    LEFT JOIN car_auto_auction t5 ON t3.auto_auction_id=t5.id
-    LEFT JOIN car_customer_follow_auto t6 ON (t2.car_id=t6.auto_id AND t6.user_id=#{customerId} AND t6.status='1')
-    LEFT JOIN car_agent t7 on t7.car_id = t2.car_id
-    LEFT JOIN car_agent_log t8 on t8.agent_id = t7.id
-    WHERE t2.auction_id = #{auctionId} AND t1.status != '0'
-    <if test="actionStatusArr != null">
-      AND t2.auction_status IN (${actionStatusArr})
-    </if>
-    <if test="brandId!=null">
-      AND t4.auto_brand=#{brandId}
-    </if>
-    <if test="carName!=null">
-      AND t3.auto_info_name LIKE CONCAT(CONCAT('%', #{carName}),'%')
-    </if>
-    <if test="grade!=null">
-      AND concat(t3.report_colligation_ranks,t3.report_servicing_ranks)=#{grade}
-    </if>
-    <if test="carAge1!=null">
-      AND YEAR(now())-YEAR(t4.begin_register_date) ${carAge1}
-    </if>
-    <if test="carAge2!=null">
-      AND YEAR(now())-YEAR(t4.begin_register_date) ${carAge2}
-    </if>
+    <!--现场拍卖车辆列表-->
+    <select id="selectAuctionCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT t3.id,t3.main_photo,t3.auto_info_name,t3.car_auto_no,t3.status,
+        t4.vehicle_attribution_city_cn,t4.mileage,t4.engine_capacity,t4.engine_capacity_unit,
+        t4.environment_cn,t4.begin_register_date,t5.starting_price,t2.auction_code,
+        t1.address,t1.start_time,(CASE WHEN t6.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow,
+        t3.auto_auction_id
+        FROM car_locale_auction_car t2
+        LEFT JOIN car_locale_auction t1 on t1.id=t2.auction_id
+        LEFT JOIN car_auto t3 on t2.car_id=t3.id
+        LEFT JOIN car_auto_info_detail t4 on t3.id=t4.auto_id
+        LEFT JOIN car_auto_auction t5 ON t3.auto_auction_id=t5.id
+        LEFT JOIN car_customer_follow_auto t6 ON (t2.car_id=t6.auto_id AND t6.user_id=#{customerId} AND t6.status='1')
+        LEFT JOIN car_agent t7 on t7.car_id = t2.car_id
+        LEFT JOIN car_agent_log t8 on t8.agent_id = t7.id
+        WHERE t2.auction_id = #{auctionId} AND t1.status != '0'
+        <if test="actionStatusArr != null">
+            AND t2.auction_status IN (${actionStatusArr})
+        </if>
+        <if test="brandId!=null">
+            AND t4.auto_brand=#{brandId}
+        </if>
+        <if test="carName!=null">
+            AND t3.auto_info_name LIKE CONCAT(CONCAT('%', #{carName}),'%')
+        </if>
+        <if test="grade!=null">
+            AND concat(t3.report_colligation_ranks,t3.report_servicing_ranks)=#{grade}
+        </if>
+        <if test="carAge1!=null">
+            AND YEAR(now())-YEAR(t4.begin_register_date) ${carAge1}
+        </if>
+        <if test="carAge2!=null">
+            AND YEAR(now())-YEAR(t4.begin_register_date) ${carAge2}
+        </if>
 
-    GROUP BY t2.auto_auction_id
+        GROUP BY t2.auto_auction_id
 
-    <if test="carSort!=null">
-      <if test="carSort=='1'.toString()">
-        ORDER BY t2.sort ASC
-      </if>
-      <if test="carSort=='2'.toString()">
-        ORDER BY t5.starting_price ASC
-      </if>
-      <if test="carSort=='3'.toString()">
-        ORDER BY t5.starting_price DESC
-      </if>
-      <if test="carSort=='4'.toString()">
-        ORDER BY t4.begin_register_date DESC
-      </if>
-      <if test="carSort=='5'.toString()">
-        ORDER BY t4.begin_register_date ASC
-      </if>
-    </if>
-    <if test="carSort==null">
-        ORDER BY t2.sort ASC
-    </if>
-    <if test="startRowNum!=null">
-      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
-    </if>
-  </select>
+        <if test="carSort!=null">
+            <if test="carSort=='1'.toString()">
+                ORDER BY t2.sort ASC
+            </if>
+            <if test="carSort=='2'.toString()">
+                ORDER BY t5.starting_price ASC
+            </if>
+            <if test="carSort=='3'.toString()">
+                ORDER BY t5.starting_price DESC
+            </if>
+            <if test="carSort=='4'.toString()">
+                ORDER BY t4.begin_register_date DESC
+            </if>
+            <if test="carSort=='5'.toString()">
+                ORDER BY t4.begin_register_date ASC
+            </if>
+        </if>
+        <if test="carSort==null">
+            ORDER BY t2.sort ASC
+        </if>
+        <if test="startRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
 
-  <select id="selectCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
-    select *
-    from (
-            select
-            t1.id,
-            t1.main_photo,
-            t1.auto_info_name,
-            t8.vehicle_attribution_city_cn,
-            t8.mileage,
-            t1. STATUS,
-            t1.report_colligation_ranks,
-            t1.report_servicing_ranks,
-            t2.auction_start_time,
-            t4.auth_time AS "deal_time",
-            t5.time AS "pass_in_time",
-            t5.msg auth_msg,
-            t1.create_time,
-            t1.if_new
-            from car_auto t1
-            left join car_auto_auction t2 ON t1.auto_auction_id=t2.id
-            left join car_order t3 on t1.id = t3.car_id
-            left join car_auto_transfer t4 on t4.order_id = t3.id
-            left join car_auto_log t5 on t5.auto_id = t1.id
-            left join car_auto_info_detail t8 on t8.auto_id=t1.id
-          <if test="managerRole != null and managerRole != ''">
+    <select id="selectCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select *
+        from (
+        select
+        t1.id,
+        t1.main_photo,
+        t1.auto_info_name,
+        t8.vehicle_attribution_city_cn,
+        t8.mileage,
+        t1. STATUS,
+        t1.report_colligation_ranks,
+        t1.report_servicing_ranks,
+        t2.auction_start_time,
+        t4.auth_time AS "deal_time",
+        t5.time AS "pass_in_time",
+        t5.msg auth_msg,
+        t1.create_time,
+        t1.if_new,
+        t2.if_agent,
+        t2.auction_type,
+        t2.reserve_price,
+        t2.starting_price,
+        t3.id as orderId,
+        t2.top_bid_price as maxBidFee
+
+        from car_auto t1
+        left join car_auto_auction t2 ON t1.auto_auction_id=t2.id
+        left join car_order t3 on t1.id = t3.car_id
+        left join car_auto_transfer t4 on t4.order_id = t3.id
+        left join car_auto_log t5 on t5.auto_id = t1.id
+        left join car_auto_info_detail t8 on t8.auto_id=t1.id
+        <if test="managerRole != null and managerRole != ''">
             inner join car_manager_user cmu on cmu.id = t1.create_user
-          </if>
-            <trim prefix="where" prefixOverrides="and">
-              t1.sale_flag = '0'
-              <choose>
+        </if>
+        <trim prefix="where" prefixOverrides="and">
+            t1.sale_flag = '0'
+            <choose>
                 <when test="managerRole != null and managerRole != ''">
-                  and cmu.department_id  = #{departmentId}
+                    and cmu.department_id = #{departmentId}
                 </when>
                 <otherwise>
-                  and t1.create_user = #{userId}
+                    and t1.create_user = #{userId}
                 </otherwise>
-              </choose>
-              <if test="status != null and status != ''">
+            </choose>
+            <if test="status != null and status != ''">
                 and t1.status = #{status}
-              </if>
-              <if test="autoInfoName != null and autoInfoName != ''">
+            </if>
+            <if test="autoInfoName != null and autoInfoName != ''">
                 and t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%')
-              </if>
-              <if test="auctionType != null and auctionType != ''">
+            </if>
+            <if test="auctionType != null and auctionType != ''">
                 and t2.auction_type = #{auctionType}
-              </if>
-              <if test="statusList != null">
+            </if>
+            <if test="statusList != null">
                 and t1.status in
                 <foreach collection="statusList" item="item" separator="," open="(" close=")">
-                  #{item}
+                    #{item}
                 </foreach>
-              </if>
-            </trim>
-          order by
-          <if test="statusListType == '1'.toString()"> t1.update_time DESC </if>
-          <if test="statusListType == '2'.toString() || statusListType == '3'.toString() || statusListType == '7'.toString()"> t5.time DESC </if>
-          <if test="statusListType == '4'.toString() || statusListType == '5'.toString()"> t2.auction_start_time DESC </if>
-          <if test="statusListType == '6'.toString()"> t4.auth_time DESC </if>
-    ) t
-    group by t.id
-    order by
-    <if test="statusListType == '1'.toString()"> t.create_time DESC </if>
-    <if test="statusListType == '2'.toString() || statusListType == '3'.toString() || statusListType == '7'.toString()"> t.pass_in_time DESC </if>
-    <if test="statusListType == '4'.toString() || statusListType == '5'.toString()"> t.auction_start_time DESC </if>
-    <if test="statusListType == '6'.toString()"> t.deal_time DESC </if>
-    <if test="endRowNum != null">
-      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
-    </if>
-  </select>
+            </if>
+        </trim>
+        order by
+        <if test="statusListType == '1'.toString()">t1.update_time DESC</if>
+        <if test="statusListType == '2'.toString() || statusListType == '3'.toString() || statusListType == '7'.toString()">
+            t5.time DESC
+        </if>
+        <if test="statusListType == '4'.toString() || statusListType == '5'.toString()">t2.auction_start_time DESC</if>
+        <if test="statusListType == '6'.toString()">t4.auth_time DESC</if>
+        ) t
+        group by t.id
+        order by
+        <if test="statusListType == '1'.toString()">t.create_time DESC</if>
+        <if test="statusListType == '2'.toString() || statusListType == '3'.toString() || statusListType == '7'.toString()">
+            t.pass_in_time DESC
+        </if>
+        <if test="statusListType == '4'.toString() || statusListType == '5'.toString()">t.auction_start_time DESC</if>
+        <if test="statusListType == '6'.toString()">t.deal_time DESC</if>
+        <if test="endRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
 
 
-  <select id="selectAuctionCarCount" resultType="java.lang.Integer">
-    SELECT count(DISTINCT t2.auto_auction_id)
-    FROM car_locale_auction_car t2
-    LEFT JOIN car_locale_auction t1 on t1.id=t2.auction_id
-    LEFT JOIN car_auto t3 on t2.car_id=t3.id
-    LEFT JOIN car_auto_info_detail t4 on t3.id=t4.auto_id
-    LEFT JOIN car_auto_auction t5 ON t3.auto_auction_id=t5.id
-    LEFT JOIN car_customer_follow_auto t6 ON (t2.car_id=t6.auto_id AND t6.user_id=#{customerId} AND t6.status='1')
-    WHERE t1.id = #{auctionId} AND t1.status != '0'
-    <if test="actionStatusArr != null">
-      AND t2.auction_status IN (${actionStatusArr})
-    </if>
-    <if test="brandId!=null">
-      AND t4.auto_brand=#{brandId}
-    </if>
-    <if test="carName!=null">
-      AND t3.auto_info_name LIKE CONCAT(CONCAT('%', #{carName}),'%')
-    </if>
-    <if test="grade!=null">
-      AND concat(t3.report_colligation_ranks,t3.report_servicing_ranks)=#{grade}
-    </if>
-    <if test="carAge1!=null">
-      AND YEAR(now())-YEAR(t4.begin_register_date) ${carAge1}
-    </if>
-    <if test="carAge2!=null">
-      AND YEAR(now())-YEAR(t4.begin_register_date) ${carAge2}
-    </if>
-  </select>
+    <select id="selectAuctionCarCount" resultType="java.lang.Integer">
+        SELECT count(DISTINCT t2.auto_auction_id)
+        FROM car_locale_auction_car t2
+        LEFT JOIN car_locale_auction t1 on t1.id=t2.auction_id
+        LEFT JOIN car_auto t3 on t2.car_id=t3.id
+        LEFT JOIN car_auto_info_detail t4 on t3.id=t4.auto_id
+        LEFT JOIN car_auto_auction t5 ON t3.auto_auction_id=t5.id
+        LEFT JOIN car_customer_follow_auto t6 ON (t2.car_id=t6.auto_id AND t6.user_id=#{customerId} AND t6.status='1')
+        WHERE t1.id = #{auctionId} AND t1.status != '0'
+        <if test="actionStatusArr != null">
+            AND t2.auction_status IN (${actionStatusArr})
+        </if>
+        <if test="brandId!=null">
+            AND t4.auto_brand=#{brandId}
+        </if>
+        <if test="carName!=null">
+            AND t3.auto_info_name LIKE CONCAT(CONCAT('%', #{carName}),'%')
+        </if>
+        <if test="grade!=null">
+            AND concat(t3.report_colligation_ranks,t3.report_servicing_ranks)=#{grade}
+        </if>
+        <if test="carAge1!=null">
+            AND YEAR(now())-YEAR(t4.begin_register_date) ${carAge1}
+        </if>
+        <if test="carAge2!=null">
+            AND YEAR(now())-YEAR(t4.begin_register_date) ${carAge2}
+        </if>
+    </select>
 
-<!--根据条件查询线上拍的车辆列表-->
-  <select id="selectOnlineCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
-    SELECT t1.id,t1.main_photo,t1.auto_info_name,t1.car_auto_no,t1.report_score,t1.report_colligation_ranks,t1.report_servicing_ranks,
-    t2.vehicle_attribution_city_cn,t2.mileage,t3.starting_price,t1.status,
-    t3.auction_start_time,t3.auction_end_time,t2.environment_cn,t2.begin_register_date
-    ,(CASE WHEN t4.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow
-    ,(CASE WHEN t5.entrust_fee IS NOT NULL THEN '1' ELSE '2' END ) AS isEntrust
-    ,t1.auto_auction_id,t1.transfer_flag
-    FROM car_auto t1
-    INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
-    INNER JOIN car_auto_auction t3 ON t1.auto_auction_id=t3.id
-    LEFT JOIN car_customer_follow_auto t4 ON (t1.id=t4.auto_id AND t4.user_id=#{customerId} AND t4.status='1')
-    LEFT JOIN car_customer_entrust_car t5 ON (t5.car_id=t1.id AND t1.auto_auction_id=t5.auto_auction_id AND t5.customer_id=#{customerId})
-    WHERE t3.auction_type='1' and (t1.status = '6' or t1.status = '7')
-    <if test="clientType=='app'">
-      <!--手机端查看过滤掉结束时间已过的车-->
-      AND t3.auction_end_time <![CDATA[ > ]]> NOW()
-    </if>
-    <if test="storeId!=null">
-      AND t1.store_id=#{storeId}
-    </if>
-    <if test="carName!=null">
-      AND t1.auto_info_name LIKE CONCAT(CONCAT('%', #{carName}),'%')
-    </if>
-    <if test="brandId!=null">
-      AND t2.auto_brand=#{brandId}
-    </if>
-    <if test="regionId!=null and regionId!=''">
-      AND t1.region_id=#{regionId}
-    </if>
-    <if test="regionIds!=null">
-      AND t1.region_id in
-      <foreach collection="regionIds" item="item" open="(" separator="," close=")">
-        #{item}
-      </foreach>
-    </if>
-    <if test="grade!=null">
-      AND concat(t1.report_colligation_ranks,t1.report_servicing_ranks)=#{grade}
-    </if>
-    <if test="carAge1!=null">
-      AND YEAR(now())-YEAR(t2.begin_register_date) ${carAge1}
-    </if>
-    <if test="carAge2!=null">
-      AND YEAR(now())-YEAR(t2.begin_register_date) ${carAge2}
-    </if>
-    <if test="status!=null">
-      <!--正在竞拍-->
-      <if test="status=='1'.toString()">
-        AND  t1.status = '7'
-      </if>
-      <!--即将开始-->
-      <if test="status=='2'.toString()">
-        AND t1.status = '6'
-      </if>
-      <!--今日上新-->
-      <if test="status=='3'.toString()">
+    <!--根据条件查询线上拍的车辆列表-->
+    <select id="selectOnlineCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        t1.id,t1.main_photo,t1.auto_info_name,t1.car_auto_no,t1.report_score,t1.report_colligation_ranks,t1.report_servicing_ranks,
+        t2.vehicle_attribution_city_cn,t2.mileage,t3.starting_price,t1.status,
+        t3.auction_start_time,t3.auction_end_time,t2.environment_cn,t2.begin_register_date
+        ,(CASE WHEN t4.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow
+        ,(CASE WHEN t5.entrust_fee IS NOT NULL THEN '1' ELSE '2' END ) AS isEntrust
+        ,t1.auto_auction_id,t1.transfer_flag
+        FROM car_auto t1
+        INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
+        INNER JOIN car_auto_auction t3 ON t1.auto_auction_id=t3.id
+        LEFT JOIN car_customer_follow_auto t4 ON (t1.id=t4.auto_id AND t4.user_id=#{customerId} AND t4.status='1')
+        LEFT JOIN car_customer_entrust_car t5 ON (t5.car_id=t1.id AND t1.auto_auction_id=t5.auto_auction_id AND
+        t5.customer_id=#{customerId})
+        WHERE t3.auction_type='1' and (t1.status = '6' or t1.status = '7')
+        <if test="clientType=='app'">
+            <!--手机端查看过滤掉结束时间已过的车-->
+            AND t3.auction_end_time <![CDATA[ > ]]> NOW()
+        </if>
+        <if test="storeId!=null">
+            AND t1.store_id=#{storeId}
+        </if>
+        <if test="carName!=null">
+            AND t1.auto_info_name LIKE CONCAT(CONCAT('%', #{carName}),'%')
+        </if>
+        <if test="brandId!=null">
+            AND t2.auto_brand=#{brandId}
+        </if>
+        <if test="regionId!=null and regionId!=''">
+            AND t1.region_id=#{regionId}
+        </if>
+        <if test="regionIds!=null">
+            AND t1.region_id in
+            <foreach collection="regionIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="grade!=null">
+            AND concat(t1.report_colligation_ranks,t1.report_servicing_ranks)=#{grade}
+        </if>
+        <if test="carAge1!=null">
+            AND YEAR(now())-YEAR(t2.begin_register_date) ${carAge1}
+        </if>
+        <if test="carAge2!=null">
+            AND YEAR(now())-YEAR(t2.begin_register_date) ${carAge2}
+        </if>
+        <if test="status!=null">
+            <!--正在竞拍-->
+            <if test="status=='1'.toString()">
+                AND t1.status = '7'
+            </if>
+            <!--即将开始-->
+            <if test="status=='2'.toString()">
+                AND t1.status = '6'
+            </if>
+            <!--今日上新-->
+            <if test="status=='3'.toString()">
+                AND date_format(NOW(), '%Y-%m-%d') = date_format(t1.publish_time, '%Y-%m-%d')
+            </if>
+        </if>
+        ORDER BY t3.auction_start_time ASC
+        <if test="startRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <!--根据条件查询线上拍的车辆总数量-->
+    <select id="selectOnlineCarCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT count(t1.id)
+        FROM car_auto t1
+        INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
+        INNER JOIN car_auto_auction t3 ON t1.auto_auction_id=t3.id
+        WHERE t3.auction_type='1' and (t1.status = '6' or t1.status = '7')
+        <if test="clientType=='app'">
+            <!--手机端查看过滤掉结束时间已过的车-->
+            AND t3.auction_end_time <![CDATA[ > ]]> NOW()
+        </if>
+        <if test="storeId!=null">
+            AND t1.store_id=#{storeId}
+        </if>
+        <if test="carName!=null">
+            AND t1.auto_info_name LIKE CONCAT(CONCAT('%', #{carName}),'%')
+        </if>
+        <if test="brandId!=null">
+            AND t2.auto_brand=#{brandId}
+        </if>
+        <if test="regionId!=null and regionId!=''">
+            AND t1.region_id=#{regionId}
+        </if>
+        <if test="regionIds!=null">
+            AND t1.region_id in
+            <foreach collection="regionIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="grade!=null">
+            AND concat(t1.report_colligation_ranks,t1.report_servicing_ranks)=#{grade}
+        </if>
+        <if test="carAge1!=null">
+            AND YEAR(now())-YEAR(t2.begin_register_date) ${carAge1}
+        </if>
+        <if test="carAge2!=null">
+            AND YEAR(now())-YEAR(t2.begin_register_date) ${carAge2}
+        </if>
+        <if test="status!=null">
+            <!--正在竞拍-->
+            <if test="status=='1'.toString()">
+                AND t1.status = '7'
+            </if>
+            <!--即将开始-->
+            <if test="status=='2'.toString()">
+                AND t1.status = '6'
+            </if>
+            <!--今日上新-->
+            <if test="status=='3'.toString()">
+                AND date_format(NOW(), '%Y-%m-%d') = date_format(t1.publish_time, '%Y-%m-%d')
+            </if>
+        </if>
+    </select>
+    <!--查询用户最新发布的车辆-->
+    <select id="selectMyLastAuto" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        ,t2.auction_type
+        from car_auto t1
+        LEFT JOIN car_auto_auction t2 ON t2.id=t1.auto_auction_id
+        WHERE t1.status != '0'
+        <if test="createUser!=null and createUser!=''">
+            AND t1.create_user = #{createUser}
+        </if>
+        <if test="status!=null and status!=''">
+            AND t1.status = #{status}
+        </if>
+        ORDER BY t1.create_time DESC
+        limit 0,1
+    </select>
+    <!--根据条件查询发拍的车辆列表-->
+    <select id="selectHairShotCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        t1.`status`,
+        t1.main_photo,
+        t1.auto_info_name,
+        t2.starting_price,
+        t3.transaction_fee,
+        t3.create_time,
+        t4.user_name AS publish_user_name,
+        t1.create_time AS publish_time,
+        t2.auction_end_time,
+        t2.auction_start_time,
+        t1.id,
+        t1.car_auto_no,
+        t8.msg logMsg
+        from car_auto t1
+        left join car_auto_auction t2 on t2.id = t1.auto_auction_id
+        left join car_order t3 on t3.auto_auction_id = t1.auto_auction_id
+        left join car_manager_user t4 on t1.create_user = t4.id
+        LEFT JOIN (
+        SELECT
+        t5.msg,
+        t5.time,
+        t5.auto_id,
+        t5.`status`
+        FROM
+        car_auto_log t5
+        INNER JOIN
+        (SELECT MAX(t6.time) time,t6.auto_id FROM car_auto_log t6 GROUP BY t6.auto_id) t7
+        ON t7.auto_id = t5.auto_id AND t7.time=t5.time WHERE t5.status='3'
+        ORDER BY t5.time desc
+        ) t8 ON t1.id = t8.auto_id
+        WHERE t1.status != '0' AND ((t1.status='1' AND t1.create_user=#{managerId}) OR t1.status != '1')
+        <if test="storeId!=null">
+            AND t1.store_id=#{storeId}
+        </if>
+        <if test="departmentId != null">
+            AND t4.department_id=#{departmentId}
+        </if>
+        <if test="autoInfoName!=null">
+            AND (t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%') OR t1.car_auto_no = #{autoInfoName})
+        </if>
+        <if test="status != null">
+            <if test="status == '1'.toString()">
+                AND (t1.status = '6' OR t1.status = '7')
+                ORDER BY t2.auction_start_time DESC
+            </if>
+            <if test="status == '2'.toString()">
+                AND (t1.status = '16' OR t1.status = '17')
+            </if>
+            <if test="status == '3'.toString()">
+                AND (t1.status = '1' OR t1.status = '2' OR t1.status = '3' OR t1.status = '4' OR t1.status = '5')
+            </if>
+            <if test="status == '4'.toString()">
+                AND (t1.status = '8' OR t1.status = '9' OR t1.status = '10' OR t1.status = '11' OR t1.status = '12' OR
+                t1.status = '14' OR t1.status = '15')
+            </if>
+            <if test="status == '5'.toString()">
+                AND (t1.status = '18' OR t1.status = '19')
+            </if>
+            <if test="status == '6'.toString()">
+                AND (t1.status = '1' OR t1.status = '3' OR t1.status = '18' OR t1.status = '19')
+            </if>
+            <if test="status != '1'.toString()">
+                order by t1.update_time desc
+            </if>
+        </if>
+        <if test="status == null">
+            order by t1.create_time desc
+        </if>
+        <if test="startRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <!--根据条件查询线发拍的车辆数量-->
+    <select id="selectHairShotCarCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select
+        count(1)
+        from car_auto t1
+        left join car_auto_auction t2 on t2.id = t1.auto_auction_id
+        left join car_order t3 on t3.auto_auction_id = t1.auto_auction_id
+        left join car_manager_user t4 on t1.create_user = t4.id
+        WHERE t1.status != '0' AND ((t1.status='1' AND t1.create_user=#{managerId}) OR t1.status != '1')
+        <if test="storeId!=null">
+            AND t1.store_id=#{storeId}
+        </if>
+        <if test="departmentId != null">
+            AND t4.department_id=#{departmentId}
+        </if>
+        <if test="autoInfoName!=null">
+            AND (t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%') OR t1.car_auto_no = #{autoInfoName})
+        </if>
+        <if test="status != null">
+            <if test="status == '1'.toString()">
+                AND (t1.status = '6' OR t1.status = '7')
+            </if>
+            <if test="status == '2'.toString()">
+                AND (t1.status = '16' OR t1.status = '17')
+            </if>
+            <if test="status == '3'.toString()">
+                AND (t1.status = '1' OR t1.status = '2' OR t1.status = '3' OR t1.status = '4' OR t1.status = '5')
+            </if>
+            <if test="status == '4'.toString()">
+                AND (t1.status = '8' OR t1.status = '9' OR t1.status = '10' OR t1.status = '11' OR t1.status = '12' OR
+                t1.status = '14' OR t1.status = '15')
+            </if>
+            <if test="status == '5'.toString()">
+                AND (t1.status = '18' OR t1.status = '19')
+            </if>
+            <if test="status == '6'.toString()">
+                AND (t1.status = '1' OR t1.status = '3' OR t1.status = '18' OR t1.status = '19')
+            </if>
+        </if>
+    </select>
+
+    <!--查询可以参与现场拍的车辆 Author 付陈林，2018-3-28-->
+    <select id="getLocaleAuctionCar" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        t1.id,
+        t1.car_auto_no,
+        t1.auto_info_name,
+        t2.starting_price,
+        t2.reserve_price,
+        t3.begin_register_date,
+        t1.source_type,
+        t1.auction_num,
+        t1.publish_user_name,
+        t2.auction_type,
+        t3.license_number,
+        t1.store_name storeName
+        from car_auto t1
+        left join car_auto_auction t2 on t2.id=t1.auto_auction_id
+        left join car_auto_info_detail t3 on t3.auto_id=t1.id
+        where t2.auction_type='2' and t1.status='5' AND t1.status != '0'
+        <if test="searchParam!=null">
+            AND (t1.auto_info_name like CONCAT(CONCAT('%', #{searchParam}),'%') or t1.car_auto_no like
+            CONCAT(CONCAT('%', #{searchParam}),'%'))
+        </if>
+    </select>
+
+    <!--根据参数查询所有的车辆列表 zhangzijuan-->
+    <select id="getAllCarAutoList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        a.id,
+        a.auto_info_name,
+        a.source_type,
+        a.publish_time,
+        a.publish_user_name,
+        a.publish_user_mobile,
+        a.report_colligation_ranks,
+        a.report_servicing_ranks,
+        a.`status`,
+        a.car_auto_no,
+        a.main_photo,
+        a.if_new,
+        a.create_time,
+        a.auction_num,
+        d.vin,
+        d.engine_capacity,
+        d.engine_capacity_unit,
+        d.vehicle_attribution_city_cn,
+        d.environment_cn,
+        d.oil_supply_system,
+        d.transmission,
+        d.mileage,
+        d.manufacture_date,
+        d.begin_register_date,
+        d.license_number,
+        d.car_nature,
+        aa.owner_price,
+        d.use_nature,
+        d.is_modification,
+        d.original_price,
+        aa.starting_price,
+        aa.reserve_price,
+        aa.service_price,
+        aa.auction_end_time,
+        aa.auction_type,
+        aa.if_agent,
+        mu.user_name AS create_user_name,
+        au.start_time,
+        au.title,
+        cs.simple_name AS carStoreNme,
+        co.transaction_fee,
+        co.service_fee,
+        co.agent_fee,
+        aa.top_bid_price AS maxBidFee,
+        co.`status` AS orderStatus,
+        cas.status_name,
+        aa.owner_name,
+        aa.owner_mobile,
+        aa.top_bid_time bid_time,
+        ar.mobile,
+        ar.`name`,
+        aa.expected_feedback_time,
+        aa.auction_start_time,
+        a.transfer_flag,
+        r.name AS cityName,
+        ar.user_num as userNum,
+        ret.sales_consultant as salesConsultant,
+        ret.transaction_fee as transactionFee
+        FROM car_auto a
+        LEFT JOIN car_auto_info_detail d ON d.auto_id=a.id
+        LEFT JOIN car_auto_auction aa on aa.id=a.auto_auction_id
+        LEFT JOIN (
+        SELECT la.title,la.start_time,ac.id,ac.car_id,ac.auto_auction_id,la.city_id
+        FROM
+        car_locale_auction_car ac
+        INNER JOIN car_locale_auction la on la.id=ac.auction_id
+        )au ON a.auto_auction_id=au.auto_auction_id
+        LEFT JOIN car_store cs on cs.id=a.store_id
+        LEFT JOIN car_relate_status cas on (cas.status=a.status AND cas.type='2')
+        LEFT JOIN car_manager_user mu on mu.id=a.create_user
+        LEFT JOIN car_order co on (co.auto_auction_id=a.auto_auction_id and co.status!='8')
+        LEFT JOIN wt_app_user ar on ar.id=aa.top_pricer_id
+        LEFT JOIN wt_region r on au.city_id = r.id
+        LEFT JOIN car_order_retail ret on ret.car_id = a.id and ret.sales_type = '1'
+        WHERE a.status != '0' AND ((a.status='1' AND a.create_user=#{managerId}) OR a.status>'1')
+        <if test="storeId!=null and storeId!=''">
+            AND a.store_id=#{storeId}
+        </if>
+        <if test="sourceType!=null and sourceType!=''">
+            AND a.source_type=#{sourceType}
+        </if>
+        <if test="ifNew!=null and ifNew!=''">
+            AND a.if_new=#{ifNew}
+        </if>
+        <if test="status!=null and status!=''">
+            AND a.status=#{status}
+        </if>
+        <if test="saleFlag!= null and saleFlag!=''">
+            AND a.sale_flag = #{saleFlag}
+        </if>
+        <if test="auctionStartTimeBegin != null and auctionStartTimeBegin !=''">
+            AND aa.auction_start_time &gt;= #{auctionStartTimeBegin}
+        </if>
+        <if test="auctionStartTimeEnd != null and auctionStartTimeEnd !=''">
+            AND aa.auction_start_time &lt;= #{auctionStartTimeEnd}
+        </if>
+        <if test="cityId != null and cityId != ''">
+            AND au.city_id = #{cityId}
+        </if>
+        <if test="title !=null and title != ''">
+            AND au.title = #{title}
+        </if>
+        <if test="salesStartDate != null and salesStartDate != ''">
+            AND ret.sales_date &gt;=#{salesStartDate}
+        </if>
+        <if test="salesEndDate != null and salesEndDate != ''">
+            AND ret.sales_date &lt;=#{salesEndDate}
+        </if>
+        <if test="auctionType!=null and auctionType!=''">
+            AND aa.auction_type=#{auctionType}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND a.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND date_format(a.create_time, '%Y-%m-%d') &lt;= #{endTime}
+        </if>
+        <if test="carAutoNo!=null and carAutoNo!=''">
+            AND a.car_auto_no = #{carAutoNo}
+        </if>
+        <if test="isEdit!=null and isEdit!=''">
+            AND (a.status='1' OR a.status='3')
+        </if>
+        <if test="vin!=null and vin!=''">
+            AND d.vin like CONCAT(CONCAT('%', #{vin}),'%')
+        </if>
+        <if test="licenseNumber!=null and licenseNumber!=''">
+            AND d.license_number like CONCAT(CONCAT('%', #{licenseNumber}),'%')
+        </if>
+        <if test="autoInfoName!=null and autoInfoName!=''">
+            AND a.auto_info_name like CONCAT(CONCAT('%', #{autoInfoName}),'%')
+        </if>
+        <if test="carAutoNo!=null and carAutoNo!=''">
+            AND a.car_auto_no like CONCAT(CONCAT('%', #{carAutoNo}),'%')
+        </if>
+        <if test="createUserName!=null and createUserName!=''">
+            AND mu.user_name like CONCAT(CONCAT('%', #{createUserName}),'%')
+        </if>
+        <if test="storeIds != null and storeIds.size!=0">
+            and (a.store_id in
+            <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                #{storeId}
+            </foreach>
+            or a.store_id is null)
+        </if>
+        -- GROUP BY a.id
+        ORDER BY a.update_time DESC,a.create_time DESC
+        <if test="startRowNum!=null and startRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+    <!--根据参数查询所有的车辆数目 zhangzijuan-->
+    <select id="getAllCarAutoCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT count(a.id)
+        FROM car_auto a
+        INNER JOIN car_auto_info_detail d ON d.auto_id=a.id
+        LEFT JOIN (
+        SELECT la.title,la.start_time,ac.id,ac.car_id,ac.auto_auction_id,la.city_id
+        FROM
+        car_locale_auction_car ac
+        INNER JOIN car_locale_auction la on la.id=ac.auction_id
+        )au ON a.auto_auction_id=au.auto_auction_id
+        LEFT JOIN car_auto_auction aa on aa.id=a.auto_auction_id
+        LEFT JOIN car_manager_user mu on mu.id=a.create_user
+        LEFT JOIN car_order_retail ret on ret.car_id = a.id and ret.sales_type = '1'
+        WHERE a.status != '0' AND ((a.status='1' AND a.create_user=#{managerId}) OR a.status>'1')
+        <if test="storeId!=null and storeId!=''">
+            AND a.store_id=#{storeId}
+        </if>
+        <if test="sourceType!=null and sourceType!=''">
+            AND a.source_type=#{sourceType}
+        </if>
+        <if test="ifNew!=null and ifNew!=''">
+            AND a.if_new=#{ifNew}
+        </if>
+        <if test="saleFlag!= null and saleFlag!=''">
+            AND a.sale_flag = #{saleFlag}
+        </if>
+        <if test="auctionStartTimeBegin != null and auctionStartTimeBegin !=''">
+            AND aa.auction_start_time &gt;= #{auctionStartTimeBegin}
+        </if>
+        <if test="auctionStartTimeEnd != null and auctionStartTimeEnd !=''">
+            AND aa.auction_start_time &lt;= #{auctionStartTimeEnd}
+        </if>
+        <if test="cityId != null and cityId != ''">
+            AND au.city_id = #{cityId}
+        </if>
+        <if test="salesStartDate != null and salesStartDate != ''">
+            AND ret.sales_date &gt;=#{salesStartDate}
+        </if>
+        <if test="salesEndDate != null and salesEndDate != ''">
+            AND ret.sales_date &lt;=#{salesEndDate}
+        </if>
+        <if test="status!=null and status!=''">
+            AND a.status=#{status}
+        </if>
+        <if test="auctionType!=null and auctionType!=''">
+            AND aa.auction_type=#{auctionType}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND a.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND date_format(a.create_time, '%Y-%m-%d')&lt;= #{endTime}
+        </if>
+        <if test="carAutoNo!=null and carAutoNo!=''">
+            AND a.car_auto_no = #{carAutoNo}
+        </if>
+        <if test="isEdit!=null and isEdit!=''">
+            AND (a.status='1' OR a.status='3')
+        </if>
+        <if test="vin!=null and vin!=''">
+            AND d.vin like CONCAT(CONCAT('%', #{vin}),'%')
+        </if>
+        <if test="licenseNumber!=null and licenseNumber!=''">
+            AND d.license_number like CONCAT(CONCAT('%', #{licenseNumber}),'%')
+        </if>
+        <if test="autoInfoName!=null and autoInfoName!=''">
+            AND a.auto_info_name like CONCAT(CONCAT('%', #{autoInfoName}),'%')
+        </if>
+        <if test="carAutoNo!=null and carAutoNo!=''">
+            AND a.car_auto_no like CONCAT(CONCAT('%', #{carAutoNo}),'%')
+        </if>
+        <if test="createUserName!=null and createUserName!=''">
+            AND mu.user_name like CONCAT(CONCAT('%', #{createUserName}),'%')
+        </if>
+        <if test="storeIds != null and storeIds.size!=0">
+            and (a.store_id in
+            <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
+                #{storeId}
+            </foreach>
+            or a.store_id is null)
+        </if>
+    </select>
+    <!--查询当日上新车辆数-->
+    <select id="selectDayCarCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT count(t1.id)
+        FROM car_auto t1
+        INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
+        INNER JOIN car_auto_auction t3 ON t1.auto_auction_id=t3.id
+        WHERE t3.auction_type='1' and (t1.status = '6' or t1.status = '7')
         AND date_format(NOW(), '%Y-%m-%d') = date_format(t1.publish_time, '%Y-%m-%d')
-      </if>
-    </if>
-    ORDER BY t3.auction_start_time ASC
-    <if test="startRowNum!=null">
-      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
-    </if>
-  </select>
+        <if test="cityId !=null">
+            AND t1.region_id = #{cityId}
+        </if>
+        <if test="cityIds !=null">
+            AND t1.region_id in
+            <foreach collection="cityIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
 
-  <!--根据条件查询线上拍的车辆总数量-->
-  <select id="selectOnlineCarCount" resultType="java.lang.Integer" parameterType="java.util.Map">
-    SELECT count(t1.id)
-    FROM car_auto t1
-    INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
-    INNER JOIN car_auto_auction t3 ON t1.auto_auction_id=t3.id
-    WHERE t3.auction_type='1' and (t1.status = '6' or t1.status = '7')
-    <if test="clientType=='app'">
-      <!--手机端查看过滤掉结束时间已过的车-->
-      AND t3.auction_end_time <![CDATA[ > ]]> NOW()
-    </if>
-    <if test="storeId!=null">
-      AND t1.store_id=#{storeId}
-    </if>
-    <if test="carName!=null">
-      AND t1.auto_info_name LIKE CONCAT(CONCAT('%', #{carName}),'%')
-    </if>
-    <if test="brandId!=null">
-      AND t2.auto_brand=#{brandId}
-    </if>
-    <if test="regionId!=null and regionId!=''">
-      AND t1.region_id=#{regionId}
-    </if>
-    <if test="regionIds!=null">
-      AND t1.region_id in 
-      <foreach collection="regionIds" item="item" open="(" separator="," close=")">
-        #{item}
-      </foreach>
-    </if>
-    <if test="grade!=null">
-      AND concat(t1.report_colligation_ranks,t1.report_servicing_ranks)=#{grade}
-    </if>
-    <if test="carAge1!=null">
-      AND YEAR(now())-YEAR(t2.begin_register_date) ${carAge1}
-    </if>
-    <if test="carAge2!=null">
-      AND YEAR(now())-YEAR(t2.begin_register_date) ${carAge2}
-    </if>
-    <if test="status!=null">
-      <!--正在竞拍-->
-      <if test="status=='1'.toString()">
-        AND  t1.status = '7'
-      </if>
-      <!--即将开始-->
-      <if test="status=='2'.toString()">
-        AND t1.status = '6'
-      </if>
-      <!--今日上新-->
-      <if test="status=='3'.toString()">
-        AND date_format(NOW(), '%Y-%m-%d') = date_format(t1.publish_time, '%Y-%m-%d')
-      </if>
-    </if>
-  </select>
-<!--查询用户最新发布的车辆-->
-  <select id="selectMyLastAuto" resultMap="BaseResultMap" parameterType="java.util.Map">
-    select
-    <include refid="Base_Column_List" />
-    ,t2.auction_type
-    from car_auto t1
-    LEFT JOIN car_auto_auction t2 ON t2.id=t1.auto_auction_id
-    WHERE t1.status != '0'
-      <if test="createUser!=null and createUser!=''">
-        AND t1.create_user = #{createUser}
-      </if>
-      <if test="status!=null and status!=''">
-        AND t1.status = #{status}
-      </if>
-    ORDER BY t1.create_time DESC
-    limit 0,1
-  </select>
-  <!--根据条件查询发拍的车辆列表-->
-  <select id="selectHairShotCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
-    select
-      t1.`status`,
-      t1.main_photo,
-      t1.auto_info_name,
-      t2.starting_price,
-      t3.transaction_fee,
-      t3.create_time,
-      t4.user_name AS publish_user_name,
-      t1.create_time AS publish_time,
-      t2.auction_end_time,
-      t2.auction_start_time,
-      t1.id,
-      t1.car_auto_no,
-      t8.msg logMsg
-    from car_auto t1
-    left join car_auto_auction t2 on t2.id = t1.auto_auction_id
-    left join car_order t3 on t3.auto_auction_id = t1.auto_auction_id
-    left join car_manager_user t4 on t1.create_user = t4.id
-    LEFT JOIN (
-    SELECT
-    t5.msg,
-    t5.time,
-    t5.auto_id,
-    t5.`status`
-    FROM
-    car_auto_log t5
-    INNER JOIN
-      (SELECT MAX(t6.time) time,t6.auto_id FROM car_auto_log t6 GROUP BY t6.auto_id) t7
-        ON t7.auto_id = t5.auto_id AND t7.time=t5.time  WHERE t5.status='3'
-    ORDER BY t5.time desc
-      ) t8 ON t1.id = t8.auto_id
-    WHERE t1.status != '0' AND ((t1.status='1' AND t1.create_user=#{managerId}) OR t1.status != '1')
-    <if test="storeId!=null">
-      AND t1.store_id=#{storeId}
-    </if>
-    <if test="departmentId != null">
-      AND t4.department_id=#{departmentId}
-    </if>
-    <if test="autoInfoName!=null">
-      AND (t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%') OR t1.car_auto_no = #{autoInfoName})
-    </if>
-    <if test="status != null">
-      <if test="status == '1'.toString()">
-        AND (t1.status = '6' OR t1.status = '7')
-        ORDER BY t2.auction_start_time DESC
-      </if>
-      <if test="status == '2'.toString()">
-        AND (t1.status = '16' OR t1.status = '17')
-      </if>
-      <if test="status == '3'.toString()">
-        AND (t1.status = '1' OR t1.status = '2' OR t1.status = '3' OR t1.status = '4' OR t1.status = '5')
-      </if>
-      <if test="status == '4'.toString()">
-        AND (t1.status = '8' OR t1.status = '9' OR t1.status = '10' OR t1.status = '11' OR t1.status = '12' OR t1.status = '14' OR t1.status = '15')
-      </if>
-      <if test="status == '5'.toString()">
-        AND (t1.status = '18' OR t1.status = '19')
-      </if>
-      <if test="status == '6'.toString()">
-        AND (t1.status = '1' OR t1.status = '3' OR t1.status = '18' OR t1.status = '19')
-      </if>
-      <if test="status != '1'.toString()">
-        order by t1.update_time desc
-      </if>
-    </if>
-    <if test="status == null">
-      order by t1.create_time desc
-    </if>
-    <if test="startRowNum!=null">
-      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
-    </if>
-  </select>
+    <select id="selectRetailForExample" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        t1.id,
+        t1.main_photo,
+        t1.auto_info_name,
+        t2.create_date as "create_time"
+        from car_auto t1
+        inner join car_order_retail t2 on t1.id = t2.car_id
+        inner join car_auto_auction caa on caa.id = t1.auto_auction_id
+        <if test="managerRole != null and managerRole != ''">
+            inner join car_manager_user cmu on cmu.id = t1.create_user
+        </if>
+        <where>
+            t1.sale_flag = '1'
+            <choose>
+                <when test="managerRole != null and managerRole != ''">
+                    and cmu.department_id = #{departmentId}
+                </when>
+                <otherwise>
+                    and t2.create_user = #{userId}
+                </otherwise>
+            </choose>
+            <if test="autoInfoName != null and autoInfoName != ''">
+                t1.auto_info_name = #{autoInfoName}
+            </if>
+        </where>
+        order by t2.create_date desc
+        <if test="startRowNum!=null and endRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
 
-  <!--根据条件查询线发拍的车辆数量-->
-  <select id="selectHairShotCarCount" resultType="java.lang.Integer" parameterType="java.util.Map">
-    select
-       count(1)
-    from car_auto t1
-    left join car_auto_auction t2 on t2.id = t1.auto_auction_id
-    left join car_order t3 on t3.auto_auction_id = t1.auto_auction_id
-    left join car_manager_user t4 on t1.create_user = t4.id
-    WHERE t1.status != '0' AND ((t1.status='1' AND t1.create_user=#{managerId}) OR t1.status != '1')
-    <if test="storeId!=null">
-      AND t1.store_id=#{storeId}
-    </if>
-    <if test="departmentId != null">
-      AND t4.department_id=#{departmentId}
-    </if>
-    <if test="autoInfoName!=null">
-      AND (t1.auto_info_name LIKE CONCAT(CONCAT('%', #{autoInfoName}),'%') OR t1.car_auto_no = #{autoInfoName})
-    </if>
-    <if test="status != null">
-      <if test="status == '1'.toString()">
-        AND (t1.status = '6' OR t1.status = '7')
-      </if>
-      <if test="status == '2'.toString()">
-        AND (t1.status = '16' OR t1.status = '17')
-      </if>
-      <if test="status == '3'.toString()">
-        AND (t1.status = '1' OR t1.status = '2' OR t1.status = '3' OR t1.status = '4' OR t1.status = '5')
-      </if>
-      <if test="status == '4'.toString()">
-        AND (t1.status = '8' OR t1.status = '9' OR t1.status = '10' OR t1.status = '11' OR t1.status = '12' OR t1.status = '14' OR t1.status = '15')
-      </if>
-      <if test="status == '5'.toString()">
-        AND (t1.status = '18' OR t1.status = '19')
-      </if>
-      <if test="status == '6'.toString()">
-        AND (t1.status = '1' OR t1.status = '3' OR t1.status = '18' OR t1.status = '19')
-      </if>
-    </if>
-  </select>
+    <select id="selectRetailForCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        count(t1.id)
+        from car_auto t1
+        inner join car_order_retail t2 on t1.id = t2.car_id
+        <where>
+            <choose>
+                <when test="managerRole != null and managerRole != ''">
+                    and t1.store_id = #{departmentId}
+                </when>
+                <otherwise>
+                    and t2.create_user = #{userId}
+                </otherwise>
+            </choose>
+            <if test="autoInfoName != null and autoInfoName != ''">
+                t1.auto_info_name like '%{autoInfoName}%'
+            </if>
+        </where>
+    </select>
 
-  <!--查询可以参与现场拍的车辆 Author 付陈林，2018-3-28-->
-  <select id="getLocaleAuctionCar" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select
-    t1.id,
-    t1.car_auto_no,
-    t1.auto_info_name,
-    t2.starting_price,
-    t2.reserve_price,
-    t3.begin_register_date,
-    t1.source_type,
-    t1.auction_num,
-    t1.publish_user_name,
-    t2.auction_type,
-    t3.license_number,
-    t1.store_name storeName
-    from car_auto t1
-    left join car_auto_auction t2 on t2.id=t1.auto_auction_id
-    left join car_auto_info_detail t3 on t3.auto_id=t1.id
-    where t2.auction_type='2' and t1.status='5' AND t1.status != '0'
-    <if test="searchParam!=null">
-      AND (t1.auto_info_name like CONCAT(CONCAT('%', #{searchParam}),'%') or t1.car_auto_no like CONCAT(CONCAT('%', #{searchParam}),'%'))
-    </if>
-  </select>
-
-  <!--根据参数查询所有的车辆列表 zhangzijuan-->
-  <select id="getAllCarAutoList" resultMap="BaseResultMap" parameterType="java.util.Map">
-    SELECT
-    a.id,
-    a.auto_info_name,
-    a.source_type,
-    a.publish_time,
-    a.publish_user_name,
-    a.publish_user_mobile,
-    a.report_colligation_ranks,
-    a.report_servicing_ranks,
-    a.`status`,
-    a.car_auto_no,
-    a.main_photo,
-    a.if_new,
-    a.create_time,
-    a.auction_num,
-    d.vin,
-    d.engine_capacity,
-    d.engine_capacity_unit,
-    d.vehicle_attribution_city_cn,
-    d.environment_cn,
-    d.oil_supply_system,
-    d.transmission,
-    d.mileage,
-    d.manufacture_date,
-    d.begin_register_date,
-    d.license_number,
-    d.car_nature,
-    aa.owner_price,
-    d.use_nature,
-    d.is_modification,
-    d.original_price,
-    aa.starting_price,
-    aa.reserve_price,
-    aa.service_price,
-    aa.auction_end_time,
-    aa.auction_type,
-    aa.if_agent,
-    mu.user_name AS create_user_name,
-    au.start_time,
-    au.title,
-    cs.simple_name AS carStoreNme,
-    co.transaction_fee,
-    co.service_fee,
-    co.agent_fee,
-    aa.top_bid_price AS maxBidFee,
-    co.`status` AS orderStatus,
-    cas.status_name,
-    aa.owner_name,
-    aa.owner_mobile,
-    aa.top_bid_time bid_time,
-    ar.mobile,
-    ar.`name`,
-    aa.expected_feedback_time,
-    aa.auction_start_time,
-    a.transfer_flag,
-    r.name AS cityName,
-    ar.user_num as userNum,
-    ret.sales_consultant as salesConsultant,
-    ret.transaction_fee as transactionFee
-    FROM car_auto a
-    LEFT JOIN car_auto_info_detail d ON d.auto_id=a.id
-    LEFT JOIN car_auto_auction aa on aa.id=a.auto_auction_id
-    LEFT JOIN (
-      SELECT la.title,la.start_time,ac.id,ac.car_id,ac.auto_auction_id,la.city_id
-      FROM
-      car_locale_auction_car ac
-      INNER  JOIN car_locale_auction la on la.id=ac.auction_id
-    )au ON a.auto_auction_id=au.auto_auction_id
-    LEFT JOIN car_store cs on cs.id=a.store_id
-    LEFT JOIN car_relate_status cas on (cas.status=a.status AND cas.type='2')
-    LEFT JOIN car_manager_user mu on mu.id=a.create_user
-    LEFT JOIN car_order  co on (co.auto_auction_id=a.auto_auction_id and co.status!='8')
-    LEFT JOIN wt_app_user ar on ar.id=aa.top_pricer_id
-    LEFT JOIN wt_region r on au.city_id = r.id
-    LEFT JOIN car_order_retail ret on ret.car_id = a.id and ret.sales_type = '1'
-    WHERE a.status != '0' AND ((a.status='1' AND a.create_user=#{managerId}) OR a.status>'1')
-    <if test="storeId!=null and storeId!=''">
-      AND a.store_id=#{storeId}
-    </if>
-    <if test="sourceType!=null and sourceType!=''">
-      AND a.source_type=#{sourceType}
-    </if>
-    <if test="ifNew!=null and ifNew!=''">
-      AND a.if_new=#{ifNew}
-    </if>
-    <if test="status!=null and status!=''">
-      AND a.status=#{status}
-    </if>
-    <if test="saleFlag!= null and saleFlag!=''">
-      AND a.sale_flag = #{saleFlag}
-    </if>
-    <if test="auctionStartTimeBegin != null and auctionStartTimeBegin !=''">
-      AND aa.auction_start_time &gt;= #{auctionStartTimeBegin}
-    </if>
-    <if test="auctionStartTimeEnd != null and auctionStartTimeEnd !=''">
-      AND aa.auction_start_time &lt;= #{auctionStartTimeEnd}
-    </if>
-    <if test="cityId != null and cityId != ''">
-      AND au.city_id = #{cityId}
-    </if>
-    <if test="title !=null and title != ''">
-      AND au.title = #{title}
-    </if>
-    <if test="salesStartDate != null and salesStartDate != ''">
-      AND ret.sales_date &gt;=#{salesStartDate}
-    </if>
-    <if test="salesEndDate != null and salesEndDate != ''">
-      AND ret.sales_date &lt;=#{salesEndDate}
-    </if>
-    <if test="auctionType!=null and auctionType!=''">
-      AND aa.auction_type=#{auctionType}
-    </if>
-    <if test="startTime!=null and startTime!=''">
-      AND a.create_time &gt;= #{startTime}
-    </if>
-    <if test="endTime!=null and endTime!=''">
-      AND  date_format(a.create_time, '%Y-%m-%d') &lt;= #{endTime}
-    </if>
-    <if test="carAutoNo!=null and carAutoNo!=''">
-      AND a.car_auto_no = #{carAutoNo}
-    </if>
-    <if test="isEdit!=null and isEdit!=''">
-      AND (a.status='1' OR a.status='3')
-    </if>
-    <if test="vin!=null and vin!=''">
-      AND d.vin like CONCAT(CONCAT('%', #{vin}),'%')
-    </if>
-    <if test="licenseNumber!=null and licenseNumber!=''">
-      AND d.license_number like CONCAT(CONCAT('%', #{licenseNumber}),'%')
-    </if>
-    <if test="autoInfoName!=null and autoInfoName!=''">
-      AND a.auto_info_name like CONCAT(CONCAT('%', #{autoInfoName}),'%')
-    </if>
-    <if test="carAutoNo!=null and carAutoNo!=''">
-      AND a.car_auto_no like CONCAT(CONCAT('%', #{carAutoNo}),'%')
-    </if>
-    <if test="createUserName!=null and createUserName!=''">
-      AND  mu.user_name like CONCAT(CONCAT('%', #{createUserName}),'%')
-    </if>
-    <if test="storeIds != null and storeIds.size!=0">
-      and (a.store_id in
-      <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
-        #{storeId}
-      </foreach>
-      or a.store_id is null)
-    </if>
---     GROUP BY a.id
-    ORDER BY a.update_time DESC,a.create_time DESC
-    <if test="startRowNum!=null and startRowNum!=null">
-      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
-    </if>
-  </select>
-  <!--根据参数查询所有的车辆数目 zhangzijuan-->
-  <select id="getAllCarAutoCount" resultType="java.lang.Integer" parameterType="java.util.Map">
-    SELECT count(a.id)
-    FROM car_auto a
-    INNER JOIN car_auto_info_detail d ON d.auto_id=a.id
-    LEFT JOIN (
-      SELECT la.title,la.start_time,ac.id,ac.car_id,ac.auto_auction_id,la.city_id
-      FROM
-      car_locale_auction_car ac
-      INNER  JOIN car_locale_auction la on la.id=ac.auction_id
-    )au ON a.auto_auction_id=au.auto_auction_id
-    LEFT JOIN car_auto_auction aa on aa.id=a.auto_auction_id
-    LEFT JOIN car_manager_user mu on mu.id=a.create_user
-    LEFT JOIN car_order_retail ret on ret.car_id = a.id and ret.sales_type = '1'
-    WHERE a.status != '0' AND ((a.status='1' AND a.create_user=#{managerId}) OR a.status>'1')
-    <if test="storeId!=null and storeId!=''">
-      AND a.store_id=#{storeId}
-    </if>
-    <if test="sourceType!=null and sourceType!=''">
-      AND a.source_type=#{sourceType}
-    </if>
-    <if test="ifNew!=null and ifNew!=''">
-      AND a.if_new=#{ifNew}
-    </if>
-    <if test="saleFlag!= null and saleFlag!=''">
-      AND a.sale_flag = #{saleFlag}
-    </if>
-    <if test="auctionStartTimeBegin != null and auctionStartTimeBegin !=''">
-      AND aa.auction_start_time &gt;= #{auctionStartTimeBegin}
-    </if>
-    <if test="auctionStartTimeEnd != null and auctionStartTimeEnd !=''">
-      AND aa.auction_start_time &lt;= #{auctionStartTimeEnd}
-    </if>
-    <if test="cityId != null and cityId != ''">
-      AND au.city_id = #{cityId}
-    </if>
-    <if test="salesStartDate != null and salesStartDate != ''">
-      AND ret.sales_date &gt;=#{salesStartDate}
-    </if>
-    <if test="salesEndDate != null and salesEndDate != ''">
-      AND ret.sales_date &lt;=#{salesEndDate}
-    </if>
-    <if test="status!=null and status!=''">
-      AND a.status=#{status}
-    </if>
-    <if test="auctionType!=null and auctionType!=''">
-      AND aa.auction_type=#{auctionType}
-    </if>
-    <if test="startTime!=null and startTime!=''">
-      AND a.create_time &gt;= #{startTime}
-    </if>
-    <if test="endTime!=null and endTime!=''">
-      AND  date_format(a.create_time, '%Y-%m-%d')&lt;= #{endTime}
-    </if>
-    <if test="carAutoNo!=null and carAutoNo!=''">
-      AND a.car_auto_no = #{carAutoNo}
-    </if>
-    <if test="isEdit!=null and isEdit!=''">
-      AND (a.status='1' OR a.status='3')
-    </if>
-    <if test="vin!=null and vin!=''">
-      AND d.vin like CONCAT(CONCAT('%', #{vin}),'%')
-    </if>
-    <if test="licenseNumber!=null and licenseNumber!=''">
-      AND d.license_number like CONCAT(CONCAT('%', #{licenseNumber}),'%')
-    </if>
-    <if test="autoInfoName!=null and autoInfoName!=''">
-      AND a.auto_info_name like CONCAT(CONCAT('%', #{autoInfoName}),'%')
-    </if>
-    <if test="carAutoNo!=null and carAutoNo!=''">
-      AND a.car_auto_no like CONCAT(CONCAT('%', #{carAutoNo}),'%')
-    </if>
-    <if test="createUserName!=null and createUserName!=''">
-      AND  mu.user_name like CONCAT(CONCAT('%', #{createUserName}),'%')
-    </if>
-    <if test="storeIds != null and storeIds.size!=0">
-      and (a.store_id in
-      <foreach item="storeId" index="index" collection="storeIds" open="(" separator="," close=")">
-        #{storeId}
-      </foreach>
-      or a.store_id is null)
-    </if>
-  </select>
-  <!--查询当日上新车辆数-->
-  <select id="selectDayCarCount" resultType="java.lang.Integer" parameterType="java.util.Map">
-    SELECT count(t1.id)
-    FROM car_auto t1
-    INNER JOIN car_auto_info_detail t2 on t1.id=t2.auto_id
-    INNER JOIN car_auto_auction t3 ON t1.auto_auction_id=t3.id
-    WHERE t3.auction_type='1' and (t1.status = '6' or t1.status = '7')
-    AND date_format(NOW(), '%Y-%m-%d') = date_format(t1.publish_time, '%Y-%m-%d')
-    <if test="cityId !=null">
-      AND t1.region_id = #{cityId}
-    </if>
-    <if test="cityIds !=null">
-      AND t1.region_id in
-      <foreach collection="cityIds" index="index" item="item" open="(" separator="," close=")">
-        #{item}
-      </foreach>
-    </if>
-  </select>
-
-  <select id="selectRetailForExample" parameterType="java.util.Map" resultMap="BaseResultMap">
-    select
-    t1.id,
-    t1.main_photo,
-    t1.auto_info_name,
-    t2.create_date as "create_time"
-    from car_auto t1
-    inner join car_order_retail t2 on t1.id = t2.car_id
-    inner join car_auto_auction caa on caa.id = t1.auto_auction_id
-    <if test="managerRole != null and managerRole != ''">
-      inner join car_manager_user cmu on cmu.id = t1.create_user
-    </if>
-    <where>
-      t1.sale_flag = '1'
-      <choose>
-        <when test="managerRole != null and managerRole != ''">
-          and cmu.department_id  = #{departmentId}
-        </when>
-        <otherwise>
-          and t2.create_user = #{userId}
-        </otherwise>
-      </choose>
-      <if test="autoInfoName != null and autoInfoName != ''">
-        t1.auto_info_name = #{autoInfoName}
-      </if>
-    </where>
-    order by t2.create_date desc
-    <if test="startRowNum!=null and endRowNum!=null">
-      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
-    </if>
-  </select>
-
-  <select id="selectRetailForCount" parameterType="java.util.Map" resultType="java.lang.Integer">
-    select
-      count(t1.id)
-    from car_auto t1
-    inner join car_order_retail t2 on t1.id = t2.car_id
-    <where>
-      <choose>
-        <when test="managerRole != null and managerRole != ''">
-          and t1.store_id = #{departmentId}
-        </when>
-        <otherwise>
-          and t2.create_user = #{userId}
-        </otherwise>
-      </choose>
-      <if test="autoInfoName != null and autoInfoName != ''">
-        t1.auto_info_name like '%{autoInfoName}%'
-      </if>
-    </where>
-  </select>
-
-  <select id="selectCountById" resultType="java.lang.Integer" parameterType="java.lang.Long">
+    <select id="selectCountById" resultType="java.lang.Integer" parameterType="java.lang.Long">
       SELECT
 	          count(1)
         FROM
@@ -987,10 +1007,10 @@
             1 = 1
   </select>
 
-  <select id="selectUserOrderList" resultMap="BaseResultMap" parameterType="java.util.Map">
-    SELECT *
-    FROM
-    (
+    <select id="selectUserOrderList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT *
+        FROM
+        (
         SELECT
         t1.auto_info_name,
         t1.main_photo,
