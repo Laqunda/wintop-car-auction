@@ -5,6 +5,7 @@ import com.wintop.ms.carauction.entity.Criteria;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ICarAutoDetectionDataReadDao {
     int countByExample(Criteria example);
@@ -22,4 +23,11 @@ public interface ICarAutoDetectionDataReadDao {
      * @return
      */
     List<CarAutoDetectionData> selectByAutoId(@Param("autoId")Long autoId);
+
+    /**
+     * 根据条件查询记录
+     * @param param
+     * @return
+     */
+    List<CarAutoDetectionData> selectByCondition(Map<String, Object> param);
 }

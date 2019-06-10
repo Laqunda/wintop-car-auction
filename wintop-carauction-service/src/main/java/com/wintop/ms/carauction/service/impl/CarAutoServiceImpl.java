@@ -14,6 +14,7 @@ import com.wintop.ms.carauction.service.ICarAutoAuctionService;
 import com.wintop.ms.carauction.service.ICarAutoService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import com.wintop.ms.carauction.util.utils.RedisAutoManager;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
@@ -25,6 +26,10 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
 
 @Service
 public class CarAutoServiceImpl implements ICarAutoService {
@@ -70,6 +75,16 @@ public class CarAutoServiceImpl implements ICarAutoService {
     private CarAssessModel carAssessModel;
     @Autowired
     private CarAutoAuctionModel carAutoAuctionModel;
+    @Autowired
+    private TblAuctionLogModel tblAuctionLogModel;
+    @Autowired
+    private CarAssessLogModel carAssessLogModel;
+    @Autowired
+    private CarAutoDetectionClassModel carAutoDetectionClassModel;
+    @Autowired
+    private CarAutoDetectionDataModel carAutoDetectionDataModel;
+    @Autowired
+    private CarAutoDetectionDataPhotoModel carAutoDetectionDataPhotoModel;
 
     private static Map<String,  List<Integer>> auctionTypeMap = getAuctionTypeMap();
 
@@ -974,6 +989,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
     /**
      * 根据车辆id查询起拍价和保留价
      */
+    @Override
     public CarAutoAuction  selectCarInfoById(JSONObject object){
        return autoAuctionModel.selectAutoAuction(object.getLong("carId"));
     }
@@ -1019,7 +1035,43 @@ public class CarAutoServiceImpl implements ICarAutoService {
         // 竞拍信息
         CarAutoAuction carAutoAuction = carAutoAuctionModel.selectAuctionInformation(carAuto.getId());
         carAuto.setCarAutoAuction(carAutoAuction);
+        // 出价列表
+        List<TblAuctionLog> tblAuctionLogList = tblAuctionLogModel.selectByExample(Collections.singletonMap("carId", carAuto.getId()));
+        carAuto.setTblAuctionLog(tblAuctionLogList);
+        // 轨迹列表
+        CarAssessLog carAssessLog = new CarAssessLog();
+        carAssessLog.setAutoId(carAuto.getId());
+        List<CarAssessLog> carAssessLogList = carAssessLogModel.selectCarAssessLogList(carAssessLog);
+        carAuto.setCarAssessLogList(carAssessLogList);
+        // 检测信息
+        List<CarAutoDetectionClass> clazzList = carAutoDetectionClassModel.selectByAll();
+        Map<Long, String> topicMap = clazzList.stream()
+                .filter(clazz -> Long.valueOf(0L).equals(clazz.getpId()))
+                .collect(Collectors.toMap(CarAutoDetectionClass::getId, CarAutoDetectionClass::getClassName));
+        Map<String, List<CarAutoDetectionClass>> classList = clazzList.stream().filter(clazz -> Long.compare(clazz.getpId(), 0L) > 0).collect(groupingBy(clazz -> topicMap.get(clazz.getpId())));
 
+        List<CarAutoDetectionData> dataList = carAutoDetectionDataModel.selectByCondition(Collections.singletonMap("autoId", carAuto.getId()));
+        List<CarAutoDetectionDataPhoto> dataPhotoList = carAutoDetectionDataPhotoModel.selectByAll(Collections.singletonMap("autoId", carAuto.getId()));
+
+        classList.forEach((key,value)->{
+            List<CarAutoDetectionClass> detectionClassList = classList.get(key);
+            for (CarAutoDetectionClass clazz : detectionClassList) {
+                for (CarAutoDetectionData data : dataList) {
+                    if (clazz.getId().equals(data.getClassId())) {
+                        clazz.setProblemDescription(data.getProblemDescription());
+                    }
+                }
+                for (CarAutoDetectionDataPhoto photo : dataPhotoList) {
+                    if (clazz.getId().equals(photo.getClassId())) {
+                        clazz.setPhotoUrl(photo.getPhotoUrl());
+                    }
+                }
+            }
+        });
+
+        carAuto.setClassList(classList);
         return carAuto;
     }
+
+
 }

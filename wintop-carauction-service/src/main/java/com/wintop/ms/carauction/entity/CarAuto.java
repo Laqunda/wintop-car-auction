@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class CarAuto implements Serializable {
 
@@ -221,6 +222,10 @@ public class CarAuto implements Serializable {
     private CarAssess carAssess;
     // 竞拍信息
     private CarAutoAuction carAutoAuction;
+    // 轨迹列表
+    private List<CarAssessLog> carAssessLogList;
+    // 检测信息标题
+    Map<String, List<CarAutoDetectionClass>> classList;
 
     public String getMaxPriceUserId() {
         return maxPriceUserId;
@@ -1239,5 +1244,21 @@ public class CarAuto implements Serializable {
 
     public void setCarAutoAuction(CarAutoAuction carAutoAuction) {
         this.carAutoAuction = carAutoAuction;
+    }
+
+    public List<CarAssessLog> getCarAssessLogList() {
+        return carAssessLogList;
+    }
+
+    public void setCarAssessLogList(List<CarAssessLog> carAssessLogList) {
+        this.carAssessLogList = carAssessLogList;
+    }
+
+    public Map<String, List<CarAutoDetectionClass>> getClassList() {
+        return classList;
+    }
+
+    public void setClassList(Map<String, List<CarAutoDetectionClass>> classList) {
+        this.classList = classList;
     }
 }
