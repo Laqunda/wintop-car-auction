@@ -188,4 +188,9 @@ public interface ICarLocaleAuctionService {
      * @return
      */
     ServiceResult<List<CarLocaleAuction>> queryAuctionListByParams(Map<String, Object> map);
+
+    /**
+     * 获取场次拍卖费用信息
+     */
+    ServiceResult<Map<String,Object>> selectLocaleAuctionInfo(CarLocaleAuction carLocaleAuction);
 }

@@ -123,7 +123,9 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />,
-    t2.auction_start_time
+    t2.auction_start_time,
+    t2.starting_price,
+    t2.reserve_price
     FROM
     car_auto t1
     left join car_auto_auction t2  on t1.auto_auction_id = t2.id
@@ -1021,13 +1023,13 @@
                SELECT count(t1.id)
                  FROM car_auto t1
           INNER JOIN car_auto_auction caa ON caa.id = t1.auto_auction_id
-          INNER JOIN car_manager_user cmu ON cmu.id = t1.create_user
           <if test="auctionType == '1'.toString()">
-            INNER JOIN car_store cs ON cs.id = cmu.department_id
+            INNER JOIN car_store cs ON cs.id = t1.store_id
             INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = cs.region_id
           </if>
           <if test="auctionType == '2'.toString()">
-            INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = cmu.department_id
+            INNER JOIN car_center_store ccs ON ccs.store_id = t1.store_id
+            INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = ccs.center_id
           </if>
                 WHERE (t1.`status` = 2 OR t1.`status` = 4 )
                   and caa.auction_type = #{auctionType}
@@ -1049,11 +1051,12 @@
     INNER JOIN car_auto_auction caa ON caa.id = t1.auto_auction_id
     INNER JOIN car_manager_user cmu ON cmu.id = t1.create_user
     <if test="auctionType == '1'.toString()">
-      INNER JOIN car_store cs ON cs.id = cmu.department_id
+      INNER JOIN car_store cs ON cs.id = t1.store_id
       INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = cs.region_id
     </if>
     <if test="auctionType == '2'.toString()">
-      INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = cmu.department_id
+      INNER JOIN car_center_store ccs ON ccs.store_id = t1.store_id
+      INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = ccs.center_id
     </if>
     WHERE (t1.`status` = 2 OR t1.`status` = 4 )
     and caa.auction_type = #{auctionType}
