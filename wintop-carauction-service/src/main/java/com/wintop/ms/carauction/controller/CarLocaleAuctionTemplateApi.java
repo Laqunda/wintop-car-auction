@@ -287,17 +287,14 @@ public class CarLocaleAuctionTemplateApi {
                 if(carAuctions.size()>0){
                     //讲今天开场的场次与主题模板作比较，开场的和未开场的返回
                     for(CarLocaleAuction carAuction: carAuctions){
+                        if(templates == null || templates.size() < 1){
+                            dataList.add(getMap(carAuction));
+                        }
                         for(int t = 0 ; t < templates.size(); t++){
                             //如果是主题id相同 或者 匹配到最后没有相同的主题id
                             if(carAuction.getTemplateId().equals(templates.get(t).getId())
                             || templates.size() == t){
-                                Map<String,Object> map = new HashMap<>();
-                                map.put("id",carAuction.getId());
-                                map.put("templateId",carAuction.getTemplateId());
-                                map.put("title",carAuction.getTitle());
-                                map.put("localStartTime",new SimpleDateFormat("HH:mm").format(carAuction.getStartTime()));
-                                map.put("poster",carAuction.getPoster());
-                                map.put("status",carAuction.getStatus());
+                                Map<String,Object> map = getMap(carAuction);
                                 //如果是竞拍结束的场次
                                 if(carAuction.getStatus().equals("4")){
                                     endList.add(map);
@@ -346,5 +343,16 @@ public class CarLocaleAuctionTemplateApi {
             result.setError("-1","异常");
         }
         return result;
+    }
+
+    private Map<String,Object> getMap(CarLocaleAuction carAuction){
+        Map<String,Object> map = new HashMap<>();
+        map.put("id",carAuction.getId());
+        map.put("templateId",carAuction.getTemplateId());
+        map.put("title",carAuction.getTitle());
+        map.put("localStartTime",new SimpleDateFormat("HH:mm").format(carAuction.getStartTime()));
+        map.put("poster",carAuction.getPoster());
+        map.put("status",carAuction.getStatus());
+        return  map;
     }
 }
