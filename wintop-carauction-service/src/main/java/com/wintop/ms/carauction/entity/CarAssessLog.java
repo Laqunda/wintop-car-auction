@@ -106,9 +106,11 @@ public class CarAssessLog extends BaseEntity {
         this.autoInfoName = autoInfoName;
     }
 
+    @Override
     public Date getCreateTime() {
         return createTime;
     }
+    @Override
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
