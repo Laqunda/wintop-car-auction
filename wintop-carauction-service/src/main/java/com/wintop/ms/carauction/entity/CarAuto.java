@@ -229,6 +229,8 @@ public class CarAuto implements Serializable {
 
     /*订单id*/
     private String orderId;
+    /*零售id*/
+    private String retailId;
 
 
     private String managerEvaluate;
@@ -1281,5 +1283,13 @@ public class CarAuto implements Serializable {
 
     public void setManagerEvaluate(String managerEvaluate) {
         this.managerEvaluate = managerEvaluate;
+    }
+
+    public String getRetailId() {
+        return retailId;
+    }
+
+    public void setRetailId(String retailId) {
+        this.retailId = retailId;
     }
 }

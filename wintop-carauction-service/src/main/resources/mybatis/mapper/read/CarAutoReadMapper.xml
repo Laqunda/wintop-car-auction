@@ -97,6 +97,7 @@
         <result column="time" property="time" jdbcType="TIMESTAMP"/>
         <result column="orderId" property="orderId" />
         <result column="manager_evaluate" property="managerEvaluate" />
+        <result column="retail_id" property="retailId" />
 
     </resultMap>
     <sql id="Base_Column_List">
@@ -742,7 +743,8 @@
         r.name AS cityName,
         ar.user_num as userNum,
         ret.sales_consultant as salesConsultant,
-        ret.transaction_fee as transactionFee
+        ret.transaction_fee as transactionFee,
+        ret.id AS retail_id
         FROM car_auto a
         LEFT JOIN car_auto_info_detail d ON d.auto_id=a.id
         LEFT JOIN car_auto_auction aa on aa.id=a.auto_auction_id
