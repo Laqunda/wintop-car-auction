@@ -3,13 +3,16 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Splitter;
 import com.google.common.primitives.Longs;
+import com.wintop.ms.carauction.core.annotation.CurrentUser;
 import com.wintop.ms.carauction.core.config.ResultCode;
+import com.wintop.ms.carauction.core.entity.AppUser;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.service.ICarLocaleAuctionService;
 import com.wintop.ms.carauction.service.ICarLocaleAuctionTemplateService;
 import com.wintop.ms.carauction.service.ICarManagerUserService;
+import com.wintop.ms.carauction.service.IWtAppUserService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -59,6 +62,8 @@ public class CarLocaleAuctionTemplateApi {
     @Autowired
     private ICarLocaleAuctionService carLocaleAuctionService;
 
+    @Autowired
+    private IWtAppUserService appUserService;
     /**
      * 查询分页列表
      * @param obj
@@ -251,6 +256,13 @@ public class CarLocaleAuctionTemplateApi {
         ServiceResult<ListEntity<AuctionListEntity<Map<String,Object>>>> result = new ServiceResult<>();
         try {
             Map<String,Object> paramMap = new HashMap<>();
+            if(obj.getLong("userId") != null && !"".equals(obj.getLong("userId")+"")){
+                //获取会员所属组
+                WtAppUser appUser = appUserService.getUserInfoById(obj.getLong("userId")).getResult();
+                if(null != appUser.getGroupIds() && !"".equals(appUser.getGroupIds())){
+                    paramMap.put("groupIds",appUser.getGroupIds());
+                }
+            }
             if (StringUtils.isNotEmpty(obj.getString("regionId"))) {
                 String regionIds = obj.getString("regionId");
                 paramMap.put("regionIds", Splitter.on(",").splitToList(regionIds).stream().map(a-> Longs.tryParse(a)).collect(Collectors.toList()));

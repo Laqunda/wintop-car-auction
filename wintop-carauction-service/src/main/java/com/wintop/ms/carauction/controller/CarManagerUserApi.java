@@ -406,4 +406,40 @@ public class CarManagerUserApi {
         return result;
     }
 
+    /***
+     * 查询所有用户列表
+     * @return
+     */
+    @RequestMapping(value = "/selectAssessUserList",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<ListEntity<CarManagerUser>> selectAssessUserList(@RequestBody JSONObject obj) {
+        ServiceResult<ListEntity<CarManagerUser>> result = new ServiceResult<>();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("userId"), true);
+            if (managerUser != null) {
+                //平台用户查看所有，其它只查看自己店铺
+                if (1 != managerUser.getRoleTypeId()) {
+                    /*其他用户*/
+                    map.put("departmentId", managerUser.getDepartmentId());
+                    map.put("roleTypeId", managerUser.getRoleTypeId());
+                    map.put("roleId", managerUser.getRoleId());
+                }
+            }
+            int count = managerUserService.countByExample(map);
+            List<CarManagerUser> userList = managerUserService.selectByExample(map);
+            ListEntity<CarManagerUser> listEntity = new ListEntity<>(userList, count);
+            result.setResult(listEntity);
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("查询所有用户列表失败", e);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
 }

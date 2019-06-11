@@ -394,6 +394,9 @@
         #{item}
       </foreach>
     </if>
+    <if test="groupIds != null">
+      AND (find_in_set(#{groupIds} ,t1.region_id ) OR t1.region_id = '' OR t1.region_id IS NULL)
+    </if>
     <if test="title != null">
       AND t1.title like CONCAT(CONCAT('%', #{title}),'%')
     </if>
