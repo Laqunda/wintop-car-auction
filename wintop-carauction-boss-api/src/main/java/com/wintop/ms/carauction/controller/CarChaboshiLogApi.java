@@ -58,10 +58,12 @@ public class CarChaboshiLogApi {
     @PostMapping(value = "/list",produces="application/json; charset=UTF-8")
     @AuthUserToken
     @RequestAuth(value = false)
-    public ResultModel list(@RequestBody Map<String,Object> map) {
+    public ResultModel list(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) {
         if(map.get("page")==null || map.get("limit")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
+        map.put("userId",userId);
+        map.put("userType","2");
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carChaboshiLog/list"))
