@@ -263,8 +263,8 @@ public class CarLocaleAuctionTemplateApi {
                     paramMap.put("groupIds",appUser.getGroupIds());
                 }
             }
-            if (StringUtils.isNotEmpty(obj.getString("regionId"))) {
-                String regionIds = obj.getString("regionId");
+            if (StringUtils.isNotEmpty(obj.getString("regionIds"))) {
+                String regionIds = obj.getString("regionIds");
                 paramMap.put("regionIds", Splitter.on(",").splitToList(regionIds).stream().map(a-> Longs.tryParse(a)).collect(Collectors.toList()));
             }
             List<AuctionListEntity<Map<String,Object>>> list = new ArrayList<>();
