@@ -2,7 +2,12 @@ package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AppApiVersion;
+import com.wintop.ms.carauction.core.annotation.AuthUserToken;
+import com.wintop.ms.carauction.core.annotation.CurrentUser;
+import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.config.Constants;
+import com.wintop.ms.carauction.core.entity.AppUser;
+import com.wintop.ms.carauction.core.entity.CarManagerUser;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import org.apache.commons.beanutils.ConvertUtils;
@@ -56,10 +61,13 @@ public class CarLocaleAuctionApi {
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
-    public ResponseEntity<ResultModel> selectAuctionTotalList(@RequestHeader Map<String,String> headers,@RequestBody Map<String,Object> map) {
+    public ResponseEntity<ResultModel> selectAuctionTotalList( @CurrentUser AppUser user,@RequestHeader Map<String,String> headers, @RequestBody Map<String,Object> map) {
         map.put("clientType","app");
         Object version = headers.get("version");
         if ("2.0".equals(version + "")) {
+            if(null != user){
+                map.put("userId",user.getId());
+            }
             ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                     RequestEntity
                             .post(URI.create(Constants.ROOT+"/service/template/selectAuctionTotalList"))

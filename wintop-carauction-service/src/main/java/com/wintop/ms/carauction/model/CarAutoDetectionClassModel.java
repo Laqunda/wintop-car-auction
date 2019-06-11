@@ -35,6 +35,10 @@ public class CarAutoDetectionClassModel {
         return this.readDao.selectByExample(example);
     }
 
+    public List<CarAutoDetectionClass> selectByAll(){
+        return this.readDao.selectByAll();
+    }
+
     public int deleteByPrimaryKey(Long id) {
         return this.writeDao.deleteByPrimaryKey(id);
     }

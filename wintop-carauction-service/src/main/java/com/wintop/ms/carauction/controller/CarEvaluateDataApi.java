@@ -10,10 +10,11 @@ import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
-import com.wintop.ms.carauction.entity.CarAssess;
 import com.wintop.ms.carauction.entity.CarEvaluateData;
+import com.wintop.ms.carauction.entity.CarOrder;
 import com.wintop.ms.carauction.entity.ListEntity;
 import com.wintop.ms.carauction.service.ICarEvaluateDataService;
+import com.wintop.ms.carauction.service.ICarOrderService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -44,26 +45,42 @@ public class CarEvaluateDataApi {
 
     @Autowired
     private ICarEvaluateDataService carEvaluateDataService;
+    @Autowired
+    private ICarOrderService orderService;
 
     /**
      * 保存评价内容
+     *
      * @param obj
      * @return
      */
     @RequestMapping(value = "/insertCarEvaluateData",
-            method= RequestMethod.POST,
-            consumes="application/json; charset=UTF-8",
-            produces="application/json; charset=UTF-8")
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ServiceResult<Map<String,Object>> insertCarEvaluateData(@RequestBody JSONObject obj){
+    public ServiceResult<Map<String, Object>> insertCarEvaluateData(@RequestBody JSONObject obj) {
         logger.info("保存评估数据");
         CarEvaluateData carEvaluateData = new CarEvaluateData();
         if (StringUtils.isNotEmpty(obj.getString("objId"))) {
             carEvaluateData.setObjId(Longs.tryParse(obj.getString("objId")));
         }
+        /*3：买家已评 4：卖家已评*/
         if (StringUtils.isNotEmpty(obj.getString("type"))) {
             carEvaluateData.setType(Longs.tryParse(obj.getString("type")));
+            if ("3".equals(obj.getString("type"))) {
+                CarOrder order = new CarOrder();
+                order.setId(obj.getLong("objId"));
+                order.setUserEvaluate("1");
+                orderService.updateByIdSelective(order);
+            }
+            if ("4".equals(obj.getString("type"))) {
+                CarOrder order = new CarOrder();
+                order.setId(obj.getLong("objId"));
+                order.setManagerEvaluate("1");
+                orderService.updateByIdSelective(order);
+            }
         }
         if (StringUtils.isNotEmpty(obj.getString("star"))) {
             carEvaluateData.setStarLevel(BigDecimal.valueOf(Double.valueOf(obj.getString("star"))));
@@ -104,8 +121,8 @@ public class CarEvaluateDataApi {
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
             int count = carEvaluateDataService.count(param);
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
-            param.put("startRowNum",pageEntity.getStartRowNum());
-            param.put("endRowNum",pageEntity.getEndRowNum());
+            param.put("startRowNum", pageEntity.getStartRowNum());
+            param.put("endRowNum", pageEntity.getEndRowNum());
             List<CarEvaluateData> list = carEvaluateDataService.list(param);
             ListEntity<CarEvaluateData> listEntity = new ListEntity<>();
             listEntity.setList(list);
@@ -129,14 +146,14 @@ public class CarEvaluateDataApi {
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8")
-    public ServiceResult<Map<String,Object>> allList(@RequestBody JSONObject obj) {
-        ServiceResult<Map<String,Object>> result = null;
+    public ServiceResult<Map<String, Object>> allList(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String, Object>> result = null;
         try {
             result = new ServiceResult<>();
             Map param = JSONObject.toJavaObject(obj, Map.class);
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
             List<CarEvaluateData> list = carEvaluateDataService.list(param);
-            result.setResult(Collections.singletonMap("list",list));
+            result.setResult(Collections.singletonMap("list", list));
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {
             logger.info("查询评估列表", e);

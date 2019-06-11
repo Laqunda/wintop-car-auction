@@ -10,6 +10,8 @@ import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.entity.CarPriceExcel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.ExcelUtil;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -72,38 +74,49 @@ public class ImportCarPriceInfoApi {
             }
             int colNum = sheet.getRow(0).getLastCellNum();//获取Excel列数
             List<CarPriceExcel> carPriceExcels=new ArrayList<>();
-                //读取每一行，第一行为标题，从第二行开始
+            //读取每一行，第一行为标题，从第二行开始
             for(int r=1;r<rowNum;r++){
-                    Row row= sheet.getRow(r);
-                    if(row!=null){
-                        CarPriceExcel priceExcel=new CarPriceExcel();
-                        Field[] fields = priceExcel.getClass().getDeclaredFields();
-                        //遍历列 从下标第一列开始
-                        for (int i = 0; i < colNum; i++) {
-                            //装载obj
-                            Cell cell = row.getCell(i);
-                            if (null == cell) {
-                                cell = row.createCell(i);
-                            }
-                            cell.setCellType(Cell.CELL_TYPE_STRING);
-                            String value = null == cell.getStringCellValue()?"":cell.getStringCellValue();
-                            Field field = fields[i];
-                            String fieldName = field.getName();
-                            String methodName = "set"+fieldName.substring(0,1).toUpperCase()+fieldName.substring(1);
-                            Method setMethod = priceExcel.getClass().getMethod(methodName, new Class[]{String.class});
-                            setMethod.invoke(priceExcel, new Object[]{value});
+                Row row= sheet.getRow(r);
+                if(row!=null){
+                    CarPriceExcel priceExcel=new CarPriceExcel();
+                    Field[] fields = priceExcel.getClass().getDeclaredFields();
+                    //遍历列 从下标第一列开始
+                    for (int i = 0; i < colNum; i++) {
+                        //装载obj
+                        Cell cell = row.getCell(i);
+                        if (null == cell) {
+                            cell = row.createCell(i);
                         }
-                        carPriceExcels.add(priceExcel);
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                        String value = null == cell.getStringCellValue()?"":cell.getStringCellValue();
+                        Field field = fields[i];
+                        String fieldName = field.getName();
+                        String methodName = "set"+fieldName.substring(0,1).toUpperCase()+fieldName.substring(1);
+                        Method setMethod = priceExcel.getClass().getMethod(methodName, new Class[]{String.class});
+                        setMethod.invoke(priceExcel, new Object[]{value});
                     }
+                    carPriceExcels.add(priceExcel);
                 }
-                map.put("carPriceExcels", carPriceExcels);
-                map.put("auctionId",auctionId);
-                map.put("fileName",multipartFile.getOriginalFilename());
-                response = this.restTemplate.exchange(
-                        RequestEntity
-                                .post(URI.create(Constants.ROOT+"/service/importPrice/importCarPriceInfo"))
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .body(map),JSONObject.class);
+            }
+            for (int i = 0; i < carPriceExcels.size(); i++) {
+                if (StringUtils.isEmpty(carPriceExcels.get(i).getStartPrice()) &&  "0".equals(carPriceExcels.get(i).getStartPrice())){
+                    return new ResultModel(false, ResultCode.FILE_FORMAT.value(), String.format("第%d行起拍价为空",i+2),null);
+                }
+                if (StringUtils.isEmpty(carPriceExcels.get(i).getReservePrice()) && "0".equals(carPriceExcels.get(i).getReservePrice())) {
+                    return new ResultModel(false, ResultCode.FILE_FORMAT.value(), String.format("第%d行保留价为空",i+2),null);
+                }
+                if (Double.valueOf(carPriceExcels.get(i).getStartPrice()) > Double.valueOf(carPriceExcels.get(i).getReservePrice())) {
+                    return new ResultModel(false, ResultCode.FILE_FORMAT.value(), String.format("第%d行,保留价低于起拍价",i+2),null);
+                }
+            }
+            map.put("carPriceExcels", carPriceExcels);
+            map.put("auctionId",auctionId);
+            map.put("fileName",multipartFile.getOriginalFilename());
+            response = this.restTemplate.exchange(
+                    RequestEntity
+                            .post(URI.create(Constants.ROOT+"/service/importPrice/importCarPriceInfo"))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(map),JSONObject.class);
         }catch (Exception e){
             e.printStackTrace();
             return new ResultModel(false, ResultCode.BUSS_EXCEPTION.value(),ResultCode.BUSS_EXCEPTION.getRemark(),null);

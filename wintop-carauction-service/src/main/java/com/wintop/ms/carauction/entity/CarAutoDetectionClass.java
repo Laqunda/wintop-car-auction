@@ -68,6 +68,15 @@ public class CarAutoDetectionClass implements Serializable {
      * 1前，2后
      */
     private String positionType;
+    // --------------- 展示使用
+    /***
+     * 问题描述，可显示多个问题
+     */
+    private String problemDescription;
+    /**
+     * 图片，显示多张图片
+     */
+    private String photoUrl;
 
     /***
      * 检测项选项
@@ -270,5 +279,21 @@ public class CarAutoDetectionClass implements Serializable {
 
     public void setDataList(List<CarAutoDetectionData> dataList) {
         this.dataList = dataList;
+    }
+
+    public String getProblemDescription() {
+        return problemDescription;
+    }
+
+    public void setProblemDescription(String problemDescription) {
+        this.problemDescription = problemDescription;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

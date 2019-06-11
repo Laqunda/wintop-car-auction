@@ -14,6 +14,7 @@ public interface ICarAutoDetectionClassReadDao {
 
     List<CarAutoDetectionClass> selectByExample(Criteria example);
 
+    List<CarAutoDetectionClass> selectByAll();
 
     CarAutoDetectionClass selectByPrimaryKey(Long id);
 

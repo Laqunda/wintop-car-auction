@@ -65,6 +65,11 @@ public class CarAssessApi {
     public ServiceResult<ListEntity<CarAssess>> list(@RequestBody JSONObject obj) {
         ServiceResult<ListEntity<CarAssess>> result = null;
         try {
+            //店铺用户
+            CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
+            Long roleTypeId = managerUser.getRoleTypeId();
+
+
             result = new ServiceResult<>();
             Long userId = obj.getLong("customerId");
             CarAssess carAssess = JSONObject.toJavaObject(obj, CarAssess.class);
@@ -72,6 +77,15 @@ public class CarAssessApi {
                 carAssess = new CarAssess();
             }
             carAssess.setCreateUser(userId);
+            //额外参数
+            //1 ：平台
+            if (1 != roleTypeId) {
+                if (carAssess.getParams() == null) {
+                    carAssess.setParams(new HashMap<>());
+                }
+                carAssess.getParams().put("deptId", "" + managerUser.getDepartmentId());
+            }
+
             int count = carAssessService.selectAssessCount(carAssess);
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             carAssess.setStartRowNum(pageEntity.getStartRowNum());
@@ -99,15 +113,23 @@ public class CarAssessApi {
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8")
-    public ServiceResult<Map<String, Object>> groupFollowCount() {
+    public ServiceResult<Map<String, Object>> groupFollowCount(@RequestBody JSONObject obj) {
         ServiceResult result = null;
         try {
+            //店铺用户
+            CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
+            Long roleTypeId = managerUser.getRoleTypeId();
+
             Map back = new HashMap();
             CarAssess carAssess = new CarAssess();
             result = new ServiceResult<>();
 
             Map params = new HashMap();
-
+            //额外参数
+            //1 ：平台
+            if (1 != roleTypeId) {
+                params.put("deptId", "" + managerUser.getDepartmentId());
+            }
             params.put("followResult", 1);
             carAssess.setParams(params);
             back.put("followResult1", carAssessService.selectAssessCount(carAssess));
@@ -343,7 +365,7 @@ public class CarAssessApi {
                 //评估日志
                 logService.saveLog(managerUser, "撤销申请采购", idWorker.nextId(), carAssess.getId());
                 //order操作日志
-                orderLogService.saveOrderLog(managerUser, "撤销审核", "3", idWorker.nextId(), order.getId());
+                orderLogService.saveOrderLog(managerUser, obj.getString("logMsg"), "3", idWorker.nextId(), order.getId());
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
             } else {
                 result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());

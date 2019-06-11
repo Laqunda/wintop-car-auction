@@ -22,6 +22,8 @@
     <result column="price_type" property="priceType" jdbcType="VARCHAR" />
     <result column="enable" property="enable" jdbcType="VARCHAR" />
     <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+    <result column="user_num" property="userNum" jdbcType="VARCHAR" ></result>
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" ></result>
 </resultMap>
 
     <sql id="Base_Column_List" >
@@ -30,7 +32,7 @@
     </sql>
     <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
         select
-        <include refid="Base_Column_List" />,t2.`name` as customerName,t4.auto_info_name,t4.car_auto_no,t5.license_number
+        <include refid="Base_Column_List" />,t2.`name` as customerName,t2.mobile,t4.auto_info_name,t4.car_auto_no,t2.user_num,t5.license_number
         from tbl_auction_log t1
         LEFT JOIN wt_app_user t2 on t1.customer_id=t2.id
         LEFT JOIN car_auto t4 on t4.id=t1.car_id

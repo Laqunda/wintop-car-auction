@@ -34,6 +34,15 @@ public class CarAutoDetectionDataModel {
         return this.readDao.selectByExample(example);
     }
 
+    /**
+     * 根据条件查询记录
+     * @param param
+     * @return
+     */
+    public List<CarAutoDetectionData> selectByCondition(Map<String, Object> param){
+        return this.readDao.selectByCondition(param);
+    }
+
     public List<CarAutoDetectionData> selectByAutoId(Long autoId) {
         return this.readDao.selectByAutoId(autoId);
     }

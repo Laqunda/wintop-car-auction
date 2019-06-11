@@ -122,7 +122,7 @@ public class CarAssessFollowDataApi {
     }
 
     /**
-     * 评估结果：1评估中，2采购前科，3战败，4确认采购
+     * 评估结果：1评估中，2采购潜客，3战败，4确认采购
      *
      * @param followResult
      * @return

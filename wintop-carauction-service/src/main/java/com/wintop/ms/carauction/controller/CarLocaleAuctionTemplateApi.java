@@ -3,13 +3,16 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Splitter;
 import com.google.common.primitives.Longs;
+import com.wintop.ms.carauction.core.annotation.CurrentUser;
 import com.wintop.ms.carauction.core.config.ResultCode;
+import com.wintop.ms.carauction.core.entity.AppUser;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.service.ICarLocaleAuctionService;
 import com.wintop.ms.carauction.service.ICarLocaleAuctionTemplateService;
 import com.wintop.ms.carauction.service.ICarManagerUserService;
+import com.wintop.ms.carauction.service.IWtAppUserService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -59,6 +62,8 @@ public class CarLocaleAuctionTemplateApi {
     @Autowired
     private ICarLocaleAuctionService carLocaleAuctionService;
 
+    @Autowired
+    private IWtAppUserService appUserService;
     /**
      * 查询分页列表
      * @param obj
@@ -251,8 +256,15 @@ public class CarLocaleAuctionTemplateApi {
         ServiceResult<ListEntity<AuctionListEntity<Map<String,Object>>>> result = new ServiceResult<>();
         try {
             Map<String,Object> paramMap = new HashMap<>();
-            if (StringUtils.isNotEmpty(obj.getString("regionId"))) {
-                String regionIds = obj.getString("regionId");
+            if(obj.getLong("userId") != null && !"".equals(obj.getLong("userId")+"")){
+                //获取会员所属组
+                WtAppUser appUser = appUserService.getUserInfoById(obj.getLong("userId")).getResult();
+                if(null != appUser.getGroupIds() && !"".equals(appUser.getGroupIds())){
+                    paramMap.put("groupIds",appUser.getGroupIds());
+                }
+            }
+            if (StringUtils.isNotEmpty(obj.getString("regionIds"))) {
+                String regionIds = obj.getString("regionIds");
                 paramMap.put("regionIds", Splitter.on(",").splitToList(regionIds).stream().map(a-> Longs.tryParse(a)).collect(Collectors.toList()));
             }
             List<AuctionListEntity<Map<String,Object>>> list = new ArrayList<>();
@@ -287,17 +299,14 @@ public class CarLocaleAuctionTemplateApi {
                 if(carAuctions.size()>0){
                     //讲今天开场的场次与主题模板作比较，开场的和未开场的返回
                     for(CarLocaleAuction carAuction: carAuctions){
+                        if(templates == null || templates.size() < 1){
+                            dataList.add(getMap(carAuction));
+                        }
                         for(int t = 0 ; t < templates.size(); t++){
                             //如果是主题id相同 或者 匹配到最后没有相同的主题id
-                            if(carAuction.getLocaleAuctionTemplateId().equals(templates.get(t).getId())
+                            if(carAuction.getTemplateId().equals(templates.get(t).getId())
                             || templates.size() == t){
-                                Map<String,Object> map = new HashMap<>();
-                                map.put("id",carAuction.getId());
-                                map.put("templateId",carAuction.getLocaleAuctionTemplateId());
-                                map.put("title",carAuction.getTitle());
-                                map.put("localStartTime",new SimpleDateFormat("HH:mm").format(carAuction.getStartTime()));
-                                map.put("poster",carAuction.getPoster());
-                                map.put("status",carAuction.getStatus());
+                                Map<String,Object> map = getMap(carAuction);
                                 //如果是竞拍结束的场次
                                 if(carAuction.getStatus().equals("4")){
                                     endList.add(map);
@@ -306,7 +315,7 @@ public class CarLocaleAuctionTemplateApi {
                                 }
                             }
                             //主题相同的将 主题模板集合移除并跳过此次循环
-                            if(carAuction.getLocaleAuctionTemplateId().equals(templates.get(t).getId())){
+                            if(carAuction.getTemplateId().equals(templates.get(t).getId())){
                                 templates.remove(templates.get(t));
                                 continue;
                             }
@@ -346,5 +355,16 @@ public class CarLocaleAuctionTemplateApi {
             result.setError("-1","异常");
         }
         return result;
+    }
+
+    private Map<String,Object> getMap(CarLocaleAuction carAuction){
+        Map<String,Object> map = new HashMap<>();
+        map.put("id",carAuction.getId());
+        map.put("templateId",carAuction.getTemplateId());
+        map.put("title",carAuction.getTitle());
+        map.put("localStartTime",new SimpleDateFormat("HH:mm").format(carAuction.getStartTime()));
+        map.put("poster",carAuction.getPoster());
+        map.put("status",carAuction.getStatus());
+        return  map;
     }
 }

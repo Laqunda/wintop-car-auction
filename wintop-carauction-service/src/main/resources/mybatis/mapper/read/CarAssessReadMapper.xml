@@ -147,6 +147,7 @@
         car_assess a
         LEFT JOIN car_assess_order o on o.assess_id = a.id
         LEFT JOIN car_store s on s.id = o.store_id
+        LEFT JOIN car_manager_user u on u.id = a.create_user
         <where>
             <if test="id != null ">and a.id = #{id}</if>
             <if test="vin != null  and vin != '' ">and vin LIKE CONCAT(CONCAT('%', #{vin}),'%')</if>
@@ -218,6 +219,12 @@
             <if test="params.status != null and params.status != '' ">
                 and find_in_set(a.status,#{params.status})
             </if>
+
+            <if test="params.deptId != null and params.deptId != '' ">
+                and u.department_id = #{params.deptId}
+            </if>
+
+
         </where>
 
         ) r
@@ -243,6 +250,7 @@
         ) follow_result
         from car_assess a
         LEFT JOIN car_assess_order o on o.assess_id = a.id
+        LEFT JOIN car_manager_user u on u.id = a.create_user
         <where>
             <if test="id != null ">and a.id = #{id}</if>
             <if test="vin != null  and vin != '' ">and vin LIKE CONCAT(CONCAT('%', #{vin}),'%')</if>
@@ -312,6 +320,9 @@
             <if test="params.status != null and params.status != '' ">
                 and find_in_set(a.status,#{params.status})
             </if>
+            <if test="params.deptId != null and params.deptId != '' ">
+                and u.department_id = #{params.deptId}
+            </if>
         </where>
         ) r
         <where>
@@ -324,75 +335,75 @@
 
     <select id="selectCarAssessById" parameterType="Long" resultMap="CarAssessResult">
         SELECT
-            a.id,
-            a.vin,
-            a.mileage,
-            a.name,
-            a.begin_register_date,
-            a.color,
-            a.engine_capacity,
-            a.`function`,
-            a.engine_number,
-            a.manufacture_date,
-            a.year_insurance,
-            a.plate_num,
-            a.transfer_number,
-            a.auto_nature,
-            a.create_time,
-            a.create_user,
-            a.create_user_name,
-            a.status,
-            a.car_photo,
-            a.certificate_photo,
-            a.other_photo,
-            a.color_cn,
-            a.region_id,
-            a.auto_brand,
-            a.auto_brand_cn,
-            a.auto_style,
-            a.auto_style_cn,
-            a.auto_series,
-            a.auto_series_cn,
-            a.edit_time,
-            a.auto_id,
-            a.reject_reason,
-            a.function_cn,
-            a.autonature_cn,
-            a.remark,
-            o.id AS order_id,
-            o.price,
-            o.status AS order_status,
-            o.remark as order_remark,
-            o.assess_id,
-            o.follow_id,
-            o.procurement_type,
-            o.procurement_date,
-            o.store_id,
-            o.if_old_new,
-            o.entirety_price,
-            o.new_car_price,
-            o.car_address,
-            o.purchase_tax,
-            o.driving_license,
-            o.registration_certificate,
-            o.if_add,
-            o.car_keys,
-            o.new_car_invoice,
-            o.quality_guarantee,
-            o.maintenance_manual,
-            o.sali,
-            o.sali_end_date,
-            o.commercial_insurance,
-            o.commercial_insurance_end_date,
-            o.commercial_insurance_price,
-            o.transport_tax,
-            o.transport_tax_end_date,
-            o.customer_name,
-            o.customer_tel,
-            o.customer_source,
-            o.create_time as order_create_time,
-            e.name as "store_name"
-         FROM car_assess a
+        a.id,
+        a.vin,
+        a.mileage,
+        a.name,
+        a.begin_register_date,
+        a.color,
+        a.engine_capacity,
+        a.`function`,
+        a.engine_number,
+        a.manufacture_date,
+        a.year_insurance,
+        a.plate_num,
+        a.transfer_number,
+        a.auto_nature,
+        a.create_time,
+        a.create_user,
+        a.create_user_name,
+        a.status,
+        a.car_photo,
+        a.certificate_photo,
+        a.other_photo,
+        a.color_cn,
+        a.region_id,
+        a.auto_brand,
+        a.auto_brand_cn,
+        a.auto_style,
+        a.auto_style_cn,
+        a.auto_series,
+        a.auto_series_cn,
+        a.edit_time,
+        a.auto_id,
+        a.reject_reason,
+        a.function_cn,
+        a.autonature_cn,
+        a.remark,
+        o.id AS order_id,
+        o.price,
+        o.status AS order_status,
+        o.remark as order_remark,
+        o.assess_id,
+        o.follow_id,
+        o.procurement_type,
+        o.procurement_date,
+        o.store_id,
+        o.if_old_new,
+        o.entirety_price,
+        o.new_car_price,
+        o.car_address,
+        o.purchase_tax,
+        o.driving_license,
+        o.registration_certificate,
+        o.if_add,
+        o.car_keys,
+        o.new_car_invoice,
+        o.quality_guarantee,
+        o.maintenance_manual,
+        o.sali,
+        o.sali_end_date,
+        o.commercial_insurance,
+        o.commercial_insurance_end_date,
+        o.commercial_insurance_price,
+        o.transport_tax,
+        o.transport_tax_end_date,
+        o.customer_name,
+        o.customer_tel,
+        o.customer_source,
+        o.create_time as order_create_time,
+        e.name as "store_name"
+        FROM car_assess a
         LEFT JOIN car_assess_order o on o.assess_id = a.id
         LEFT JOIN car_store e on e.id = o.store_id
         <trim prefix="where" prefixOverrides="and">

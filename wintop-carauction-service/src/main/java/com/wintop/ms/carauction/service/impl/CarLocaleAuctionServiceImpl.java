@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.config.CarStatusEnum;
 import com.wintop.ms.carauction.core.config.Constants;
+import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.model.CarAutoAuctionModel;
@@ -915,4 +916,37 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
         result.setResult(carAuctions);
         return result;
     }
+
+    /**
+     * 获取场次拍卖费用信息
+     */
+    public ServiceResult<Map<String,Object>> selectLocaleAuctionInfo(CarLocaleAuction carLocaleAuction){
+        //获取服务费、代理费
+        BigDecimal agenFee =new BigDecimal(0);
+        BigDecimal serviceFee=new BigDecimal(0);
+        BigDecimal endClosinPrice = new BigDecimal(0);
+        if(carLocaleAuction!=null){
+            CarRegionSetting carRegionSetting = carRegionSettingModel.selectByRegionId(carLocaleAuction.getCityId());
+            if(carRegionSetting!=null){
+                agenFee =carRegionSetting.getAgentFee();
+                List<CarRegionServerfeeSetting> serverfeeSettings = serverfeeSettingModel.selectByRegionSettingId(carRegionSetting.getId());
+                if(serverfeeSettings!=null&&serverfeeSettings.size()>0){
+                    for(CarRegionServerfeeSetting carRegionServerfeeSetting:serverfeeSettings){
+                        serviceFee =carRegionServerfeeSetting.getServiceFee();
+                    }
+                }else{
+                    return new ServiceResult<>(false,"获取不到服务费","101");
+                }
+            }else{
+                return new ServiceResult<>(false,"获取不到该地区的代办费！","101");
+            }
+        }else{
+            return new ServiceResult<>(false,"查询不到场次信息","101");
+        }
+        if(serviceFee==null||agenFee==null||agenFee.compareTo(new BigDecimal(0))==0||serviceFee.compareTo(new BigDecimal(0))==0){
+            return new ServiceResult<>(false,"获取不到代办费或者服务费,请确定该地区已经设置！","101");
+        }
+        return new ServiceResult<>(true, ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+    }
+
 }

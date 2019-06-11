@@ -36,6 +36,7 @@ public class CarAssessApi {
     private ResultModel resultModel;
     private final RestTemplate restTemplate;
 
+
     CarAssessApi(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
@@ -46,10 +47,13 @@ public class CarAssessApi {
     @ApiOperation(value = "查询车辆评估列表")
     @PostMapping(value = "/list", produces = "application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel list(@RequestBody Map<String, Object> map) {
+    public ResultModel list(@RequestBody Map<String, Object> map, @CurrentUserId Long userId) {
         if (map.get("page") == null || map.get("limit") == null) {
             return new ResultModel(false, ResultCode.NO_PARAM.value(), ResultCode.NO_PARAM.getRemark(), null);
         }
+        //平台看所有的，其他的看自己店铺的
+        map.put("managerId", userId);
+
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT + "/service/carAssess/list"))
@@ -65,13 +69,15 @@ public class CarAssessApi {
     @PostMapping(value = "/groupFollowCount", produces = "application/json; charset=UTF-8")
     @AuthUserToken
     @RequestAuth(value = false)
-    public ResultModel groupFollowCount() {
-
+    public ResultModel groupFollowCount(@CurrentUserId Long userId) {
+    //平台看所有的，其他的看自己店铺的
+        Map map = new HashMap();
+        map.put("managerId", userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT + "/service/carAssess/groupFollowCount"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(null), JSONObject.class);
+                        .body(map), JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 

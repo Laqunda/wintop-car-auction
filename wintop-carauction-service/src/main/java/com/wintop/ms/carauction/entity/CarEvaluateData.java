@@ -184,4 +184,6 @@ public class CarEvaluateData extends BaseEntity implements Serializable {
     public void setCarOrder(CarOrder carOrder) {
         this.carOrder = carOrder;
     }
+
+
 }

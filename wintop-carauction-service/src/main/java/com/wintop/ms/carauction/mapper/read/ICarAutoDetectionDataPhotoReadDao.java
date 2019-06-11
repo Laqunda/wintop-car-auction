@@ -23,4 +23,11 @@ public interface ICarAutoDetectionDataPhotoReadDao {
      * @return
      */
     List<CarAutoDetectionDataPhoto> selectByAutoId(@Param("autoId") Long autoId);
+
+    /**
+     * 根据条件查询所有检测图片
+     * @param param
+     * @return
+     */
+    List<CarAutoDetectionDataPhoto> selectByAll(Map<String, Object> param);
 }
