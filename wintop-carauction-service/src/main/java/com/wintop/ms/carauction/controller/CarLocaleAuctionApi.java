@@ -229,7 +229,7 @@ public class CarLocaleAuctionApi {
                 map.put("isFollow",carAuto.getIsFollow());
                 map.put("environment",carAuto.getEnvironment());
                 map.put("auctionId",carAuto.getAutoAuctionId());
-                map.put("transferFlag  ",carAuto.getTransferFlag());
+                map.put("transferFlag",carAuto.getTransferFlag());
             map.put("beginRegisterDate",carAuto.getBeginRegisterDate());
             map.put("status",carAuto.getStatus());
             list.add(map);
