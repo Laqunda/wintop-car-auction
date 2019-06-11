@@ -1,14 +1,10 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
-import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.service.*;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
@@ -18,17 +14,12 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.*;
 import java.math.BigDecimal;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -238,6 +229,7 @@ public class CarLocaleAuctionApi {
                 map.put("isFollow",carAuto.getIsFollow());
                 map.put("environment",carAuto.getEnvironment());
                 map.put("auctionId",carAuto.getAutoAuctionId());
+                map.put("transferFlag  ",carAuto.getTransferFlag());
             map.put("beginRegisterDate",carAuto.getBeginRegisterDate());
             map.put("status",carAuto.getStatus());
             list.add(map);

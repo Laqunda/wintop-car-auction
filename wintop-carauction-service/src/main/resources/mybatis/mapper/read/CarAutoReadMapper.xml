@@ -231,7 +231,7 @@
 
     <!--现场拍卖车辆列表-->
     <select id="selectAuctionCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
-        SELECT t3.id,t3.main_photo,t3.auto_info_name,t3.car_auto_no,t3.status,
+        SELECT t3.transfer_flag,t3.id,t3.main_photo,t3.auto_info_name,t3.car_auto_no,t3.status,
         t4.vehicle_attribution_city_cn,t4.mileage,t4.engine_capacity,t4.engine_capacity_unit,
         t4.environment_cn,t4.begin_register_date,t5.starting_price,t2.auction_code,
         t1.address,t1.start_time,(CASE WHEN t6.auto_id IS NOT NULL THEN '1' ELSE '2' END ) AS isFollow,
