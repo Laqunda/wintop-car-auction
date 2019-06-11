@@ -320,11 +320,9 @@ public class CarChaboshiLogAPi {
     public ServiceResult<Map<String, Object>> updateIsOpen(@RequestBody Map<String, Object> map) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-
-            if (map.get("is_open") == null || map.get("vin") == null || map.get("storeId") == null) {
+            if (map.get("is_open") == null || map.get("id") == null ) {
                 result.setError(ResultCode.NO_PARAM.strValue(), ResultCode.NO_PARAM.getRemark());
             } else {
-
                 Map m = new HashMap();
                 carChaboshiLogService.updateIsOpen(map);
                 result.setSuccess(true);

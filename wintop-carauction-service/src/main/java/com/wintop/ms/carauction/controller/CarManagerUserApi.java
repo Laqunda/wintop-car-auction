@@ -424,8 +424,8 @@ public class CarManagerUserApi {
                 if (1 != managerUser.getRoleTypeId()) {
                     /*其他用户*/
                     map.put("departmentId", managerUser.getDepartmentId());
-                    map.put("roleTypeId", managerUser.getRoleTypeId());
-                    map.put("roleId", managerUser.getRoleId());
+//                    map.put("roleTypeId", managerUser.getRoleTypeId());
+//                    map.put("roleId", managerUser.getRoleId());
                 }
             }
             int count = managerUserService.countByExample(map);
