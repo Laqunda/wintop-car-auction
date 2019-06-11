@@ -91,6 +91,17 @@ public class CarAssessOrderLogServiceImpl implements ICarAssessOrderLogService {
         log.setLogMsg(msg);
         //状态 1提交申请，2审核通过，-1审核不通过 3审核撤销
         log.setStatus(status);
+        if("1".equals(status)){
+            log.setStatusCn("提交申请");
+        }else if("2".equals(status)){
+            log.setStatusCn("审核通过");
+        }else if("-1".equals(status)){
+            log.setStatusCn("审核不通过");
+        }else if("3".equals(status)){
+            log.setStatusCn("审核撤回");
+        }
+
+
         log.setCreateTime(new Date());
         log.setUserMobile(managerUser.getUserPhone());
         log.setUserName(managerUser.getUserName());
