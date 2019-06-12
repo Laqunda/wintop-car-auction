@@ -681,7 +681,7 @@ public class CarAutoApi {
          * 平台管理员除外
          */
         CarManagerUser managerUser = managerUserService.selectByPrimaryKey(Long.parseLong(map.get("managerId") + ""), false);
-        if(!"1".equals(managerUser.getRoleTypeId())){
+        if(ManagerRole.PT_GLY.value() != managerUser.getRoleId()){
             String status = map.get("status") + "";
             if(CarStatusEnum.WAITING_AUDITOR.value().equals(status) || CarStatusEnum.RECALL_HANLDING.value().equals(status)){
                 //查询关联的店铺
