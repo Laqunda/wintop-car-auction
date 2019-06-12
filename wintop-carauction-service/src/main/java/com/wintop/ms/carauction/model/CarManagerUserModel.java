@@ -159,4 +159,14 @@ public class CarManagerUserModel {
         }
         return storeIds;
     }
+
+    /**
+     * 根据用户审批车辆权限查询管理店铺范围
+     * @param map
+     * @return
+     */
+    public List<Long> queryStoreScope(Map<String,Object> map){
+        List<Long> storeIds = storeReadDao.queryStoreListByRole(map);
+        return storeIds;
+    }
 }

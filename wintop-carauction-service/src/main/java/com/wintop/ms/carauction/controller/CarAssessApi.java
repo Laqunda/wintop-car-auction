@@ -2,6 +2,7 @@ package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -67,7 +68,7 @@ public class CarAssessApi {
         try {
             //店铺用户
             CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
-            Long roleTypeId = managerUser.getRoleTypeId();
+            Long roleId = managerUser.getRoleId();
             result = new ServiceResult<>();
             Long userId = obj.getLong("customerId");
             CarAssess carAssess = JSONObject.toJavaObject(obj, CarAssess.class);
@@ -77,7 +78,7 @@ public class CarAssessApi {
             carAssess.setCreateUser(userId);
             //额外参数
             //1 ：平台
-            if (1 != roleTypeId) {
+            if (ManagerRole.PT_GLY.value() != roleId) {
                 if (carAssess.getParams() == null) {
                     carAssess.setParams(new HashMap<>());
                 }
@@ -116,7 +117,7 @@ public class CarAssessApi {
         try {
             //店铺用户
             CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
-            Long roleTypeId = managerUser.getRoleTypeId();
+            Long roleId = managerUser.getRoleId();
 
             Map back = new HashMap();
             CarAssess carAssess = new CarAssess();
@@ -125,7 +126,7 @@ public class CarAssessApi {
             Map params = new HashMap();
             //额外参数
             //1 ：平台
-            if (1 != roleTypeId) {
+            if (ManagerRole.PT_GLY.value() != roleId) {
                 params.put("deptId", "" + managerUser.getDepartmentId());
             }
             params.put("followResult", 1);
