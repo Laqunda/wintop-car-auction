@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarAppInfo;
+import com.wintop.ms.carauction.entity.CarAppSetting;
 import com.wintop.ms.carauction.service.ICarAppSettingService;
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ public class CarAppSettingApi {
     @PostMapping(value = "getSettingsByCode",/*指定请求的实际地址，指定的地址可以是URI Template 模式（后面将会说明）；*/
             consumes="application/json; charset=UTF-8",/*指定处理请求的提交内容类型（Content-Type），例如application/json, text/html;*/
             produces="application/json; charset=UTF-8")/*指定返回的内容类型，仅当request请求头中的(Accept)类型中包含该指定类型才返回；*/
-    public ServiceResult<Map<String,Object>> getSettingsByCode(@RequestBody JSONObject obj) {
+    public ServiceResult<CarAppSetting> getSettingsByCode(@RequestBody JSONObject obj) {
         return carAppSettingService.getAcutionHint(Collections.singletonMap("code",obj.getString("code")));
     }
 

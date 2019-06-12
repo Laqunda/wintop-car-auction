@@ -1,10 +1,13 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Splitter;
 import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
+import com.wintop.ms.carauction.entity.CarAppSetting;
 import com.wintop.ms.carauction.entity.CarLocaleAuction;
+import com.wintop.ms.carauction.service.ICarAppSettingService;
 import com.wintop.ms.carauction.service.ICarAutoService;
 import com.wintop.ms.carauction.service.ICarLocaleAuctionService;
 import org.slf4j.Logger;
@@ -15,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +44,8 @@ public class HomePageApi {
     private String successRate = "85%";
     //置换比
     private String replaceRate = "95%";
+    @Autowired
+    private ICarAppSettingService carAppSettingService;
     /**
      * 买家端首页信息接口
      */
@@ -60,6 +62,12 @@ public class HomePageApi {
            // param.put("cityId",obj.getLong("cityId"));
             if (obj.getString("cityIds") != null) {
                 param.put("cityIds", Splitter.on(",").splitToList(obj.getString("cityIds")).stream().map(a -> Longs.tryParse(a)).collect(Collectors.toList()));
+            }
+            //竞拍场次site_val  竞拍城市city_val
+            List<String> listVal = Arrays.asList("site_val", "city_val");
+            for(String code:listVal){
+                CarAppSetting appSet = carAppSettingService.getAcutionHint(Collections.singletonMap("code", code)).getResult();
+                map.put(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, code),appSet.getContent());
             }
             //竞拍场次
             Integer auctionCount =  iCarLocaleAuctionService.queryAuctionCount(param).getResult();
