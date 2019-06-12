@@ -20,4 +20,10 @@ public interface ICarRegionServerfeeSettingReadDao {
      */
     List<CarRegionServerfeeSetting> selectByRegionSettingId(@Param("regionSettingId") Long regionSettingId);
 
+    /**
+     * 根据条件进行查询
+     * @param map
+     * @return
+     */
+    List<CarRegionServerfeeSetting> selectByCondition(Map<String, Object> map);
 }

@@ -11,4 +11,71 @@
     values (#{id}, #{regionSettingId}, #{startClosingPrice}, #{endClosingPrice}, #{serviceFee}
       )
   </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarRegionServerfeeSetting" >
+    insert into car_region_serverfee_setting
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="regionSettingId != null" >
+        region_setting_id,
+      </if>
+      <if test="startClosingPrice != null" >
+        start_closing_price,
+      </if>
+      <if test="endClosingPrice != null" >
+        end_closing_price,
+      </if>
+      <if test="serviceFee != null" >
+        service_fee,
+      </if>
+      <if test="showText != null" >
+        show_text,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="centerId != null" >
+        #{centerId,jdbcType=BIGINT},
+      </if>
+      <if test="regionSettingId != null" >
+        #{regionSettingId,jdbcType=BIGINT},
+      </if>
+      <if test="startClosingPrice != null" >
+        #{startClosingPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="endClosingPrice != null" >
+        #{endClosingPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceFee != null" >
+        #{serviceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="showText != null" >
+        #{showText,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarRegionServerfeeSetting" >
+    update car_region_serverfee_setting
+    <set >
+      <if test="regionSettingId != null" >
+        region_setting_id = #{regionSettingId,jdbcType=BIGINT},
+      </if>
+      <if test="startClosingPrice != null" >
+        start_closing_price = #{startClosingPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="endClosingPrice != null" >
+        end_closing_price = #{endClosingPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceFee != null" >
+        service_fee = #{serviceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="showText != null" >
+        show_text = #{showText,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

@@ -97,6 +97,7 @@
         <result column="time" property="time" jdbcType="TIMESTAMP"/>
         <result column="orderId" property="orderId" />
         <result column="manager_evaluate" property="managerEvaluate" />
+        <result column="retail_id" property="retailId" />
 
     </resultMap>
     <sql id="Base_Column_List">
@@ -742,7 +743,8 @@
         r.name AS cityName,
         ar.user_num as userNum,
         ret.sales_consultant as salesConsultant,
-        ret.transaction_fee as transactionFee
+        ret.transaction_fee as transactionFee,
+        ret.id AS retail_id
         FROM car_auto a
         LEFT JOIN car_auto_info_detail d ON d.auto_id=a.id
         LEFT JOIN car_auto_auction aa on aa.id=a.auto_auction_id
@@ -1002,7 +1004,7 @@
                 INNER JOIN car_auto_log t2 ON t1.id = t2.auto_id
                 WHERE
                     ( t2.`status` = 2  OR t2.`status` = 4 )
-                AND t2.user_id = '19'
+                AND t2.user_id = #{userId}
                 GROUP BY t1.id
             ) t
         WHERE
@@ -1029,7 +1031,7 @@
         INNER JOIN car_manager_user cmu ON cmu.id = t1.create_user
         WHERE
         ( t2.`status` = 2 OR t2.`status` = 4 )
-        AND t2.user_id = '19'
+        AND t2.user_id = #{userId}
         ORDER BY t2.time DESC
     ) t
     WHERE  1 = 1

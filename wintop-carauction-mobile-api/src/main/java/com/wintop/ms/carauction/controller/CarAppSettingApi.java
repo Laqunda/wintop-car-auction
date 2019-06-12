@@ -17,7 +17,7 @@ import java.net.URI;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/carAppSettingApi")
+@RequestMapping("/carAppSetting")
 public class CarAppSettingApi {
 
     private ResultModel resultModel;
@@ -28,7 +28,7 @@ public class CarAppSettingApi {
     }
 
     /**
-     * 轮播图,现场播报
+     * 查询APP设置
      */
     @PostMapping( value = "/getSettingsByCode",
             consumes = "application/json; charset=UTF-8",

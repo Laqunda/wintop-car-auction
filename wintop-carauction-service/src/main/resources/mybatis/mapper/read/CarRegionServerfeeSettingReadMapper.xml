@@ -25,4 +25,14 @@
     where start_closing_price <![CDATA[ <= ]]> #{closingPrice} and end_closing_price <![CDATA[ >= ]]> #{closingPrice}
     limit 1;
   </select>
+  <select id="selectByCondition" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from car_region_serverfee_setting
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="regionSettingId != null">
+        and region_setting_id = #{region_setting_id}
+      </if>
+    </trim>
+  </select>
 </mapper>

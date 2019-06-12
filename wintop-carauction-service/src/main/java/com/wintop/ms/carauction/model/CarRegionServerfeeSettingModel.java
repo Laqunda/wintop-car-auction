@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CarRegionServerfeeSettingModel {
@@ -16,6 +17,10 @@ public class CarRegionServerfeeSettingModel {
     private ICarRegionServerfeeSettingReadDao serverfeeSettingReadDao;
     @Autowired
     private ICarRegionServerfeeSettingWriteDao serverfeeSettingWriteDao;
+    @Autowired
+    private ICarRegionServerfeeSettingReadDao carRegionServerfeeSettingReadDao;
+    @Autowired
+    private ICarRegionServerfeeSettingWriteDao carRegionServerfeeSettingWriteDao;
 
     private IdWorker idWorker = new IdWorker(10);
 
@@ -45,6 +50,32 @@ public class CarRegionServerfeeSettingModel {
      */
     public int insert(CarRegionServerfeeSetting record){
         return serverfeeSettingWriteDao.insert(record);
+    }
+
+    /**
+     * 根据条件进行查询
+     * @param map
+     * @return
+     */
+    public List<CarRegionServerfeeSetting> selectByCondition(Map<String, Object> map) {
+        return carRegionServerfeeSettingReadDao.selectByCondition(map);
+    }
+
+    /**
+     * 保存记录
+     * @param record
+     */
+    public int insertSelective(CarRegionServerfeeSetting record){
+        return serverfeeSettingWriteDao.insertSelective(record);
+    }
+
+    /**
+     * 修改记录
+     * @param record
+     * @return
+     */
+    public int updateByPrimaryKeySelective(CarRegionServerfeeSetting record){
+        return serverfeeSettingWriteDao.updateByPrimaryKeySelective(record);
     }
 
     /**

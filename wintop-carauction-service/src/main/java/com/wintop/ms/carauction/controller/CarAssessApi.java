@@ -68,8 +68,6 @@ public class CarAssessApi {
             //店铺用户
             CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
             Long roleTypeId = managerUser.getRoleTypeId();
-
-
             result = new ServiceResult<>();
             Long userId = obj.getLong("customerId");
             CarAssess carAssess = JSONObject.toJavaObject(obj, CarAssess.class);

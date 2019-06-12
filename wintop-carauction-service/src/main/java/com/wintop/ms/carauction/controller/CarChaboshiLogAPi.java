@@ -82,7 +82,6 @@ public class CarChaboshiLogAPi {
     public ServiceResult<ListEntity<CarChaboshiLog>> list(@RequestBody JSONObject obj) {
         ServiceResult<ListEntity<CarChaboshiLog>> result = null;
         try {
-
             Map param = JSONObject.toJavaObject(obj, Map.class);
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
             /*根据assessId查询其查博士的查询日志*/
@@ -91,12 +90,15 @@ public class CarChaboshiLogAPi {
                 carAssess.setId(obj.getLong("assessId"));
                 CarAssess assess = assessService.selectCarAssessById(carAssess);
                 param.put("vin", assess.getVin());
-                param.put("userId", assess.getCreateUser());
+//                param.put("userId", assess.getCreateUser());
+            }
+            //店铺
+            if("2".equals(param.get("userType")+"")){
+                List<Long> storeIds = managerUserService.queryStoreScope(obj.getLong("userId"));
+                param.put("storeIds", storeIds);
             }
             result = new ServiceResult<>();
-
             int count = carChaboshiLogService.selectCount(param);
-
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             param.put("startRowNum", pageEntity.getStartRowNum());
             param.put("endRowNum", pageEntity.getEndRowNum());

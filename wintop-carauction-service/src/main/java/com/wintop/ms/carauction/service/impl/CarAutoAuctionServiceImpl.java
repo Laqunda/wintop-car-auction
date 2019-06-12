@@ -319,7 +319,7 @@ public class CarAutoAuctionServiceImpl implements ICarAutoAuctionService {
             CarAuctionBidRecord bidRecord = bidRecordModel.selectMaxBidRecordByCarId(carId,autoAuction.getId());
             JPushAutoData autoData = new JPushAutoData();
             autoData.setMaxPrice(bidRecord==null?zero:bidRecord.getBidFee());
-            autoData.setMaxPriceUserId(bidRecord==null?0l:bidRecord.getCustomerId());
+            autoData.setMaxPriceUserId(bidRecord==null?0L:bidRecord.getCustomerId());
             autoData.setStartingPrice(autoAuction.getStartingPrice());
             autoData.setAuctionStartTime(autoAuction.getAuctionStartTime().getTime()+"");
             autoData.setAuctionEndTime(autoAuction.getAuctionEndTime().getTime()+"");

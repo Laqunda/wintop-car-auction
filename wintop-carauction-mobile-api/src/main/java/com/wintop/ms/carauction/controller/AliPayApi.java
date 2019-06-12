@@ -184,9 +184,9 @@ public class AliPayApi {
 
             //            查询版本 1维修版 2综合版
             if ("1".equals(map.get("edition"))) {
-                response.getBody().getJSONObject("result").getBigDecimal("payment");
+                count = response.getBody().getJSONObject("result").getBigDecimal("payment");
             } else if ("2".equals(map.get("edition"))) {
-                response.getBody().getJSONObject("result").getBigDecimal("paymentComposite");
+                count = response.getBody().getJSONObject("result").getBigDecimal("paymentComposite");
             } else {
                 resultModel = ResultModel.error(ResultStatus.PARAMETERS_ERROR);
                 return new ResponseEntity<>(resultModel, HttpStatus.OK);
@@ -277,7 +277,7 @@ public class AliPayApi {
 
                 ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                         RequestEntity
-                                .post(URI.create(Constants.ROOT + "/service//payChaboshiAmountCallback"))
+                                .post(URI.create(Constants.ROOT + "/service/payChaboshiAmountCallback"))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .body(jsonObject), JSONObject.class);
 
