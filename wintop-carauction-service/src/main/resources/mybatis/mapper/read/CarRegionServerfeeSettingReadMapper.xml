@@ -4,13 +4,14 @@
   <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarRegionServerfeeSetting" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="region_setting_id" property="regionSettingId" jdbcType="BIGINT" />
+    <result column="center_id" property="centerId" jdbcType="BIGINT" />
     <result column="start_closing_price" property="startClosingPrice" jdbcType="DECIMAL" />
     <result column="end_closing_price" property="endClosingPrice" jdbcType="DECIMAL" />
     <result column="service_fee" property="serviceFee" jdbcType="DECIMAL" />
     <result column="show_text" property="showText" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, region_setting_id, start_closing_price, end_closing_price, service_fee,show_text
+    id, region_setting_id,center_id, start_closing_price, end_closing_price, service_fee,show_text
   </sql>
   <select id="selectByRegionSettingId" resultMap="BaseResultMap">
     select
@@ -24,5 +25,18 @@
     from car_region_serverfee_setting
     where start_closing_price <![CDATA[ <= ]]> #{closingPrice} and end_closing_price <![CDATA[ >= ]]> #{closingPrice}
     limit 1;
+  </select>
+  <select id="selectByCondition" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from car_region_serverfee_setting
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="regionSettingId != null">
+        and region_setting_id = #{region_setting_id}
+      </if>
+      <if test="centerId != null">
+        and center_id = #{centerId}
+      </if>
+    </trim>
   </select>
 </mapper>
