@@ -140,6 +140,10 @@ public class CarAssessOrder extends BaseEntity {
      * 状态 1待审核，2审核通过，-1审核不通过 3审核撤销
      */
     private String status;
+    /**
+     * 创建时间
+     */
+    private Date createTime;
 
     private CarAssess carAssess;
 
@@ -466,5 +470,15 @@ public class CarAssessOrder extends BaseEntity {
 
     public void setRegionId(String regionId) {
         this.regionId = regionId;
+    }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

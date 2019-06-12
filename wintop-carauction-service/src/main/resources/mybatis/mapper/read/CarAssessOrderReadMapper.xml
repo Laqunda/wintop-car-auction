@@ -45,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectCarAssessOrderVo">
-        cas.id, cas.assess_id, cas.follow_id, cas.procurement_type, cas.price, cas.procurement_date, cas.store_id, cas.if_old_new, cas.entirety_price, cas.new_car_price, cas.car_address, cas.purchase_tax, cas.driving_license, cas.registration_certificate, cas.if_add, cas.car_keys, cas.new_car_invoice, cas.quality_guarantee, cas.maintenance_manual, cas.sali, cas.sali_end_date, cas.commercial_insurance, cas.commercial_insurance_end_date, cas.commercial_insurance_price, cas.transport_tax, cas.transport_tax_end_date, cas.customer_name, cas.customer_tel, cas.customer_source, cas.remark, cas.status
+        cas.id, cas.assess_id, cas.follow_id, cas.procurement_type, cas.price, cas.procurement_date, cas.store_id, cas.if_old_new, cas.entirety_price, cas.new_car_price, cas.car_address, cas.purchase_tax, cas.driving_license, cas.registration_certificate, cas.if_add, cas.car_keys, cas.new_car_invoice, cas.quality_guarantee, cas.maintenance_manual, cas.sali, cas.sali_end_date, cas.commercial_insurance, cas.commercial_insurance_end_date, cas.commercial_insurance_price, cas.transport_tax, cas.transport_tax_end_date, cas.customer_name, cas.customer_tel, cas.customer_source, cas.remark, cas.status, cas.create_time
     </sql>
 	
     <select id="selectCarAssessOrderList" parameterType="com.wintop.ms.carauction.entity.CarAssessOrder" resultMap="CarAssessOrderResult">
@@ -91,11 +91,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                  or cas.customer_name like CONCAT(CONCAT('%',#{searchName}),'%')
                  or ca.vin like CONCAT(CONCAT('%',#{searchName}),'%'))
              </if>
+            <if test="verifySearchName != null and verifySearchName !=''">
+                and ( cas.id like CONCAT(CONCAT('%',#{verifySearchName}),'%')
+                  or ca.plate_num like CONCAT(CONCAT('%',#{verifySearchName}),'%')
+                  or cas.customer_name like CONCAT(CONCAT('%',#{verifySearchName}),'%')
+                  or cas.customer_tel like CONCAT(CONCAT('%',#{verifySearchName}),'%')
+                )
+            </if>
             <if test="startTime != null">
                 and cas.procurement_date &gt;= #{startTime}
             </if>
             <if test="endTime != null">
                 and cas.procurement_date &lt;= #{endTime}
+            </if>
+            <if test="startCreateTime != null">
+                and cas.create_time &gt;= #{startCreateTime}
+            </if>
+            <if test="endCreateTime != null">
+                and cas.create_time &lt;= #{endCreateTime}
             </if>
             <if test="createUser != null and createUser != ''">
                 and createUser like CONCAT(CONCAT('%',#{createUser}),'%')
