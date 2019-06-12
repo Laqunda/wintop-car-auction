@@ -29,17 +29,12 @@ public class CarAppSettingServiceImpl implements ICarAppSettingService {
      * @return
      */
     @Override
-    public ServiceResult<Map<String,Object>> getAcutionHint(Map<String, Object> map) {
-        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
+    public ServiceResult<CarAppSetting> getAcutionHint(Map<String, Object> map) {
+        ServiceResult<CarAppSetting> result = new ServiceResult<>();
         try {
             Map<String, Object> data = Maps.newHashMap();
             CarAppSetting carAppSetting = carAppSettingModel.selectByCode(map);
-            if (isNotEmpty(carAppSetting)) {
-                data.put("result", Boolean.valueOf(carAppSetting.getContent()));
-            } else {
-                data.put("result", Boolean.FALSE);
-            }
-            result.setResult(data);
+            result.setResult(carAppSetting);
             result.setSuccess("0","成功");
         } catch (Exception e) {
             e.printStackTrace();
