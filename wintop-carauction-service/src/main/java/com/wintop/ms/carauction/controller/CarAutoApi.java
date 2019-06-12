@@ -6,6 +6,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.primitives.Longs;
+import com.wintop.ms.carauction.core.config.CarStatusEnum;
 import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
@@ -673,13 +674,26 @@ public class CarAutoApi {
         Integer pageSize = (Integer) map.get("limit");
         map.put("startRowNum", (page - 1) * pageSize);
         map.put("endRowNum", pageSize);
-        /**
-         * 数据权限过滤
-         */
         Long userId = Long.parseLong(map.get("managerId").toString());
-        if (userId != null) {
-            List<Long> storeIds = managerUserService.queryStoreScope(userId);
-            map.put("storeIds", storeIds);
+        /**
+         * 数据权限过滤 审核车辆根据审核人员负责区域划分
+         * 其余车辆按店铺人员区分店铺车辆
+         * 平台管理员除外
+         */
+        CarManagerUser managerUser = managerUserService.selectByPrimaryKey(Long.parseLong(map.get("managerId") + ""), false);
+        if(!"1".equals(managerUser.getRoleTypeId())){
+            String status = map.get("status") + "";
+            if(CarStatusEnum.WAITING_AUDITOR.value().equals(status) || CarStatusEnum.RECALL_HANLDING.value().equals(status)){
+                //查询关联的店铺
+                List<Long> storeIds = managerUserService.queryStoreScope(map);
+                if(storeIds == null || storeIds.size() < 1){
+                    return result;
+                }
+                map.put("storeIds", storeIds);
+            }else{
+                List<Long> storeIds = managerUserService.queryStoreScope(managerUser.getRoleTypeId(),managerUser.getDepartmentId());
+                map.put("storeIds", storeIds);
+            }
         }
         ListEntity<CarAuto> carAutoListEntity = new ListEntity<>();
         carAutoListEntity.setList(carAutoService.getAllCarAutoList(map).getResult());

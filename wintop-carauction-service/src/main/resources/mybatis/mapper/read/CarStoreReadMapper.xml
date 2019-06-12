@@ -22,11 +22,13 @@
     <result column="del_person" property="delPerson" jdbcType="BIGINT" />
     <result column="region_id" property="regionId" jdbcType="BIGINT" />
   </resultMap>
+
   <resultMap id="StoreResultMap" type="com.wintop.ms.carauction.entity.CommonNameVo">
     <result column="id" property="id" jdbcType="BIGINT" />
     <result column="checked" property="checked" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
   </resultMap>
+
   <resultMap id="IdResultMap" type="java.lang.Long">
     <result column="id" property="id" jdbcType="BIGINT" />
   </resultMap>
@@ -92,5 +94,20 @@
     <if test="storeName!=null">
       and name LIKE CONCAT(CONCAT('%', #{storeName}),'%')
     </if>
+  </select>
+
+  <!-- 根据用户审批车辆权限查询店铺 -->
+  <select id="queryStoreListByRole" parameterType="java.util.Map" resultMap="IdResultMap" >
+    SELECT cs.id
+    FROM car_store cs
+    <if test="auctionType == '1'.toString()">
+      INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = cs.region_id
+    </if>
+    <if test="auctionType == '2'.toString()">
+      INNER JOIN car_center_store ccs ON ccs.store_id = cs.id
+      INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = ccs.center_id
+    </if>
+    WHERE cmrp.type_id = #{auctionType}
+    and cmrp.manager_id = #{managerId}
   </select>
 </mapper>
