@@ -151,6 +151,8 @@ public class CarOrder implements Serializable {
     private String logNo;
     private String identityNumber;
     private String storeName;
+    private String simpleName;
+    private String address;
     private String vin;
     private String moveAddress;
     private String statusName;
@@ -1010,5 +1012,21 @@ public class CarOrder implements Serializable {
 
     public void setUserEvaluate(String userEvaluate) {
         this.userEvaluate = userEvaluate;
+    }
+
+    public String getSimpleName() {
+        return simpleName;
+    }
+
+    public void setSimpleName(String simpleName) {
+        this.simpleName = simpleName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
