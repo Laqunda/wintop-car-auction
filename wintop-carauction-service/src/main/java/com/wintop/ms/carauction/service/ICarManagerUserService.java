@@ -71,4 +71,11 @@ public interface ICarManagerUserService {
      * @return
      */
     List<Long> queryStoreScope(Long userId);
+
+    /**
+     * 根据用户审批车辆权限查询管理店铺范围
+     * @param map
+     * @return
+     */
+    List<Long> queryStoreScope(Map<String,Object> map);
 }
