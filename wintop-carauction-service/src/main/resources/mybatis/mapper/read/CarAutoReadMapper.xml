@@ -1031,7 +1031,7 @@
         INNER JOIN car_manager_user cmu ON cmu.id = t1.create_user
         WHERE
         ( t2.`status` = 2 OR t2.`status` = 4 )
-        AND t2.user_id = '19'
+        AND t2.user_id = #{userId}
         ORDER BY t2.time DESC
     ) t
     WHERE  1 = 1
