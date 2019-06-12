@@ -17,9 +17,6 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="centerId != null" >
-        center_id,
-      </if>
       <if test="regionSettingId != null" >
         region_setting_id,
       </if>
@@ -63,9 +60,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarRegionServerfeeSetting" >
     update car_region_serverfee_setting
     <set >
-      <if test="centerId != null" >
-        centr_id = #{centerId,jdbcType=BIGINT},
-      </if>
       <if test="regionSettingId != null" >
         region_setting_id = #{regionSettingId,jdbcType=BIGINT},
       </if>

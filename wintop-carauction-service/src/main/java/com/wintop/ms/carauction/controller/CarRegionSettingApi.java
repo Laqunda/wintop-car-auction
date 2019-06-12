@@ -222,12 +222,6 @@ public class CarRegionSettingApi {
             Map param = JSONObject.toJavaObject(obj, Map.class);
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
             CarManagerUser user = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), false);
-            if (isNotEmpty(user)) {
-                if (new Long(CENTER).equals(user.getRoleTypeId())
-                        && ManagerRole.ZX_ESCFZR.value() == user.getRoleId().intValue()){
-                    param.put("centerId",user.getDepartmentId());
-                }
-            }
             List<CarRegionSetting> settingList = regionSettingService.selectByExample(param);
             saveOrUpdateSetting(obj, param, settingList, user);
 
@@ -246,9 +240,6 @@ public class CarRegionSettingApi {
             if (isNotEmpty(setting.getId())) {
                 if (isNotEmpty(obj.getString("regionId"))) {
                     setting.setRegionId(obj.getLong("regionId"));
-                }
-                if (isNotEmpty(param.get("centerId"))) {
-                    setting.setCenterId(Long.valueOf(param.get("centerId") + ""));
                 }
                 if (isNotEmpty(obj.getString("agentFee"))) {
                     setting.setAgentFee(BigDecimal.valueOf(obj.getLong("agentFee")));
@@ -292,9 +283,6 @@ public class CarRegionSettingApi {
             if (isNotEmpty(obj.getString("regionId"))) {
                 setting.setRegionId(obj.getLong("regionId"));
             }
-            if (isNotEmpty(param.get("centerId"))) {
-                setting.setCenterId(Long.valueOf(param.get("centerId") + ""));
-            }
             if (isNotEmpty(obj.getString("agentFee"))) {
                 setting.setAgentFee(BigDecimal.valueOf(obj.getLong("agentFee")));
             }
@@ -315,9 +303,6 @@ public class CarRegionSettingApi {
             if (isNotEmpty(obj.getString("serviceFeeBefore"))) {
                 serverfeeSetting.setServiceFee(BigDecimal.valueOf(obj.getLong("serviceFeeBefore")));
             }
-            if (isNotEmpty(param.get("centerId"))) {
-                serverfeeSetting.setCenterId(Long.valueOf(param.get("centerId") + ""));
-            }
             regionSettingService.insertServerfeeSelective(serverfeeSetting);
 
             serverfeeSetting.setId(idWorker.nextId());
@@ -328,9 +313,6 @@ public class CarRegionSettingApi {
             }
             if (isNotEmpty(obj.getString("serviceFeeAfter"))) {
                 serverfeeSetting.setServiceFee(BigDecimal.valueOf(obj.getLong("serviceFeeAfter")));
-            }
-            if (isNotEmpty(param.get("centerId"))) {
-                serverfeeSetting.setCenterId(Long.valueOf(param.get("centerId") + ""));
             }
             regionSettingService.insertServerfeeSelective(serverfeeSetting);
         }

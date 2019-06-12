@@ -77,7 +77,7 @@ public class CarRegionSetting implements Serializable {
 
     private String serverfeeSettings;
 
-    private Long centerId;
+
 
     private List<CarRegionServerfeeSetting> serverfeeSettingList;
 
@@ -300,11 +300,4 @@ public class CarRegionSetting implements Serializable {
         this.serverfeeSettingList = serverfeeSettingList;
     }
 
-    public Long getCenterId() {
-        return centerId;
-    }
-
-    public void setCenterId(Long centerId) {
-        this.centerId = centerId;
-    }
 }

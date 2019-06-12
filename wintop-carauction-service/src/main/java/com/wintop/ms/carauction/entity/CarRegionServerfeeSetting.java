@@ -34,8 +34,6 @@ public class CarRegionServerfeeSetting implements Serializable {
     //***服务费展示的文本
     private String showText;
 
-    private Long centerId;
-
     /**
      * @return 主键
      */
@@ -117,13 +115,5 @@ public class CarRegionServerfeeSetting implements Serializable {
 
     public void setShowText(String showText) {
         this.showText = showText;
-    }
-
-    public Long getCenterId() {
-        return centerId;
-    }
-
-    public void setCenterId(Long centerId) {
-        this.centerId = centerId;
     }
 }

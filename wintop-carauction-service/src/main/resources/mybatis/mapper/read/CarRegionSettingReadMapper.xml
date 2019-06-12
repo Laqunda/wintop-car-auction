@@ -4,7 +4,6 @@
   <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarRegionSetting" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="region_id" property="regionId" jdbcType="BIGINT" />
-    <result column="center_id" property="centerId" jdbcType="BIGINT" />
     <result column="region_name" property="regionName" jdbcType="VARCHAR" />
     <result column="frozen_capital" property="frozenCapital" jdbcType="DECIMAL" />
     <result column="pay_breach_day" property="payBreachDay" jdbcType="INTEGER" />
@@ -19,7 +18,7 @@
     <result column="update_person" property="updatePerson" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    t1.id, t1.center_id, t1.region_id,t2.`name` AS region_name, t1.frozen_capital, t1.pay_breach_day, t1.pay_breach_time, t1.create_time,
+    t1.id, t1.region_id,t2.`name` AS region_name, t1.frozen_capital, t1.pay_breach_day, t1.pay_breach_time, t1.create_time,
     t1.create_person, t1.status, t1.transfer_breach_day, t1.transfer_breach_time, t1.agent_fee, t1.update_time,
     t1.update_person
   </sql>
@@ -31,9 +30,6 @@
     WHERE 1=1
     <if test="regionId!=null">
       AND t1.region_id=#{regionId}
-    </if>
-    <if test="centerId!=null">
-      AND t1.center_id=#{centerId}
     </if>
     <if test="startRowNum != null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
