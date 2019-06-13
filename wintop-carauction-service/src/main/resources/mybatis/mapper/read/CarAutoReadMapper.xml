@@ -98,6 +98,7 @@
         <result column="orderId" property="orderId" />
         <result column="manager_evaluate" property="managerEvaluate" />
         <result column="retail_id" property="retailId" />
+        <result column="auto_auction_id" property="autoAuctionId" />
 
     </resultMap>
     <sql id="Base_Column_List">
@@ -113,6 +114,9 @@
         WHERE t1.status != '0'
         <if test="carAutoNo != null and carAutoNo != ''">
             and t1.car_auto_no != #{carAutoNo}
+        </if>
+        <if test="id != null">
+            and t1.id = #{id}
         </if>
         <if test="orderByClause != null">
             order by ${orderByClause}
@@ -316,9 +320,8 @@
         t2.starting_price,
         t3.id as orderId,
         t3.manager_evaluate,
+        t3.create_time submit_time,
         t2.top_bid_price as maxBidFee
-
-
         from car_auto t1
         left join car_auto_auction t2 ON t1.auto_auction_id=t2.id
         left join car_order t3 on t1.id = t3.car_id
@@ -1004,7 +1007,7 @@
                 INNER JOIN car_auto_log t2 ON t1.id = t2.auto_id
                 WHERE
                     ( t2.`status` = 2  OR t2.`status` = 4 )
-                AND t2.user_id = '19'
+                AND t2.user_id = #{userId}
                 GROUP BY t1.id
             ) t
         WHERE
@@ -1031,7 +1034,7 @@
         INNER JOIN car_manager_user cmu ON cmu.id = t1.create_user
         WHERE
         ( t2.`status` = 2 OR t2.`status` = 4 )
-        AND t2.user_id = '19'
+        AND t2.user_id = #{userId}
         ORDER BY t2.time DESC
     ) t
     WHERE  1 = 1

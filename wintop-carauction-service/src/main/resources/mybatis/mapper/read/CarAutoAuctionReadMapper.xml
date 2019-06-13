@@ -115,7 +115,7 @@
   </select>
 
   <!--获取竞拍信息-->
-  <select id="selectAuctionInformation" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectAuctionInformation" parameterType="java.util.Map" resultMap="BaseResultMap">
       SELECT
           t2.source_type,
           t1.starting_price,
@@ -132,7 +132,14 @@
       from car_auto_auction t1
       left  JOIN car_auto t2 on t2.id = t1.auto_id
       left  join car_store t3 on t2.store_id = t3.id
-      where t1.auto_id = #{carId}
+      <trim prefix="where" prefixOverrides="and">
+        <if test="carId != null">
+            and t1.auto_id = #{carId}
+        </if>
+        <if test="id != null">
+            and t1.id = #{id}
+        </if>
+      </trim>
   </select>
 
   <select id="selectAutoAuctionByCarId"  resultMap="BaseResultMap" parameterType="java.lang.Long">

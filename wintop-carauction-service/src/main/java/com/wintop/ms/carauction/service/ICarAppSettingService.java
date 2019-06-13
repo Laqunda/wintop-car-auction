@@ -13,7 +13,7 @@ public interface ICarAppSettingService {
      * @param map
      * @return
      */
-    public ServiceResult<Map<String,Object>> getAcutionHint(Map<String, Object> map);
+    public ServiceResult<CarAppSetting> getAcutionHint(Map<String, Object> map);
 
     /**
      * 获取首页所有有配置信息

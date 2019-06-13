@@ -1033,16 +1033,18 @@ public class CarAutoServiceImpl implements ICarAutoService {
         List<CarAutoConfDetail> carAutoConfDetailList = carAutoConfDetailModel.selectByExample(Collections.singletonMap("autoId", carAuto.getId()));
         carAuto.setCarAutoConfDetailList(carAutoConfDetailList);
         // 竞拍信息
-        CarAutoAuction carAutoAuction = carAutoAuctionModel.selectAuctionInformation(carAuto.getId());
+        CarAutoAuction carAutoAuction = carAutoAuctionModel.selectAuctionInformation(Collections.singletonMap("id",carAuto.getAutoAuctionId()));
         carAuto.setCarAutoAuction(carAutoAuction);
         // 出价列表
         List<TblAuctionLog> tblAuctionLogList = tblAuctionLogModel.selectByExample(Collections.singletonMap("carId", carAuto.getId()));
         carAuto.setTblAuctionLog(tblAuctionLogList);
         // 轨迹列表
-        CarAssessLog carAssessLog = new CarAssessLog();
-        carAssessLog.setAutoId(carAuto.getId());
-        List<CarAssessLog> carAssessLogList = carAssessLogModel.selectCarAssessLogList(carAssessLog);
-        carAuto.setCarAssessLogList(carAssessLogList);
+        if (carAssess != null){
+            CarAssessLog carAssessLog = new CarAssessLog();
+            carAssessLog.setAssessId(carAssess.getId());
+            List<CarAssessLog> carAssessLogList = carAssessLogModel.selectCarAssessLogList(carAssessLog);
+            carAuto.setCarAssessLogList(carAssessLogList);
+        }
         // 检测信息
         List<CarAutoDetectionClass> clazzList = carAutoDetectionClassModel.selectByAll();
         Map<Long, String> topicMap = clazzList.stream()

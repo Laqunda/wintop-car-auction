@@ -88,7 +88,6 @@ public class CarBidRecordApi {
                 paramMap.put("carId",obj.getLong("carId"));
             }
             Long userId=obj.getLong("userId");
-            System.out.println(userId);
             if(userId!=null){
                 List<Long> storeIds = managerUserService.queryStoreScope(userId);
                 paramMap.put("storeIds",storeIds);

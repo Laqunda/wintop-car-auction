@@ -146,6 +146,10 @@ public class CarOrderApi {
             map.put("auctionId",carOrder.getAutoAuctionId());
             map.put("managerEvaluate",carOrder.getManagerEvaluate());
             map.put("userEvaluate",carOrder.getUserEvaluate());
+            map.put("name",carOrder.getStoreName());
+            map.put("simpleName",carOrder.getSimpleName());
+            map.put("address",carOrder.getAddress());
+
             result.setResult(map);
             result.setSuccess("0","成功");
         }catch (Exception e){

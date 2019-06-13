@@ -59,6 +59,8 @@
         <result column="log_no" property="logNo" jdbcType="VARCHAR"/>
         <result column="identity_number" property="identityNumber" jdbcType="VARCHAR"/>
         <result column="store_name" property="storeName" jdbcType="VARCHAR"/>
+        <result column="simple_name" property="simpleName" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
         <result column="vin" property="vin" jdbcType="VARCHAR"/>
         <result column="move_address" property="moveAddress" jdbcType="VARCHAR"/>
         <result column="status_name" property="statusName" jdbcType="VARCHAR"/>
@@ -89,7 +91,6 @@
         <result column="auctionName" property="auctionName" jdbcType="VARCHAR"/>
         <result column="user_num" property="userNum" jdbcType="VARCHAR"/>
         <result column="begin_register_date" property="beginRegisterDate" jdbcType="TIMESTAMP"/>
-
         <result column="manager_evaluate" jdbcType="VARCHAR" property="managerEvaluate"/>
         <result column="user_evaluate" jdbcType="VARCHAR" property="userEvaluate"/>
     </resultMap>
@@ -316,12 +317,14 @@
     SELECT t1.manager_evaluate,t1.user_evaluate,t1.id,t1.status,t1.pay_fee,t1.transaction_fee,t1.service_fee,t1.agent_fee,t1.order_no,t1.create_time,
     t1.pay_time,t1.pay_end_time,t1.car_id,t1.amount_fee,
     t2.main_photo,t2.car_auto_no,t2.auto_info_name,t2.report_colligation_ranks,t2.report_servicing_ranks,
-    t3.vehicle_attribution_city,t3.vehicle_attribution_city_cn,t3.mileage,t4.move_to_where,t5.if_agent,t1.auto_auction_id
+    t3.vehicle_attribution_city,t3.vehicle_attribution_city_cn,t3.mileage,t4.move_to_where,t5.if_agent,t1.auto_auction_id,
+    cs.`name` store_name, cs.simple_name, cs.address
     FROM car_order t1
     INNER JOIN car_auto t2 ON t1.car_id=t2.id
     INNER JOIN car_auto_info_detail t3 ON t2.id=t3.auto_id
     INNER JOIN car_auto_auction t5 ON t1.auto_auction_id=t5.id
     LEFT JOIN  car_auto_procedures t4 ON  t4.auto_id=t1.car_id
+    INNER JOIN car_store cs ON cs.id = t2.store_id
     WHERE t1.id=#{orderId}
   </select>
 

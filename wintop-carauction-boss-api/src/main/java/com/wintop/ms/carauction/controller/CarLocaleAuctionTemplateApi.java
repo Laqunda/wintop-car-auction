@@ -161,8 +161,6 @@ public class CarLocaleAuctionTemplateApi {
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
-
-
     @AuthPublic
     @PostMapping( value = "/export" )
     public void export(HttpServletRequest request, HttpServletResponse rep,

@@ -64,16 +64,17 @@ public class Constants {
      */
     public static final String APP_VERSION = "version";
 
-    public static final String ROOT = "http://127.0.0.1:8185";
-//    public static final String ROOT = "http://3f7e2caa.ngrok.io" ;
+//    public static final String ROOT = "http://test-api.yuntongauto.com" ;
+    public static final String ROOT = "http://127.0.0.1:8185" ;
 
     /*查博士回调地址*/
-    public static final String CALLBACK_CHABOSHI = "http://3f7e2caa.ngrok.io/service/carChaboshiLog/cbsCallback";
+    public static final String CALLBACK_CHABOSHI = ROOT+"/service/carChaboshiLog/cbsCallback" ;
 
     /**
      * 在线签约微服务地址
      */
-    public static final String COMMON_MODULE_ROOT = "http://test-api.yuntongauto.com";
+//    public static final String COMMON_MODULE_ROOT = "http://test-api.yuntongauto.com" ;
+    public static final String COMMON_MODULE_ROOT = "http://127.0.0.1:8081";
     /***
      * 本地开发，接口调用测试环境接口
      * http://test-api.yuntongauto.com/file 文件上传接口
@@ -81,34 +82,25 @@ public class Constants {
      * http://test-api.yuntongauto.com/carmodel 车型库接口
      */
 
-    /**
-     * pdf模板方式合同生成甲方签字合同
-     **/
-    public static final String CREATESIGNATURE_TEMP_URL = Constants.COMMON_MODULE_ROOT + "/signature/gosign/pdf/fill";
+    /**pdf模板方式合同生成甲方签字合同**/
+    public static final String CREATESIGNATURE_TEMP_URL =  Constants.COMMON_MODULE_ROOT + "/signature/gosign/pdf/fill";
 
-    /**
-     * 在线签约--个人签约--签署关键字
-     */
+    /**在线签约--个人签约--签署关键字*/
     public static final String SIGNATURE_CUS_KEY = "甲方签字";
 
-    /**
-     * 在线签约--个人签约--签署关键字
-     */
+    /**在线签约--个人签约--签署关键字*/
     public static final String SIGNATURE_BSE_KEY = "乙方：（盖章）";
 
-    /**
-     * 根据身份证号获取e签宝的已有账号编号
-     */
+    /**根据身份证号获取e签宝的已有账号编号
+     * */
     public static final String SIGNATURE_GETUSERID_URL = Constants.COMMON_MODULE_ROOT + "/signature/account/user/getid";
 
-    /**
-     * 给合同补签公司章-url
-     */
-    public static final String PLATFORM_SIGNATURE_URL = Constants.COMMON_MODULE_ROOT + "/signature/gosign/multi/platform";
+    /**给合同补签公司章-url*/
+    public static final String PLATFORM_SIGNATURE_URL =  Constants.COMMON_MODULE_ROOT + "/signature/gosign/multi/platform";
 
     /**
      * 签约服务--两要素接口
-     */
+     * */
     public static final String PERSON_CARNO_VERIFICATION = Constants.COMMON_MODULE_ROOT + "/signature/account/user/vrification";
 
     /***
