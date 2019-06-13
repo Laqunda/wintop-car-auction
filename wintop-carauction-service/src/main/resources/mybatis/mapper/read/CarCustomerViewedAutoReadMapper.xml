@@ -83,6 +83,17 @@
         <if test="auctionType">
             AND t4.auction_type=#{auctionType}
         </if>
+        <if test="currentDate != null">
+            and (
+            auction_start_time is not null
+            and
+            str_to_date(auction_start_time,'%Y-%m-%d %H:%i') =
+            str_to_date(date_add(currentDate,INTERVAL 20 MINUTE),'%Y-%m-%d %H:%i')
+            )
+        </if>
+        <if test="status != null">
+            AND t4.status = ${status}
+        </if>
         <if test="brandId!=null">
             AND t3.auto_brand=#{brandId}
         </if>

@@ -9,10 +9,12 @@ import com.wintop.ms.carauction.core.entity.RedisAutoData;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.model.*;
+import com.wintop.ms.carauction.service.ICarAppInfoService;
 import com.wintop.ms.carauction.service.ICarAuctionSettingService;
 import com.wintop.ms.carauction.service.ICarAutoAuctionService;
 import com.wintop.ms.carauction.service.ICarAutoService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
+import com.wintop.ms.carauction.util.utils.JPushUtil;
 import com.wintop.ms.carauction.util.utils.RedisAutoManager;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +35,15 @@ import static java.util.stream.Collectors.joining;
 
 @Service
 public class CarAutoServiceImpl implements ICarAutoService {
+    private static final String UNDERLINE = "2";
+    private static final String STORE_TYPE = "2";
+    private static final String CENTER_TYPE = "2";
+    private static final String CENTER_INCHANGE = "3";
+    private static final String ONLINE = "1";
+    private static final String CELLER = "1";
+    private static final String AUDIT_CAR_TITLE = "审批车辆";
+    private static final String AUDIT_CAR_CONTENT = "您有一个车辆待审批";
+    private static final String STORE_INCHANGE = "8";
     @Autowired
     private CarAutoModel carAutoModel;
     @Autowired
@@ -85,6 +96,14 @@ public class CarAutoServiceImpl implements ICarAutoService {
     private CarAutoDetectionDataModel carAutoDetectionDataModel;
     @Autowired
     private CarAutoDetectionDataPhotoModel carAutoDetectionDataPhotoModel;
+    @Autowired
+    private CarManagerRolePublishModel carManagerRolePublishModel;
+    @Autowired
+    private CarStoreModel carStoreModel;
+    @Autowired
+    private CarCenterStoreModel carCenterStoreModel;
+    @Autowired
+    private ICarAppInfoService appInfoService;
 
     private static Map<String,  List<Integer>> auctionTypeMap = getAuctionTypeMap();
 
@@ -694,8 +713,9 @@ public class CarAutoServiceImpl implements ICarAutoService {
         Long managerId=object.getLong("managerId");
         CarManagerUser managerUser=managerUserModel.selectByPrimaryKey(managerId);
         CarAuto carAuto=carAutoModel.selectByCarId(map);
+        CarAutoAuction autoAuction = null;
         if(managerUser!=null && carAuto!=null && carAuto.getAuctionType()!=null){
-            CarAutoAuction autoAuction=autoAuctionModel.selectByPrimaryKey(carAuto.getAutoAuctionId());
+            autoAuction = autoAuctionModel.selectByPrimaryKey(carAuto.getAutoAuctionId());
             CarAuctionSetting auctionSetting=auctionSettingService.selectByRegionId(carAuto.getRegionId());
             //如果审核通过
             if("1".equals(object.getString("status"))){
@@ -799,15 +819,48 @@ public class CarAutoServiceImpl implements ICarAutoService {
                     RedisAutoData autoData = carAutoAuctionService.getRedisAutoData(carAuto.getId());
                     redisAutoManager.updateAuto(autoData);
                 }
+                // 发车消息推送
+                pushCarAutoMsg(managerId, carAuto, autoAuction);
             }
         }
         return result;
+    }
+
+    private void pushCarAutoMsg(Long managerId, CarAuto carAuto, CarAutoAuction autoAuction) {
+        CarAppInfo carAppInfo = appInfoService.selectByType(CELLER);
+        Map<String, Object> param = Maps.newHashMap();
+        param.put("managerId", managerId);
+        param.put("typeId", autoAuction.getAuctionType());
+        List<CarManagerRolePublish> publishList = carManagerRolePublishModel.selectByCondition(param);
+        for (CarManagerRolePublish publish : publishList) {
+            if (ONLINE.equals(autoAuction.getAuctionType())) {
+                List<CarStore> storeList = carStoreModel.selectByExample(Collections.singletonMap("regionId", publish.getObjId()));
+                for (CarStore store : storeList) {
+                    List<CarManagerUser> userList = managerUserModel.selectByExample(Collections.singletonMap("departmentId", store.getId()));
+                    for (CarManagerUser user : userList) {
+                        // 二手车负责人 经销店
+                        if (user.getRoleTypeId().equals(Long.valueOf(CENTER_TYPE)) && user.getRoleId().equals(Long.valueOf(STORE_INCHANGE))) {
+                            JPushUtil.sendAutoMsg(carAppInfo.getAppId(), new String[]{user.getId() + ""}, AUDIT_CAR_TITLE, AUDIT_CAR_CONTENT, carAuto.getId() + "");
+                        }
+                    }
+                }
+            } else if (UNDERLINE.equals(autoAuction.getAuctionType())) {
+                List<CarManagerUser> userList = userModel.selectByExample(Collections.singletonMap("departmentId", publish.getObjId()));
+                for (CarManagerUser user : userList) {
+                    // 二手车负责人 中心店
+                    if (user.getRoleTypeId().equals(Long.valueOf(CENTER_TYPE)) && user.getRoleId().equals(Long.valueOf(CENTER_INCHANGE))) {
+                        JPushUtil.sendAutoMsg(carAppInfo.getAppId(), new String[]{user.getId() + ""},AUDIT_CAR_TITLE,AUDIT_CAR_CONTENT,carAuto.getId()+"");
+                    }
+                }
+            }
+        }
     }
 
     /**
      *获取当日上新车辆数
      */
     @Transactional
+    @Override
     public Integer selectDayCarCount(Map<String,Object> map) {
         Integer result = 0;
         try {

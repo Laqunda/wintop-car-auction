@@ -123,6 +123,12 @@ public class CarAutoApi {
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 
+    /**
+     * 零售车辆列表
+     * @param map
+     * @param userId
+     * @return
+     */
     @RequestMapping(value = "/retailOrderList",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",

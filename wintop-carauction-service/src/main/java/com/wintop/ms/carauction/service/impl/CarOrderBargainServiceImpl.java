@@ -1,25 +1,28 @@
 package com.wintop.ms.carauction.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.CarStatusEnum;
 import com.wintop.ms.carauction.core.config.OrderStatusEnum;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.model.*;
+import com.wintop.ms.carauction.service.ICarAppInfoService;
 import com.wintop.ms.carauction.service.ICarOrderBargainService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
+import com.wintop.ms.carauction.util.utils.JPushUtil;
 import com.wintop.ms.carauction.util.utils.RandCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CarOrderBargainServiceImpl implements ICarOrderBargainService {
+    private static final String SURE_BARGAINING_TITLE = "车辆待议价";
+    private static final String SURE_BARGAINING_CONTENT = "您有一辆车待议价";
+    private static final String CELLER = "1";
     @Autowired
     private CarOrderBargainModel model;
     @Autowired
@@ -40,6 +43,8 @@ public class CarOrderBargainServiceImpl implements ICarOrderBargainService {
     private CarAuctionBidRecordModel bidRecordModel;
     @Autowired
     private CarRegionSettingModel regionSettingModel;
+    @Autowired
+    private ICarAppInfoService appInfoService;
     private IdWorker idWorker = new IdWorker(10);
     @Override
     public ServiceResult<Integer> countByExample(Map<String, Object> map) {
@@ -82,6 +87,7 @@ public class CarOrderBargainServiceImpl implements ICarOrderBargainService {
         Integer count = model.updateById(carOrderBargain);
         return new ServiceResult<>(true,count);
     }
+    @Override
     @Transactional
     public Integer sureBargaining(JSONObject object,CarAuto auto){
         Integer result=0;
@@ -119,7 +125,7 @@ public class CarOrderBargainServiceImpl implements ICarOrderBargainService {
                 Date date=new Date();
                 CarOrder order = new CarOrder();
                 order.setId(idWorker.nextId());
-                order.setAuctionId(1l);
+                order.setAuctionId(1L);
                 order.setOrderNo(RandCodeUtil.getOrderNumber());
                 order.setCarId(carId);
                 order.setCustomerId(bargain.getCustomerId());
@@ -150,6 +156,7 @@ public class CarOrderBargainServiceImpl implements ICarOrderBargainService {
                 bargain.setOrderId(order.getId());
                 //议价成功
                 bargain.setStatus("2");
+                pushSureBargainingMsg(managerUser, auto);
                 //议价失败
             }else if ("2".equals(status)){
                 //车辆状态更改 19流拍
@@ -191,4 +198,9 @@ public class CarOrderBargainServiceImpl implements ICarOrderBargainService {
         return result;
     }
 
+    private void pushSureBargainingMsg(CarManagerUser managerUser, CarAuto carAuto) {
+        CarAppInfo carAppInfo = appInfoService.selectByType(CELLER);
+        JPushUtil.sendAutoMsg(carAppInfo.getAppId(), new String[]{managerUser.getCreatePerson() + ""}, SURE_BARGAINING_TITLE, SURE_BARGAINING_CONTENT, carAuto.getId() + "");
+
+    }
 }
