@@ -33,8 +33,6 @@ public class CarAssessLog extends BaseEntity {
      */
     private Date createTime;
 
-    private Long autoId;
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -113,13 +111,5 @@ public class CarAssessLog extends BaseEntity {
     @Override
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    public Long getAutoId() {
-        return autoId;
-    }
-
-    public void setAutoId(Long autoId) {
-        this.autoId = autoId;
     }
 }

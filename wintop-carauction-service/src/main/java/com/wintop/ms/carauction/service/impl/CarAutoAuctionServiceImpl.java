@@ -19,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service("CarAutoAuctionService")
 public class CarAutoAuctionServiceImpl implements ICarAutoAuctionService {
@@ -292,7 +289,7 @@ public class CarAutoAuctionServiceImpl implements ICarAutoAuctionService {
      */
     @Override
     public CarAutoAuction selectAuctionInformation(Long carId) {
-        return autoAuctionModel.selectAuctionInformation(carId);
+        return autoAuctionModel.selectAuctionInformation(Collections.singletonMap("carId",carId));
     }
 
     /**

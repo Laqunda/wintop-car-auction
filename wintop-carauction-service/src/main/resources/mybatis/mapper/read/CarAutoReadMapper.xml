@@ -98,6 +98,7 @@
         <result column="orderId" property="orderId" />
         <result column="manager_evaluate" property="managerEvaluate" />
         <result column="retail_id" property="retailId" />
+        <result column="auto_auction_id" property="autoAuctionId" />
 
     </resultMap>
     <sql id="Base_Column_List">
@@ -113,6 +114,9 @@
         WHERE t1.status != '0'
         <if test="carAutoNo != null and carAutoNo != ''">
             and t1.car_auto_no != #{carAutoNo}
+        </if>
+        <if test="id != null">
+            and t1.id = #{id}
         </if>
         <if test="orderByClause != null">
             order by ${orderByClause}
