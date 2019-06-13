@@ -200,7 +200,7 @@ public class Constants {
     /***
      * 查博士店铺充值支付宝支付通知接口
      */
-    public static final String ALIPAY_NOTIFY_URL_CHABOSHI_STORE = "http://111.202.186.103:8080/mobile/aliPay/payCbsChargeCallback";
+    public static final String ALIPAY_NOTIFY_URL_CHABOSHI_STORE = "http://111.202.186.103:8080/store/aliPay/payCbsChargeCallback";
 
     /**
      * 图片上传
