@@ -129,9 +129,9 @@
       FROM car_auction_bid_record t1
       INNER JOIN car_auto t2 ON t1.car_id = t2.id
       INNER JOIN car_auto_info_detail t3 ON t3.auto_id = t1.car_id
-      INNER JOIN car_auto_auction t4 ON t4.id = t2.auto_auction_id
+      INNER JOIN car_auto_auction t4 ON t4.id = t2.auto_auction_id and t4.`status` = '4'
       LEFT JOIN car_store cs on cs.id=t2.store_id
-      LEFT JOIN car_order o on (o.auction_bid_record_id=t1.id AND o.customer_id=#{customerId})
+      LEFT JOIN car_order o on (o.auto_auction_id=t1.auction_id AND o.customer_id=#{customerId})
       LEFT JOIN car_customer_entrust_car t5 ON (t5.auto_auction_id=t1.auction_id AND t5.customer_id=#{customerId})
       LEFT JOIN car_locale_auction_car t7 ON t7.car_id = t1.car_id
       WHERE  t1.customer_id = #{customerId}
