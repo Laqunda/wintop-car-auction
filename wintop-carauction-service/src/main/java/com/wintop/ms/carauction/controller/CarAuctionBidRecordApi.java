@@ -44,6 +44,9 @@ public class CarAuctionBidRecordApi {
         try {
             Long customerId = obj.getLong("customerId");
             Map<String,Object> paramMap = new HashMap<>();
+            if(null != obj.getString("auctionType") && !"".equals(obj.getString("auctionType"))){
+                paramMap.put("auctionType", obj.getString("auctionType"));
+            }
             paramMap.put("customerId",customerId);
             int count = iCarAuctionBidRecordService.selectBidCount(paramMap);
             PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
