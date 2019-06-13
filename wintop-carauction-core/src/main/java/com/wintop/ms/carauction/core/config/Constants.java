@@ -64,15 +64,16 @@ public class Constants {
      */
     public static final String APP_VERSION = "version";
 
-    public static final String ROOT = "http://test-api.yuntongauto.com" ;
-
-//    public static final String ROOT = "http://127.0.0.1:8185" ;
+    public static final String ROOT = "http://127.0.0.1:8185";
+//    public static final String ROOT = "http://3f7e2caa.ngrok.io" ;
 
     /*查博士回调地址*/
-    public static final String CALLBACK_CHABOSHI = ROOT+"/service/carChaboshiLog/cbsCallback" ;
+    public static final String CALLBACK_CHABOSHI = "http://3f7e2caa.ngrok.io/service/carChaboshiLog/cbsCallback";
 
-    /**在线签约微服务地址*/
-    public static final String COMMON_MODULE_ROOT = "http://test-api.yuntongauto.com" ;
+    /**
+     * 在线签约微服务地址
+     */
+    public static final String COMMON_MODULE_ROOT = "http://test-api.yuntongauto.com";
     /***
      * 本地开发，接口调用测试环境接口
      * http://test-api.yuntongauto.com/file 文件上传接口
@@ -80,25 +81,34 @@ public class Constants {
      * http://test-api.yuntongauto.com/carmodel 车型库接口
      */
 
-    /**pdf模板方式合同生成甲方签字合同**/
-    public static final String CREATESIGNATURE_TEMP_URL =  Constants.COMMON_MODULE_ROOT + "/signature/gosign/pdf/fill";
+    /**
+     * pdf模板方式合同生成甲方签字合同
+     **/
+    public static final String CREATESIGNATURE_TEMP_URL = Constants.COMMON_MODULE_ROOT + "/signature/gosign/pdf/fill";
 
-    /**在线签约--个人签约--签署关键字*/
+    /**
+     * 在线签约--个人签约--签署关键字
+     */
     public static final String SIGNATURE_CUS_KEY = "甲方签字";
 
-    /**在线签约--个人签约--签署关键字*/
+    /**
+     * 在线签约--个人签约--签署关键字
+     */
     public static final String SIGNATURE_BSE_KEY = "乙方：（盖章）";
 
-    /**根据身份证号获取e签宝的已有账号编号
-     * */
+    /**
+     * 根据身份证号获取e签宝的已有账号编号
+     */
     public static final String SIGNATURE_GETUSERID_URL = Constants.COMMON_MODULE_ROOT + "/signature/account/user/getid";
 
-    /**给合同补签公司章-url*/
-    public static final String PLATFORM_SIGNATURE_URL =  Constants.COMMON_MODULE_ROOT + "/signature/gosign/multi/platform";
+    /**
+     * 给合同补签公司章-url
+     */
+    public static final String PLATFORM_SIGNATURE_URL = Constants.COMMON_MODULE_ROOT + "/signature/gosign/multi/platform";
 
     /**
      * 签约服务--两要素接口
-     * */
+     */
     public static final String PERSON_CARNO_VERIFICATION = Constants.COMMON_MODULE_ROOT + "/signature/account/user/vrification";
 
     /***
@@ -121,33 +131,51 @@ public class Constants {
     /***
      * 车辆配置，两个选项
      */
-    public static final List<Map<String,String>> AUTO_CONF_OPTION_TWO = new ArrayList<>(
+    public static final List<Map<String, String>> AUTO_CONF_OPTION_TWO = new ArrayList<>(
             Arrays.asList(
-                    new HashMap<String,String>(){{put("confOption","1");put("confOptionCn","有");}},
-                    new HashMap<String,String>(){{put("confOption","2");put("confOptionCn","无");}}
+                    new HashMap<String, String>() {{
+                        put("confOption", "1");
+                        put("confOptionCn", "有");
+                    }},
+                    new HashMap<String, String>() {{
+                        put("confOption", "2");
+                        put("confOptionCn", "无");
+                    }}
             ));
 
     /***
      * 车辆配置，三个选项
      */
-    public static final List<Map<String,String>> AUTO_CONF_OPTION_THREE = new ArrayList<>(
+    public static final List<Map<String, String>> AUTO_CONF_OPTION_THREE = new ArrayList<>(
             Arrays.asList(
-                    new HashMap<String,String>(){{put("confOption","1");put("confOptionCn","有");}},
-                    new HashMap<String,String>(){{put("confOption","2");put("confOptionCn","无");}},
-                    new HashMap<String,String>(){{put("confOption","3");put("confOptionCn","加装");}}
+                    new HashMap<String, String>() {{
+                        put("confOption", "1");
+                        put("confOptionCn", "有");
+                    }},
+                    new HashMap<String, String>() {{
+                        put("confOption", "2");
+                        put("confOptionCn", "无");
+                    }},
+                    new HashMap<String, String>() {{
+                        put("confOption", "3");
+                        put("confOptionCn", "加装");
+                    }}
             ));
 
-    /**获取品牌信息
-     * */
-    public static final String GET_BRANDS_URL = COMMON_MODULE_ROOT+"/carmodel/brands";
+    /**
+     * 获取品牌信息
+     */
+    public static final String GET_BRANDS_URL = COMMON_MODULE_ROOT + "/carmodel/brands";
 
-    /**获取品牌下车系
-     * */
-    public static final String GET_SERIES_URL = COMMON_MODULE_ROOT+"/carmodel/series";
+    /**
+     * 获取品牌下车系
+     */
+    public static final String GET_SERIES_URL = COMMON_MODULE_ROOT + "/carmodel/series";
 
-    /**获取车系下车型
-     * */
-    public static final String GET_VEHICLE_URL = COMMON_MODULE_ROOT+"/carmodel/vehicle";
+    /**
+     * 获取车系下车型
+     */
+    public static final String GET_VEHICLE_URL = COMMON_MODULE_ROOT + "/carmodel/vehicle";
 
     /***getVehicleListByVin
      * 根据vin码匹配车型列表
@@ -158,26 +186,39 @@ public class Constants {
     /***
      * 根据具体车型获取车辆详细配置信息
      */
-    public static final String ID_GET_VEHICLEDETAIL_URL = COMMON_MODULE_ROOT+"/carmodel";
+    public static final String ID_GET_VEHICLEDETAIL_URL = COMMON_MODULE_ROOT + "/carmodel";
 //    public static final String ID_GET_VEHICLEDETAIL_URL = "http://192.168.22.67:2001/carmodel/vehicledetail";
 
 
     /**
      * 线上拍卖的时间设置
      */
-    public static final Integer AUCTION_TIME=120000;
+    public static final Integer AUCTION_TIME = 120000;
 
     /***
      * 保证金支付宝支付通知接口
      */
     public static final String ALIPAY_NOTIFY_URL = "http://111.202.186.103:8080/mobile/aliPay/payNotifyDeposit";
-//    public static final String ALIPAY_NOTIFY_URL = "http://2sc.wintop2sc.com/mobile/aliPay/payNotifyDeposit";
+    //public static final String ALIPAY_NOTIFY_URL = "http://2sc.wintop2sc.com/mobile/aliPay/payNotifyDeposit";
 
-    /**图片上传*/
-    public static final String UPLOADFILE_URL = COMMON_MODULE_ROOT+"/file/uploadFile";
+    /***
+     * 查博士支付宝支付通知接口
+     */
+    public static final String ALIPAY_NOTIFY_URL_CHABOSHI = "http://111.202.186.103:8080/mobile/aliPay/payChaboshiAmountCallback";
+    /***
+     * 查博士店铺充值支付宝支付通知接口
+     */
+    public static final String ALIPAY_NOTIFY_URL_CHABOSHI_STORE = "http://111.202.186.103:8080/mobile/aliPay/payCbsChargeCallback";
+
+    /**
+     * 图片上传
+     */
+    public static final String UPLOADFILE_URL = COMMON_MODULE_ROOT + "/file/uploadFile";
 //    public static final String UPLOADFILE_URL = "http://192.168.22.67:2003/file/uploadFile";
-    /**图片上传*/
-    public static final String UPLOADIMAGEFORQUALITY_URL = COMMON_MODULE_ROOT+"/file/uploadImageForQuality";
+    /**
+     * 图片上传
+     */
+    public static final String UPLOADIMAGEFORQUALITY_URL = COMMON_MODULE_ROOT + "/file/uploadImageForQuality";
 //    public static final String UPLOADIMAGEFORQUALITY_URL = "http://192.168.22.67:2003/file/uploadImageForQuality";
 
 
@@ -194,7 +235,7 @@ public class Constants {
      * 静态资源服务器地址
      */
 //    public static final String STATIC_WEBSITE = "http://2sc.wintop2sc.com";
-    public static final String STATIC_WEBSITE = "http://test-admin.yuntongauto.com";
+    public static final String STATIC_WEBSITE = "http://szemw5.natappfree.cc";
 
     /***
      * 柠檬竞价logo，用于通用图片使用

@@ -198,7 +198,7 @@ public class AliPayApi {
             alipayRequestModel.setBody("查博士查询消费");//描述
             alipayRequestModel.setPassbackParams(user.getId() + "");//附加字段
             alipayRequestModel.setOutTradeNo(RandCodeUtil.getOrderNumber());//单号
-            alipayRequestModel.setPayNotifyUrl(Constants.ALIPAY_NOTIFY_URL);//回调通知地址
+            alipayRequestModel.setPayNotifyUrl(Constants.ALIPAY_NOTIFY_URL_CHABOSHI);//回调通知地址
             alipayRequestModel.setSubject("查博士查询");//标题
             alipayRequestModel.setTimeoutExpress("30m");//支付有效期30分钟
             alipayRequestModel.setTotalAmount(count + "");//付款金额
