@@ -35,7 +35,8 @@ import java.util.*;
 @RequestMapping("/service/carRegionSetting")
 public class CarRegionSettingApi {
     private static final Logger logger = LoggerFactory.getLogger(CarRegionSettingApi.class);
-    private static final long CENTER = 2L;
+    // 使用状态
+    private static final String USE = "1";
     @Autowired
     private ICarRegionSettingService regionSettingService;
     @Autowired
@@ -186,12 +187,7 @@ public class CarRegionSettingApi {
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
 
             CarManagerUser user = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), false);
-            if (isNotEmpty(user)) {
-                if (new Long(CENTER).equals(user.getRoleTypeId())
-                        && ManagerRole.ZX_ESCFZR.value() == user.getRoleId().intValue()){
-                    param.put("centerId",user.getDepartmentId());
-                }
-            }
+
             List<CarRegionSetting> settingList  = regionSettingService.selectByExample(param);
             if(CollectionUtils.isEmpty(settingList)){
                 result.setError(ResultCode.NO_OBJECT.strValue(),ResultCode.NO_OBJECT.getRemark());
@@ -241,6 +237,9 @@ public class CarRegionSettingApi {
                 if (isNotEmpty(obj.getString("regionId"))) {
                     setting.setRegionId(obj.getLong("regionId"));
                 }
+                if (isNotEmpty(obj.getString("regionName"))){
+                    setting.setRegionName(obj.getString("regionName"));
+                }
                 if (isNotEmpty(obj.getString("agentFee"))) {
                     setting.setAgentFee(BigDecimal.valueOf(obj.getLong("agentFee")));
                 }
@@ -248,6 +247,7 @@ public class CarRegionSettingApi {
                     setting.setUpdateTime(new Date());
                     setting.setUpdatePerson(user.getId());
                 }
+                setting.setStatus(USE);
                 regionSettingService.updateByPrimaryKeySelective(setting);
             }
             List<CarRegionServerfeeSetting> serverfeeSettingList = setting.getServerfeeSettingList();
@@ -286,10 +286,14 @@ public class CarRegionSettingApi {
             if (isNotEmpty(obj.getString("agentFee"))) {
                 setting.setAgentFee(BigDecimal.valueOf(obj.getLong("agentFee")));
             }
+            if (isNotEmpty(obj.getString("regionName"))){
+                setting.setRegionName(obj.getString("regionName"));
+            }
             if (isNotEmpty(user)) {
                 setting.setCreateTime(new Date());
                 setting.setCreatePerson(user.getId());
             }
+            setting.setStatus(USE);
             regionSettingService.insert(setting);
 
             CarRegionServerfeeSetting serverfeeSetting = new CarRegionServerfeeSetting();
