@@ -357,7 +357,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
             if ("1".equals(obj.get("edition"))) {
                 /*维修版本*/
                 if (balance == null || balance.compareTo(payment) == -1) {
-                    result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.LOW_BALANCE.getRemark());
+                    result.setError(ResultCode.FAIL.strValue(), ResultCode.LOW_BALANCE.getRemark());
                 } else {
                     /* 查询--支付--生成查询记录*/
                     result = chaboshiStore(payment, obj);
@@ -365,18 +365,18 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
             } else if ("2".equals(obj.get("edition"))) {
                 /*综合版本*/
                 if (balance == null || balance.compareTo(paymentComposite) == -1) {
-                    result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.LOW_BALANCE.getRemark());
+                    result.setError(ResultCode.FAIL.strValue(), ResultCode.LOW_BALANCE.getRemark());
                 } else {
                     /* 查询--支付--生成查询记录*/
                     result = chaboshiStore(payment, obj);
                 }
             } else {
-                result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_PARAM.getRemark());
+                result.setError(ResultCode.FAIL.strValue(), ResultCode.NO_PARAM.getRemark());
             }
 
 
         } else {
-            result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_OBJECT.getRemark());
+            result.setError(ResultCode.FAIL.strValue(), ResultCode.NO_OBJECT.getRemark());
         }
         return result;
     }
@@ -408,12 +408,12 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
             c.setBalance(c.getBalance().subtract(payment));
             /*小于零 余额不足*/
             if (c.getBalance().compareTo(BigDecimal.ZERO) == -1) {
-                result.setSuccess(ResultCode.FAIL.strValue(), "余额不足！");
+                result.setError(ResultCode.FAIL.strValue(), "余额不足！");
                 return result;
             }
         } else {
             /*没有找到流水记录*/
-            result.setSuccess(ResultCode.FAIL.strValue(), "没有找到流水记录");
+            result.setError(ResultCode.FAIL.strValue(), "没有找到流水记录");
             return result;
         }
 
@@ -465,12 +465,12 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                 /*查博士查找失败*/
                 log.setResponseResult("2");
                 log.setOrderMsg(object.getString("Message"));
-                result.setSuccess(ResultCode.FAIL.strValue(), object.getString("Message"));
+                result.setError(ResultCode.FAIL.strValue(), object.getString("Message"));
             }
         } else {
             /*查询失败*/
             log.setResponseResult("2");
-            result.setSuccess(ResultCode.FAIL.strValue(), "查找失败！");
+            result.setError(ResultCode.FAIL.strValue(), "查找失败！");
         }
 
         insertCarChaboshiLog(log);
