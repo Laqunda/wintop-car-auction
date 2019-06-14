@@ -820,40 +820,24 @@ public class CarAutoServiceImpl implements ICarAutoService {
                     redisAutoManager.updateAuto(autoData);
                 }
                 // 发车消息推送
-                pushCarAutoMsg(managerId, carAuto, autoAuction);
+                pushCarAutoMsg(carAuto, autoAuction);
             }
         }
         return result;
     }
 
-    private void pushCarAutoMsg(Long managerId, CarAuto carAuto, CarAutoAuction autoAuction) {
+    private void pushCarAutoMsg(CarAuto carAuto, CarAutoAuction autoAuction) {
         CarAppInfo carAppInfo = appInfoService.selectByType(CELLER);
         Map<String, Object> param = Maps.newHashMap();
-        param.put("managerId", managerId);
         param.put("typeId", autoAuction.getAuctionType());
+        param.put("objId", carAuto.getRegionId());
         List<CarManagerRolePublish> publishList = carManagerRolePublishModel.selectByCondition(param);
-        for (CarManagerRolePublish publish : publishList) {
-            if (ONLINE.equals(autoAuction.getAuctionType())) {
-                List<CarStore> storeList = carStoreModel.selectByExample(Collections.singletonMap("regionId", publish.getObjId()));
-                for (CarStore store : storeList) {
-                    List<CarManagerUser> userList = managerUserModel.selectByExample(Collections.singletonMap("departmentId", store.getId()));
-                    for (CarManagerUser user : userList) {
-                        // 二手车负责人 经销店
-                        if (user.getRoleTypeId().equals(Long.valueOf(CENTER_TYPE)) && user.getRoleId().equals(Long.valueOf(STORE_INCHANGE))) {
-                            JPushUtil.sendAutoMsg(carAppInfo.getAppId(), new String[]{user.getId() + ""}, AUDIT_CAR_TITLE, AUDIT_CAR_CONTENT, carAuto.getId() + "");
-                        }
-                    }
-                }
-            } else if (UNDERLINE.equals(autoAuction.getAuctionType())) {
-                List<CarManagerUser> userList = userModel.selectByExample(Collections.singletonMap("departmentId", publish.getObjId()));
-                for (CarManagerUser user : userList) {
-                    // 二手车负责人 中心店
-                    if (user.getRoleTypeId().equals(Long.valueOf(CENTER_TYPE)) && user.getRoleId().equals(Long.valueOf(CENTER_INCHANGE))) {
-                        JPushUtil.sendAutoMsg(carAppInfo.getAppId(), new String[]{user.getId() + ""},AUDIT_CAR_TITLE,AUDIT_CAR_CONTENT,carAuto.getId()+"");
-                    }
-                }
+        if (CollectionUtils.isNotEmpty(publishList)) {
+            for (CarManagerRolePublish publish : publishList) {
+                JPushUtil.sendAutoMsg(carAppInfo.getAppId(), new String[]{publish.getManagerId() + ""}, AUDIT_CAR_TITLE, AUDIT_CAR_CONTENT, publish.getManagerId() + "");
             }
         }
+
     }
 
     /**
