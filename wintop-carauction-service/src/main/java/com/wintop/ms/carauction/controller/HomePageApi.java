@@ -64,7 +64,7 @@ public class HomePageApi {
                 param.put("cityIds", Splitter.on(",").splitToList(obj.getString("cityIds")).stream().map(a -> Longs.tryParse(a)).collect(Collectors.toList()));
             }
             //竞拍场次site_val  竞拍城市city_val
-            List<String> listVal = Arrays.asList("site_val", "city_val");
+            List<String> listVal = Arrays.asList("site_val", "city_val","car_val");
             for(String code:listVal){
                 CarAppSetting appSet = carAppSettingService.getAcutionHint(Collections.singletonMap("code", code)).getResult();
                 map.put(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, code),appSet.getContent());

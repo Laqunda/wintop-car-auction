@@ -143,6 +143,7 @@
       ) t
 
       GROUP BY t.car_id
+      ORDER BY t.bid_time DESC
     <if test="startRowNum!=null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>

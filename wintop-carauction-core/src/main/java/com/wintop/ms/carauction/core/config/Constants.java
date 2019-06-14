@@ -64,17 +64,15 @@ public class Constants {
      */
     public static final String APP_VERSION = "version";
 
-//    public static final String ROOT = "http://test-api.yuntongauto.com" ;
-    public static final String ROOT = "http://127.0.0.1:8185" ;
+    public static final String ROOT = "http://test-api.yuntongauto.com" ;
+
+//    public static final String ROOT = "http://127.0.0.1:8185" ;
 
     /*查博士回调地址*/
     public static final String CALLBACK_CHABOSHI = ROOT+"/service/carChaboshiLog/cbsCallback" ;
 
-    /**
-     * 在线签约微服务地址
-     */
-//    public static final String COMMON_MODULE_ROOT = "http://test-api.yuntongauto.com" ;
-    public static final String COMMON_MODULE_ROOT = "http://127.0.0.1:8081";
+    /**在线签约微服务地址*/
+    public static final String COMMON_MODULE_ROOT = "http://test-api.yuntongauto.com" ;
     /***
      * 本地开发，接口调用测试环境接口
      * http://test-api.yuntongauto.com/file 文件上传接口
@@ -172,8 +170,8 @@ public class Constants {
     /***getVehicleListByVin
      * 根据vin码匹配车型列表
      */
-//    public static final String VIN_GET_VEHICLELIST_URL = COMMON_MODULE_ROOT+"/carmodel/vehiclelist";
-    public static final String VIN_GET_VEHICLELIST_URL = "http://192.168.22.67:2001/carmodel/vehiclelist";
+    public static final String VIN_GET_VEHICLELIST_URL = COMMON_MODULE_ROOT+"/carmodel/vehiclelist";
+//    public static final String VIN_GET_VEHICLELIST_URL = "http://192.168.22.67:2001/carmodel/vehiclelist";
 
     /***
      * 根据具体车型获取车辆详细配置信息
@@ -190,17 +188,17 @@ public class Constants {
     /***
      * 保证金支付宝支付通知接口
      */
-    public static final String ALIPAY_NOTIFY_URL = "http://111.202.186.103:8080/mobile/aliPay/payNotifyDeposit";
+    public static final String ALIPAY_NOTIFY_URL = COMMON_MODULE_ROOT + "/mobile/aliPay/payNotifyDeposit";
     //public static final String ALIPAY_NOTIFY_URL = "http://2sc.wintop2sc.com/mobile/aliPay/payNotifyDeposit";
 
     /***
      * 查博士支付宝支付通知接口
      */
-    public static final String ALIPAY_NOTIFY_URL_CHABOSHI = "http://111.202.186.103:8080/mobile/aliPay/payChaboshiAmountCallback";
+    public static final String ALIPAY_NOTIFY_URL_CHABOSHI = COMMON_MODULE_ROOT + "/mobile/aliPay/payChaboshiAmountCallback";
     /***
      * 查博士店铺充值支付宝支付通知接口
      */
-    public static final String ALIPAY_NOTIFY_URL_CHABOSHI_STORE = "http://111.202.186.103:8080/store/aliPay/payCbsChargeCallback";
+    public static final String ALIPAY_NOTIFY_URL_CHABOSHI_STORE = COMMON_MODULE_ROOT + "/store/aliPay/payCbsChargeCallback";
 
     /**
      * 图片上传
@@ -227,7 +225,7 @@ public class Constants {
      * 静态资源服务器地址
      */
 //    public static final String STATIC_WEBSITE = "http://2sc.wintop2sc.com";
-    public static final String STATIC_WEBSITE = "http://szemw5.natappfree.cc";
+    public static final String STATIC_WEBSITE = "http://test-admin.yuntongauto.com";
 
     /***
      * 柠檬竞价logo，用于通用图片使用
