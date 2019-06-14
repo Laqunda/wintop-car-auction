@@ -38,6 +38,14 @@ public class CarManagerRolePublishModel {
         return writeDao.insertSelective(record);
     }
 
+    public int insert(CarManagerRolePublish record){
+        return writeDao.insert(record);
+    }
+
+    public int deleteByCondition(Map<String, Object> map){
+        return writeDao.deleteByCondition(map);
+    }
+
     public int updateByPrimaryKeySelective(CarManagerRolePublish record){
         return writeDao.updateByPrimaryKeySelective(record);
     }

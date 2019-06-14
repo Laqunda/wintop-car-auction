@@ -5,10 +5,24 @@
     delete from car_manager_role_publish
     where id = #{id,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteByCondition" parameterType="java.util.Map">
+    delete from car_manager_role_publish
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="managerId != null">
+        and manager_id = #{manager_id}
+      </if>
+      <if test="typeId != null">
+        and type_id = #{typeId}
+      </if>
+      <if test="objId != nul and objId != ''">
+        and obj_id = #{objId}
+      </if>
+    </trim>
+  </delete>
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarManagerRolePublish" >
-    insert into car_manager_role_publish (id, manager_id, type_id, 
+    insert into car_manager_role_publish (id, manager_id, type_id,
       obj_id)
-    values (#{id,jdbcType=BIGINT}, #{managerId,jdbcType=BIGINT}, #{typeId,jdbcType=BIGINT}, 
+    values (#{id,jdbcType=BIGINT}, #{managerId,jdbcType=BIGINT}, #{typeId,jdbcType=BIGINT},
       #{objId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarManagerRolePublish" >
