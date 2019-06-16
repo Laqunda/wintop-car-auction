@@ -8,10 +8,13 @@ import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.model.*;
 import com.wintop.ms.carauction.service.*;
 import com.wintop.ms.carauction.util.utils.IdWorker;
+import com.wintop.ms.carauction.util.utils.JPushUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +27,13 @@ import java.util.Map;
  */
 @Service
 public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
+    private static final String STORE_TYPE = "2";
+    private static final String CENTER_TYPE = "2";
+    private static final String CENTER_INCHANGE = "3";
+    private static final String CELLER = "1";
+    private static final String AUDIT_ORDER_TITLE = "审批订单";
+    private static final String AUDIT_ORDER_CONTENT = "您有一个订单待审批";
+    private static final String STORE_INCHANGE = "8";
     @Autowired
     private CarAssessOrderModel model;
     @Autowired
@@ -57,6 +67,11 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
     @Autowired
     private CarAutoProceduresModel proceduresModel;
 
+    @Autowired
+    private CarCenterStoreModel carCenterStoreModel;
+
+    @Autowired
+    private ICarAppInfoService appInfoService;
     /**
      * 查询评估采购单信息
      *
@@ -140,6 +155,7 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
     }
 
     @Transactional
+    @Override
     public ServiceResult<Map<String, Object>> createAssessOrder(JSONObject obj, IdWorker idWorker) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
@@ -181,6 +197,7 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
                     orderLogService.saveOrderLog(managerUser, "提交申请采购单！", "1", orderlog_id, order_id);
 
                     result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+                    assessPushMsg(managerUser, order_id);
                 } else {
                     result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());
                 }
@@ -194,6 +211,27 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
 
         }
         return result;
+    }
+
+    private void assessPushMsg(CarManagerUser managerUser, long order_id) {
+        CarAppInfo carAppInfo = appInfoService.selectByType(CELLER);
+        if (managerUser.getRoleTypeId().equals(Long.valueOf(CENTER_TYPE))){
+            List<CarManagerUser> userList = userModel.selectByExample(Collections.singletonMap("departmentId", managerUser.getDepartmentId()));
+            for (CarManagerUser user : userList) {
+                // 二手车负责人 中心店
+                if (user.getRoleTypeId().equals(Long.valueOf(CENTER_TYPE)) && user.getRoleId().equals(Long.valueOf(CENTER_INCHANGE))) {
+                    JPushUtil.sendOrder(carAppInfo.getAppId(), new String[]{user.getId() + ""},AUDIT_ORDER_TITLE,AUDIT_ORDER_CONTENT,order_id +"");
+                }
+            }
+        } else if (managerUser.getRoleTypeId().equals(Long.valueOf(STORE_TYPE))) {
+            List<CarManagerUser> userList = userModel.selectByExample(Collections.singletonMap("departmentId", managerUser.getDepartmentId()));
+            for (CarManagerUser user : userList) {
+                // 二手车负责人 经销店
+                if (user.getRoleTypeId().equals(Long.valueOf(STORE_TYPE)) && user.getRoleId().equals(Long.valueOf(STORE_INCHANGE))) {
+                    JPushUtil.sendOrder(carAppInfo.getAppId(), new String[]{user.getId() + ""},AUDIT_ORDER_TITLE,AUDIT_ORDER_CONTENT,order_id +"");
+                }
+            }
+        }
     }
 
     @Override

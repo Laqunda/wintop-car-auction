@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.CarManagerRolePublishWriteDao" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_manager_role_publish
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarManagerRolePublish" >
+    insert into car_manager_role_publish (id, manager_id, type_id, 
+      obj_id)
+    values (#{id,jdbcType=BIGINT}, #{managerId,jdbcType=BIGINT}, #{typeId,jdbcType=BIGINT}, 
+      #{objId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarManagerRolePublish" >
+    insert into car_manager_role_publish
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="managerId != null" >
+        manager_id,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="objId != null" >
+        obj_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="managerId != null" >
+        #{managerId,jdbcType=BIGINT},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=BIGINT},
+      </if>
+      <if test="objId != null" >
+        #{objId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarManagerRolePublish" >
+    update car_manager_role_publish
+    <set >
+      <if test="managerId != null" >
+        manager_id = #{managerId,jdbcType=BIGINT},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=BIGINT},
+      </if>
+      <if test="objId != null" >
+        obj_id = #{objId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarManagerRolePublish" >
+    update car_manager_role_publish
+    set manager_id = #{managerId,jdbcType=BIGINT},
+      type_id = #{typeId,jdbcType=BIGINT},
+      obj_id = #{objId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

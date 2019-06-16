@@ -45,6 +45,9 @@
     <if test="status != null">
       and t1.status=#{status}
     </if>
+    <if test="regionId != null">
+      and t1.region_id = #{regionId}
+    </if>
     <if test="status == null">
       and t1.status <![CDATA[ <> ]]> '3'
     </if>
