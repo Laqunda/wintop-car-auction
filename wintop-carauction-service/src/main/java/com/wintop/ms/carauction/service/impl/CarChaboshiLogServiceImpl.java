@@ -253,10 +253,10 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
         CarChaboshiLog log = selectCarChaboshiLogById(logId);
        /*
         查询结果 1查询成功，2查询失败，3，查询中
-        类型：1店铺，2个人
+        类型：1个人，2店铺
         条件：钱必须支付，必须是个人用户，状态必须是查询中
         */
-        if (log != null && log.getMoney() != null && "2".equals(log.getUserType()) && "3".equals(log.getResponseResult())) {
+        if (log != null && log.getMoney() != null && "1".equals(log.getUserType()) && "3".equals(log.getResponseResult())) {
             result = chaboshi(userId, userName, edition, logId, vin);
         } else {
             result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_ORDER.getRemark());

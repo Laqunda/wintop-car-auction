@@ -19,7 +19,7 @@ public class CarChaboshiLog extends BaseEntity
 	
 	/** 查询日志主键id */
 	private Long id;
-	/** 类型：1店铺，2个人 */
+	/** 类型：1个人，2店铺 */
 	private String userType;
 	/** 查询人ID */
 	private Long userId;

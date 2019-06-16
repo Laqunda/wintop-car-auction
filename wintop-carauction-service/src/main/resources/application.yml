@@ -25,12 +25,12 @@ spring:
 # 系统分享配置
 share_uri: http://2sc.wintop2sc.com/ht/share/index.html
 # 驱动配置信息
-spring.datasource.url :  jdbc:mysql://111.203.134.35:3306/ningmengcar?characterEncoding=utf8&useSSL=false&allowMultiQueries=true
-spring.datasource.username :  root
-spring.datasource.password :  wintop123
-#spring.datasource.url :  jdbc:mysql://192.168.0.106:3306/ningmengcar?characterEncoding=utf8&useSSL=false&allowMultiQueries=true
+#spring.datasource.url :  jdbc:mysql://111.203.134.35:3306/ningmengcar?characterEncoding=utf8&useSSL=false&allowMultiQueries=true
 #spring.datasource.username :  root
-#spring.datasource.password :  1234
+#spring.datasource.password :  wintop123
+spring.datasource.url: jdbc:mysql://rdswg333bkv6u506y1l5o.mysql.rds.aliyuncs.com:3306/ningmeng?characterEncoding=utf8&useSSL=false&allowMultiQueries=true
+spring.datasource.username: nm
+spring.datasource.password: Nm123456
 spring.datasource.driverClassName :  com.mysql.jdbc.Driver
 # 初始化大小，最小，最大
 spring.datasource.initialSize: 500
