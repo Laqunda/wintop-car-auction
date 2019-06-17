@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
+import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.core.annotation.AppApiVersion;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.config.ResultCode;
@@ -18,6 +19,7 @@ import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,8 @@ import java.util.stream.Collectors;
 public class CarChaboshiLogAPi {
 
     private static final Logger logger = LoggerFactory.getLogger(CarAssessApi.class);
+    private static final String SUCCESS = "0";
+    private static final String QUERY_FAIL_REFUND = "4";
     private IdWorker idWorker = new IdWorker(10);
 
     @Autowired
@@ -97,6 +101,7 @@ public class CarChaboshiLogAPi {
                 List<Long> storeIds = managerUserService.queryStoreScope(obj.getLong("userId"));
                 param.put("storeIds", storeIds);
             }
+            param.remove("userId");
             result = new ServiceResult<>();
             int count = carChaboshiLogService.selectCount(param);
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
@@ -595,5 +600,37 @@ public class CarChaboshiLogAPi {
         return accountService.insertCarChaboshiStoreAccount(c);
     }
 
+    /**
+     * 查博士退款回调
+     */
+    @ApiOperation(value = "查博士退款回调")
+    @RequestMapping(value = "/refund",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult refund(@RequestBody JSONObject obj) {
+        ServiceResult result = new ServiceResult<>();
+        try {
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
+            /*退款到个人支付宝*/
+            CarFinancePayLog payLog = financePayLogModel.selectById(Longs.tryParse(param.get("payLogId").toString()));
+            Map map = AlipayUtil.refundOrder(payLog);
+//            if (SUCCESS.equals(map.get("code"))) {
+                /*退款成功*/
+            int c = carChaboshiLogService.savePayLog(payLog);
+
+            param.put("responseResult", QUERY_FAIL_REFUND);
+            param.put("responseMsg", map.get("sub_msg"));
+            carChaboshiLogService.updateCarChaboshiLog(param);
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("查博士退款回调", e);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
 
 }
