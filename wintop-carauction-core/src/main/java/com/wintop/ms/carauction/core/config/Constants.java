@@ -64,16 +64,16 @@ public class Constants {
      */
     public static final String APP_VERSION = "version";
 
-//    public static final String ROOT = "http://test-api.yuntongauto.com" ;
+    public static final String ROOT = "http://test-api.yuntongauto.com" ;
 
-    public static final String ROOT = "http://127.0.0.1:8185" ;
+//    public static final String ROOT = "http://127.0.0.1:8185" ;
 
     /*查博士回调地址*/
     public static final String CALLBACK_CHABOSHI = ROOT+"/service/carChaboshiLog/cbsCallback" ;
 
     /**在线签约微服务地址*/
-//    public static final String COMMON_MODULE_ROOT = "http://test-api.yuntongauto.com" ;
-    public static final String COMMON_MODULE_ROOT = "http://127.0.0.1:8081";
+    public static final String COMMON_MODULE_ROOT = "http://test-api.yuntongauto.com" ;
+//    public static final String COMMON_MODULE_ROOT = "http://127.0.0.1:8081";
     /***
      * 本地开发，接口调用测试环境接口
      * http://test-api.yuntongauto.com/file 文件上传接口
