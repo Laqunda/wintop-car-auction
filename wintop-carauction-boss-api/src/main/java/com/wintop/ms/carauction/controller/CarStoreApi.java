@@ -68,7 +68,8 @@ public class CarStoreApi {
             consumes = "application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel selectStoreList(@RequestBody Map<String,Object> map) {
+    public ResultModel selectStoreList(@RequestBody Map<String,Object> map,@CurrentUserId String managerId) {
+        map.put("managerId", managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carStore/selectStoreList"))

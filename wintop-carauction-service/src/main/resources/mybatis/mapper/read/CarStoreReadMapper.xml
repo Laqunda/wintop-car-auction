@@ -51,8 +51,14 @@
     <if test="status == null">
       and t1.status <![CDATA[ <> ]]> '3'
     </if>
-    <if test="storeName!=null">
+    <if test="storeName != null">
       and t1.`name` LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+    </if>
+    <if test="storeList != null">
+      and t1.id in
+      <foreach collection="storeList" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
     order by t1.`name`
     <if test="startRowNum != null">
@@ -70,6 +76,12 @@
     where 1=1
     <if test="storeName!=null">
       and t1.`name` LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+    </if>
+    <if test="storeList != null">
+      and t1.id in
+      <foreach collection="storeList" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
   </select>
   <select id="selectAllStore" resultMap="StoreResultMap">
