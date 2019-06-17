@@ -40,13 +40,20 @@ public class CarSaleOrderListApi {
             Long customerId = object.getLong("customerId");
             //查询用户权限
             CarManagerUser carManagerUser = iCarManagerUserService.selectByPrimaryKey(customerId,true);
-            //如果用户是中心店管理员
             if (object.getString("searchName") != null) {
                 paramMap.put("searchName", object.getString("searchName"));
             }
-            List<Long> storeList = iCarManagerUserService.queryStoreScope(carManagerUser.getRoleTypeId(), carManagerUser.getDepartmentId());
-            paramMap.put("storeList",storeList);
-//            paramMap.put("customerId",customerId);
+            //如果用户是中心店管理员
+            if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
+                paramMap.put("departmentId",carManagerUser.getDepartmentId());
+                paramMap.put("managerRole",carManagerUser.getRoleId());
+            }
+            //如果用户是店铺管理员
+            if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
+                paramMap.put("departmentId",carManagerUser.getDepartmentId());
+                paramMap.put("managerRole",carManagerUser.getRoleId());
+            }
+            paramMap.put("customerId",customerId);
             int count = iCarSaleOrderService.selectCarSaleOrderCount(paramMap);
             PageEntity pageEntity= CarAutoUtils.getPageParam(object);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
@@ -101,24 +108,11 @@ public class CarSaleOrderListApi {
             //查询用户权限
             CarManagerUser carManagerUser = iCarManagerUserService.selectByPrimaryKey(customerId,true);
             paramMap.put("userId",carManagerUser.getId());
-            //如果用户是中心店管理员
             if (object.getString("searchName") != null) {
                 paramMap.put("searchName", object.getString("searchName"));
             }
-            if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
-//                paramMap.put("auctionType","2");//现场车辆
-//                paramMap.put("roleTyped","2");//中心店
-                paramMap.put("departmentId",carManagerUser.getDepartmentId());
-                paramMap.put("managerRole",carManagerUser.getRoleId());
-            }
-            //如果用户是店铺管理员
-            if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
-//                paramMap.put("auctionType","1");//线上车辆
-//                paramMap.put("roleTyped","3");//店铺
-                paramMap.put("departmentId",carManagerUser.getDepartmentId());
-                paramMap.put("managerRole",carManagerUser.getRoleId());
-            }
-            paramMap.put("customerId",customerId);
+            List<Long> storeList = iCarManagerUserService.queryStoreScope(carManagerUser.getRoleTypeId(), carManagerUser.getDepartmentId());
+            paramMap.put("storeList",storeList);
             int count = iCarSaleOrderService.selectCarSaleOrderCount(paramMap);
             List<CarOrderRetail> carSaleOrders = iCarSaleOrderService.selectCarSaleOrder(paramMap);
             List<Map<String,Object>> list = new ArrayList<>();
