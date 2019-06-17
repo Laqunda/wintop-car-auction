@@ -1,5 +1,6 @@
 package com.wintop.ms.carauction.starter;
 
+import com.wintop.ms.carauction.core.config.SwaggerConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
