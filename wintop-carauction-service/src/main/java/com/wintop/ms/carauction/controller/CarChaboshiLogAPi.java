@@ -400,7 +400,7 @@ public class CarChaboshiLogAPi {
      * @return
      * @Time 2018-3-13
      */
-    @PostMapping(value = "payChaboshiAmountCallback")
+    @PostMapping(value = "/payChaboshiAmountCallback")
     @ApiOperation(value = "支付成功后，回调保存成功")
     @ApiImplicitParam(name = "obj", value = "JSONObject对象", required = true, dataType = "JSONObject")
     @ResponseBody
