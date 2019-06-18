@@ -25,10 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 评估采购单 信息操作处理
@@ -89,6 +86,32 @@ public class CarAssessOrderApi {
         return result;
     }
 
+    /**
+     * 查询评估采购单列表
+     */
+    @ApiOperation(value = "查询评估采购单列表")
+    @RequestMapping(value = "/allList",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> allList(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+        try {
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
+
+            List<CarAssessOrder> list = carAssessOrderService.selectCarAssessOrderList(param);
+
+            result.setResult(Collections.singletonMap("list",list));
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询评估采购单列表", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+
+        return result;
+    }
 
     /**
      * 新增保存评估采购单

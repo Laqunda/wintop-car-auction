@@ -63,7 +63,7 @@ public class CarChaboshiLogApi {
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
         map.put("userId",userId);
-        map.put("userType","2");
+//        map.put("userType","2");
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carChaboshiLog/list"))
@@ -391,6 +391,20 @@ public class CarChaboshiLogApi {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carChaboshiLog/allList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
+    /**
+     * 查询查博士日志列表
+     */
+    @ApiOperation(value = "查询查博士日志列表")
+    @PostMapping(value = "/refund",produces="application/json; charset=UTF-8")
+    public ResultModel refund(@RequestBody Map<String,Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carChaboshiLog/refund"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);

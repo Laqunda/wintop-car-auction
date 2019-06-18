@@ -78,7 +78,7 @@ public class AliPayApi {
             alipayRequestModel.setBody("充值");//描述
             alipayRequestModel.setPassbackParams(user.getId() + "");//附加字段
             alipayRequestModel.setOutTradeNo(RandCodeUtil.getOrderNumber());//单号
-            alipayRequestModel.setPayNotifyUrl(Constants.ALIPAY_NOTIFY_URL);//回调通知地址
+            alipayRequestModel.setPayNotifyUrl(Constants.ALIPAY_NOTIFY_URL_CHABOSHI_STORE);//回调通知地址
             alipayRequestModel.setSubject("充值");//标题
             alipayRequestModel.setTimeoutExpress("30m");//支付有效期30分钟
             alipayRequestModel.setTotalAmount("" + map.get("count"));//付款金额

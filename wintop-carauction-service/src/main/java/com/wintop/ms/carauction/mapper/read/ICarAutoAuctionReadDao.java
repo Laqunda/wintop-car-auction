@@ -47,7 +47,7 @@ public interface ICarAutoAuctionReadDao {
     /**
      * 获取竞拍信息
      */
-    CarAutoAuction selectAuctionInformation(@Param("carId") Long carId);
+    CarAutoAuction selectAuctionInformation(Map<String,Object> param);
 
     /**
      * 获取车辆拍卖活动

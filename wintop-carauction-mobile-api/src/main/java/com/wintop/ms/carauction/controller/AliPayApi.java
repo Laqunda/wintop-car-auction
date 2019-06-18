@@ -198,7 +198,7 @@ public class AliPayApi {
             alipayRequestModel.setBody("查博士查询消费");//描述
             alipayRequestModel.setPassbackParams(user.getId() + "");//附加字段
             alipayRequestModel.setOutTradeNo(RandCodeUtil.getOrderNumber());//单号
-            alipayRequestModel.setPayNotifyUrl(Constants.ALIPAY_NOTIFY_URL);//回调通知地址
+            alipayRequestModel.setPayNotifyUrl(Constants.ALIPAY_NOTIFY_URL_CHABOSHI);//回调通知地址
             alipayRequestModel.setSubject("查博士查询");//标题
             alipayRequestModel.setTimeoutExpress("30m");//支付有效期30分钟
             alipayRequestModel.setTotalAmount(count + "");//付款金额
@@ -247,8 +247,22 @@ public class AliPayApi {
             AlipayConfig alipayConfig = new AlipayConfig();
             AlipayResponseModel alipayResponseModel = AlipayUtil.aliPayNotify(alipayConfig, requestMap);
             //2、根据结果处理查博士业务
+            /*alipayResponseModel = new AlipayResponseModel();
+            alipayResponseModel.setOutTradeNo("2018061409572236275");
+            alipayResponseModel.setTradeNo("2018061421001004550573031341");
+            alipayResponseModel.setAmount("0.01");
+            alipayResponseModel.setLog("log日志");*/
             if (alipayResponseModel != null) {
                 String alipayRequestModelJsonStr = redisManager.getKeyValue(alipayResponseModel.getOutTradeNo());
+                /*alipayRequestModelJsonStr = "{\n" +
+                        "  \"edition\":\"1\",\n" +
+                        "  \"userId\":\"3833653830952960\",\n" +
+                        "  \"passbackParams\":\"3833653830952960\",\n" +
+                        "  \"vin\":\"123\",\n" +
+                        "  \"userName\":\"郑启耀\",\n" +
+                        "  \"userType\":1\n" +
+                        "}";*/
+
                 JSONObject requestModel = JSONObject.parseObject(alipayRequestModelJsonStr);
 
                 JSONObject jsonObject = new JSONObject();
@@ -277,7 +291,7 @@ public class AliPayApi {
 
                 ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                         RequestEntity
-                                .post(URI.create(Constants.ROOT + "/service/payChaboshiAmountCallback"))
+                                .post(URI.create(Constants.ROOT + "/service/carChaboshiLog/payChaboshiAmountCallback"))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .body(jsonObject), JSONObject.class);
 

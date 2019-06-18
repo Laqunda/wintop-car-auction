@@ -121,20 +121,35 @@ public class Constants {
     /***
      * 车辆配置，两个选项
      */
-    public static final List<Map<String,String>> AUTO_CONF_OPTION_TWO = new ArrayList<>(
+    public static final List<Map<String, String>> AUTO_CONF_OPTION_TWO = new ArrayList<>(
             Arrays.asList(
-                    new HashMap<String,String>(){{put("confOption","1");put("confOptionCn","有");}},
-                    new HashMap<String,String>(){{put("confOption","2");put("confOptionCn","无");}}
+                    new HashMap<String, String>() {{
+                        put("confOption", "1");
+                        put("confOptionCn", "有");
+                    }},
+                    new HashMap<String, String>() {{
+                        put("confOption", "2");
+                        put("confOptionCn", "无");
+                    }}
             ));
 
     /***
      * 车辆配置，三个选项
      */
-    public static final List<Map<String,String>> AUTO_CONF_OPTION_THREE = new ArrayList<>(
+    public static final List<Map<String, String>> AUTO_CONF_OPTION_THREE = new ArrayList<>(
             Arrays.asList(
-                    new HashMap<String,String>(){{put("confOption","1");put("confOptionCn","有");}},
-                    new HashMap<String,String>(){{put("confOption","2");put("confOptionCn","无");}},
-                    new HashMap<String,String>(){{put("confOption","3");put("confOptionCn","加装");}}
+                    new HashMap<String, String>() {{
+                        put("confOption", "1");
+                        put("confOptionCn", "有");
+                    }},
+                    new HashMap<String, String>() {{
+                        put("confOption", "2");
+                        put("confOptionCn", "无");
+                    }},
+                    new HashMap<String, String>() {{
+                        put("confOption", "3");
+                        put("confOptionCn", "加装");
+                    }}
             ));
 
     /**获取品牌信息
@@ -158,8 +173,8 @@ public class Constants {
     /***
      * 根据具体车型获取车辆详细配置信息
      */
-//    public static final String ID_GET_VEHICLEDETAIL_URL = COMMON_MODULE_ROOT+"/carmodel/vehicledetail";
-    public static final String ID_GET_VEHICLEDETAIL_URL = "http://carmodellibserver/carmodel/vehicledetail";
+    public static final String ID_GET_VEHICLEDETAIL_URL = COMMON_MODULE_ROOT+"/carmodel";
+//    public static final String ID_GET_VEHICLEDETAIL_URL = "http://192.168.22.67:2001/carmodel/vehicledetail";
 
 
     /**

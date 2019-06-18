@@ -37,9 +37,6 @@
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="centerId != null" >
-        #{centerId,jdbcType=BIGINT},
-      </if>
       <if test="regionSettingId != null" >
         #{regionSettingId,jdbcType=BIGINT},
       </if>

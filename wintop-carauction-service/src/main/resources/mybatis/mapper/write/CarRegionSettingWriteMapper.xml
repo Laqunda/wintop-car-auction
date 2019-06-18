@@ -5,7 +5,7 @@
     insert into car_region_setting (id, region_id, region_name,  frozen_capital, pay_breach_day, pay_breach_time,
       create_time, create_person, status, transfer_breach_day, transfer_breach_time, 
       agent_fee, update_time, update_person)
-    values (#{id}, #{regionId}, #{regionName}, #{centerId}, #{frozenCapital}, #{payBreachDay}, #{payBreachTime},
+    values (#{id}, #{regionId}, #{regionName}, #{frozenCapital}, #{payBreachDay}, #{payBreachTime},
       #{createTime}, #{createPerson}, #{status}, #{transferBreachDay}, #{transferBreachTime}, 
       #{agentFee}, #{updateTime}, #{updatePerson})
   </insert>

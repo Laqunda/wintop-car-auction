@@ -119,7 +119,7 @@ public class CarEvaluateDataApi {
                     c4.setCellValue(object.getJSONObject("carAuto").getString("publishUserName"));
 
                     HSSFCell c5 = itemRow.createCell(5);
-                    c5.setCellValue(object.getJSONObject("carAuto").getString("carStoreName"));
+                    c5.setCellValue(object.getJSONObject("carAuto").getString("storeName"));
 
                     HSSFCell c6 = itemRow.createCell(6);
                     c6.setCellValue(sdf.format(object.getDate("createTime")));
@@ -329,7 +329,7 @@ public class CarEvaluateDataApi {
                     c4.setCellValue(object.getJSONObject("carAuto").getString("carAutoNo"));
 
                     HSSFCell c5 = itemRow.createCell(5);
-                    c5.setCellValue(object.getJSONObject("carAuto").getString("carStoreName"));
+                    c5.setCellValue(object.getJSONObject("carAuto").getString("storeName"));
 
                     HSSFCell c6 = itemRow.createCell(6);
                     c6.setCellValue(sdf.format(object.getDate("createTime")));

@@ -85,8 +85,8 @@ public class CarAutoAuctionModel {
     /**
      * 获取竞拍信息
      */
-    public CarAutoAuction selectAuctionInformation(Long carId){
-        return readDao.selectAuctionInformation(carId);
+    public CarAutoAuction selectAuctionInformation(Map<String,Object> param){
+        return readDao.selectAuctionInformation(param);
     }
 
     /**

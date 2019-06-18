@@ -150,6 +150,7 @@ public class CarManagerUserModel {
         List<Long> storeIds = new ArrayList<>();
         if(roleType.longValue()==1l){
             //storeIds=storeModel.selectAllStoreIds();
+            storeIds = null;
         }else if(roleType.longValue()==2l){
             storeIds=centerStoreReadDao.selectAllStoreIds(departmentId);
         }else if(roleType.longValue()==3l){

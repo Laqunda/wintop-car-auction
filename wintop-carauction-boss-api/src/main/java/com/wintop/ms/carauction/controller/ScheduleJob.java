@@ -37,4 +37,14 @@ public class ScheduleJob {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(new HashMap()),Integer.class);
     }
+
+    @Scheduled( fixedRate = 1000 )
+    public void startAuctionViewed(){
+        this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAutoSchedule/startAuctionViewed"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(new HashMap()),Integer.class);
+    }
+
 }

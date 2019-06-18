@@ -22,10 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 客户端用户使用接口类
@@ -397,6 +394,45 @@ public class CarManagerUserApi {
             List<CarManagerUser> userList = managerUserService.selectByExample(map);
             ListEntity<CarManagerUser> listEntity = new ListEntity<>(userList,count);
             result.setResult(listEntity);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("查询所有用户列表失败",e);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /***
+     * 查询所有用户列表
+     * @return
+     */
+    @RequestMapping(value = "/selectManagerUserAllList",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> selectManagerUserAllList(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+        try {
+            Map<String,Object> map = new HashMap<>();
+            if(obj.get("searchName")!=null){
+                map.put("searchName",obj.getString("searchName"));
+            }
+            if(obj.get("roleTypeId")!=null){
+                map.put("roleTypeId",obj.getLong("roleTypeId"));
+            }
+            if(obj.get("roleId")!=null){
+                map.put("roleId",obj.getLong("roleId"));
+            }
+            if(obj.get("name")!=null){
+                Map<String,Object> storeMap = new HashMap<>();
+                storeMap.put("name",obj.get("storeName"));
+                Long storeId = iCarStoreService.idByExample(storeMap);
+                map.put("department_id",storeId);
+            }
+            int count = managerUserService.countByExample(map);
+            List<CarManagerUser> userList = managerUserService.selectByExample(map);
+            result.setResult(Collections.singletonMap("list",userList));
             result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
         }catch (Exception e){
             e.printStackTrace();
