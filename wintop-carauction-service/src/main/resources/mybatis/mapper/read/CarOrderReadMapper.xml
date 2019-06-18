@@ -585,7 +585,7 @@
     SELECT
     <include refid="Base_Column_List"/>
     FROM car_order t1
-    WHERE t1.car_id=#{carId} and t1.auction_id=#{auctionId}
+    WHERE t1.car_id=#{carId} and t1.auction_id=#{auctionId} limit 1
   </select>
   <select id="selectOrderPrintInfo" resultMap="BaseResultMap" parameterType="java.lang.Long">
     SELECT t2.car_auto_no,t3.license_number,t2.auto_info_name,t3.vin,t4.auction_plate_num,t1.service_fee,
