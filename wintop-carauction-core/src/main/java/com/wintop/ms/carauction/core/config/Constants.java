@@ -185,26 +185,30 @@ public class Constants {
     /***
      * 保证金支付宝支付通知接口
      */
-//    public static final String ALIPAY_NOTIFY_URL = "http://111.202.186.103:8080/mobile/aliPay/payNotifyDeposit";
-    public static final String ALIPAY_NOTIFY_URL = "http://test-api.yuntongauto.com/mobile/aliPay/payNotifyDeposit";
-//    public static final String ALIPAY_NOTIFY_URL = "http://2sc.wintop2sc.com/mobile/aliPay/payNotifyDeposit";
-
-    /**图片上传*/
-//    public static final String UPLOADFILE_URL = COMMON_MODULE_ROOT+"/file/uploadFile";
-    public static final String UPLOADFILE_URL = "http://fileuploadserver/file/uploadFile";
-    /**图片上传*/
-//    public static final String UPLOADIMAGEFORQUALITY_URL = COMMON_MODULE_ROOT+"/file/uploadImageForQuality";
-    public static final String UPLOADIMAGEFORQUALITY_URL = "http://fileuploadserver/file/uploadImageForQuality";
-
-   /* **
-     * 买家端appid--*/
-
-//    public static final String CUS_APP_ID = "1234567";
+    public static final String ALIPAY_NOTIFY_URL = COMMON_MODULE_ROOT + "/mobile/aliPay/payNotifyDeposit";
+    //public static final String ALIPAY_NOTIFY_URL = "http://2sc.wintop2sc.com/mobile/aliPay/payNotifyDeposit";
 
     /***
-     * 卖家端appid---*/
+     * 查博士支付宝支付通知接口
+     */
+    public static final String ALIPAY_NOTIFY_URL_CHABOSHI = COMMON_MODULE_ROOT + "/mobile/aliPay/payChaboshiAmountCallback";
+    /***
+     * 查博士店铺充值支付宝支付通知接口
+     */
+    public static final String ALIPAY_NOTIFY_URL_CHABOSHI_STORE = COMMON_MODULE_ROOT + "/store/aliPay/payCbsChargeCallback";
 
-//    public static final String STORE_APP_ID = "1234567_store";
+    /**
+     * 图片上传
+     */
+    public static final String UPLOADFILE_URL = COMMON_MODULE_ROOT + "/file/uploadFile";
+//    public static final String UPLOADFILE_URL = "http://192.168.22.67:2003/file/uploadFile";
+    /**
+     * 图片上传
+     */
+    public static final String UPLOADIMAGEFORQUALITY_URL = COMMON_MODULE_ROOT + "/file/uploadImageForQuality";
+//    public static final String UPLOADIMAGEFORQUALITY_URL = "http://192.168.22.67:2003/file/uploadImageForQuality";
+
+
     /***
      * 买家端appid--*/
 
