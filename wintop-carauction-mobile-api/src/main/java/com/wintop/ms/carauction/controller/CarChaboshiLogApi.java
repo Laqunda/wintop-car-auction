@@ -76,12 +76,9 @@ public class CarChaboshiLogApi {
             return new ResultModel(false, ResultCode.NO_PARAM.value(), ResultCode.NO_PARAM.getRemark(), null);
         }
         map.put("userId", userId);
-
         map.put("fs", DateUtils.addMonths(new Date(), -1));
         map.put("responseResult", "1");
-        map.put("userType", "1");
-        map.put("includeShare", "1");
-
+//        map.put("userType", "1");
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT + "/service/carChaboshiLog/list"))

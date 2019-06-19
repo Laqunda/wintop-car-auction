@@ -13,6 +13,7 @@ import com.wintop.ms.carauction.util.utils.IdWorker;
 import com.wintop.ms.carauction.util.utils.RandCodeUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.httpclient.util.DateUtil;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -277,6 +278,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     @Override
     public ServiceResult<Map<String, Object>> chaboshi(Long userId, String userName, String edition, Long logId, String vin) {
         ServiceResult result = new ServiceResult();
+        result.setSuccess("0", ResultCode.SUCCESS.getRemark());
         Map data = new HashMap();
         JSONObject object = null;
         object = cha(edition, vin, result);
@@ -284,26 +286,33 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
         CarChaboshiLog log = selectCarChaboshiLogById(logId);
         boolean isSuccess = false;
         if (object != null) {
-
             if ("0".equals(object.get("Code"))) {
                 /*查询成功*/
                 data.put("orderId", object.getString("orderId"));
-                result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
                 result.setResult(data);
-
                 log.setOrderId(object.getString("orderId"));
                 log.setOrderMsg(object.getString("Message"));
                 log.setResponseResult("3");//查询中
+                //数据来自数据库
+                if("2".equals(object.get("sourceType"))){
+                    log.setResponseResult("1");//查询成功
+                    log.setResponseMsg(object.getString("responseMsg"));
+                    log.setOrderId(object.getString("orderId"));
+                    log.setOrderMsg(object.getString("orderMsg"));
+                    log.setFinishTime(object.getDate("finishTime"));
+                    log.setSourceType(object.getString("sourceType"));
+                    log.setVehicleType(object.getString("vehicleType"));
+                    log.setPc_url(object.getString("pc_url"));
+                    log.setApp_url(object.getString("app_url"));
+                }
                 isSuccess = true;
             } else {
                 /*查询失败*/
                 log.setOrderMsg(object.getString("Message"));
                 log.setResponseResult("2");
-                result.setSuccess(ResultCode.FAIL.strValue(), object.getString("Message"));
             }
         } else {
             log.setResponseResult("2");
-            result.setSuccess(ResultCode.FAIL.strValue(), "查询失败！");
         }
         /*更新日志*/
         Map<String, Object> param = Class2MapUtil.convertMap(log);
@@ -416,9 +425,7 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
             result.setError(ResultCode.FAIL.strValue(), "没有找到流水记录");
             return result;
         }
-
-        JSONObject object = null;
-        object = cha(edition, vin, result);
+        JSONObject object = cha(edition, vin, result);
         /*log 创建存储*/
         CarChaboshiLog log = new CarChaboshiLog();
         log.setId(idWorker.nextId());
@@ -446,8 +453,19 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                 log.setOrderId(object.getString("orderId"));
                 log.setOrderMsg(object.getString("Message"));
                 log.setResponseResult("3");//查询中
+                //数据来自数据库
+                if("2".equals(object.get("sourceType"))){
+                    log.setResponseResult("1");//查询成功
+                    log.setResponseMsg(object.getString("responseMsg"));
+                    log.setOrderId(object.getString("orderId"));
+                    log.setOrderMsg(object.getString("orderMsg"));
+                    log.setFinishTime(object.getDate("finishTime"));
+                    log.setSourceType(object.getString("sourceType"));
+                    log.setVehicleType(object.getString("vehicleType"));
+                    log.setPc_url(object.getString("pc_url"));
+                    log.setApp_url(object.getString("app_url"));
+                }
                 /*扣款*/
-
                 CarChaboshiStoreAccount c = accounts.get(0);
                 c.setId(idWorker.nextId());
                 c.setPayment(payment);
@@ -459,8 +477,6 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                 c.setType("2");//出账
                 /*插入流水记录*/
                 storeAccountModel.insertCarChaboshiStoreAccount(c);
-
-
             } else {
                 /*查博士查找失败*/
                 log.setResponseResult("2");
@@ -472,7 +488,6 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
             log.setResponseResult("2");
             result.setError(ResultCode.FAIL.strValue(), "查找失败！");
         }
-
         insertCarChaboshiLog(log);
         return result;
     }
@@ -568,16 +583,28 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
      */
     private JSONObject cha(String edition, String vin, ServiceResult result) {
         JSONObject object = null;
+        Map<String,Object> map = new HashMap<>();
+        map.put("fs", DateUtils.addMonths(new Date(), -1));
+        map.put("responseResult", "1");
+        map.put("vin",vin);
+        map.put("edition",edition);
+        //查询数据库公式或vin重复1个月之内有效的维修记录
+        List<CarChaboshiLog> carChaboshiLogDao = model.selectCarChaboshiLogList(map);
+        if(carChaboshiLogDao != null && carChaboshiLogDao.size() > 0){
+            CarChaboshiLog carChaboshiLog = carChaboshiLogDao.get(0);
+            object = JSONObject.parseObject(JSONObject.toJSON(carChaboshiLog).toString());
+            object.put("sourceType","2");
+            object.put("Code","0");
+            return object;
+        }
         if ("1".equals(edition)) {
             //维修版本
             object = ChaboshiUtils.report(vin);
         } else if ("2".equals(edition)) {
             //综合版本
             object = ChaboshiUtils.repairReport(vin);
-
-        } else {
-            result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.NO_OBJECT.getRemark());
         }
+        object.put("sourceType","1");
         return object;
     }
 }

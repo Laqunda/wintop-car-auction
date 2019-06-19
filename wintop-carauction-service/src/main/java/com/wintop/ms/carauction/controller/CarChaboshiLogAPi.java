@@ -19,7 +19,6 @@ import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,16 +47,7 @@ public class CarChaboshiLogAPi {
     private ICarChaboshiLogService carChaboshiLogService;
 
     @Autowired
-    private IWtAppUserService appUserService;
-
-    @Autowired
     private ICarManagerUserService managerUserService;
-
-    @Autowired
-    private ICarChaboshiStoreConfService storeConfService;
-
-    @Autowired
-    private ICarChaboshiPaymentConfService paymentConfService;
 
     @Autowired
     private CarFinancePayLogModel financePayLogModel;
@@ -67,9 +57,6 @@ public class CarChaboshiLogAPi {
 
     @Autowired
     private ICarAssessService assessService;
-
-    @Autowired
-    private ICarChaboshiStoreConfService carChaboshiStoreConfService;
 
     @Autowired
     private ICarFinancePayLogService carFinancePayLogService;
@@ -100,8 +87,8 @@ public class CarChaboshiLogAPi {
             if("2".equals(param.get("userType")+"")){
                 List<Long> storeIds = managerUserService.queryStoreScope(obj.getLong("userId"));
                 param.put("storeIds", storeIds);
+                param.remove("userId");
             }
-            param.remove("userId");
             result = new ServiceResult<>();
             int count = carChaboshiLogService.selectCount(param);
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
@@ -429,8 +416,6 @@ public class CarChaboshiLogAPi {
      *
      * @param obj
      * @return
-     * @Autor 付陈林
-     * @Time 2018-3-13
      */
     @PostMapping(value = "payCbsChargeCallback")
     @ApiOperation(value = "设置支付成功后，回调保存成功")
