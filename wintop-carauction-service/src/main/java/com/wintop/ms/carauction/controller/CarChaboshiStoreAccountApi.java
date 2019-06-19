@@ -12,6 +12,7 @@ import com.wintop.ms.carauction.service.ICarManagerUserService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,41 @@ public class CarChaboshiStoreAccountApi
 			listEntity.setCount(count);
 			result.setResult(listEntity);
 			result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+		} catch (Exception e) {
+			logger.info("博士店铺资金流水列表", e);
+			e.printStackTrace();
+			result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * 查询查博士店铺资金流水明细
+	 */
+	@ApiOperation(value = "博士店铺资金流水明细")
+	@RequestMapping(value = "/detail",
+			method = RequestMethod.POST,
+			consumes = "application/json; charset=UTF-8",
+			produces = "application/json; charset=UTF-8")
+
+	public ServiceResult<Map<String,Object>> detail(@RequestBody JSONObject obj) {
+		ServiceResult<Map<String,Object>> result = null;
+		try {
+			CarChaboshiStoreAccount bean = JSONObject.toJavaObject(obj, CarChaboshiStoreAccount.class);
+			if (bean == null) {
+				bean = new CarChaboshiStoreAccount();
+			}
+			result = new ServiceResult<>();
+
+			List<CarChaboshiStoreAccount> list = service.selectCarChaboshiStoreAccountList(bean);
+			if (CollectionUtils.isNotEmpty(list)){
+				result.setResult(Collections.singletonMap("data",list.get(0)));
+				result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+			} else{
+				result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+			}
 		} catch (Exception e) {
 			logger.info("博士店铺资金流水列表", e);
 			e.printStackTrace();

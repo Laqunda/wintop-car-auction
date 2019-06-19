@@ -111,7 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and cas.create_time &lt;= #{endCreateTime}
             </if>
             <if test="createUser != null and createUser != ''">
-                and createUser like CONCAT(CONCAT('%',#{createUser}),'%')
+                and ca.create_user_name like CONCAT(CONCAT('%',#{createUser}),'%')
             </if>
          </where>
         order by cas.id desc
@@ -126,35 +126,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join car_assess ca on cas.assess_id = ca.id
         <where>
             <if test="id != null "> and cas.id = #{id}</if>
-             <if test="assessId != null "> and assess_id = #{assessId}</if>
-             <if test="followId != null "> and follow_id = #{followId}</if>
-             <if test="procurementType != null  and procurementType != '' "> and procurement_type = #{procurementType}</if>
-             <if test="price != null "> and price = #{price}</if>
-             <if test="procurementDate != null "> and procurement_date = #{procurementDate}</if>
-             <if test="storeId != null "> and store_id = #{storeId}</if>
-             <if test="ifOldNew != null  and ifOldNew != '' "> and if_old_new = #{ifOldNew}</if>
-             <if test="entiretyPrice != null "> and entirety_price = #{entiretyPrice}</if>
-             <if test="newCarPrice != null "> and new_car_price = #{newCarPrice}</if>
-             <if test="carAddress != null  and carAddress != '' "> and car_address = #{carAddress}</if>
-             <if test="purchaseTax != null  and purchaseTax != '' "> and purchase_tax = #{purchaseTax}</if>
-             <if test="drivingLicense != null  and drivingLicense != '' "> and driving_license = #{drivingLicense}</if>
-             <if test="registrationCertificate != null  and registrationCertificate != '' "> and registration_certificate = #{registrationCertificate}</if>
-             <if test="ifAdd != null  and ifAdd != '' "> and if_add = #{ifAdd}</if>
-             <if test="carKeys != null "> and car_keys = #{carKeys}</if>
-             <if test="newCarInvoice != null  and newCarInvoice != '' "> and new_car_invoice = #{newCarInvoice}</if>
-             <if test="qualityGuarantee != null  and qualityGuarantee != '' "> and quality_guarantee = #{qualityGuarantee}</if>
-             <if test="maintenanceManual != null  and maintenanceManual != '' "> and maintenance_manual = #{maintenanceManual}</if>
-             <if test="sali != null  and sali != '' "> and sali = #{sali}</if>
-             <if test="saliEndDate != null "> and sali_end_date = #{saliEndDate}</if>
-             <if test="commercialInsurance != null  and commercialInsurance != '' "> and commercial_insurance = #{commercialInsurance}</if>
-             <if test="commercialInsuranceEndDate != null "> and commercial_insurance_end_date = #{commercialInsuranceEndDate}</if>
-             <if test="commercialInsurancePrice != null "> and commercial_insurance_price = #{commercialInsurancePrice}</if>
-             <if test="transportTax != null  and transportTax != '' "> and transport_tax = #{transportTax}</if>
-             <if test="transportTaxEndDate != null "> and transport_tax_end_date = #{transportTaxEndDate}</if>
-             <if test="customerName != null  and customerName != '' "> and customer_name = #{customerName}</if>
-             <if test="customerTel != null  and customerTel != '' "> and customer_tel = #{customerTel}</if>
-             <if test="customerSource != null  and customerSource != '' "> and customer_source = #{customerSource}</if>
-             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="assessId != null "> and cas.assess_id = #{assessId}</if>
+             <if test="followId != null "> and cas.follow_id = #{followId}</if>
+             <if test="procurementType != null  and procurementType != '' "> and cas.procurement_type = #{procurementType}</if>
+             <if test="price != null "> and cas.price = #{price}</if>
+             <if test="procurementDate != null "> and cas.procurement_date = #{procurementDate}</if>
+             <if test="storeId != null "> and cas.store_id = #{storeId}</if>
+             <if test="ifOldNew != null  and ifOldNew != '' "> and cas.if_old_new = #{ifOldNew}</if>
+             <if test="entiretyPrice != null "> and cas.entirety_price = #{entiretyPrice}</if>
+             <if test="newCarPrice != null "> and cas.new_car_price = #{newCarPrice}</if>
+             <if test="carAddress != null  and carAddress != '' "> and cas.car_address = #{carAddress}</if>
+             <if test="purchaseTax != null  and purchaseTax != '' "> and cas.purchase_tax = #{purchaseTax}</if>
+             <if test="drivingLicense != null  and drivingLicense != '' "> and cas.driving_license = #{drivingLicense}</if>
+             <if test="registrationCertificate != null  and registrationCertificate != '' "> and cas.registration_certificate = #{registrationCertificate}</if>
+             <if test="ifAdd != null  and ifAdd != '' "> and cas.if_add = #{ifAdd}</if>
+             <if test="carKeys != null "> and cas.car_keys = #{carKeys}</if>
+             <if test="newCarInvoice != null  and newCarInvoice != '' "> and cas.new_car_invoice = #{newCarInvoice}</if>
+             <if test="qualityGuarantee != null  and qualityGuarantee != '' "> and cas.quality_guarantee = #{qualityGuarantee}</if>
+             <if test="maintenanceManual != null  and maintenanceManual != '' "> and cas.maintenance_manual = #{maintenanceManual}</if>
+             <if test="sali != null  and sali != '' "> and cas.sali = #{sali}</if>
+             <if test="saliEndDate != null "> and cas.sali_end_date = #{saliEndDate}</if>
+             <if test="commercialInsurance != null  and commercialInsurance != '' "> and cas.commercial_insurance = #{commercialInsurance}</if>
+             <if test="commercialInsuranceEndDate != null "> and cas.commercial_insurance_end_date = #{commercialInsuranceEndDate}</if>
+             <if test="commercialInsurancePrice != null "> and cas.commercial_insurance_price = #{commercialInsurancePrice}</if>
+             <if test="transportTax != null  and transportTax != '' "> and cas.transport_tax = #{transportTax}</if>
+             <if test="transportTaxEndDate != null "> and cas.transport_tax_end_date = #{transportTaxEndDate}</if>
+             <if test="customerName != null  and customerName != '' "> and cas.customer_name = #{customerName}</if>
+             <if test="customerTel != null  and customerTel != '' "> and cas.customer_tel = #{customerTel}</if>
+             <if test="customerSource != null  and customerSource != '' "> and cas.customer_source = #{customerSource}</if>
+             <if test="remark != null  and remark != '' "> and cas.remark = #{remark}</if>
              <if test="status != null  and status != '' "> and cas.status = #{status}</if>
             <if test="searchName != null and searchName != ''">
                 and (ca.name like CONCAT(CONCAT('%',#{searchName}),'%')
@@ -168,7 +168,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and cas.procurement_date &lt;= #{endTime}
             </if>
             <if test="createUser != null and createUser != ''">
-                and createUser like CONCAT(CONCAT('%',#{createUser}),'%')
+                and ca.create_user_name like CONCAT(CONCAT('%',#{createUser}),'%')
             </if>
          </where>
     </select>

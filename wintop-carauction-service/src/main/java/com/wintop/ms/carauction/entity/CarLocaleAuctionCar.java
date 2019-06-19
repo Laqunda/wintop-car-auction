@@ -179,6 +179,11 @@ public class CarLocaleAuctionCar implements Serializable {
      */
     private String status;
 
+    /**
+     * 开拍时间
+     */
+    private Date auctionStartTime;
+
     public BigDecimal getInitPriceRange() {
         return initPriceRange;
     }
@@ -485,5 +490,13 @@ public class CarLocaleAuctionCar implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Date getAuctionStartTime() {
+        return auctionStartTime;
+    }
+
+    public void setAuctionStartTime(Date auctionStartTime) {
+        this.auctionStartTime = auctionStartTime;
     }
 }

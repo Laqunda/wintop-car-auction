@@ -114,4 +114,6 @@ public class CarChaboshiStoreConf extends BaseEntity
             .append("paymentComposite", getPaymentComposite())
             .toString();
     }
+
+
 }

@@ -2,6 +2,7 @@ package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Splitter;
+import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -20,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 查博士店铺设置 信息操作处理
@@ -62,6 +63,10 @@ public class CarChaboshiStoreConfApi {
 
             int count = service.selectCount(bean);
 
+            if (Objects.nonNull(obj) && Objects.nonNull(obj.getString("idList"))) {
+                List<String> idList = Splitter.on(",").splitToList(obj.getString("idList"));
+                bean.setStoreIdList(idList);
+            }
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             bean.setStartRowNum(pageEntity.getStartRowNum());
             bean.setEndRowNum(pageEntity.getEndRowNum());

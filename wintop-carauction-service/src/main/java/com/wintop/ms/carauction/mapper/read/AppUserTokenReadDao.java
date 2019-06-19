@@ -2,6 +2,8 @@ package com.wintop.ms.carauction.mapper.read;
 
 import com.wintop.ms.carauction.entity.AppUserToken;
 
+import java.util.Map;
+
 /**
  * AppUserTokenReadDao:读用户token设置
  * @author zhangzijuan

@@ -1292,6 +1292,7 @@ public class CarLocaleAuctionApi {
             map.put("storeName",carLocaleAuctionCar.getStoreName());
             map.put("sourceType",carLocaleAuctionCar.getSourceType());
             map.put("startTime",carLocaleAuctionCar.getStartTime());
+            map.put("auctionStartTime",carLocaleAuctionCar.getAuctionStartTime());
             map.put("address",carLocaleAuctionCar.getAddress());
             map.put("title",carLocaleAuctionCar.getTitle());
             map.put("startingPrice",carLocaleAuctionCar.getStartingPrice());

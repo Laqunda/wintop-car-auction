@@ -925,8 +925,7 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
 
                 // 保存关联组信息
                 object.put("userId",appUserId);
-                Map<String, Object> resultMap = updateUserGroup(object).getResult();
-                if (MapUtils.isNotEmpty(Maps.filterValues(resultMap, Predicates.equalTo("success")))) {
+                if (updateUserGroup(object).getSuccess()) {
                     logger.info("修改关联信息成功");
                 }
             }

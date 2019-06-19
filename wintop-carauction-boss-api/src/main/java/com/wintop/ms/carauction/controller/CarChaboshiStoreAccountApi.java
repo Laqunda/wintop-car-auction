@@ -9,6 +9,7 @@ import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 查博士店铺资金流水 信息操作处理
@@ -81,6 +83,9 @@ public class CarChaboshiStoreAccountApi {
     @PostMapping(value = "/detail",produces="application/json; charset=UTF-8")
     @AuthUserToken
     public ResultModel detail(@RequestBody Map<String,Object> map) {
+        if (MapUtils.isNotEmpty(map) && Objects.isNull(map.get("storeId"))){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carChaboshiStoreAccount/detail"))
