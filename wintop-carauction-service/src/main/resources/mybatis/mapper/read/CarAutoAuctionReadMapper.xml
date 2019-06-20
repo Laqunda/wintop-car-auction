@@ -69,7 +69,7 @@
     </if>
   </select>
 
-  <select id="selectForToday" resultType="java.lang.String" parameterType="java.util.Map">
+  <select id="selectForToday" resultMap="BaseResultMap" parameterType="java.util.Map">
       select *
         from car_auto_auction caa ,car_auto ca
       where ca.auto_auction_id = caa.id

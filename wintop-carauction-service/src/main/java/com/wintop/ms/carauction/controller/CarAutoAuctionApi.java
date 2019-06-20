@@ -433,7 +433,7 @@ public class CarAutoAuctionApi {
                 }
             }
             resultMap.put("auctionStartTime",autoAuction.getAuctionStartTime());
-            result.setResult(map);
+            result.setResult(resultMap);
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {
             logger.info("查询车辆评估详情", e);
