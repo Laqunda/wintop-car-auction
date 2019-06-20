@@ -271,7 +271,7 @@
             </if>
             <if test="orderStatus=='4'.toString()">
                 AND t1.status='7'
-                AND t1.user_evaluate=0
+                AND (t1.user_evaluate=0 or t1.user_evaluate is null)
             </if>
             <if test="managerEvaluate != null and managerEvaluate != ''">
                 and t1.manager_evaluate = #{managerEvaluate}
@@ -309,7 +309,7 @@
             </if>
             <if test="orderStatus=='4'.toString()">
                 AND t1.status='7'
-                AND t1.user_evaluate=0
+                AND (t1.user_evaluate=0 or t1.user_evaluate is null)
             </if>
         </if>
     </select>
@@ -334,7 +334,7 @@
         count(1) as orderNum,
         sum(case when `status`='1' then 1 else 0 end) as unPay,
         sum(case when (`status`='2' or `status`='3' or `status`='4' or `status`='5' or `status`='6') then 1 else 0 end) as dealing,
-        sum(case when (`status`='7' and user_evaluate = 0) then 1 else 0 end) as unEvaluated,
+        sum(case when (`status`='7' and (user_evaluate = 0 or user_evaluate is null)) then 1 else 0 end) as unEvaluated,
         sum(case when `status`='7' then 1 else 0 end) as finish
     from car_order
     where customer_id = #{customerId}

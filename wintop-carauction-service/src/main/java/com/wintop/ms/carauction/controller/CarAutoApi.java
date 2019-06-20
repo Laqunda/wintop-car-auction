@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.core.config.CarStatusEnum;
+import com.wintop.ms.carauction.core.config.CarTypeEnum;
 import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
@@ -431,7 +432,11 @@ public class CarAutoApi {
                 paramMap.put("statusList", statusList.get(obj.getString("status")));
             }
             paramMap.put("userId", obj.getLong("userId"));
+            paramMap.put("saleFlag", CarTypeEnum.SALE_FLAG_SELL_WHOLESALE.value());
             paramMap.put("auctionType", obj.getString("type"));
+            if(CarTypeEnum.AUCTION_TYPE_RETAIL.value().equals(obj.getString("type"))){
+                paramMap.put("saleFlag", CarTypeEnum.SALE_FLAG_RETAIL.value());
+            }
             Integer count = carAutoService.selectCarCount(paramMap);
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum", pageEntity.getStartRowNum());
@@ -912,21 +917,21 @@ public class CarAutoApi {
                 }
             } else if (autoAuction != null
                     && "2".equals(autoAuction.getAuctionType())
-                    && photoList != null && photoList.size() >= 3) {
+                    && photoList != null && photoList.size() >= 1) {
                 int photoSize = photoList.size();
                 for (CarAutoPhoto carAutoPhoto : photoList) {
                     if (carAutoPhoto.getSort() > 12) {
                         photoSize -= 1;
                     }
                 }
-                if (photoSize >= 3) {
+                if (photoSize >= 1) {
                     map.put("photoStatus", "1");
                 }
             }
 
             //检测信息
             if ("2".equals(infoDetail.getIfNew())
-                    || (autoAuction != null && "2".equals(autoAuction.getAuctionType()))
+//                    || (autoAuction != null && "2".equals(autoAuction.getAuctionType()))
                     || (infoDetail.getReportServicingRanks() != null && infoDetail.getReportColligationRanks() != null)) {
                 map.put("detectionStatus", "1");
             }
@@ -1165,4 +1170,66 @@ public class CarAutoApi {
         }
         return result;
     }*/
+
+    /**
+     * 车辆划分渠道
+     * @Author jianglk
+     * @return
+     */
+    @ApiOperation(value = "车辆划分渠道")
+    @RequestMapping(value = "/updateAuctionType",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> withDrawCarAuction(@RequestBody JSONObject object){
+        ServiceResult<Map<String,Object>> result=new ServiceResult<>();
+        try {
+            Map map = JSONObject.toJavaObject(object, Map.class);
+            ServiceResult serviceResult = carAutoService.updateAuctionType(map);
+            if(serviceResult.getSuccess()){
+                result.setSuccess((ResultCode.SUCCESS.value())+"",ResultCode.SUCCESS.getRemark());
+            }else{
+                result.setError(serviceResult.getCode(),serviceResult.getMessage());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            result.setError(ResultCode.NO_OBJECT.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /**
+     * 车辆转渠道
+     */
+    @RequestMapping(value = "/updateTransferFlag",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> transferChannelCar(@RequestBody JSONObject obj){
+        logger.info("车辆转渠道");
+        ServiceResult<Map<String,Object>> result = new ServiceResult<Map<String,Object>>();
+        Map<String,Object> map = new HashMap<>();
+        try {
+            Long userId = obj.getLong("userId");
+            Long id = obj.getLong("carId");
+            String transferFlag = obj.getString("transferFlag");
+            if(transferFlag == null || "".equals(transferFlag)){
+                transferFlag = "1";
+            }
+            map.put("userId",userId);
+            map.put("carId",id);
+            map.put("transferFlag",transferFlag);
+            ServiceResult serviceResult = carAutoService.updateTransferFlag(map);
+            if(serviceResult.getSuccess()){
+                result.setSuccess((ResultCode.SUCCESS.value())+"",ResultCode.SUCCESS.getRemark());
+            }else{
+                result.setError(serviceResult.getCode(),serviceResult.getMessage());
+            }
+        }catch (Exception e){
+            result.setError("-1","异常");
+            e.printStackTrace();
+            logger.info("转渠道失败",e);
+        }
+        return result;
+    }
 }

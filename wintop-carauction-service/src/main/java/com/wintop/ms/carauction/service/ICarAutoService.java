@@ -26,6 +26,21 @@ public interface ICarAutoService {
 
     ServiceResult<Integer> insertSelective(CarAuto record);
 
+
+    /**
+     * 车辆划分渠道
+     * @param map
+     * @return
+     */
+    ServiceResult updateAuctionType(Map<String, Object> map);
+
+    /**
+     * 车辆转渠道
+     * @param map
+     * @return
+     */
+    ServiceResult updateTransferFlag(Map<String, Object> map);
+
     /**
      * 车辆信息接口
      * @return
@@ -176,4 +191,5 @@ public interface ICarAutoService {
      * @return
      */
     CarAuto selectCarDetailCondition(Map<String, Object> map);
+
 }

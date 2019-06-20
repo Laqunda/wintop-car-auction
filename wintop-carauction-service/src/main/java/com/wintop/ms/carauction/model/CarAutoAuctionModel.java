@@ -149,7 +149,7 @@ public class CarAutoAuctionModel {
      * 查询-填充使用,最近的开拍时间
      * @return
      */
-    public String selectForToday(){
-        return readDao.selectForToday(Collections.singletonMap("date",new Date()));
+    public CarAutoAuction selectForToday(Map<String,Object> map){
+        return readDao.selectForToday(map);
     }
 }

@@ -516,7 +516,7 @@ public class CarAutoAuctionServiceImpl implements ICarAutoAuctionService {
      * @return
      */
     @Override
-    public String selectForToday() {
-        return autoAuctionModel.selectForToday();
+    public CarAutoAuction selectForToday(Map<String,Object> map) {
+        return autoAuctionModel.selectForToday(map);
     }
 }
