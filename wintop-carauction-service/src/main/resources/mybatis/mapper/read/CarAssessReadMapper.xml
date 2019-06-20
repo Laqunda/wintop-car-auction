@@ -150,9 +150,9 @@
         LEFT JOIN car_manager_user u on u.id = a.create_user
         <where>
             <if test="id != null ">and a.id = #{id}</if>
-            <if test="vin != null  and vin != '' ">and vin LIKE CONCAT(CONCAT('%', #{vin}),'%')</if>
-            <if test="mileage != null ">and mileage &lt;= #{mileage}</if>
-            <if test="name != null  and name != '' ">and name LIKE CONCAT(CONCAT('%', #{name}),'%')</if>
+            <if test="vin != null  and vin != '' ">and a.vin LIKE CONCAT(CONCAT('%', #{vin}),'%')</if>
+            <if test="mileage != null ">and a.mileage &lt;= #{mileage}</if>
+            <if test="name != null  and name != '' ">and a.name LIKE CONCAT(CONCAT('%', #{name}),'%')</if>
             <if test="beginRegisterDate != null ">and begin_register_date = #{beginRegisterDate}</if>
             <if test="color != null  and color != '' ">and color = #{color}</if>
             <if test="engineCapacity != null ">and engine_capacity = #{engineCapacity}</if>
@@ -160,7 +160,7 @@
             <if test="engineNumber != null  and engineNumber != '' ">and engine_number = #{engineNumber}</if>
             <if test="manufactureDate != null ">and manufacture_date = #{manufactureDate}</if>
             <if test="yearInsurance != null ">and year_insurance = #{yearInsurance}</if>
-            <if test="plateNum != null  and plateNum != '' ">and plate_num LIKE CONCAT(CONCAT('%', #{plateNum}),'%')
+            <if test="plateNum != null  and plateNum != '' ">and a.plate_num LIKE CONCAT(CONCAT('%', #{plateNum}),'%')
             </if>
             <if test="transferNumber != null ">and transfer_number = #{transferNumber}</if>
             <if test="autoNature != null  and autoNature != '' ">and auto_nature = #{autoNature}</if>
@@ -174,7 +174,7 @@
             </if>
             <if test="otherPhoto != null  and otherPhoto != '' ">and other_photo = #{otherPhoto}</if>
             <if test="colorCn != null  and colorCn != '' ">and color_cn = #{colorCn}</if>
-            <if test="regionId != null  and regionId != '' ">and region_id = #{regionId}</if>
+            <if test="regionId != null  and regionId != '' ">and a.region_id = #{regionId}</if>
             <if test="autoBrand != null  and autoBrand != '' ">and auto_brand = #{autoBrand}</if>
             <if test="autoBrandCn != null  and autoBrandCn != '' ">and auto_brand_cn = #{autoBrandCn}</if>
             <if test="autoStyle != null  and autoStyle != '' ">and auto_style = #{autoStyle}</if>
@@ -263,7 +263,7 @@
             <if test="engineNumber != null  and engineNumber != '' ">and engine_number = #{engineNumber}</if>
             <if test="manufactureDate != null ">and manufacture_date = #{manufactureDate}</if>
             <if test="yearInsurance != null ">and year_insurance = #{yearInsurance}</if>
-            <if test="plateNum != null  and plateNum != '' ">and plate_num LIKE CONCAT(CONCAT('%', #{plateNum}),'%')
+            <if test="plateNum != null  and plateNum != '' ">and a.plate_num LIKE CONCAT(CONCAT('%', #{plateNum}),'%')
             </if>
             <if test="transferNumber != null ">and transfer_number = #{transferNumber}</if>
             <if test="autoNature != null  and autoNature != '' ">and auto_nature = #{autoNature}</if>
@@ -277,7 +277,7 @@
             </if>
             <if test="otherPhoto != null  and otherPhoto != '' ">and other_photo = #{otherPhoto}</if>
             <if test="colorCn != null  and colorCn != '' ">and color_cn = #{colorCn}</if>
-            <if test="regionId != null  and regionId != '' ">and region_id = #{regionId}</if>
+            <if test="regionId != null  and regionId != '' ">and a.region_id = #{regionId}</if>
             <if test="autoBrand != null  and autoBrand != '' ">and auto_brand = #{autoBrand}</if>
             <if test="autoBrandCn != null  and autoBrandCn != '' ">and auto_brand_cn = #{autoBrandCn}</if>
             <if test="autoStyle != null  and autoStyle != '' ">and auto_style = #{autoStyle}</if>

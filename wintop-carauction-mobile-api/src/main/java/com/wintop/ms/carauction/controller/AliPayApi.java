@@ -302,8 +302,6 @@ public class AliPayApi {
                         redisManager.delKeyValue(alipayResponseModel.getOutTradeNo());
                         result = "success";
                         logger.info("支付成功通知处理完成，返回支付宝success");
-                        //更新redis中用户的状态
-                        appUserManager.updateUserStatus(requestModel.getString("passbackParams"), AppUserStatusEnum.SIG_ING.value());
                     }
                 }
             }

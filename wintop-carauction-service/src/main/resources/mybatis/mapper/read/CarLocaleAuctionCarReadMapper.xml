@@ -226,7 +226,8 @@
         t5.top_bid_price,
         t1.auction_status,
         t3.publish_user_name,
-        t3.publish_user_mobile
+        t3.publish_user_mobile,
+        t5.auction_start_time
         FROM `car_locale_auction_car` t1
         left join car_locale_auction t2 on t1.auction_id=t2.id
         left join car_auto t3 on t1.car_id=t3.id
@@ -247,13 +248,19 @@
                 AND t1.auction_status = #{status}
             </if>
         </if>
+        <!--<if test="beginTime != null">-->
+            <!--AND t2.start_time <![CDATA[ >= ]]> #{beginTime}-->
+        <!--</if>-->
+        <!--<if test="endTime != null">-->
+            <!--AND t2.start_time <![CDATA[ <= ]]> #{endTime}-->
+        <!--</if>-->
         <if test="beginTime != null">
-            AND t2.start_time <![CDATA[ >= ]]> #{beginTime}
+            AND t5.auction_start_time <![CDATA[ >= ]]> #{beginTime}
         </if>
         <if test="endTime != null">
-            AND t2.start_time <![CDATA[ <= ]]> #{endTime}
+            AND t5.auction_start_time <![CDATA[ <= ]]> #{endTime}
         </if>
-        ORDER BY t2.start_time DESC,t1.auction_code asc
+        ORDER BY t5.auction_start_time DESC,t1.auction_code asc
         <if test="startRowNum!=null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
         </if>

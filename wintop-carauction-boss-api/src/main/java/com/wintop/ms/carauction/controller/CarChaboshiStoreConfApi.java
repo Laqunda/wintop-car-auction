@@ -57,7 +57,7 @@ public class CarChaboshiStoreConfApi {
     }
 
     /**
-     * 查询查博士店铺设置列表
+     * 查询查博士店铺设置详情
      */
     @ApiOperation(value = "查询查博士店铺设置详情")
     @PostMapping(value = "/detail",produces="application/json; charset=UTF-8")

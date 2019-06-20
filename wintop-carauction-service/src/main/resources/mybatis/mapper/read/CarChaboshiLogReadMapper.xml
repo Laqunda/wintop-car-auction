@@ -40,7 +40,7 @@
         <include refid="selectCarChaboshiLogVo"/>
         from car_chaboshi_log ccl
         <if test='userType != null and userType == "1"'>
-            left join wt_app_user wau on ccl.user_id = wau.id and ccl.user_type = '1'
+            left join wt_app_user wau on ccl.user_id = wau.id
         </if>
         <if test='userType != null and userType == "2"'>
             left join car_store cs on ccl.store_id = cs.id
@@ -73,36 +73,18 @@
                 and (ccl.user_name like CONCAT(CONCAT('%',#{sellerSearchName}),'%')
                 or cs.name like CONCAT(CONCAT('%',#{sellerSearchName}),'%'))
             </if>
-
             <if test="fs != null ">
-                and ccl.finish_time &gt;= #{fs}
+                and DATE_FORMAT( ccl.create_time,  '%Y-%m-%d')  &gt;= DATE_FORMAT(#{fs}, '%Y-%m-%d')
             </if>
-
             <if test="fe != null ">
-                and ccl.finish_time &lt;= #{fe}
+                and ccl.create_time &lt;= #{fe}
             </if>
-            <if test="includeShare != null and includeShare = '1'">
-                and (
-                <if test="fs == null">
-                    is_open = '1'
-                </if>
-                <if test="fs != null ">
-                    ccl.finish_time &gt;= #{fs}
-                </if>
-                <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
-                <if test="responseResult != null  and responseResult != '' ">and response_result = #{responseResult}</if>
-                )
-
-            </if>
-
             <if test="storeIds != null">
                 and store_id in
                 <foreach collection="storeIds" item="item" open="(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
-
-
         </where>
         order by create_time desc
         <if test="startRowNum != null and endRowNum != null">
@@ -114,9 +96,6 @@
     <select id="selectCount" parameterType="java.util.Map"
             resultType="java.lang.Integer">
         select count(*) from car_chaboshi_log ccl
-        <if test='userType != null and userType == "1"'>
-            left join wt_app_user wau on ccl.user_id = wau.id and ccl.user_type = '1'
-        </if>
         <where>
             <if test="id != null ">and id = #{id}</if>
             <if test="createTime != null ">and create_time = #{createTime}</if>
@@ -141,26 +120,12 @@
                 and (wau.name like CONCAT(CONCAT('%',#{buyerSearchName}),'%')
                 or wau.mobile like CONCAT(CONCAT('%',#{buyerSearchName}),'%'))
             </if>
-
             <if test="fs != null ">
-                and ccl.finish_time &gt;= #{fs}
+                and DATE_FORMAT( ccl.create_time,  '%Y-%m-%d')  &gt;= DATE_FORMAT(#{fs}, '%Y-%m-%d')
             </if>
-
             <if test="fe != null ">
-                and ccl.finish_time &lt;= #{fe}
+                and ccl.create_time &lt;= #{fe}
             </if>
-            <if test="includeShare != null and includeShare = '1'">
-                or (is_open = '1'
-                <if test="fs != null ">
-                    and ccl.finish_time &gt;= #{fs}
-
-                </if>
-                <if test="vin != null  and vin != '' ">and vin = #{vin}</if>
-                <if test="responseResult != null  and responseResult != '' ">and response_result = #{responseResult}</if>
-                )
-
-            </if>
-
             <if test="storeIds != null">
                 and store_id in
                 <foreach collection="storeIds" item="item" open="(" separator="," close=")">

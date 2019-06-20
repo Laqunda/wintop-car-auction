@@ -105,10 +105,8 @@
     </select>
 
     <select id="selectRetailById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-        select t1.id, t1.car_id, t1.order_no, t1.transaction_fee, t1.earnest_money, t1.payment_type, t1.down_payments, t1.mortgage_amount, t1.mortgage_period,
-        t1.monthly_repayment, t1.transfer, t1.sales_type, t1.insurance_company, t1.commercial_insurance_expires, t1.compulsory_insurance_expires, t1.mortgage_charges,
-        t1.insurance_rebate, t1.boutique_profit, t1.guaranteed_profit, t1.add_profits, t1.other_expenses, t1.remarks, t1.vehicle_owner_type , t1.phone, t1.name, t1.source,
-        t1.id_card, t1.address, t1.drawee, t1.opening_bank, t1.other_accounts, t1.mortgage_plan
+        select
+        <include refid="Base_Column_List"/>
         FROM car_order_retail t1
         WHERE t1.id=#{id}
     </select>

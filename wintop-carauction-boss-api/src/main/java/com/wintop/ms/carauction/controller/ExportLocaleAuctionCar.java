@@ -28,6 +28,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author zhangzijuan
@@ -72,8 +73,12 @@ public class ExportLocaleAuctionCar {
                 for (int i=0;i<result.size();i++){
                     JSONObject object=result.getJSONObject(i);
                     HSSFRow itemRow = sheet.createRow(i+2);
+                    String auctionStartTime = "";
+                    if (!Objects.isNull(object.getString("auctionStartTime"))) {
+                        auctionStartTime = UtilDate.dataFormat(object.getDate("auctionStartTime"));
+                    }
                     HSSFCell c0 = itemRow.createCell(0);
-                    c0.setCellValue(UtilDate.dataFormat(object.getDate("startTime")));
+                    c0.setCellValue(auctionStartTime);
 
                     HSSFCell c12 = itemRow.createCell(1);
                     c12.setCellValue(object.getString("title"));
