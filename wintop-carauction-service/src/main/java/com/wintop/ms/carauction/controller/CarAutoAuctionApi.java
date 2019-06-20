@@ -418,7 +418,7 @@ public class CarAutoAuctionApi {
         Map<String,Object> resultMap = new HashMap<>();
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
         try {
-            resultMap.put("data",sdf.format(new Date()));
+            resultMap.put("date",sdf.format(new Date()));
             Map<String,Object> map = new HashMap<>();
             map.put("date",new Date());
             map.put("publishUserId",obj.getLong("userId"));
@@ -429,7 +429,7 @@ public class CarAutoAuctionApi {
                 CarAppSetting appSet = carAppSettingService.getAcutionHint(Collections.singletonMap("code", "car_interval")).getResult();
                 if(appSet != null && appSet.getContent() != null && !"".equals(appSet.getContent())){
                     Date date = DateUtils.addMinutes(autoAuction.getAuctionStartTime(), Integer.parseInt(appSet.getContent()));
-                    resultMap.put("data",sdf.format(date));
+                    resultMap.put("date",sdf.format(date));
                 }
             }
             resultMap.put("auctionStartTime",autoAuction.getAuctionStartTime());
