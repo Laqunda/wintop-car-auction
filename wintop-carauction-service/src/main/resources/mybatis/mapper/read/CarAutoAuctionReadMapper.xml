@@ -75,7 +75,7 @@
       where ca.auto_auction_id = caa.id
         and caa.auction_type = #{auctionType}
         and ca.publish_user_id = #{publishUserId}
-        and date_format(caa.auction_start_time,'%Y-%m-%d')= date_format(#{date},'%Y-%m-%d')
+        and date_format(caa.auction_start_time,'%Y-%m-%d') &gt;= date_format(#{date},'%Y-%m-%d')
   order by caa.auction_start_time DESC
       limit 1
   </select>

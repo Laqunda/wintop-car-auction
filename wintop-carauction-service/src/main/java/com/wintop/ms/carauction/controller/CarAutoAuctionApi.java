@@ -416,7 +416,7 @@ public class CarAutoAuctionApi {
     public ServiceResult<Map<String,Object>> detail(@RequestBody JSONObject obj) {
         ServiceResult<Map<String,Object>> result = new ServiceResult<>();
         Map<String,Object> resultMap = new HashMap<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
         try {
             resultMap.put("date",sdf.format(new Date()));
             Map<String,Object> map = new HashMap<>();
