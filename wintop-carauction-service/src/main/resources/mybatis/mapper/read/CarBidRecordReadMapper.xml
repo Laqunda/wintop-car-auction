@@ -120,7 +120,7 @@
             AND t1.car_id=#{carId}
         </if>
         <if test="auctionType!=null">
-            AND t4.auction_type LIKE  CONCAT(CONCAT('%',#{auctionType}),'%')
+            AND t4.auction_type=#{auctionType}
         </if>
         <if test="beginTime!=null">
             AND t1.bid_time <![CDATA[ >= ]]>#{beginTime}

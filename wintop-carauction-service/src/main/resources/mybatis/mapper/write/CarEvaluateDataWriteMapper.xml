@@ -12,9 +12,10 @@
     <result column="role" jdbcType="VARCHAR" property="role" />
     <result column="tags" jdbcType="VARCHAR" property="tags" />
     <result column="tag_ids" jdbcType="VARCHAR" property="tagIds" />
+    <result column="add_tags" jdbcType="VARCHAR" property="addTags" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, obj_id, content, type, star_level, create_time, create_person, role, tags, tag_ids
+    id, obj_id, content, type, star_level, create_time, create_person, role, tags, tag_ids, add_tags
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -30,11 +31,11 @@
     insert into car_evaluate_data (id, obj_id, content,
       type, star_level, create_time,
       create_person, role, tags,
-      tag_ids)
+      tag_ids,add_tags)
     values (#{id,jdbcType=BIGINT}, #{objId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR},
       #{type,jdbcType=BIGINT}, #{starLevel,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
       #{createPerson,jdbcType=BIGINT}, #{role,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR},
-      #{tagIds,jdbcType=VARCHAR})
+      #{tagIds,jdbcType=VARCHAR}, #{addTags,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarEvaluateData">
     insert into car_evaluate_data
@@ -69,6 +70,9 @@
       <if test="tagIds != null">
         tag_ids,
       </if>
+      <if test="addTags != null">
+        add_tags,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -100,6 +104,9 @@
       </if>
       <if test="tagIds != null">
         #{tagIds,jdbcType=VARCHAR},
+      </if>
+      <if test="addTags != null">
+        #{add_tags,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -133,6 +140,9 @@
       <if test="tagIds != null">
         tag_ids = #{tagIds,jdbcType=VARCHAR},
       </if>
+      <if test="addTags != null">
+        add_tags = #{addTags,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -146,7 +156,8 @@
       create_person = #{createPerson,jdbcType=BIGINT},
       role = #{role,jdbcType=VARCHAR},
       tags = #{tags,jdbcType=VARCHAR},
-      tag_ids = #{tagIds,jdbcType=VARCHAR}
+      tag_ids = #{tagIds,jdbcType=VARCHAR},
+      add_tags = #{addTags,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

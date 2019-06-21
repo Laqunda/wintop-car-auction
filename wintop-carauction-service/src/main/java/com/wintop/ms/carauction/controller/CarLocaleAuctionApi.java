@@ -2,6 +2,7 @@ package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.wintop.ms.carauction.core.config.CarTypeEnum;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -1335,6 +1336,7 @@ public class CarLocaleAuctionApi {
             PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
+            paramMap.put("saleFlag", CarTypeEnum.SALE_FLAG_SELL_WHOLESALE.value());
             List<CarAuto> carAutos = carAutoService.selectAuctionCarList(paramMap);
             List<Map<String,Object>> list = new ArrayList<>();
             for(CarAuto carAuto:carAutos){

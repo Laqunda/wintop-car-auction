@@ -78,27 +78,6 @@ public class CarAutoAuctionApi {
         return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
     }
 
-    @ApiOperation(value = "保存车辆转渠道")
-    @RequestMapping(value = "/saveTransferFlag",
-            method= RequestMethod.POST,
-            consumes="application/json; charset=UTF-8",
-            produces="application/json; charset=UTF-8")
-    @AuthUserToken
-    @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> saveTransferFlag(@RequestBody JSONObject object,@CurrentUserId Long managerId) {
-        if (object.getString("carId") == null) {
-            return new ResponseEntity<>(new ResultModel(false, 101, "缺少参数", null), HttpStatus.OK);
-        }
-        object.put("userId", managerId);
-        logger.info("保存车辆转渠道");
-        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
-                RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/handleDispute/transferChannelCar"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(object),JSONObject.class);
-        return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
-    }
-
     /**
      * 获取最高价信息
      * @param map

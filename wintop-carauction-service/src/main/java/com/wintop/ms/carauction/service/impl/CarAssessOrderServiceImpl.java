@@ -331,16 +331,20 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
         detail.setBeginRegisterDate(a.getBeginRegisterDate());
         detail.setLicenseNumber(a.getPlateNum());
         detail.setCarNature(a.getAutoNature());//Nature CN
+        detail.setCarNatureCn(a.getAutoNatureCn());
         detail.setUseNature(a.getFunction());//Function CN
-        detail.setIsModification(oreder.getIfAdd());
+        detail.setUseNatureCn(a.getFunctionCn());
+//        detail.setIsModification(oreder.getIfAdd());
         detail.setOriginalPrice(oreder.getNewCarPrice());
         detail.setRemark(a.getRemark());
         detail.setRemarkPhoto(a.getOtherPhoto());
+        detail.setVehicleAttributionCity(a.getRegionId());
+        detail.setVehicleAttributionCityCn(oreder.getCarAddress());
         detail.setCreateTime(new Date());
         detail.setCreateUser(a.getCreateUser() + "");
         autoInfoDetailModel.insert(detail);
         /* car_auto_procedures */
-        saveProcedures(autoId,idWorker,oreder,a.getCreateUser());
+        saveProcedures(autoId,idWorker,a,oreder,a.getCreateUser());
         /* car auto log*/
         CarAutoLog log = new CarAutoLog();
         log.setId(idWorker.nextId());
@@ -379,6 +383,7 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
         }
         auto.setStatus(CarStatusEnum.DRAFT.value());//草稿
         auto.setAutoAuctionId(autoAuctionId);
+        auto.setIfNew("1");
         return carAutoModel.insert(auto);
     }
 
@@ -391,13 +396,14 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
         auction.setAutoId(autoId);
         auction.setCreatePerson(user.getId());
         auction.setCreateTime(new Date());
-        Long roleTypeId = user.getRoleTypeId();
-        if (roleTypeId == 2) {
-            auction.setAuctionType("2");//线下
-        }
-        if (roleTypeId == 3) {
-            auction.setAuctionType("1");//线上
-        }
+        auction.setAuctionType("-1");//待分配
+//        Long roleTypeId = user.getRoleTypeId();
+//        if (roleTypeId == 2) {
+//            auction.setAuctionType("2");//线下
+//        }
+//        if (roleTypeId == 3) {
+//            auction.setAuctionType("1");//线上
+//        }
         auction.setStatus("1");
         auction.setDelFlag("0");
         auction.setBidsCount(0);
@@ -408,7 +414,7 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
     /**
      * 手续信息
      */
-    private int saveProcedures(Long autoId,IdWorker idWorker,CarAssessOrder order,Long userId){
+    private int saveProcedures(Long autoId,IdWorker idWorker,CarAssess a,CarAssessOrder order,Long userId){
         CarAutoProcedures autoProcedures = new CarAutoProcedures();
         autoProcedures.setId(idWorker.nextId());
         autoProcedures.setAutoId(autoId);
@@ -419,6 +425,9 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
         autoProcedures.setBusinessInsurance(order.getCommercialInsuranceEndDate());
         autoProcedures.setNewCarInvoice(order.getNewCarInvoice());
         autoProcedures.setCarKeys(order.getCarKeys());
+        autoProcedures.setTransferNumber(a.getTransferNumber());
+        autoProcedures.setDrivingLicense(order.getDrivingLicense());
+        autoProcedures.setYearInsurance(a.getYearInsurance());
         autoProcedures.setCreateUser(userId);
         autoProcedures.setCreateTime(new Date());
         return proceduresModel.insert(autoProcedures);

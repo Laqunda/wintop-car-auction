@@ -76,19 +76,17 @@ public class AutoManagerApi {
     @AuthUserToken
     @ApiOperation(value = "初始化一辆新车记录" ,notes = "初始化一辆车辆信息")
     public ResponseEntity<ResultModel> initAuto(@CurrentUser CarManagerUser managerUser,
-                                                @ApiParam(value = "二手车、新车",required = true) @RequestParam String ifNew){
+                                                @ApiParam(value = "二手车、新车",required = true) @RequestParam String ifNew,
+                                                @ApiParam(value = "拍卖类型1线上、2现场",required = true) @RequestParam String auctionType){
         logger.info("初始化一辆新车记录");
 
-        String auctionType;
         if (managerUser==null || managerUser.getRoleTypeId()==null){
             //如果不是中心或经销店人员，则无权限新增车辆
             return new ResponseEntity<>(ResultModel.error(ResultStatus.UN_AUTHORIZED),HttpStatus.OK);
         }else if (managerUser.getRoleTypeId()==2L){
             //中心--线下
-            auctionType = "2";
         }else if (managerUser.getRoleTypeId()==3L){
             //经销店--线上
-            auctionType = "1";
         }else {
             //如果不是中心或经销店人员，则无权限新增车辆
             return new ResponseEntity<>(ResultModel.error(ResultStatus.UN_AUTHORIZED),HttpStatus.OK);

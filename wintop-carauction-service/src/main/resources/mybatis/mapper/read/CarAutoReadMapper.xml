@@ -182,7 +182,7 @@
         <if test="managerRole != null and managerRole != ''">
             inner join car_manager_user cmu on cmu.id = t1.create_user
         </if>
-        where t1.sale_flag = '0'
+        where t1.sale_flag = #{saleFlag}
         and t2.auction_type = #{auctionType}
         <choose>
             <when test="managerRole != null and managerRole != ''">
@@ -208,14 +208,12 @@
 
     <select id="selectCarAutoForSaleCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(t1.id) num
-        from car_order_retail t1
-        inner join car_auto t2 on t1.car_id = t2.id
-        inner join car_auto_auction caa on caa.id = t2.auto_auction_id
+        from car_auto t1
         <if test="managerRole != null and managerRole != ''">
-            inner join car_manager_user cmu on cmu.id = t2.create_user
+            inner join car_manager_user cmu on cmu.id = t1.create_user
         </if>
         where
-        t2.sale_flag = #{saleFlag}
+        t1.sale_flag = #{saleFlag}
         <choose>
             <when test="managerRole != null and managerRole != ''">
                 and cmu.department_id = #{departmentId}
@@ -224,6 +222,9 @@
                 and t1.create_user = #{userId}
             </otherwise>
         </choose>
+        <if test="status != null and status != ''">
+            and t1.status = #{status}
+        </if>
         <if test="autoInfoName != null and autoInfoName != ''">
             and t1.auto_info_name like '%{autoInfoName}%'
         </if>
@@ -332,7 +333,7 @@
             inner join car_manager_user cmu on cmu.id = t1.create_user
         </if>
         <trim prefix="where" prefixOverrides="and">
-            t1.sale_flag = '0'
+            t1.sale_flag = #{saleFlag}
             <choose>
                 <when test="managerRole != null and managerRole != ''">
                     and cmu.department_id = #{departmentId}

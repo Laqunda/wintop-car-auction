@@ -94,6 +94,9 @@ public class CarEvaluateDataApi {
         if (StringUtils.isNotEmpty(obj.getString("content"))) {
             carEvaluateData.setContent(obj.getString("content"));
         }
+        if (StringUtils.isNotEmpty(obj.getString("addTags"))) {
+            carEvaluateData.setAddTags(obj.getString("addTags"));
+        }
         if (StringUtils.isNotEmpty(obj.getString("createPerson"))) {
             try {
                 carEvaluateData.setCreatePerson(Longs.tryParse(obj.getString("createPerson")));

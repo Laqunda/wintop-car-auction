@@ -27,20 +27,16 @@ public interface ICarAutoAuctionReadDao {
 
     /**
      * 查询-填充使用,最近的开拍时间
-     * @return
      */
-    String selectForToday(Map<String,Object> map);
+    CarAutoAuction selectForToday(Map<String,Object> map);
 
     /**
      * 获取车辆拍卖活动
-     * @param carId
-     * @return
      */
     CarAutoAuction selectAutoAuction(@Param("carId") Long carId);
 
     /**
      * 查询所有有效竞拍车辆
-     * @return
      */
     List<CommonNameVo> selectAllValidAuto();
 
@@ -51,8 +47,6 @@ public interface ICarAutoAuctionReadDao {
 
     /**
      * 获取车辆拍卖活动
-     * @param carId
-     * @return
      */
     CarAutoAuction selectAutoAuctionByCarId(@Param("carId") Long carId);
 

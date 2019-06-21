@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.wintop.ms.carauction.core.config.CarTypeEnum;
 import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.RedisAutoData;
@@ -31,19 +32,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
 
 @Service
 public class CarAutoServiceImpl implements ICarAutoService {
-    private static final String UNDERLINE = "2";
-    private static final String STORE_TYPE = "2";
-    private static final String CENTER_TYPE = "2";
-    private static final String CENTER_INCHANGE = "3";
-    private static final String ONLINE = "1";
     private static final String CELLER = "1";
     private static final String AUDIT_CAR_TITLE = "审批车辆";
     private static final String AUDIT_CAR_CONTENT = "您有一个车辆待审批";
-    private static final String STORE_INCHANGE = "8";
     @Autowired
     private CarAutoModel carAutoModel;
     @Autowired
@@ -68,6 +62,8 @@ public class CarAutoServiceImpl implements ICarAutoService {
     private CarStoreModel storeModel;
     @Autowired
     private CarManagerUserModel userModel;
+    @Autowired
+    private CarManagerRoleModel roleModel;
     @Autowired
     private ICarAutoAuctionService carAutoAuctionService;
     @Autowired
@@ -303,6 +299,90 @@ public class CarAutoServiceImpl implements ICarAutoService {
         }finally {
             return result;
         }
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult updateAuctionType(Map<String, Object> map) {
+        ServiceResult result =new ServiceResult<>();
+        result.setSuccess(true);
+        String auctionType = map.get("auctionType")+"";
+        long autoId = Long.parseLong(map.get("autoId") + "");
+        //查询车辆信息
+        CarAuto autoDao = carAutoModel.selectByPrimaryKey(autoId);
+        if(autoDao == null){
+            result.setSuccess(false);
+            result.setError(ResultCode.NO_OBJECT.strValue(),ResultCode.NO_OBJECT.getRemark());
+            return result;
+        }
+        //如果是零售 修改 车辆表（car_auto）  拍卖表（car_auto_auction）
+        if("3".equals(auctionType)){
+            autoDao.setSaleFlag("1");
+            carAutoModel.updateByPrimaryKeySelective(autoDao);
+        }
+        //如果是批售修改 拍卖表（car_auto_auction）
+        CarAutoAuction caa = new CarAutoAuction();
+        caa.setId(autoDao.getAutoAuctionId());
+        caa.setAuctionType(auctionType);
+        autoAuctionModel.updateByPrimaryKeySelective(caa);
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult updateTransferFlag(Map<String, Object> map) {
+        ServiceResult result =new ServiceResult<>();
+        result.setSuccess(true);
+        Long id = Long.parseLong(map.get("carId")+"");
+        Long userId = Long.parseLong(map.get("userId")+"");
+        CarAuto carAuto = carAutoModel.selectByPrimaryKey(id);
+        if(carAuto == null ){
+            result.setError(ResultCode.NO_OBJECT.strValue(),ResultCode.NO_OBJECT.getRemark());
+            return result;
+        }
+        //**,2只能操作自己的数据
+        CarManagerRole managerRole = roleModel.selectByUserId(userId);
+        if("2".equals(managerRole.getWriteType())){
+            if(userId.compareTo(carAuto.getCreateUser()) != 0){
+                result.setError(ResultCode.NO_ALLOW_UPDATE.strValue(),ResultCode.NO_ALLOW_UPDATE.getRemark());
+                return result;
+            }
+        }
+        String transferFlag = map.get("transferFlag")+"";
+        //更改销售渠道类型
+        CarAutoAuction carAutoAuction = new CarAutoAuction();
+        if(CarTypeEnum.TRANSFER_FLAG_3.value().equals(transferFlag) || CarTypeEnum.TRANSFER_FLAG_4.value().equals(transferFlag)){
+            //转零售
+            carAuto.setSaleFlag(CarTypeEnum.SALE_FLAG_RETAIL.value());
+            carAutoAuction.setAuctionType(CarTypeEnum.AUCTION_TYPE_RETAIL.value());
+        }
+        if(CarTypeEnum.TRANSFER_FLAG_1.value().equals(transferFlag) || CarTypeEnum.TRANSFER_FLAG_2.value().equals(transferFlag)){
+            //转线上/现场
+            carAutoAuction.setAuctionType(CarTypeEnum.TRANSFER_FLAG_1.value().equals(transferFlag)? CarTypeEnum.AUCTION_TYPE_SCENE.value() : CarTypeEnum.AUCTION_TYPE_ONLINE.value());
+        }
+        if(CarTypeEnum.TRANSFER_FLAG_5.value().equals(transferFlag) || CarTypeEnum.TRANSFER_FLAG_6.value().equals(transferFlag)){
+            //零售转线上/现场
+            carAuto.setSaleFlag(CarTypeEnum.SALE_FLAG_SELL_WHOLESALE.value());
+            carAutoAuction.setAuctionType(CarTypeEnum.TRANSFER_FLAG_6.value().equals(transferFlag)? CarTypeEnum.AUCTION_TYPE_SCENE.value() : CarTypeEnum.AUCTION_TYPE_ONLINE.value());
+        }
+        carAuto.setTransferFlag(transferFlag);
+        //更新车辆信息
+        carAutoModel.updateByPrimaryKeySelective(carAuto);
+        carAutoAuction.setId(carAuto.getAutoAuctionId());
+        carAutoAuction.setAuctionStartTime(null);
+        autoAuctionModel.updateByPrimaryKeySelective(carAutoAuction);
+        // 日志信息记录
+        CarManagerUser user = userModel.selectByPrimaryKey(userId);
+        CarAutoLog carAutoLog = new CarAutoLog();
+        IdWorker idWorker=new IdWorker(10);
+        carAutoLog.setId(idWorker.nextId());
+        carAutoLog.setAutoId(id);
+        carAutoLog.setMsg(CarTypeEnum.auctionType.get(transferFlag));
+        carAutoLog.setUserMobile(user.getUserPhone());
+        carAutoLog.setUserName(user.getUserName());
+        carAutoLog.setStatus("1");
+        logModel.insert(carAutoLog);
+        return result;
     }
 
     @Override
@@ -860,7 +940,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
 
     @Override
     /**
-     * 库存管理--（零售[已售]、线上拍[车辆库存、审批状态、竞价状态、竞价结果]、现场拍[车辆库存、审批状态、竞价状态、竞价结果]）
+     * 库存管理--（零售[车辆列表]、线上拍[车辆列表、审批状态、竞价状态、竞价结果]、现场拍[车辆库存、审批状态、竞价状态、竞价结果]）
      */
     public List<Map<String,Object>> selectCarAutoForSaleCount(Map<String, Object> map){
         List<Map<String, Object>> mapArrayList = Lists.newArrayList();
@@ -873,7 +953,7 @@ public class CarAutoServiceImpl implements ICarAutoService {
             add("auction_result");
         }};
         List<String> titleList = new ArrayList<String>(){{
-            add("车辆库存");
+            add("待发车辆");
             add("审批状态");
             add("竞价状态");
             add("竞价结果");
@@ -885,25 +965,22 @@ public class CarAutoServiceImpl implements ICarAutoService {
             paramMap.put("userId",carManagerUser.getId());
             //如果用户是中心店管理员
             if(ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()){
-//                paramMap.put("auctionType","2");//现场车辆
-//                paramMap.put("roleTyped","2");//中心店
                 paramMap.put("departmentId",carManagerUser.getDepartmentId());
                 paramMap.put("managerRole",carManagerUser.getRoleId());
             }
             //如果用户是店铺管理员
             if(ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()){
-//                paramMap.put("auctionType","1");//线上车辆
-//                paramMap.put("roleTyped","3");//店铺
                 paramMap.put("departmentId",carManagerUser.getDepartmentId());
                 paramMap.put("managerRole",carManagerUser.getRoleId());
             }
             //竞拍
-            paramMap.put("saleFalg", "0");
+            paramMap.put("saleFlag", "0");
             if ("retail".equals(type)) {
                 // 零售
                 paramMap.put("saleFlag", "1");
+                paramMap.put("status", "1");
                 Integer num = carAutoModel.selectCarAutoForSaleCount(paramMap);
-                resultMap.put("title", "已售");
+                resultMap.put("title", "零售车辆");
                 resultMap.put("num", num);
                 mapArrayList.add(resultMap);
             } else if ("online".equals(type)) {

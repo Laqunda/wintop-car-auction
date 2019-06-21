@@ -12,9 +12,10 @@
     <result column="role" property="role" jdbcType="VARCHAR"/>
     <result column="tags" property="tags" jdbcType="VARCHAR"/>
     <result column="tag_ids" property="tagIds" jdbcType="VARCHAR"/>
+    <result column="add_tags" property="addTags" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
-    d.id, d.obj_id, d.content, d.type, d.star_level, d.create_time, d.create_person, d.role, d.tags, d.tag_ids
+    d.id, d.obj_id, d.content, d.type, d.star_level, d.create_time, d.create_person, d.role, d.tags, d.tag_ids, add_tags
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
     select

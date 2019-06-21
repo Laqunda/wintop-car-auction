@@ -220,4 +220,64 @@ public class CarAutoApi {
                         .body(map), JSONObject.class);
         return ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
     }*/
+
+    @ApiOperation(value = "车辆划分渠道")
+    @RequestMapping(value = "/updateAuctionType",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResponseEntity<ResultModel> withDrawCarAuction(@RequestBody Map map ,@CurrentUserId Long managerId) {
+        map.put("userId",managerId);
+        if(map.get("autoId") == null || "".equals(map.get("autoId"))){
+            return new ResponseEntity<>(ResultModel.error(ResultStatus.PARAMETERS_ERROR), HttpStatus.OK);
+        }
+        if(map.get("auctionType") == null || "".equals(map.get("auctionType"))){
+            return new ResponseEntity<>(ResultModel.error(ResultStatus.PARAMETERS_ERROR), HttpStatus.OK);
+        }
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/carAuto/updateAuctionType"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
+    }
+
+    @ApiOperation(value = "车辆转渠道")
+    @RequestMapping(value = "/updateTransferFlag",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResponseEntity<ResultModel> saveTransferFlag(@RequestBody JSONObject object,@CurrentUserId Long managerId) {
+        if (object.getString("carId") == null || object.getString("transferFlag") == null) {
+            return new ResponseEntity<>(new ResultModel(false, 101, "缺少参数", null), HttpStatus.OK);
+        }
+        object.put("userId", managerId);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAuto/updateTransferFlag"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(object),JSONObject.class);
+        return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
+    }
+
+    @ApiOperation(value = "查询最后审批车辆的拍卖时间")
+    @RequestMapping(value = "/getLastCarAuctionDate",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResponseEntity<ResultModel> getLastCarAuctionDate(@RequestBody JSONObject object,@CurrentUserId Long managerId) {
+        object.put("userId", managerId);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAutoAuction/selectForToday"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(object),JSONObject.class);
+        return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
+    }
 }

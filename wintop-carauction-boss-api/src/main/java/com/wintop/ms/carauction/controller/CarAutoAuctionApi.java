@@ -83,8 +83,10 @@ public class CarAutoAuctionApi {
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
-    public ResultModel selectForToday(@RequestBody JSONObject object) {
+    @AuthUserToken
+    public ResultModel selectForToday(@RequestBody JSONObject object,@CurrentUserId Long userId) {
         logger.info("最近的开拍时间");
+        object.put("userId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(selectForToday_URL))

@@ -139,6 +139,9 @@
               <if test="auctionType != null ">
                   AND t4.auction_type = #{auctionType}
               </if>
+              <if test="status != null ">
+                  AND t2.status = #{status}
+              </if>
               ORDER BY t1.bid_time DESC
       ) t
 
@@ -160,6 +163,9 @@
       <if test="auctionType != null ">
           AND t4.auction_type = #{auctionType}
       </if>
+      <if test="status != null ">
+      AND t2.status = #{status}
+  </if>
   </select>
 
     <select id="getCustomerBidPriceList" resultMap="BaseResultMap" parameterType="java.util.Map">

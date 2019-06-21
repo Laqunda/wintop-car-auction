@@ -37,6 +37,9 @@ public class CarEvaluateData extends BaseEntity implements Serializable {
     /** 评价标签id组合*/
     private String tagIds;
 
+    /** 添加评价标签中文组合*/
+    private String addTags;
+
     /** 车辆信息*/
     private CarAuto carAuto;
 
@@ -135,6 +138,14 @@ public class CarEvaluateData extends BaseEntity implements Serializable {
 
     public void setTagIds(String tagIds) {
         this.tagIds = tagIds;
+    }
+
+    public String getAddTags() {
+        return addTags;
+    }
+
+    public void setAddTags(String addTags) {
+        this.addTags = addTags;
     }
 
     public CarAuto getCarAuto() {

@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.annotation.AppApiVersion;
 import com.wintop.ms.carauction.core.annotation.CurrentUser;
 import com.wintop.ms.carauction.core.config.CarStatusEnum;
+import com.wintop.ms.carauction.core.config.CarTypeEnum;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.RedisAutoData;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -57,6 +59,8 @@ public class CarAutoAuctionApi {
     private RedisAutoManager redisAutoManager;
     @Autowired
     private RedisManagerTemplate redisManagerTemplate;
+    @Autowired
+    private ICarAppSettingService carAppSettingService;
     @Autowired
     private CarAutoApi carAutoApi;
     @Autowired
@@ -404,15 +408,32 @@ public class CarAutoAuctionApi {
     /**
      * 查询-填充使用,最近的开拍时间
      */
-    @ApiOperation(value = "最近的开拍时间")
+    @ApiOperation(value = "查询最后一辆车的开拍时间")
     @RequestMapping(value = "/selectForToday",
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8")
     public ServiceResult<Map<String,Object>> detail(@RequestBody JSONObject obj) {
         ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+        Map<String,Object> resultMap = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
         try {
-            result.setResult(Collections.singletonMap("data",this.carAutoAuctionService.selectForToday()));
+            resultMap.put("date",sdf.format(new Date()));
+            Map<String,Object> map = new HashMap<>();
+            map.put("date",new Date());
+            map.put("publishUserId",obj.getLong("userId"));
+            map.put("auctionType", CarTypeEnum.AUCTION_TYPE_ONLINE.value());
+            CarAutoAuction autoAuction = carAutoAuctionService.selectForToday(map);
+            if(autoAuction != null && autoAuction.getAuctionStartTime() != null && !"".equals(autoAuction.getAuctionStartTime())){
+                //获取间隔时间 car_interval
+                CarAppSetting appSet = carAppSettingService.getAcutionHint(Collections.singletonMap("code", "car_interval")).getResult();
+                if(appSet != null && appSet.getContent() != null && !"".equals(appSet.getContent())){
+                    Date date = DateUtils.addMinutes(autoAuction.getAuctionStartTime(), Integer.parseInt(appSet.getContent()));
+                    resultMap.put("date",sdf.format(date));
+                }
+            }
+            resultMap.put("auctionStartTime",autoAuction.getAuctionStartTime());
+            result.setResult(resultMap);
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {
             logger.info("查询车辆评估详情", e);

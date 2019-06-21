@@ -122,5 +122,5 @@ public interface ICarAutoAuctionService {
      *
      * @return
      */
-    public String selectForToday();
+    public CarAutoAuction selectForToday(Map<String,Object> map);
 }
