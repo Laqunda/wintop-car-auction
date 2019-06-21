@@ -128,7 +128,7 @@
         t1.car_id,
         t2.car_auto_no,
         t1.add_fee,
-        SUBSTRING_INDEX(GROUP_CONCAT(t1.bid_fee ORDER BY t1.bid_time DESC),',',1) bid_fee,
+        t1.bid_fee,
         t1.bid_time,
         t1.id,
         t1.auction_id,
@@ -151,6 +151,9 @@
         (CASE WHEN t5.entrust_fee IS NULL THEN 0 ELSE t5.entrust_fee END ) AS entrustPrice,
         (CASE WHEN o.id IS NOT NULL THEN '1' ELSE '2' END ) AS bidSuccess
         FROM car_auction_bid_record t1
+        INNER JOIN
+        (SELECT SUBSTRING_INDEX(GROUP_CONCAT(id ORDER BY bid_time DESC),',',1) id FROM car_auction_bid_record where customer_id = #{customerId} GROUP BY car_id) cabr
+        ON cabr.id = t1.id
         INNER JOIN car_auto t2 ON t1.car_id = t2.id
         INNER JOIN car_auto_info_detail t3 ON t3.auto_id = t1.car_id
         INNER JOIN car_auto_auction t4 ON t4.id = t1.auction_id
@@ -165,7 +168,6 @@
         <if test="status != null ">
             AND t2.status = #{status}
         </if>
-        GROUP BY t1.car_id
         ORDER BY t1.bid_time DESC
 
         <if test="startRowNum!=null">
