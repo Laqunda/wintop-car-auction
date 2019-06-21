@@ -7,6 +7,7 @@ import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -47,6 +48,7 @@ public class CarAssessLogApi {
             produces="application/json; charset=UTF-8")
     @AuthUserToken
     @RequestAuth(value = false)
+    @ApiOperation(value = "查询评估日志列表")
     public ResultModel list(@RequestBody Map map) {
         if (map.get("page") == null || map.get("limit") == null) {
             return new ResultModel(false, ResultCode.NO_PARAM.value(), ResultCode.NO_PARAM.getRemark(), null);
@@ -69,6 +71,7 @@ public class CarAssessLogApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation(value = "新增保存评估日志")
     public ResultModel addSave(@RequestBody Map map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
@@ -87,6 +90,7 @@ public class CarAssessLogApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation(value = "修改保存评估日志")
     public ResultModel editSave(@RequestBody Map map) {
 
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
@@ -105,6 +109,7 @@ public class CarAssessLogApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation(value = "删除评估日志")
     public ResultModel remove(@RequestBody Map map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity

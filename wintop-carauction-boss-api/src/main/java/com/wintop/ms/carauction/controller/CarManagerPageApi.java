@@ -1,7 +1,9 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
+import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.annotation.RequestAuth;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
@@ -53,6 +55,27 @@ public class CarManagerPageApi {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carManagerPage/getPageTreeList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.LIST);
+    }
+
+    /**
+     * 根据角色id查询可见页面
+     *@Author:zhangzijuan
+     *@date 2018-04-11
+     */
+    @ApiOperation(value = "根据角色id查询可见页面")
+    @PostMapping(value = "/getPageTreeForTwoNode",
+            consumes = "application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel getPageTreeForTwoNode( @CurrentUserId Long manaagerId) {
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("managerId", manaagerId);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carManagerPage/getPageTreeForTwoNode"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.LIST);

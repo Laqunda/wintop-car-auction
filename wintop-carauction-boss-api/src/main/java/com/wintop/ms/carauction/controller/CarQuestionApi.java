@@ -43,6 +43,7 @@ public class CarQuestionApi {
     /**
      * 获取常见问题分类列表
      */
+    @ApiOperation(value = "获取常见问题分类列表")
     @RequestMapping(value = "/selectQuestionClassifyList",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
@@ -60,6 +61,7 @@ public class CarQuestionApi {
     /**
      * 获取所有常见问题分类列表
      */
+    @ApiOperation(value = "获取所有常见问题分类列表")
     @RequestMapping(value = "/selectAllQuestionClassify",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",

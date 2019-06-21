@@ -6,6 +6,7 @@ import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,7 @@ public class CarEvaluateTagConfApi {
     /**
      * 获取评价标签配置父列表
      */
+    @ApiOperation(value = "获取评价标签配置父列表")
     @RequestMapping(value = "/selectBossParentConfList",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
@@ -52,6 +54,7 @@ public class CarEvaluateTagConfApi {
     /**
      * 获取评价标签配置子列表
      */
+    @ApiOperation(value = "获取评价标签配置子列表")
     @RequestMapping(value = "/selectBossChildrenConfList",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
@@ -68,6 +71,7 @@ public class CarEvaluateTagConfApi {
     /**
      * 新增评价标签配置
      */
+    @ApiOperation(value = "新增评价标签配置")
     @RequestMapping(value = "/save",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
@@ -84,6 +88,7 @@ public class CarEvaluateTagConfApi {
     /**
      * 修改评价标签配置
      */
+    @ApiOperation(value = "修改评价标签配置")
     @RequestMapping(value = "/update",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
@@ -92,6 +97,23 @@ public class CarEvaluateTagConfApi {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carEvaluateTagConf/update"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
+    }
+
+    /**
+     * 删除评价标签配置
+     */
+    @ApiOperation(value = "删除评价标签配置")
+    @RequestMapping(value = "/delete",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ResponseEntity<ResultModel> delete(@RequestBody Map<String,Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carEvaluateTagConf/delete"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);

@@ -11,6 +11,7 @@ import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.ExcelUtil;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -47,6 +48,7 @@ public class CarSaleOrderListApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation(value = "零售订单列表")
     public ResponseEntity<ResultModel> getCarSaleOrderRetailList(@RequestBody Map<String,Object> map, @CurrentUserId Long userId){
         map.put("customerId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
@@ -62,6 +64,7 @@ public class CarSaleOrderListApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation(value = "零售订单详情")
     public ResponseEntity<ResultModel> getCarSaleOrderRetail(@RequestBody Map<String,Object> map, @CurrentUserId Long userId){
         map.put("customerId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
@@ -80,6 +83,7 @@ public class CarSaleOrderListApi {
      */
     @AuthPublic
     @PostMapping( value = "/export" )
+    @ApiOperation(value = "零售订单导出")
     public void export(HttpServletRequest request, HttpServletResponse rep,
                                     @RequestParam("searchName") String searchName,
                                     @RequestParam("authorization") String authorization) {

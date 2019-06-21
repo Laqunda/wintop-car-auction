@@ -1,12 +1,15 @@
 package com.wintop.ms.carauction.service.impl;
 
+import com.google.common.primitives.Longs;
 import com.wintop.ms.carauction.entity.CarManagerPage;
 import com.wintop.ms.carauction.entity.TreeEntity;
 import com.wintop.ms.carauction.model.CarManagerPageModel;
 import com.wintop.ms.carauction.service.ICarManagerPageService;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -85,6 +88,24 @@ public class CarManagerPageServiceImpl implements ICarManagerPageService {
                 List<TreeEntity> tree2=pageModel.getPageTreeByPId(map);
                 e.setTreeEntityList(tree2);
             }
+        }
+        return treeEntities;
+    }
+
+    /**
+     * 查询一二级敏据节点
+     */
+    @Override
+    public List<TreeEntity> getPageTreeForTwoNode(Map<String, Object> map){
+        if (MapUtils.isEmpty(map) || !map.containsKey("roleId")) {
+            return Collections.emptyList();
+        }
+            map.put("parentId", 0L);
+        List<TreeEntity> treeEntities=pageModel.getPageTreeByPId(map);
+        for (TreeEntity entity:treeEntities){
+            map.put("parentId",entity.getId());
+            List<TreeEntity> twoTree=pageModel.getPageTreeByPId(map);
+            entity.setTreeEntityList(twoTree);
         }
         return treeEntities;
     }

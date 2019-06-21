@@ -177,6 +177,7 @@ public class WtRegionApi {
         }
     }
 
+    @ApiOperation(value = "查询全部地区城市")
     @PostMapping( value = "/getAll", produces = "application/json; charset=UTF-8" )
     public ResultModel getAll(@RequestBody Map<String, Object> map) {
         if (map.get("status") == null) {

@@ -58,6 +58,7 @@ public class CarLocaleAuctionTemplateApi {
         put("5", "星期五");
         put("6", "星期六");
     }};
+    @ApiOperation(value = "现场拍主题列表")
     @PostMapping(value = "/list",
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
@@ -74,6 +75,7 @@ public class CarLocaleAuctionTemplateApi {
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
+    @ApiOperation(value = "现场拍主题全部列表")
     @PostMapping(value = "/allList",
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
@@ -107,6 +109,7 @@ public class CarLocaleAuctionTemplateApi {
     /**
      * 保存主题设置
      */
+    @ApiOperation(value = "保存主题设置")
     @RequestMapping(value = "/save",
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
@@ -125,6 +128,7 @@ public class CarLocaleAuctionTemplateApi {
     /**
      * 修改主题设置
      */
+    @ApiOperation(value = "修改主题设置")
     @RequestMapping(value = "/edit",
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
@@ -161,6 +165,7 @@ public class CarLocaleAuctionTemplateApi {
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
+    @ApiOperation(value = "主题设置列表导出")
     @AuthPublic
     @PostMapping( value = "/export" )
     public void export(HttpServletRequest request, HttpServletResponse rep,

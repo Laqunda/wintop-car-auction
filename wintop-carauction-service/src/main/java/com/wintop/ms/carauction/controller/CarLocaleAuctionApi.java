@@ -35,6 +35,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/service/carLocaleAuction")
 public class CarLocaleAuctionApi {
     private static final Logger logger = LoggerFactory.getLogger(CarLocaleAuctionApi.class);
+    private static final Long CENTER = 2L;
+    private static final Long REGION_BEIJING = 2L;
     private IdWorker idWorker = new IdWorker(10);
     @Autowired
     private ICarLocaleAuctionService carLocaleAuctionService;
@@ -47,6 +49,12 @@ public class CarLocaleAuctionApi {
 
     @Autowired
     private ICarAuctionBidRecordService carAuctionBidRecordService;
+
+    @Autowired
+    private ICarCenterStoreService carCenterStoreService;
+
+    @Autowired
+    private ICarManagerUserService carManagerUserService;
 
     /***
      * 获取场次列表
@@ -275,6 +283,15 @@ public class CarLocaleAuctionApi {
         }
         if(obj.getString("endTime")!=null&&!"".equals(obj.getString("endTime"))){
             paramMap.put("endTime",obj.getString("endTime"));
+        }
+        if (Objects.nonNull(obj.getString("managerId"))) {
+            CarManagerUser user = carManagerUserService.selectByPrimaryKey(obj.getLong("managerId"), false);
+            // 就否是中心
+            if (user.getRoleTypeId().equals(CENTER) && user.getDepartmentId().equals(REGION_BEIJING)) {
+                List<CommonNameVo> cityList = carCenterStoreService.selectAllStore(user.getDepartmentId());
+                List<Long> regionIds = cityList.stream().map(city -> city.getId()).collect(Collectors.toList());
+                paramMap.put("regionIds", regionIds);
+            }
         }
         int count = carLocaleAuctionService.selectAuctionCount(paramMap).getResult();
         PageEntity pageEntity= CarAutoUtils.getPageParam(obj);

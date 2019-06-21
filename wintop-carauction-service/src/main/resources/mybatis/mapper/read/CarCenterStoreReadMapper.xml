@@ -23,10 +23,11 @@
   </select>
   <select id="selectByCondition" resultMap="StoreResultMap"  parameterType="java.util.Map">
     SELECT
+    DISTINCT
     c.id, c.center_name as `name`
     FROM  car_center_store cs
     INNER JOIN car_center c ON cs.center_id=c.id
-    <trim prefix="WHERE" prefixOverrides="AND |OR">
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
       <if test="storeId != null and storeId != ''">
         AND cs.store_id = #{storeId}
       </if>

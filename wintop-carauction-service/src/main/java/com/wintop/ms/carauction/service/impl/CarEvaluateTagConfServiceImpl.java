@@ -100,4 +100,14 @@ public class CarEvaluateTagConfServiceImpl implements ICarEvaluateTagConfService
     public Integer deleteByPrimaryKey(Long id){
         return carEvaluateTagConfModel.deleteByPrimaryKey(id);
     }
+
+    /**
+     * 删除数据
+     * @param map
+     * @return
+     */
+    @Override
+    public Integer deleteByCondition(Map<String,Object> map){
+        return carEvaluateTagConfModel.deleteByCondtion(map);
+    }
 }

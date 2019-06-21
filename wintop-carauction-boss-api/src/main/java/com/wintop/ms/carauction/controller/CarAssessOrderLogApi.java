@@ -6,6 +6,7 @@ import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -40,6 +41,7 @@ public class CarAssessOrderLogApi {
     /**
      * 查询评估采购日志列表
      */
+    @ApiOperation( value = "查询评估采购日志列表" )
     @RequestMapping(value = "/list",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
@@ -66,6 +68,7 @@ public class CarAssessOrderLogApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation( value = "查询评估采购日志列表" )
     public ResultModel allList(@RequestBody Map map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
@@ -83,6 +86,7 @@ public class CarAssessOrderLogApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation( value = "新增保存评估采购日志" )
     public ResultModel addSave(@RequestBody Map map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
@@ -101,6 +105,7 @@ public class CarAssessOrderLogApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation( value = "修改保存评估采购日志" )
     public ResultModel editSave(@RequestBody Map map) {
 
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
@@ -119,6 +124,7 @@ public class CarAssessOrderLogApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation( value = "删除评估采购日志" )
     public ResultModel remove(@RequestBody Map map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity

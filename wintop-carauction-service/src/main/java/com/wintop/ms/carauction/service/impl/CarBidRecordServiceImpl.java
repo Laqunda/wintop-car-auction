@@ -1,5 +1,6 @@
 package com.wintop.ms.carauction.service.impl;
 
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.entity.CarBidRecord;
 import com.wintop.ms.carauction.entity.CommonNameVo;
 import com.wintop.ms.carauction.model.CarBidRecordModel;
@@ -38,10 +39,12 @@ public class CarBidRecordServiceImpl implements ICarBidRecordService{
     public List<CarBidRecord> queryCarBidRecordRecordList(Map<String, Object> map) {
         List<CarBidRecord> list=carBidRecordModel.queryCarBidRecordList(map);
         if (CollectionUtils.isNotEmpty(list)) {
+            List<CommonNameVo> storeVoList = carCenterStoreModel.selectByCondition(Maps.newHashMap(map));
             for (int i = 0; i < list.size(); i++) {
-                List<CommonNameVo> storeVoList = carCenterStoreModel.selectByCondition(Collections.singletonMap("storeId", list.get(i).getStoreId()));
                 if (CollectionUtils.isNotEmpty(storeVoList)) {
-                    list.get(i).setCenterName(storeVoList.get(0).getName());
+                    Long centerId = list.get(i).getCenterId();
+                    CommonNameVo commonNameVo = storeVoList.stream().filter(store -> store.getId().equals(centerId)).findFirst().get();
+                    list.get(i).setCenterName(commonNameVo.getName());
                 }
             }
         }

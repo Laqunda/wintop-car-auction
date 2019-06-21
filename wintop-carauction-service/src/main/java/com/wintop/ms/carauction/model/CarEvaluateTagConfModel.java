@@ -70,4 +70,9 @@ public class CarEvaluateTagConfModel {
     public Integer deleteByPrimaryKey(Long id){
         return writeDao.deleteByPrimaryKey(id);
     }
+
+
+    public Integer deleteByCondtion(Map<String,Object> map){
+        return writeDao.deleteByCondtion(map);
+    }
 }

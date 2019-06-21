@@ -16,6 +16,7 @@
         <result column="bid_time" property="bidTime" jdbcType="TIMESTAMP" />
         <result column="bid_fee" property="bidFee" jdbcType="DECIMAL" />
         <result column="auction_status" property="auctionStatus" jdbcType="VARCHAR" />
+        <result column="center_id" property="centerId" jdbcType="BIGINT" />
         <!--<result column="store_id" property="storeId" jdbcType="BIGINT" />-->
     </resultMap>
     <!--根据条件查询车辆出价记录列表-->
@@ -35,13 +36,15 @@
         t1.bid_time,
         t1.bid_fee,
         t4.status auction_status,
-        t3.store_id as storeId
+        t3.store_id as storeId,
+        t7.center_id
         from car_auction_bid_record t1
         INNER JOIN wt_app_user t2 ON t1.customer_id = t2.id
         INNER JOIN car_auto t3 ON t1.car_id = t3.id
         INNER JOIN car_auto_auction t4 ON t3.auto_auction_id = t4.id
         LEFT JOIN car_store t5 ON t5.id=t2.store_id
         LEFT JOIN car_store t6 ON t6.id=t3.store_id
+        LEFT JOIN car_center_store t7 on t3.store_id = t7.store_id
         WHERE  1=1
         <if test="searchName!=null and searchName!=''">
             AND (t2.user_num LIKE CONCAT(CONCAT('%', #{searchName}),'%')
@@ -58,6 +61,9 @@
         </if>
         <if test="cityId != null and cityId != ''">
             AND t3.region_id = #{cityId}
+        </if>
+        <if test="centerId != null">
+            AND t7.center_id = #{centerId}
         </if>
         <if test="carStoreId!=null and carStoreId!=''">
             AND t3.store_id=#{carStoreId}

@@ -361,10 +361,11 @@ public class CarAutoApi {
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
     /**
-     * 查询车辆信息
+     * 通过车辆id查询车辆信息
      * @param map
      * @return
      */
+    @ApiOperation(value ="通过车辆id查询车辆信息")
     @RequestMapping(value = "/selectByCarId",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
@@ -384,6 +385,7 @@ public class CarAutoApi {
      * @param map
      * @return
      */
+    @ApiOperation(value ="查询车辆信息")
     @RequestMapping(value = "/detail",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
@@ -410,6 +412,7 @@ public class CarAutoApi {
             produces="application/json; charset=UTF-8")
     @AuthPublic
     @RequestAuth(false)
+    @ApiOperation(value ="查询车辆基本信息")
     public ResultModel selectDetailByCarId(@RequestBody Map<String,Object> map){
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
@@ -419,6 +422,7 @@ public class CarAutoApi {
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 
+    @ApiOperation(value ="查询车辆手续信息")
     @RequestMapping(value = "/selectProcedureByCarId",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
@@ -446,6 +450,7 @@ public class CarAutoApi {
      * @param startTime
      * @param endTime
      */
+    @ApiOperation(value = "线上车辆导出")
     @AuthPublic
     @PostMapping( value = "/exportOnlineCarList" )
     public void exportOnlineCarList(HttpServletRequest request, HttpServletResponse rep,
@@ -620,6 +625,7 @@ public class CarAutoApi {
      * @param auctionStartTimeBegin
      * @param auctionStartTimeEnd
      */
+    @ApiOperation(value = "现场车辆导出")
     @AuthPublic
     @PostMapping( value = "/exportUnderCarList" )
     public void exportUnderCarList(HttpServletRequest request, HttpServletResponse rep,
@@ -770,6 +776,7 @@ public class CarAutoApi {
      * @param createUserName
      * @param vin
      */
+    @ApiOperation(value = "零售车辆导出")
     @AuthPublic
     @PostMapping( value = "/exportRetailCarList" )
     public void exportRetailCarList(HttpServletRequest request, HttpServletResponse rep,

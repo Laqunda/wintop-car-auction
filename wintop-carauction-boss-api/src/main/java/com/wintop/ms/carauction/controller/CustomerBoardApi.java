@@ -9,6 +9,7 @@ import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.IdWorker;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,7 @@ public class CustomerBoardApi {
      * @param map
      * @return
      */
+    @ApiOperation(value = "绑定拍牌")
     @RequestMapping(value = "/saveCustomerBoard",
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
@@ -66,6 +68,7 @@ public class CustomerBoardApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation(value = "解除绑定")
     public ResultModel deleteAuctionBoard(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("customerId")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);

@@ -8,6 +8,7 @@ import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -37,6 +38,7 @@ public class ElectronAuctionApi {
      * 电子拍牌访问接口
      * @return
      */
+    @ApiOperation(value = "电子拍牌访问接口")
     @AuthPublic
     @RequestMapping(value = "/bidding",produces="application/json; charset=UTF-8")
     public synchronized Integer bidding(HttpServletRequest request,String jz,String pp,String mm) {
@@ -63,6 +65,7 @@ public class ElectronAuctionApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthPublic
+    @ApiOperation(value = "电子拍牌访问记录列表")
     public synchronized ResultModel selectLogList(@RequestBody Map<String,Object> map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
@@ -76,6 +79,7 @@ public class ElectronAuctionApi {
      * 电子拍牌上传访问接口
      * @return
      */
+    @ApiOperation(value = "电子拍牌上传访问接口")
     @AuthPublic
     @RequestMapping(value = "/tongji",produces="application/json; charset=UTF-8")
     public synchronized Integer tongji(HttpServletRequest request,String jz,String pps,String mm,String rq) {

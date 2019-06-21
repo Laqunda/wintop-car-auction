@@ -6,6 +6,7 @@ import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultStatus;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class CarAutoBrandApi {
         this.restTemplate=restTemplate;
     }
 
-
+    @ApiOperation(value = "查询车辆品牌")
     @PostMapping(value = "/selectCarBrand",
             produces="application/json; charset=UTF-8")
     public ResponseEntity<ResultModel> selectCarBrand(){

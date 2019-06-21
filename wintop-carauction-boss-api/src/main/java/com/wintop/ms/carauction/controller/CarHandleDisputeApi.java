@@ -37,6 +37,7 @@ public class CarHandleDisputeApi {
     /**
      *申请撤回车辆接口
      */
+    @ApiOperation(value = "申请撤回车辆接口")
     @RequestMapping(value = "/insertRevocationCar",
             method= RequestMethod.POST,
             produces="application/json; charset=UTF-8")
@@ -57,6 +58,7 @@ public class CarHandleDisputeApi {
     /**
      * 线上转线下渠道
      */
+    @ApiOperation(value = "线上转线下渠道")
     @RequestMapping(value = "/transferChannelCar",
             method= {RequestMethod.POST,RequestMethod.GET},
             produces="application/json; charset=UTF-8")
@@ -104,6 +106,7 @@ public class CarHandleDisputeApi {
     /**
      *确定收款
      */
+    @ApiOperation(value = "确定收款")
     @RequestMapping(value = "/saveGathering",
             method= RequestMethod.POST,
             produces="application/json; charset=UTF-8")

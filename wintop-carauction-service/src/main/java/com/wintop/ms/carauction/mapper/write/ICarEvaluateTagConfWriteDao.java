@@ -2,6 +2,8 @@ package com.wintop.ms.carauction.mapper.write;
 
 import com.wintop.ms.carauction.entity.CarEvaluateTagConf;
 
+import java.util.Map;
+
 public interface ICarEvaluateTagConfWriteDao {
 
     /**
@@ -22,4 +24,10 @@ public interface ICarEvaluateTagConfWriteDao {
      * @return
      */
     Integer deleteByPrimaryKey(Long id);
+    /**
+     * 删除数据
+     * @param map
+     * @return
+     */
+    Integer deleteByCondtion(Map<String,Object> map);
 }
