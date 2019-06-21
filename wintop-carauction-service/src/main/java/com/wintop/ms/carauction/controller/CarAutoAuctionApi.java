@@ -419,6 +419,7 @@ public class CarAutoAuctionApi {
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
         try {
             resultMap.put("date",sdf.format(new Date()));
+            resultMap.put("auctionStartTime","");
             Map<String,Object> map = new HashMap<>();
             map.put("date",new Date());
             map.put("publishUserId",obj.getLong("userId"));
@@ -431,8 +432,8 @@ public class CarAutoAuctionApi {
                     Date date = DateUtils.addMinutes(autoAuction.getAuctionStartTime(), Integer.parseInt(appSet.getContent()));
                     resultMap.put("date",sdf.format(date));
                 }
+                resultMap.put("auctionStartTime",autoAuction.getAuctionStartTime());
             }
-            resultMap.put("auctionStartTime",autoAuction.getAuctionStartTime());
             result.setResult(resultMap);
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {
