@@ -70,12 +70,11 @@ public class CarAssessApi {
             CarManagerUser managerUser = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), true);
             Long roleId = managerUser.getRoleId();
             result = new ServiceResult<>();
-            Long userId = obj.getLong("customerId");
+            Long userId = obj.getLong("managerId");
             CarAssess carAssess = JSONObject.toJavaObject(obj, CarAssess.class);
             if (carAssess == null) {
                 carAssess = new CarAssess();
             }
-            carAssess.setCreateUser(userId);
             //额外参数
             //1 ：平台
             if (ManagerRole.PT_GLY.value() != roleId) {
