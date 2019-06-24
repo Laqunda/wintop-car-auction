@@ -31,8 +31,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author zhangzijuan
@@ -124,6 +126,7 @@ public class CarCustomerGroupApi {
                                     @RequestParam(value = "appId",required = false) String appId,
                                     @RequestParam(value = "managerId",required = false) @CurrentUserId Long managerId){
         String[] headers={"车商号","拍牌号","电子拍牌","姓名","注册手机号","所属店铺","会员级别","会员分组","创建时间","会员状态"};
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         HSSFWorkbook workbook= ExcelUtil.createStartExcel("出价记录",headers);
         Map<String,Object> map=new HashMap<>();
         map.put("searchName", searchName);
@@ -146,28 +149,38 @@ public class CarCustomerGroupApi {
                     JSONObject object=result.getJSONObject(i);
                     HSSFRow itemRow = sheet.createRow(i+2);
                     HSSFCell c0 = itemRow.createCell(0);
-                    c0.setCellValue(object.getString("auctionPlateNum"));
+                    c0.setCellValue(object.getString("id"));
 
-                    HSSFCell c12 = itemRow.createCell(1);
-                    c12.setCellValue(object.getString("boardRealId"));
+                    HSSFCell c1 = itemRow.createCell(1);
+                    c1.setCellValue(object.getString("auctionPlateNum"));
 
-                    HSSFCell c1 = itemRow.createCell(2);
-                    c1.setCellValue(object.getString("name"));
+                    HSSFCell c2 = itemRow.createCell(2);
+                    c2.setCellValue(object.getString("boardRealId"));
 
-                    HSSFCell c2 = itemRow.createCell(3);
-                    c2.setCellValue(object.getString("mobile"));
+                    HSSFCell c3 = itemRow.createCell(3);
+                    c3.setCellValue(object.getString("name"));
 
-                    HSSFCell c3 = itemRow.createCell(4);
-                    c3.setCellValue(object.getString("userStoreName"));
+                    HSSFCell c4 = itemRow.createCell(4);
+                    c4.setCellValue(object.getString("mobile"));
 
-                    HSSFCell c4 = itemRow.createCell(5);
-                    c4.setCellValue(object.getString("levelName"));
+                    HSSFCell c5 = itemRow.createCell(5);
+                    c5.setCellValue(object.getString("userStoreName"));
 
-                    HSSFCell c5 = itemRow.createCell(6);
-                    c5.setCellValue(object.getString("groupName"));
+                    HSSFCell c6 = itemRow.createCell(6);
+                    c6.setCellValue(object.getString("levelName"));
 
-                    HSSFCell c6 = itemRow.createCell(7);
-                    c6.setCellValue(object.getString("statusName"));
+                    HSSFCell c7 = itemRow.createCell(7);
+                    c7.setCellValue(object.getString("groupName"));
+
+                    HSSFCell c8 = itemRow.createCell(8);
+                    String registTime = "";
+                    if (Objects.nonNull(object.getString("registTime"))) {
+                        registTime = sdf.format(object.getDate("registTime"));
+                    }
+                    c8.setCellValue(registTime);
+
+                    HSSFCell c9 = itemRow.createCell(9);
+                    c9.setCellValue(object.getString("statusName"));
                 }
             }
         }
