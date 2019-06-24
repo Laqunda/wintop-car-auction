@@ -54,7 +54,7 @@ public class CarRegionSettingServiceImpl implements ICarRegionSettingService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int insert(CarRegionSetting record) {
         int count = regionSettingModel.insert(record);
         if (StringUtils.isNotEmpty(record.getServerfeeSettings())) {

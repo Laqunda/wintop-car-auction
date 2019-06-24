@@ -146,6 +146,7 @@ public class CarRegionSettingApi {
      * @param map
      * @return
      */
+    @ApiOperation(value = "查询地区拍卖设置")
     @RequestMapping(value = "/getBossRegionSetting",
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
@@ -161,7 +162,7 @@ public class CarRegionSettingApi {
     }
 
     /***
-     * 查询地区拍卖设置
+     * 保存修改地区拍卖设置
      * @param map
      * @return
      */
@@ -169,6 +170,7 @@ public class CarRegionSettingApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation(value = "保存修改地区拍卖设置")
     public ResultModel saveOrUpdateSetting(@RequestBody Map<String,Object> map) {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity

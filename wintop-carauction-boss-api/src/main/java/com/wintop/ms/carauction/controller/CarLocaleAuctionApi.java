@@ -59,10 +59,11 @@ public class CarLocaleAuctionApi {
             @ApiImplicitParam(name = "limit",value = "每页显示的条数",required = true,paramType = "query",dataType = "int")
     })
     @AuthUserToken
-    public ResultModel getLocaleAuctionList(@RequestBody Map<String,Object> map){
+    public ResultModel getLocaleAuctionList(@RequestBody Map<String,Object> map,@CurrentUserId Long maanagerId){
         if(map.get("page")==null || map.get("limit")==null){
             return new ResultModel(false,101,"缺少page或者limit参数",null);
         }
+        map.put("managerId", maanagerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carLocaleAuction/getLocaleAuctionList"))

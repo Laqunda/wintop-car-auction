@@ -48,4 +48,10 @@ public interface ICarEvaluateTagConfService {
      * @return
      */
     public Integer deleteByPrimaryKey(Long id);
+    /**
+     * 删除数据
+     * @param map
+     * @return
+     */
+    public Integer deleteByCondition(Map<String, Object> map);
 }

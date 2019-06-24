@@ -52,4 +52,9 @@ public interface ICarManagerPageService {
      * 根据父节点查询
      */
      List<TreeEntity> getPageTreeByPId(Map<String, Object> map);
+
+    /**
+     * 查询一二级敏据节点
+     */
+    List<TreeEntity> getPageTreeForTwoNode(Map<String, Object> map);
 }

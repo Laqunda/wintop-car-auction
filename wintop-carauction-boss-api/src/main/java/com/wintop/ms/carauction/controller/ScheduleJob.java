@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.util.HashMap;
 
-@Controller
+//@Controller
 public class ScheduleJob {
 
     private final RestTemplate restTemplate;

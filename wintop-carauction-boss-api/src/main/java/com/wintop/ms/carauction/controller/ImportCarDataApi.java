@@ -12,6 +12,7 @@ import com.wintop.ms.carauction.entity.CarDataExcel;
 import com.wintop.ms.carauction.entity.CarPhotoTemp;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.ExcelUtil;
+import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.TernaryNode;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -61,6 +62,8 @@ public class ImportCarDataApi {
     ImportCarDataApi(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
+    @ApiOperation(value = "车辆信息的批量导入")
     @PostMapping(value = "/importCarDataExcel", produces="application/json; charset=UTF-8")
     @ResponseBody
     @RequestAuth(false)
@@ -161,6 +164,7 @@ public class ImportCarDataApi {
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 //用来生成数据填写模板
+@ApiOperation(value = "车辆信息模板的导出")
     @GetMapping(value = "/exportCarDataModelExcel",
             produces="application/json; charset=UTF-8")
     @AuthPublic
@@ -196,7 +200,7 @@ public class ImportCarDataApi {
 
     }
 
-
+    @ApiOperation(value = "车辆信息图片模板的导入")
     @PostMapping(value = "/importCarPhoto", produces="application/json; charset=UTF-8")
     @ResponseBody
     @RequestAuth(false)
@@ -286,6 +290,7 @@ public class ImportCarDataApi {
     @PostMapping(value = "/deleteCarPhoto", produces="application/json; charset=UTF-8")
     @ResponseBody
     @RequestAuth(false)
+    @ApiOperation(value = "车辆信息图片删除")
     public ResultModel deleteCarPhoto(@RequestParam("auctionId") Long auctionId){
         //1.判断传入参数的非空
         if( auctionId==null || auctionId==0){

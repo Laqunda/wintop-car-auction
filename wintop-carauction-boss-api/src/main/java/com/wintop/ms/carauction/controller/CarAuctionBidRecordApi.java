@@ -131,6 +131,8 @@ public class CarAuctionBidRecordApi {
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 
+
+    @ApiOperation( value = "获取竞拍统计导出" )
     @PostMapping(value = "/exportBidRecordList",produces="application/json; charset=UTF-8")
     @AuthPublic
     public void exportBidRecordList(HttpServletRequest request, HttpServletResponse rep,
@@ -227,6 +229,7 @@ public class CarAuctionBidRecordApi {
      * @Description:根据车辆id获取车辆出价记录
      * @Date:2018/4/16
      **/
+    @ApiOperation( value = "根据车辆id获取车辆出价记录" )
     @PostMapping(value = "/getCarBidRecordByCarId",produces="application/json; charset=UTF-8")
     @ResponseBody
     public ResultModel getCarBidRecordByCarId(@RequestBody Map<String,Object> map) {

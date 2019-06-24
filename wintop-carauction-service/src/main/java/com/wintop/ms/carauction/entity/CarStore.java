@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class CarStore implements Serializable {
@@ -82,6 +83,10 @@ public class CarStore implements Serializable {
      * 所属地区
      */
     private String area;
+    /**
+     * 余额
+     */
+    private BigDecimal balance;
     /**
      * @return id
      */
@@ -317,5 +322,13 @@ public class CarStore implements Serializable {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 }

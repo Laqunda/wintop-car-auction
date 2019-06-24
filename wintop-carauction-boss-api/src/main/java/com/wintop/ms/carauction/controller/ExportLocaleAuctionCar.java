@@ -6,6 +6,7 @@ import com.wintop.ms.carauction.core.annotation.AuthPublic;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.ExcelUtil;
+import io.swagger.annotations.ApiOperation;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -32,7 +33,7 @@ import java.util.Objects;
 
 /**
  * @author zhangzijuan
- * @Description:参怕车辆的导出
+ * @Description:参拍车辆的导出
  * @date 2018-06-22
  */
 @Controller
@@ -42,6 +43,8 @@ public class ExportLocaleAuctionCar {
     ExportLocaleAuctionCar(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
+    @ApiOperation(value = "参拍车辆的导出")
     @PostMapping(value = "/exportAuctionCarList",produces="application/json; charset=UTF-8")
     @AuthPublic
     public void exportBidRecordList(HttpServletRequest request, HttpServletResponse rep,

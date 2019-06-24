@@ -10,6 +10,7 @@ import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.entity.CarPriceExcel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.ExcelUtil;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
@@ -48,6 +49,7 @@ public class ImportCarPriceInfoApi {
         this.restTemplate = restTemplate;
     }
 
+    @ApiOperation(value = "导入车辆的相关价格信息")
     @PostMapping(value = "/importCarPriceInfo",
             produces="application/json; charset=UTF-8")
     @ResponseBody
@@ -123,6 +125,8 @@ public class ImportCarPriceInfoApi {
         }
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
+
+    @ApiOperation(value = "导出车辆的相关价格信息模板")
     @GetMapping(value = "/exportCarPriceTemplate",
             produces="application/json; charset=UTF-8")
     @AuthPublic

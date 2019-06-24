@@ -52,9 +52,9 @@ public class CarEvaluateDataApi {
     }
 
     /**
-     * 查询评估列表
+     * 查询评价数据列表
      */
-    @ApiOperation(value = "查询评估列表")
+    @ApiOperation(value = "查询评价数据列表")
     @PostMapping(value = "/list", produces = "application/json; charset=UTF-8")
     @AuthUserToken
     public ResultModel list(@RequestBody Map<String, Object> map) {
@@ -69,6 +69,7 @@ public class CarEvaluateDataApi {
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
+    @ApiOperation(value = "报告评价列表报告导出")
     @AuthPublic
     @PostMapping( value = "/reportExport" )
     public void reportExport(HttpServletRequest request, HttpServletResponse rep,
@@ -139,6 +140,7 @@ public class CarEvaluateDataApi {
         }
     }
 
+    @ApiOperation(value = "现场评价列表报告导出")
     @AuthPublic
     @PostMapping( value = "/localeExport" )
     public void localeExport(HttpServletRequest request, HttpServletResponse rep,
@@ -212,6 +214,7 @@ public class CarEvaluateDataApi {
         }
     }
 
+    @ApiOperation(value = "成交车辆评价列表报告导出")
     @AuthPublic
     @PostMapping( value = "/orderExport" )
     public void orderExport(HttpServletRequest request, HttpServletResponse rep,
@@ -284,6 +287,7 @@ public class CarEvaluateDataApi {
     }
 
 
+    @ApiOperation(value = "卖家评价列表报告导出")
     @AuthPublic
     @PostMapping( value = "/sellerExport" )
     public void sellerExport(HttpServletRequest request, HttpServletResponse rep,

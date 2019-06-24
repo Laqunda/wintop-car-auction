@@ -49,6 +49,7 @@ public class CarAssessApi {
     @AppApiVersion(value = "2.0")
     public ResultModel list(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) {
         map.put("managerId",userId);
+        map.put("createUser",userId);
         if(map.get("page")==null || map.get("limit")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }

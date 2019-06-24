@@ -202,4 +202,32 @@ public class CarEvaluateTagConfApi {
         }
         return result;
     }
+
+    /**
+     * 删除评价标签配置
+     */
+    @ApiOperation(value = "删除评价标签配置")
+    @RequestMapping(value = "/delete",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String, Object>> delete(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
+        try {
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
+            int code = carEvaluateTagConfService.deleteByCondition(param);
+            if (code > 0) {
+                result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+            } else {
+                result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());
+            }
+        } catch (Exception e) {
+            logger.info("修改评价标签配置", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+
+        }
+        return result;
+    }
 }

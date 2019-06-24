@@ -91,4 +91,18 @@
       star = #{star,jdbcType=DECIMAL}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <delete id="deleteByCondtion" parameterType="java.util.Map">
+    delete from car_evaluate_tag_conf
+    <trim prefix="where" prefixOverrides="and|or">
+      <if test="pId != null">
+        and p_id = #{pId,jdbcType=BIGINT}
+      </if>
+      <if test="type != null">
+        and type = #{type,jdbcType=VARCHAR}
+      </if>
+      <if test="star != null">
+        and star = #{star,jdbcType=DECIMAL}
+      </if>
+    </trim>
+  </delete>
 </mapper>

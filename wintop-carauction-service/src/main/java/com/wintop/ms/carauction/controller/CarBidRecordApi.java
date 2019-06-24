@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -72,6 +69,9 @@ public class CarBidRecordApi {
             auctionType=checkParamNull(auctionType);
             String beginTime=obj.get("beginTime")==null?"1970-01-01 00:00:00":obj.getString("beginTime")+" 00:00:00";
             String endTime=obj.get("endTime")==null?"2099-12-31 00:00:00":obj.getString("endTime")+" 23:59:59";
+            if (Objects.nonNull(obj.getString("centerId"))) {
+                paramMap.put("centerId", obj.getLong("centerId"));
+            }
             System.out.println("开始时间："+beginTime);
             PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
@@ -166,10 +166,10 @@ public class CarBidRecordApi {
             paramMap.put("carId", obj.getLong("carId"));
             Long userId=obj.getLong("userId");
             System.out.println(userId);
-            if(userId!=null){
-                List<Long> storeIds = managerUserService.queryStoreScope(userId);
-                paramMap.put("storeIds",storeIds);
-            }
+//            if(userId!=null){
+//                List<Long> storeIds = managerUserService.queryStoreScope(userId);
+//                paramMap.put("storeIds",storeIds);
+//            }
             List<CarBidRecord> recordList=carBidRecordService.queryCarBidRecordRecordList(paramMap);
             List<Map<String,Object>> list=new ArrayList<>();
             for(CarBidRecord record:recordList){

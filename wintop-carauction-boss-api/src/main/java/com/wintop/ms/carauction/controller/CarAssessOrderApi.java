@@ -181,6 +181,7 @@ public class CarAssessOrderApi {
 
     @AuthPublic
     @PostMapping( value = "/exportVerify" )
+    @ApiOperation( value = "评估采购单导出" )
     public void exportVerify(HttpServletRequest request, HttpServletResponse rep,
                              @RequestParam( "verifySearchName" ) Long verifySearchName,
                              @RequestParam( "startCreateTime" ) String startCreateTime,

@@ -1,14 +1,17 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarCenter;
+import com.wintop.ms.carauction.entity.CarManagerUser;
 import com.wintop.ms.carauction.entity.ListEntity;
 import com.wintop.ms.carauction.entity.TreeEntity;
 import com.wintop.ms.carauction.service.ICarCenterService;
 import com.wintop.ms.carauction.service.ICarManagerPageService;
+import com.wintop.ms.carauction.service.ICarManagerUserService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -16,10 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 请求接口地址Url
@@ -30,6 +30,8 @@ public class CarManagerPageApi {
     private static final Logger logger = LoggerFactory.getLogger(CarManagerPageApi.class);
     @Autowired
     private ICarManagerPageService pageService;
+    @Autowired
+    private ICarManagerUserService managerUserService;
 
     /***
      * 查询列表
@@ -59,6 +61,36 @@ public class CarManagerPageApi {
     }
 
 
+    /***
+     * 查询一二级数据节点
+     * @param obj
+     * @return
+     */
+    @RequestMapping(value = "/getPageTreeForTwoNode",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<List<TreeEntity>> getPageTreeForTwoNode(@RequestBody JSONObject obj) {
+        ServiceResult<List<TreeEntity>> result = new ServiceResult<>();
+
+        try {
+            CarManagerUser user = managerUserService.selectByPrimaryKey(obj.getLong("managerId"), false);
+            Map<String, Object> map = Maps.newHashMap();
+            map.put("roleId", user.getRoleId());
+            List<TreeEntity> list = pageService.getPageTreeForTwoNode(map);
+            if (list!=null && list.size()>0){
+                result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+            }else {
+                result.setError(ResultCode.NO_OBJECT.strValue(),ResultCode.NO_OBJECT.getRemark());
+            }
+            result.setResult(list);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("查询一二级数据节点失败",e);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
 
     /***
      * 根据父节点查询

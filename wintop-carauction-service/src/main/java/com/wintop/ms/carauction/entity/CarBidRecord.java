@@ -77,6 +77,10 @@ public class CarBidRecord implements Serializable{
      * 显示中心店铺
      */
     private String centerName;
+    /**
+     * 二手车中心ID
+     */
+    private Long centerId;
 
 
     public Long getId() {
@@ -205,6 +209,14 @@ public class CarBidRecord implements Serializable{
 
     public void setCenterName(String centerName) {
         this.centerName = centerName;
+    }
+
+    public Long getCenterId() {
+        return centerId;
+    }
+
+    public void setCenterId(Long centerId) {
+        this.centerId = centerId;
     }
 
     @Override
