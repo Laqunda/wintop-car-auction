@@ -2,14 +2,8 @@ package com.wintop.ms.carauction.controller;
 
 import com.wintop.ms.carauction.core.config.ResultStatus;
 import com.wintop.ms.carauction.core.model.ResultModel;
-import com.wintop.ocr.alibabaapi.DriversLicenseParser;
-import com.wintop.ocr.alibabaapi.DrivingCardParser;
-import com.wintop.ocr.alibabaapi.IDcardParser;
-import com.wintop.ocr.alibabaapi.LicensePlateParser;
-import com.wintop.ocr.entity.DriversLicense;
-import com.wintop.ocr.entity.DrivingCard;
-import com.wintop.ocr.entity.IDcard;
-import com.wintop.ocr.entity.LicensePlate;
+import com.wintop.ocr.alibabaapi.*;
+import com.wintop.ocr.entity.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -105,6 +99,23 @@ public class OCRApi {
         try {
             //识别身份证反面
             IDcard result = IDcardParser.parseIdCardBack(url);
+            responseEntity = new ResponseEntity<>(ResultModel.ok(result), HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            responseEntity = new ResponseEntity<>(ResultModel.error(ResultStatus.ERROR),HttpStatus.INTERNAL_SERVER_ERROR);
+        }finally {
+            return responseEntity;
+        }
+    }
+
+    @ApiOperation(value = "OCR图像识别VIN")
+    @PostMapping(value = "vin")
+    public ResponseEntity<ResultModel> vin(@ApiParam(value = "图片url") @RequestParam String url){
+        logger.info("OCR图像识别vin");
+        ResponseEntity<ResultModel> responseEntity = null;
+        try {
+            //识别vin
+            VinInfo result = VinParser.parseVinInfoFace(url);
             responseEntity = new ResponseEntity<>(ResultModel.ok(result), HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
