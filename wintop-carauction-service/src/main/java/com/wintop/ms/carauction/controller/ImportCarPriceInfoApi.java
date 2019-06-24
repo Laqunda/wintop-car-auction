@@ -45,8 +45,8 @@ public class ImportCarPriceInfoApi {
                     boolean flag = true;
                         for (int j=0;j<carPriceExcels.size();j++){
                             CarPriceExcel priceExcel = carPriceExcels.get(j);
-                            if (auctionCar.getAuctionCode()!=null&&auctionCar.getAuctionCode().equals(priceExcel.getCode())){
-                                auction.setId(localeAuctionCars.get(j).getAutoAuctionId());
+                            if (auctionCar.getAuctionCode()!=null && auctionCar.getAuctionCode().equals(priceExcel.getCode())){
+                                auction.setId(auctionCar.getAutoAuctionId());
                                 if (StringUtils.isNotBlank(priceExcel.getStartPrice())){
                                     flag = false;
                                     BigDecimal startPrice=transformToBig(priceExcel.getStartPrice());
