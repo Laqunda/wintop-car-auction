@@ -232,6 +232,10 @@ public class CarAuto implements Serializable {
     /*零售id*/
     private String retailId;
 
+    /* 出价记录 */
+    private List<CarBidRecord> carBidRecordList;
+
+    List<TblAuctionLog> tblAuctionLog;
 
     private String managerEvaluate;
     public String getMaxPriceUserId() {
@@ -1187,7 +1191,6 @@ public class CarAuto implements Serializable {
     }
     private List<CarAutoLog> carAutoLog;
 
-    private List<TblAuctionLog> tblAuctionLog;
 
     public List<CarAutoLog> getCarAutoLog() {
         return carAutoLog;
@@ -1195,14 +1198,6 @@ public class CarAuto implements Serializable {
 
     public void setCarAutoLog(List<CarAutoLog> carAutoLog) {
         this.carAutoLog = carAutoLog;
-    }
-
-    public List<TblAuctionLog> getTblAuctionLog() {
-        return tblAuctionLog;
-    }
-
-    public void setTblAuctionLog(List<TblAuctionLog> tblAuctionLog) {
-        this.tblAuctionLog = tblAuctionLog;
     }
 
     public Date getTime() {
@@ -1291,5 +1286,21 @@ public class CarAuto implements Serializable {
 
     public void setRetailId(String retailId) {
         this.retailId = retailId;
+    }
+
+    public List<CarBidRecord> getCarBidRecordList() {
+        return carBidRecordList;
+    }
+
+    public void setCarBidRecordList(List<CarBidRecord> carBidRecordList) {
+        this.carBidRecordList = carBidRecordList;
+    }
+
+    public List<TblAuctionLog> getTblAuctionLog() {
+        return tblAuctionLog;
+    }
+
+    public void setTblAuctionLog(List<TblAuctionLog> tblAuctionLog) {
+        this.tblAuctionLog = tblAuctionLog;
     }
 }

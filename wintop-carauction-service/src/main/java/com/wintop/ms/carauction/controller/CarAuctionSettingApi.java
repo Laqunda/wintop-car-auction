@@ -35,6 +35,10 @@ import java.util.Map;
 @RequestMapping("/service/auctionSetting")
 public class CarAuctionSettingApi {
     private static final Logger logger = LoggerFactory.getLogger(CarAuctionSettingApi.class);
+    private static final int DELAYED_TIME = 10;
+    private static final int END_KEEP_TIME = 10;
+    private static final int KEEP_TIME = 120;
+    private static final String USE = "1";
     @Autowired
     private ICarAuctionSettingService auctionSettingService;
     @Autowired
@@ -94,7 +98,10 @@ public class CarAuctionSettingApi {
             };
             auctionSetting.setId(idWorker.nextId());
             auctionSetting.setCreateTime(new Date());
-            auctionSetting.setStatus("1");
+            auctionSetting.setKeepTime(KEEP_TIME);
+            auctionSetting.setEndKeepTime(END_KEEP_TIME);
+            auctionSetting.setDelayedTime(DELAYED_TIME);
+            auctionSetting.setStatus(USE);
             int count = auctionSettingService.insert(auctionSetting);
             Map<String,Object> map = new HashMap<>();
             map.put("count",count);

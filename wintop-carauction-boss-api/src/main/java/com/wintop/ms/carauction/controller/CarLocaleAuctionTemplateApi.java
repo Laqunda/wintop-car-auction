@@ -50,7 +50,7 @@ public class CarLocaleAuctionTemplateApi {
     }
 
     private static Map<String, String> weekMap = new HashMap<String, String>(){{
-        put("0", "星期日");
+        put("7", "星期日");
         put("1", "星期一");
         put("2", "星期二");
         put("3", "星期三");
@@ -236,7 +236,6 @@ public class CarLocaleAuctionTemplateApi {
                 tempList.add(weekMap.get(item));
             });
             return Joiner.on(",").join(tempList);
-
         }
         return null;
     }

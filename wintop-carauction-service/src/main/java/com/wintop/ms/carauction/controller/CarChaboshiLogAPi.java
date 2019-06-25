@@ -85,9 +85,9 @@ public class CarChaboshiLogAPi {
             }
             //店铺
             if("2".equals(param.get("userType")+"")){
-                List<Long> storeIds = managerUserService.queryStoreScope(obj.getLong("userId"));
+                List<Long> storeIds = managerUserService.queryStoreScope(obj.getLong("managerId"));
                 param.put("storeIds", storeIds);
-                param.remove("userId");
+                param.remove("managerId");
             }
             result = new ServiceResult<>();
             int count = carChaboshiLogService.selectCount(param);

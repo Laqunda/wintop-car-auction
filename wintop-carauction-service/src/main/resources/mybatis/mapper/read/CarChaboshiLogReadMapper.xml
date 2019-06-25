@@ -120,6 +120,11 @@
                 and (wau.name like CONCAT(CONCAT('%',#{buyerSearchName}),'%')
                 or wau.mobile like CONCAT(CONCAT('%',#{buyerSearchName}),'%'))
             </if>
+            <if test="sellerSearchName != null and sellerSearchName != ''">
+                and (ccl.user_name like CONCAT(CONCAT('%',#{sellerSearchName}),'%')
+                or cs.simple_name like CONCAT(CONCAT('%',#{sellerSearchName}),'%')
+                or cs.name like CONCAT(CONCAT('%',#{sellerSearchName}),'%'))
+            </if>
             <if test="fs != null ">
                 and DATE_FORMAT( ccl.create_time,  '%Y-%m-%d')  &gt;= DATE_FORMAT(#{fs}, '%Y-%m-%d')
             </if>
