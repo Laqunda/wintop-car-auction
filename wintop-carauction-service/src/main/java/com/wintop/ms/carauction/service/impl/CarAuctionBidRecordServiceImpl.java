@@ -386,9 +386,12 @@ public class CarAuctionBidRecordServiceImpl implements ICarAuctionBidRecordServi
         return 0;
     }
 
-    public List<Map<String,Object>> getBidPriceList(Long autoId) {
+    public List<Map<String,Object>> getBidPriceList(CarAuctionBidRecord carAuctionBidRecord) {
         List<Map<String,Object>> resultList = Lists.newArrayList();
-        List<CarAuctionBidRecord> bidRecordList = model.getCustomerBidPriceList(Collections.singletonMap("carId", autoId));
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("carId", carAuctionBidRecord.getAutoId());
+        map.put("auctionId", carAuctionBidRecord.getAutoId());
+        List<CarAuctionBidRecord> bidRecordList = model.getCustomerBidPriceList(map);
         for (int i = 0; i < bidRecordList.size();i++){
             CarAuctionBidRecord record = bidRecordList.get(i);
             if(record.getCustomerId() != null){
