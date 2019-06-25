@@ -201,6 +201,9 @@ public class Constants {
      */
     public static final String ALIPAY_NOTIFY_URL_CHABOSHI_STORE = COMMON_MODULE_ROOT + "/store/aliPay/payCbsChargeCallback";
 
+    /*查博士回调地址*/
+    public static final String CALLBACK_CHABOSHI = COMMON_MODULE_ROOT+"/boss/carChaboshiLog/cbsCallback" ;
+
     /**
      * 图片上传
      */

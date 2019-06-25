@@ -63,12 +63,9 @@
   <select id="getPageTreeByPId" resultMap="TreeResultMap" parameterType="java.util.Map">
     SELECT t1.id,t1.parent_id pId,t1.designation `name`, if(t2.id is null,false,true) checked
     FROM car_manager_page t1
-    LEFT JOIN car_manager_role_page t2 ON t1.id=t2.page_id
+    LEFT JOIN car_manager_role_page t2 ON t1.id=t2.page_id and t2.role_id=#{roleId}
     WHERE t1.`status`='1'
     AND t1.parent_id=#{parentId}
-    <if test="roleId != null">
-      AND t2.role_id=#{roleId}
-    </if>
 
   </select>
 

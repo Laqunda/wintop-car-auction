@@ -462,7 +462,6 @@ public class CarChaboshiLogAPi {
 
     }
 
-
     /**
      * 查博生成报告回掉
      *
@@ -470,28 +469,23 @@ public class CarChaboshiLogAPi {
      * @Time 2018-3-13
      */
     @PostMapping(value = "cbsCallback")
-    @ApiOperation(value = "查博生成报告回掉，回调保存成功")
+    @ApiOperation(value = "查博生成报告回调，回调保存成功")
     @ResponseBody
-    public Map chaboshiCallback(@RequestParam String result, @RequestParam String message, @RequestParam String orderid) {
-        logger.info("查博生成报告回掉，回调成功");
-        Map resultMap = new HashMap();
-        resultMap.put("code", "0");
-        resultMap.put("message", "success");
+    public ServiceResult<Map<String, Object>> chaboshiCallback(@RequestBody JSONObject obj) {
+        logger.info("查博生成报告回调，回调成功");
+        String orderid = obj.getString("orderid");
+        String result = obj.getString("result");
+        String message = obj.getString("message");
+        ServiceResult resultMsg = new ServiceResult();
         try {
-            System.out.println("----------查博士回调成功--------------");
-            System.out.println("result：" + result + "\n" + "message:" + message + "\n" + "orderId:" + orderid);
-
             /*根据orderId获取log数据 */
             Map<String, Object> param = Maps.newHashMap();
             param.put("responseResult", "3");
             param.put("sourceType", "1");
             param.put("orderId", orderid);
             CarChaboshiLog log = carChaboshiLogService.selectCarChaboshiLog(param);
-
             if (log == null) {
-                resultMap.put("code", "1");
-                resultMap.put("message", "未找到查询记录!");
-
+                resultMsg.setError("1", "未找到查询记录!");
             } else if ("1".equals(result)) {
                 /*生成报告成功  并更新状态*/
                 //获取url
@@ -499,9 +493,7 @@ public class CarChaboshiLogAPi {
                 String pcUrl = (String) chaboshi.get("pcUrl");
                 String mobileUrl = (String) chaboshi.get("mobileUrl");
                 //获取json
-
                 JSONObject object = ChaboshiUtils.reportJson(orderid);
-
                 if (object != null) {
                     log.setResponseMsg(object.toJSONString());
                     if ("1104".equals(object.getString("Code"))) {
@@ -522,12 +514,10 @@ public class CarChaboshiLogAPi {
                 Map<String, Object> logMap = Class2MapUtil.convertMap(log);
                 carChaboshiLogService.updateCarChaboshiLog(logMap);
             } else {
-
                 log.setResponseResult("2");//失败
                 log.setOrderMsg(message);
                 Map<String, Object> logMap = Class2MapUtil.convertMap(log);
                 carChaboshiLogService.updateCarChaboshiLog(logMap);
-
                 /*退款*/
                 if ("1".equals(log.getUserType())) {
                     /*退款到个人支付宝*/
@@ -544,16 +534,13 @@ public class CarChaboshiLogAPi {
                     /*退款到店铺资金流水表*/
                     saveStoreAccountLog(log);
                 }
-
             }
-
+            resultMsg.setSuccess("0","成功");
         } catch (Exception e) {
             e.printStackTrace();
-            resultMap.put("code", "1");
-            resultMap.put("message", e.getMessage());
+            resultMsg.setError("1", "代码异常");
         }
-        return resultMap;
-
+        return resultMsg;
     }
 
     /**
