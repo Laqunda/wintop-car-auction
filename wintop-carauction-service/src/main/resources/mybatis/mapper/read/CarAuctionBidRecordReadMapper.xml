@@ -154,7 +154,7 @@
         INNER JOIN
         (SELECT SUBSTRING_INDEX(GROUP_CONCAT(id ORDER BY bid_time DESC),',',1) id FROM car_auction_bid_record where customer_id = #{customerId} GROUP BY car_id) cabr
         ON cabr.id = t1.id
-        INNER JOIN car_auto t2 ON t1.car_id = t2.id
+        INNER JOIN car_auto t2 ON t1.car_id = t2.id AND t2.auto_auction_id = t1.auction_id
         INNER JOIN car_auto_info_detail t3 ON t3.auto_id = t1.car_id
         INNER JOIN car_auto_auction t4 ON t4.id = t1.auction_id
         LEFT JOIN car_store cs on cs.id=t2.store_id
