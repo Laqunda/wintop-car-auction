@@ -99,6 +99,8 @@ public class CarAssessOrderLogServiceImpl implements ICarAssessOrderLogService {
             log.setStatusCn("审核不通过");
         }else if("3".equals(status)){
             log.setStatusCn("审核撤回");
+        }else if("4".equals(status)){
+            log.setStatusCn("已付全款");
         }
 
 
