@@ -507,7 +507,8 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     @Transactional
     public ServiceResult<Map<String, Object>> chaboshiOrder(CarChaboshiLog log, Long userId, String userName) {
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
-
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("appUrl","");
         if (log == null || log.getOrderId() == null) {
             result.setSuccess(ResultCode.FAIL.strValue(), "未发现查博士订单！");
         } else {
@@ -515,17 +516,15 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
             if ("1104".equals(orderStatus.get("Code"))) {
                 /*已出报告*/
                 Map cbs = ChaboshiUtils.reportDetail(log.getOrderId());
-                result.setResult(cbs);
+                resultMap.put("appUrl",cbs.get("mobileUrl"));
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
                 //如果当时的log状态为查询中 则需要更新状态
-
                 if ("3".equals(log.getResponseResult())) {
                     //获取url
                     String pcUrl = "" + cbs.get("pcUrl");
                     String mobileUrl = "" + cbs.get("mobileUrl");
                     //获取json
                     JSONObject object = ChaboshiUtils.reportJson(log.getOrderId());
-
                     if (object != null) {
                         log.setResponseMsg(object.toJSONString());
                         if ("1104".equals(object.getString("Code"))) {
@@ -536,16 +535,13 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                             log.setVehicleType(brand + "-" + seriesName + "-" + modelName);
                         }
                     }
-
                     log.setResponseResult("1");
                     log.setFinishTime(new Date());
                     log.setPc_url(pcUrl);
                     log.setApp_url(mobileUrl);
-
                     Map logMap = JSONObject.parseObject(JSONObject.toJSON(log).toString(), Map.class);
                     logMap.remove("createTime");
                     logMap.put("finishTime", DateUtil.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"));
-
                     updateCarChaboshiLog(logMap);
                 }
             } else if ("1102".equals(orderStatus.get("Code"))) {
@@ -559,17 +555,16 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                 log.setOrderMsg(orderStatus.getString("Message"));
                 result.setSuccess(ResultCode.FAIL.strValue(), orderStatus.getString("Message"));
             }
-
-            log.setId(idWorker.nextId());
+            /*log.setId(idWorker.nextId());
             log.setMoney(new BigDecimal(0));
             log.setSourceType("2");
             log.setUserId(userId);
             log.setUserName(userName);
             log.setCreateTime(new Date());
-
-            /*写入日志*/
-            insertCarChaboshiLog(log);
+            *//*写入日志*//*
+            insertCarChaboshiLog(log);*/
         }
+        result.setResult(resultMap);
         return result;
     }
 

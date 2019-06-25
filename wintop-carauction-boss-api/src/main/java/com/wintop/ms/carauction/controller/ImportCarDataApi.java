@@ -215,7 +215,7 @@ public class ImportCarDataApi {
         }
         String fileName=null;
         Map<String,Object> map=new HashMap<>();
-        HttpPost httpPost=new HttpPost("http://test-api.wintopclub.com/file/uploadImageForQuality");
+        HttpPost httpPost=new HttpPost(Constants.UPLOADIMAGEFORQUALITY_URL);
         httpPost.setHeader("appId","1234567_boss");
         CloseableHttpClient httpclient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
