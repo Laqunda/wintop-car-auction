@@ -34,6 +34,7 @@ import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * describe: 评价数据记录
@@ -75,7 +76,7 @@ public class CarEvaluateDataApi {
     public void reportExport(HttpServletRequest request, HttpServletResponse rep,
                        @RequestParam("storeName") String storeName,
                        @RequestParam("type") Long type) {
-        String[] headers = {"会员信息","评价详情","车辆名称","车辆编号","发拍人","车辆所在店铺","评价时间"};
+        String[] headers = {"会员信息","评价详情","标签","自定义标签","车辆名称","车辆编号","发拍人","车辆所在店铺","评价时间"};
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
         Map<String, Object> map = Maps.newHashMap();
         map.put("storeName", storeName);
@@ -108,22 +109,27 @@ public class CarEvaluateDataApi {
                     c1.setCellValue(object.getString("content"));
 
                     HSSFCell c2 = itemRow.createCell(2);
-                    c2.setCellValue(object.getJSONObject("carAuto").getString("address"));
-
+                    c2.setCellValue(object.getString("tags"));
 
 
                     HSSFCell c3 = itemRow.createCell(3);
-                    c3.setCellValue(object.getJSONObject("carAuto").getString("carAutoNo"));
+                    c3.setCellValue(object.getString("addTags"));
 
 
                     HSSFCell c4 = itemRow.createCell(4);
-                    c4.setCellValue(object.getJSONObject("carAuto").getString("publishUserName"));
+                    c4.setCellValue(object.getJSONObject("carAuto").getString("address"));
 
                     HSSFCell c5 = itemRow.createCell(5);
-                    c5.setCellValue(object.getJSONObject("carAuto").getString("storeName"));
+                    c5.setCellValue(object.getJSONObject("carAuto").getString("carAutoNo"));
 
                     HSSFCell c6 = itemRow.createCell(6);
-                    c6.setCellValue(sdf.format(object.getDate("createTime")));
+                    c6.setCellValue(object.getJSONObject("carAuto").getString("publishUserName"));
+
+                    HSSFCell c7 = itemRow.createCell(7);
+                    c7.setCellValue(object.getJSONObject("carAuto").getString("storeName"));
+
+                    HSSFCell c8 = itemRow.createCell(8);
+                    c8.setCellValue(sdf.format(object.getDate("createTime")));
                 }
             }
         }
@@ -148,7 +154,7 @@ public class CarEvaluateDataApi {
                        @RequestParam("beginTime") String beginTime,
                        @RequestParam("endTime") String endTime,
                        @RequestParam("type") Long type) {
-        String[] headers = {"成员信息","评价详情","拍卖场次","场次编号","场次地点","评价时间"};
+        String[] headers = {"成员信息","评价详情","标签","自定义标签","拍卖场次","场次编号","场次地点","评价时间"};
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
         Map<String, Object> map = Maps.newHashMap();
         map.put("title", title);
@@ -182,22 +188,29 @@ public class CarEvaluateDataApi {
                     HSSFCell c1 = itemRow.createCell(1);
                     c1.setCellValue(object.getString("content"));
 
+                    HSSFCell c2 = itemRow.createCell(2);
+                    c2.setCellValue(object.getString("tags"));
+
+
+                    HSSFCell c3 = itemRow.createCell(3);
+                    c3.setCellValue(object.getString("addTags"));
+
                     String titleInfo = String.format("场次主题:%s 开拍时间%s",
                             object.getJSONObject("carLocaleAuction").getString("title"),
                             sdf.format(object.getJSONObject("carLocaleAuction").getDate("startTime"))
                     );
-                    HSSFCell c2 = itemRow.createCell(2);
-                    c2.setCellValue(titleInfo);
-
-                    HSSFCell c3 = itemRow.createCell(3);
-                    c3.setCellValue(object.getJSONObject("carLocaleAuction").getString("code"));
-
-
                     HSSFCell c4 = itemRow.createCell(4);
-                    c4.setCellValue(object.getJSONObject("carLocaleAuction").getString("address"));
+                    c4.setCellValue(titleInfo);
 
                     HSSFCell c5 = itemRow.createCell(5);
-                    c5.setCellValue(sdf.format(object.getDate("createTime")));
+                    c5.setCellValue(object.getJSONObject("carLocaleAuction").getString("code"));
+
+
+                    HSSFCell c6 = itemRow.createCell(6);
+                    c6.setCellValue(object.getJSONObject("carLocaleAuction").getString("address"));
+
+                    HSSFCell c7 = itemRow.createCell(7);
+                    c7.setCellValue(sdf.format(object.getDate("createTime")));
                 }
             }
         }
@@ -221,7 +234,7 @@ public class CarEvaluateDataApi {
                              @RequestParam("storeName") String storeName,
                              @RequestParam("auctionType") String auctionType,
                              @RequestParam("type") Long type) {
-        String[] headers = {"订单编号","会员信息","评价详情","拍卖场次","车辆编号","发拍人","车辆所在店铺"};
+        String[] headers = {"订单编号","会员信息","评价详情","标签","自定义标签","拍卖场次","车辆编号","发拍人","车辆所在店铺"};
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
         Map<String, Object> map = Maps.newHashMap();
         map.put("storeName", storeName);
@@ -248,9 +261,9 @@ public class CarEvaluateDataApi {
                     c0.setCellValue(object.getJSONObject("carOrder").getString("orderNo"));
 
                     String userInfo = "";
-                    JSONObject wtAppUser = object.getJSONObject("carManagerUser");
+                    JSONObject wtAppUser = object.getJSONObject("wtAppUser");
                     if (wtAppUser != null) {
-                        userInfo = String.format("%s (%s)", wtAppUser.getString("userName"), wtAppUser.getString("userPhone"));
+                        userInfo = String.format("%s (%s)", wtAppUser.getString("name"), wtAppUser.getString("mobile"));
                     }
                     HSSFCell c1 = itemRow.createCell(1);
                     c1.setCellValue(userInfo);
@@ -260,16 +273,26 @@ public class CarEvaluateDataApi {
                     c2.setCellValue(object.getString("content"));
 
                     HSSFCell c3 = itemRow.createCell(3);
-                    c3.setCellValue(object.getJSONObject("carLocaleAuction").getString("title"));
+                    c3.setCellValue(object.getString("tags"));
 
                     HSSFCell c4 = itemRow.createCell(4);
-                    c4.setCellValue(object.getJSONObject("carOrder").getString("carAutoNo"));
+                    c4.setCellValue(object.getString("addTags"));
 
+                    String title = "";
+                    if (Objects.nonNull(object.getJSONObject("carLocaleAuction"))) {
+                        title = object.getJSONObject("carLocaleAuction").getString("title");
+                    }
                     HSSFCell c5 = itemRow.createCell(5);
-                    c5.setCellValue(object.getJSONObject("carAuto").getString("publishUserName"));
+                    c5.setCellValue(title);
 
                     HSSFCell c6 = itemRow.createCell(6);
-                    c6.setCellValue(object.getJSONObject("carOrder").getString("storeName"));
+                    c6.setCellValue(object.getJSONObject("carOrder").getString("carAutoNo"));
+
+                    HSSFCell c7 = itemRow.createCell(7);
+                    c7.setCellValue(object.getJSONObject("carAuto").getString("publishUserName"));
+
+                    HSSFCell c8 = itemRow.createCell(8);
+                    c8.setCellValue(object.getJSONObject("carOrder").getString("storeName"));
                 }
             }
         }
@@ -293,7 +316,7 @@ public class CarEvaluateDataApi {
     public void sellerExport(HttpServletRequest request, HttpServletResponse rep,
                             @RequestParam("storeName") String storeName,
                             @RequestParam("type") Long type) {
-        String[] headers = {"卖家用户名","卖家电话","评价详情","车辆名称","车辆编号","车辆所在店铺","评价时间"};
+        String[] headers = {"卖家用户名","卖家电话","评价详情","标签","自定义标签","车辆名称","车辆编号","车辆所在店铺","评价时间"};
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
         Map<String, Object> map = Maps.newHashMap();
         map.put("storeName", storeName);
@@ -314,29 +337,49 @@ public class CarEvaluateDataApi {
                     JSONObject object = result.getJSONObject(i);
                     HSSFRow itemRow = sheet.createRow(i + 2);
 
-
+                    String name = "";
+                    String mobile = "";
+                    if (Objects.nonNull(object.getJSONObject("wtAppUser"))) {
+                        name = object.getJSONObject("wtAppUser").getString("name");
+                        mobile = object.getJSONObject("wtAppUser").getString("mobile");
+                    }
                     HSSFCell c0 = itemRow.createCell(0);
-                    c0.setCellValue(object.getJSONObject("carAutoAuction").getString("ownerName"));
+                    c0.setCellValue(name);
 
 
                     HSSFCell c1 = itemRow.createCell(1);
-                    c1.setCellValue(object.getJSONObject("carAutoAuction").getString("ownerMobile"));
-
+                    c1.setCellValue(mobile);
 
                     HSSFCell c2 = itemRow.createCell(2);
                     c2.setCellValue(object.getString("content"));
 
                     HSSFCell c3 = itemRow.createCell(3);
-                    c3.setCellValue(object.getJSONObject("carAuto").getString("autoInfoName"));
+                    c3.setCellValue(object.getString("tags"));
+
 
                     HSSFCell c4 = itemRow.createCell(4);
-                    c4.setCellValue(object.getJSONObject("carAuto").getString("carAutoNo"));
+                    c4.setCellValue(object.getString("addTags"));
+
+                    String autoInfoName = "";
+                    String carAutoNo = "";
+                    String carStoreName = "";
+                    if (Objects.nonNull(object.getJSONObject("carAuto"))) {
+                        autoInfoName = object.getJSONObject("carAuto").getString("autoInfoName");
+                        carAutoNo = object.getJSONObject("carAuto").getString("carAutoNo");
+                        carStoreName = object.getJSONObject("carAuto").getString("carStoreName");
+                    }
 
                     HSSFCell c5 = itemRow.createCell(5);
-                    c5.setCellValue(object.getJSONObject("carAuto").getString("storeName"));
+                    c5.setCellValue(autoInfoName);
 
                     HSSFCell c6 = itemRow.createCell(6);
-                    c6.setCellValue(sdf.format(object.getDate("createTime")));
+                    c6.setCellValue(carAutoNo);
+
+                    HSSFCell c7 = itemRow.createCell(7);
+                    c7.setCellValue(carStoreName);
+
+                    HSSFCell c8 = itemRow.createCell(8);
+                    c8.setCellValue(sdf.format(object.getDate("createTime")));
                 }
             }
         }

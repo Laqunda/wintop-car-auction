@@ -99,7 +99,8 @@
         <result column="manager_evaluate" property="managerEvaluate" />
         <result column="retail_id" property="retailId" />
         <result column="auto_auction_id" property="autoAuctionId" />
-
+        <result column="source" property="source"/>
+        <result column="city_name" property="cityName" />
     </resultMap>
     <sql id="Base_Column_List">
     t1.id, t1.publish_user_id, t1.publish_user_name, t1.publish_user_mobile, t1.auto_info_name, t1.store_id,t1.store_name,
@@ -744,11 +745,12 @@
         aa.expected_feedback_time,
         aa.auction_start_time,
         a.transfer_flag,
-        r.name AS cityName,
+        r.name AS city_name,
         ar.user_num as userNum,
         ret.sales_consultant as salesConsultant,
         ret.transaction_fee as transactionFee,
-        ret.id AS retail_id
+        ret.id AS retail_id,
+        ret.source
         FROM car_auto a
         LEFT JOIN car_auto_info_detail d ON d.auto_id=a.id
         LEFT JOIN car_auto_auction aa on aa.id=a.auto_auction_id
