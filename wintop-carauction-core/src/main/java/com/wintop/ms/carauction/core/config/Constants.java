@@ -106,6 +106,11 @@ public class Constants {
     /*查博士店铺充值支付宝支付通知接口*/
     public static final String ALIPAY_NOTIFY_URL_CHABOSHI_STORE =  API_DOMAIN + "/store/aliPay/payCbsChargeCallback";
     //------------------------------------------------------------------------------------------------------
+    /*车辆分享页面地址*/
+    public static final String CAR_SHARE_URL = STATIC_WEBSITE + "/carauction/share/index.html" ;
+    /*场次分享页面地址*/
+    public static final String AUCTION_SHARE_URL = STATIC_WEBSITE + "/carauction/share/match.html" ;
+    //------------------------------------------------------------------------------------------------------
     /* 车辆配置，两个选项 */
     public static final List<Map<String, String>> AUTO_CONF_OPTION_TWO = new ArrayList<>(
             Arrays.asList(
