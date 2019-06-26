@@ -48,9 +48,9 @@ public class CarCustomerSignApi {
     /**获取用户实名认证信息*/
     private static String getAuthInfoByUserId_URL = Constants.ROOT + "/service/customerAuth/getAuthInfoByUserId";
     /**创建签约账户*/
-    private static String createSignUser_URL = Constants.COMMON_MODULE_ROOT + "/signature/account/user/add";
+    private static String createSignUser_URL = Constants.ONLINESIGNATURE_SERVER_URL + "/signature/account/user/add";
     /**生成个人签名的合同*/
-    private static String createSignature_URL =  Constants.COMMON_MODULE_ROOT + "/signature/gosign/single";
+    private static String createSignature_URL =  Constants.ONLINESIGNATURE_SERVER_URL + "/signature/gosign/single";
     CarCustomerSignApi(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
