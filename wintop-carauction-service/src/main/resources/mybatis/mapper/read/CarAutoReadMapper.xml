@@ -101,6 +101,13 @@
         <result column="auto_auction_id" property="autoAuctionId" />
         <result column="source" property="source"/>
         <result column="city_name" property="cityName" />
+        <result column="sales_consultant" property="salesConsultant" />
+        <result column="transaction_fee" property="transactionFee" />
+        <result column="payment_type" property="paymentType" />
+        <result column="user_num" property="userNum" />
+        <result column="retail_transaction_fee" property="retailTransactionFee"/>
+        <result column="retail_create_date" property="retailCreateDate" />
+        <result column="retail_user_name" property="retailUserName" />
     </resultMap>
     <sql id="Base_Column_List">
     t1.id, t1.publish_user_id, t1.publish_user_name, t1.publish_user_mobile, t1.auto_info_name, t1.store_id,t1.store_name,
@@ -746,9 +753,12 @@
         aa.auction_start_time,
         a.transfer_flag,
         r.name AS city_name,
-        ar.user_num as userNum,
-        ret.sales_consultant as salesConsultant,
-        ret.transaction_fee as transactionFee,
+        ar.user_num,
+        ret.payment_type,
+        ret.sales_consultant,
+        ret.transaction_fee as retail_transaction_fee,
+        ret.create_date retail_create_date,
+        rmu.user_name retail_user_name,
         ret.id AS retail_id,
         ret.source
         FROM car_auto a
@@ -767,6 +777,7 @@
         LEFT JOIN wt_app_user ar on ar.id=aa.top_pricer_id
         LEFT JOIN wt_region r on au.city_id = r.id
         LEFT JOIN car_order_retail ret on ret.car_id = a.id and ret.sales_type = '1'
+        LEFT JOIN car_manager_user rmu on rmu.id=ret.create_user
         WHERE a.status != '0' AND ((a.status='1' AND a.create_user=#{managerId}) OR a.status>'1')
         <if test="storeId!=null and storeId!=''">
             AND a.store_id=#{storeId}
@@ -784,16 +795,22 @@
             AND a.sale_flag = #{saleFlag}
         </if>
         <if test="auctionStartTimeBegin != null and auctionStartTimeBegin !=''">
-            AND aa.auction_start_time &gt;= #{auctionStartTimeBegin}
+            AND aa.auction_start_time &gt;= str_to_date(concat(#{auctionStartTimeBegin},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
         </if>
         <if test="auctionStartTimeEnd != null and auctionStartTimeEnd !=''">
-            AND aa.auction_start_time &lt;= #{auctionStartTimeEnd}
+            AND aa.auction_start_time &lt;= str_to_date(concat(#{auctionStartTimeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
         </if>
         <if test="startTimeBegin != null and startTimeBegin !=''">
-            AND  au.start_time &gt;= #{startTimeBegin}
+            AND  au.start_time &gt;= str_to_date(concat(#{startTimeBegin},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
         </if>
         <if test="startTimeEnd != null and startTimeEnd !=''">
-            AND  au.start_time &lt;= #{startTimeEnd}
+            AND  au.start_time &lt;= str_to_date(concat(#{startTimeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="retailTimeBegin != null and retailTimeBegin !=''">
+            AND  ret.create_date &gt;= str_to_date(concat(#{retailTimeBegin},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="retailTimeEnd != null and retailTimeEnd !=''">
+            AND  ret.create_date &lt;= str_to_date(concat(#{retailTimeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
         </if>
         <if test="cityId != null and cityId != ''">
             AND au.city_id = #{cityId}
@@ -811,10 +828,10 @@
             AND aa.auction_type=#{auctionType}
         </if>
         <if test="startTime!=null and startTime!=''">
-            AND a.create_time &gt;= #{startTime}
+            AND a.create_time &gt;= str_to_date(concat(#{startTime},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
         </if>
         <if test="endTime!=null and endTime!=''">
-            AND date_format(a.create_time, '%Y-%m-%d') &lt;= #{endTime}
+            AND a.create_time &lt;= str_to_date(concat(#{endTime},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
         </if>
         <if test="carAutoNo!=null and carAutoNo!=''">
             AND a.car_auto_no = #{carAutoNo}
@@ -844,7 +861,6 @@
             </foreach>
             or a.store_id is null)
         </if>
-        -- GROUP BY a.id
         ORDER BY a.update_time DESC,a.create_time DESC
         <if test="startRowNum!=null and startRowNum!=null">
             limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
