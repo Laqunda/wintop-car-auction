@@ -165,7 +165,7 @@
         <if test="auctionType != null ">
             AND t4.auction_type = #{auctionType}
         </if>
-        <if test="status != null and status = '9'.toString() ">
+        <if test="status != null and status == '9'.toString() ">
             AND t2.status = #{status}
             AND t4.top_pricer_id = #{customerId}
         </if>
@@ -187,8 +187,9 @@
         <if test="auctionType != null ">
             AND t4.auction_type = #{auctionType}
         </if>
-        <if test="status != null ">
+        <if test="status != null and status == '9'.toString() ">
             AND t2.status = #{status}
+            AND t4.top_pricer_id = #{customerId}
         </if>
     </select>
 
