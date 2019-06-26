@@ -186,7 +186,7 @@ public class CarAuctionBidRecordApi {
             carAuctionBidRecord = new CarAuctionBidRecord();
         }
         try {
-            List<Map<String, Object>> list = iCarAuctionBidRecordService.getBidPriceList(carAuctionBidRecord.getCarId());
+            List<Map<String, Object>> list = iCarAuctionBidRecordService.getBidPriceList(carAuctionBidRecord);
             result.setResult(list);
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {

@@ -100,7 +100,7 @@ public class CarManagerPageServiceImpl implements ICarManagerPageService {
         if (MapUtils.isEmpty(map) || !map.containsKey("roleId")) {
             return Collections.emptyList();
         }
-            map.put("parentId", 0L);
+        map.put("parentId", 0L);
         List<TreeEntity> treeEntities=pageModel.getPageTreeByPId(map);
         for (TreeEntity entity:treeEntities){
             map.put("parentId",entity.getId());

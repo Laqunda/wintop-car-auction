@@ -102,12 +102,15 @@
     <if test="regionId != null">
       AND t1.city_id=#{regionId}
     </if>
-    <if test="regionIds != null">
+    <if test="departmentId != null">
+      AND t2.department_id=#{departmentId}
+    </if>
+    <!--<if test="regionIds != null">
       AND t1.city_id in
       <foreach collection="regionIds" index="index" item="item" open="(" separator="," close=")">
         #{item}
       </foreach>
-    </if>
+    </if>-->
     <if test="title != null">
       AND t1.title like CONCAT(CONCAT('%', #{title}),'%')
     </if>
@@ -138,9 +141,13 @@
   <select id="selectAuctionCount" resultType="java.lang.Integer" parameterType="java.util.Map">
     SELECT count(t1.id)
     FROM car_locale_auction t1
+    left join car_manager_user t2 on t1.create_person=t2.id
     WHERE 1=1
     <if test="regionId != null">
       AND t1.city_id=#{regionId}
+    </if>
+    <if test="departmentId != null">
+      AND t2.department_id=#{departmentId}
     </if>
     <if test="title != null">
       AND t1.title=#{title}

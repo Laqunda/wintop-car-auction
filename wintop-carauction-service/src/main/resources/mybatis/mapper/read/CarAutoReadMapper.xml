@@ -787,11 +787,17 @@
         <if test="auctionStartTimeEnd != null and auctionStartTimeEnd !=''">
             AND aa.auction_start_time &lt;= #{auctionStartTimeEnd}
         </if>
+        <if test="startTimeBegin != null and startTimeBegin !=''">
+            AND  au.start_time &gt;= #{startTimeBegin}
+        </if>
+        <if test="startTimeEnd != null and startTimeEnd !=''">
+            AND  au.start_time &lt;= #{startTimeEnd}
+        </if>
         <if test="cityId != null and cityId != ''">
             AND au.city_id = #{cityId}
         </if>
         <if test="title !=null and title != ''">
-            AND au.title = #{title}
+            AND au.title like CONCAT(CONCAT('%', #{title}),'%')
         </if>
         <if test="salesStartDate != null and salesStartDate != ''">
             AND ret.sales_date &gt;=#{salesStartDate}
@@ -874,6 +880,15 @@
         </if>
         <if test="auctionStartTimeEnd != null and auctionStartTimeEnd !=''">
             AND aa.auction_start_time &lt;= #{auctionStartTimeEnd}
+        </if>
+        <if test="startTimeBegin != null and startTimeBegin !=''">
+            AND  au.start_time &gt;= #{startTimeBegin}
+        </if>
+        <if test="startTimeEnd != null and startTimeEnd !=''">
+            AND  au.start_time &lt;= #{startTimeEnd}
+        </if>
+        <if test="title !=null and title != ''">
+            AND au.title like CONCAT(CONCAT('%', #{title}),'%')
         </if>
         <if test="cityId != null and cityId != ''">
             AND au.city_id = #{cityId}

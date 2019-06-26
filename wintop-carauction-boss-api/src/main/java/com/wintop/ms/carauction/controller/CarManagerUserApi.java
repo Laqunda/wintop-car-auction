@@ -348,10 +348,11 @@ public class CarManagerUserApi {
 
     @AuthPublic
     @PostMapping( value = "/exportManagerUserList" )
-    public void exportManagerUserList(HttpServletRequest request, HttpServletResponse rep, @RequestParam String searchName) {
+    public void exportManagerUserList(HttpServletRequest request, HttpServletResponse rep, @RequestParam Long roleId , @RequestParam String searchName) {
         String[] headers = {"登录账号", "用户姓名", "联系电话", "角色类型", "角色名称", "备注"};
         Map<String, Object> map = Maps.newHashMap();
         map.put("searchName", searchName);
+        map.put("roleId", roleId);
         HSSFWorkbook workbook = ExcelUtil.createStartExcel("出价记录", headers);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity

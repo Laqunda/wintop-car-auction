@@ -363,7 +363,8 @@ public class CarAssessApi {
                 //评估日志
                 logService.saveLog(managerUser, "撤销申请采购", idWorker.nextId(), carAssess.getId());
                 //order操作日志
-                orderLogService.saveOrderLog(managerUser, obj.getString("logMsg"), "3", idWorker.nextId(), order.getId());
+                String logMsg = obj.getString("logMsg") == null || "".equals(obj.getString("logMsg")) ? "撤销采购申请" : obj.getString("logMsg");
+                orderLogService.saveOrderLog(managerUser, logMsg, "3", idWorker.nextId(), order.getId());
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
             } else {
                 result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());

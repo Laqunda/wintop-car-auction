@@ -1,5 +1,6 @@
 package com.wintop.ms.carauction.controller;
 
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.alibaba.fastjson.JSONObject;
@@ -30,6 +31,7 @@ import java.util.Objects;
 public class WtAppUserApi {
 
     private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(WtAppUserApi.class);
+    private static final String PASS = "2";
 
     @Autowired
     private IWtAppUserService appUserService;
@@ -252,6 +254,16 @@ public class WtAppUserApi {
                         }else if ("1".equals(deposit.getStatus()) && "2".equals(sign.getStatus())){
                             appUser.setType("3");
                         }
+
+                    }
+                }
+                for (WtAppUser appUser:appUsers){
+                    Map<String, Object> param = Maps.newHashMap();
+                    param.put("userId", appUser.getId());
+                    param.put("status", PASS);
+                    CarCustomerDeposit deposit=depositService.selectDepositByUserId(param);
+                    if (Objects.nonNull(deposit)) {
+                        appUser.setDepositAmount(deposit.getDepositAmount());
                     }
                 }
                 listEntity.setList(appUsers);

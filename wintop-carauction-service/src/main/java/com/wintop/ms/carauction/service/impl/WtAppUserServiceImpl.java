@@ -38,6 +38,8 @@ import java.util.stream.Collectors;
 @Service
 public class WtAppUserServiceImpl implements IWtAppUserService {
     private static final Logger logger = LoggerFactory.getLogger(BargainingAuditApi.class);
+    private static final String USE = "0";
+    private static final String PASS = "2";
     @Resource
     private AppUserModel appUserModel;
     @Resource
@@ -532,6 +534,8 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
                     groupDetailModel.insertSelective(groupDetail);
                 }
             }
+            // 保存保证金
+            saveDepositAmount(object, userId);
             result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
         }catch (Exception e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -539,6 +543,35 @@ public class WtAppUserServiceImpl implements IWtAppUserService {
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
         }
         return result;
+    }
+
+    /**
+     * 保存保证金
+     * @param object
+     * @param userId
+     */
+    private void saveDepositAmount(JSONObject object, Long userId) {
+        if (StringUtils.isNotEmpty(object.getString("depositAmount"))) {
+            Map<String, Object> map = Maps.newHashMap();
+            map.put("userId", userId);
+            CarCustomerDeposit deposit = depositModel.selectDepositByUserId(map);
+            //保存保证金信息
+            if (Objects.isNull(deposit)){
+                deposit=new CarCustomerDeposit();
+                deposit.setId(idWorker.nextId());
+                deposit.setUserId(userId);
+                deposit.setDepositAmount(object.getBigDecimal("depositAmount"));
+                deposit.setStatus(PASS);
+                deposit.setAuthMsg("车商现场添加");
+                deposit.setAuthManager(object.getLong("managerId"));
+                deposit.setAuthTime(new Date());
+                deposit.setUseStatus(USE);
+                depositModel.insert(deposit);
+            } else {
+                deposit.setDepositAmount(object.getBigDecimal("depositAmount"));
+                depositModel.updateByPrimaryKeySelective(deposit);
+            }
+        }
     }
 
     /**

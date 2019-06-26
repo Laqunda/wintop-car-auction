@@ -116,7 +116,8 @@
     t2.auction_num,
     t2.publish_user_name,
     t2.store_name,
-    t5.status
+    t5.status,
+    t2.main_photo
     from car_locale_auction_car t1
     left join car_auto t2 on t1.car_id=t2.id
     left join car_auto_auction t3 on t3.id=t1.auto_auction_id

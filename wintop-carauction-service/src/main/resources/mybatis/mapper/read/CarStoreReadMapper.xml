@@ -42,8 +42,12 @@
     select
     <include refid="Base_Column_List" />,balance
     from car_store t1
-    left join ( select max(create_time),store_id,balance  from car_chaboshi_store_account
-     group by store_id
+    left join (
+      select t3.create_time,t3.store_id, t3.balance
+        from car_chaboshi_store_account t3
+      inner join
+        (select max(create_time) create_time,store_id  from car_chaboshi_store_account group by store_id) t2
+        on  t3.store_id = t2.store_id and t3.create_time = t2.create_time
     ) account on account.store_id = t1.id
     where 1=1
     <if test="status != null">
@@ -56,7 +60,8 @@
       and t1.status <![CDATA[ <> ]]> '3'
     </if>
     <if test="storeName != null">
-      and t1.`name` LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+      and (t1.`name` LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+      or t1.simple_name like CONCAT(CONCAT('%',#{storeName}),'%'))
     </if>
     <if test="storeList != null">
       and t1.id in
@@ -79,7 +84,8 @@
     select count(t1.id) from car_store t1
     where 1=1
     <if test="storeName!=null">
-      and t1.`name` LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+      and (t1.`name` LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+      or t1.simple_name like CONCAT(CONCAT('%',#{storeName}),'%'))
     </if>
     <if test="storeList != null">
       and t1.id in

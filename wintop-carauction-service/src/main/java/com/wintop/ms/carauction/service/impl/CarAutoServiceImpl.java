@@ -100,6 +100,8 @@ public class CarAutoServiceImpl implements ICarAutoService {
     private CarCenterStoreModel carCenterStoreModel;
     @Autowired
     private ICarAppInfoService appInfoService;
+    @Autowired
+    private CarBidRecordModel carBidRecordModel;
 
     private static Map<String,  List<Integer>> auctionTypeMap = getAuctionTypeMap();
 
@@ -1150,8 +1152,10 @@ public class CarAutoServiceImpl implements ICarAutoService {
         CarAutoAuction carAutoAuction = carAutoAuctionModel.selectAuctionInformation(Collections.singletonMap("id",carAuto.getAutoAuctionId()));
         carAuto.setCarAutoAuction(carAutoAuction);
         // 出价列表
-        List<TblAuctionLog> tblAuctionLogList = tblAuctionLogModel.selectByExample(Collections.singletonMap("carId", carAuto.getId()));
-        carAuto.setTblAuctionLog(tblAuctionLogList);
+//        List<TblAuctionLog> tblAuctionLogList = tblAuctionLogModel.selectByExample(Collections.singletonMap("carId", carAuto.getId()));
+//        carAuto.setTblAuctionLog(tblAuctionLogList);
+        List<CarBidRecord> carBidRecordList = carBidRecordModel.queryCarBidRecordList(Collections.singletonMap("carId", carAuto.getId()));
+        carAuto.setCarBidRecordList(carBidRecordList);
         // 轨迹列表
         if (carAssess != null){
             CarAssessLog carAssessLog = new CarAssessLog();

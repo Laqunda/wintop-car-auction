@@ -43,7 +43,7 @@ public class CarBidRecordServiceImpl implements ICarBidRecordService{
             for (int i = 0; i < list.size(); i++) {
                 if (CollectionUtils.isNotEmpty(storeVoList)) {
                     Long centerId = list.get(i).getCenterId();
-                    CommonNameVo commonNameVo = storeVoList.stream().filter(store -> store.getId().equals(centerId)).findFirst().get();
+                    CommonNameVo commonNameVo = storeVoList.stream().filter(store -> store.getId().equals(centerId)).findFirst().orElse(new CommonNameVo());
                     list.get(i).setCenterName(commonNameVo.getName());
                 }
             }

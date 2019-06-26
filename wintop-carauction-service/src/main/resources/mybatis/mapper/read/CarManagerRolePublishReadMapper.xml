@@ -22,7 +22,7 @@
     from car_manager_role_publish
     <trim prefix="WHERE" prefixOverrides="AND|OR">
       <if test="managerId != null">
-        and manager_id = #{manager_id}
+        and manager_id = #{managerId}
       </if>
       <if test="typeId != null">
         and type_id = #{typeId}

@@ -121,8 +121,8 @@ public interface ICarAuctionBidRecordService {
 
     /**
      * 根据车辆id 查询出价列表
-     * @param autoId
+     * @param carAuctionBidRecord
      * @return
      */
-    public List<Map<String,Object>> getBidPriceList(Long autoId);
+    public List<Map<String,Object>> getBidPriceList(CarAuctionBidRecord carAuctionBidRecord);
 }

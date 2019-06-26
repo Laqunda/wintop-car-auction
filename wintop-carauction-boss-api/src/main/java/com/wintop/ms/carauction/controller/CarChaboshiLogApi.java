@@ -58,11 +58,11 @@ public class CarChaboshiLogApi {
     @PostMapping(value = "/list",produces="application/json; charset=UTF-8")
     @AuthUserToken
     @RequestAuth(value = false)
-    public ResultModel list(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) {
+    public ResultModel list(@RequestBody Map<String,Object> map,@CurrentUserId Long managerId) {
         if(map.get("page")==null || map.get("limit")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
         }
-        map.put("userId",userId);
+        map.put("managerId",managerId);
 //        map.put("userType","2");
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
@@ -408,5 +408,30 @@ public class CarChaboshiLogApi {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
+    @AuthPublic
+    @ApiOperation(value = "查博士回调")
+    @PostMapping("cbsCallback")
+    public Map cbsCallback(@RequestParam String result, @RequestParam String message, @RequestParam String orderid) {
+        logger.info("查博士回调通知");
+        Map map = new HashMap();
+        map.put("result",result);
+        map.put("message",message);
+        map.put("orderid",orderid);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carChaboshiLog/cbsCallback"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        Map resultMap = new HashMap();
+        resultMap.put("code", "1");
+        resultMap.put("message", "接口访问失败");
+        if (response.getStatusCode() == HttpStatus.OK) {
+            JSONObject object = response.getBody();
+            resultMap.put("code", object.getString("code"));
+            resultMap.put("message", object.getString("message"));
+        }
+        return resultMap;
     }
 }

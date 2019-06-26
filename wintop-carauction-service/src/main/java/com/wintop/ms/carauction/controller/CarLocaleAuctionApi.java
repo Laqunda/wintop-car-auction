@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.CarTypeEnum;
+import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -286,12 +287,15 @@ public class CarLocaleAuctionApi {
         }
         if (Objects.nonNull(obj.getString("managerId"))) {
             CarManagerUser user = carManagerUserService.selectByPrimaryKey(obj.getLong("managerId"), false);
+            if(Long.valueOf(ManagerRole.PT_GLY.value()).compareTo(user.getRoleId()) != 0){
+                paramMap.put("departmentId", user.getDepartmentId());
+            }
             // 就否是中心
-            if (user.getRoleTypeId().equals(CENTER) && user.getDepartmentId().equals(REGION_BEIJING)) {
+            /*if (user.getRoleTypeId().equals(CENTER) && user.getDepartmentId().equals(REGION_BEIJING)) {
                 List<CommonNameVo> cityList = carCenterStoreService.selectAllStore(user.getDepartmentId());
                 List<Long> regionIds = cityList.stream().map(city -> city.getId()).collect(Collectors.toList());
                 paramMap.put("regionIds", regionIds);
-            }
+            }*/
         }
         int count = carLocaleAuctionService.selectAuctionCount(paramMap).getResult();
         PageEntity pageEntity= CarAutoUtils.getPageParam(obj);

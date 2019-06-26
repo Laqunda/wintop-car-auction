@@ -16,8 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Comparator.*;
 
 /**
  * 评估采购日志 信息操作处理
@@ -52,7 +55,6 @@ public class CarAssessOrderLogApi {
             result = new ServiceResult<>();
 
             int count = carAssessOrderLogService.selectAssessOrderCount(carAssessOrderLog);
-
 
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             carAssessOrderLog.setStartRowNum(pageEntity.getStartRowNum());
@@ -95,6 +97,7 @@ public class CarAssessOrderLogApi {
             int count = carAssessOrderLogService.selectAssessOrderCount(carAssessOrderLog);
 
             List<CarAssessOrderLog> list = carAssessOrderLogService.selectCarAssessOrderLogList(carAssessOrderLog);
+            Collections.sort(list, comparing(CarAssessOrderLog::getCreateTime));
             result.setResult(Collections.singletonMap("list",list));
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {

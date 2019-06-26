@@ -197,6 +197,9 @@ public class Constants {
      */
     public static final String ALIPAY_NOTIFY_URL_CHABOSHI_STORE = COMMON_MODULE_ROOT + "/store/aliPay/payCbsChargeCallback";
 
+    /*查博士回调地址*/
+    public static final String CALLBACK_CHABOSHI = COMMON_MODULE_ROOT+"/boss/carChaboshiLog/cbsCallback" ;
+
     /**
      * 图片上传
      */
@@ -232,4 +235,12 @@ public class Constants {
     public static final String CAR_AUTO_AUCTION = "CAR_AUTO_AUCTION";
 
     public static final String AUCTION_SETTING = "AUCTION_SETTING";
+
+    /***
+     * 权限过滤路径
+     */
+    public static final List<String> AUTHORITY_PATH = new ArrayList<String>();
+    static {
+        AUTHORITY_PATH.add("/boss/managerPage/getPageTreeForTwoNode");
+    }
 }
