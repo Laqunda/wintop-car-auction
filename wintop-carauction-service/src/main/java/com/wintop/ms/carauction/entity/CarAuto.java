@@ -212,6 +212,12 @@ public class CarAuto implements Serializable {
     private Date dealTime;
     private Date passInTime;
 
+    // 来源
+    private String source;
+
+    // 城市名称
+    private String cityName;
+
     // 车辆明细
     private CarAutoInfoDetail carAutoInfoDetail;
     // 车辆手续信息
@@ -1302,5 +1308,21 @@ public class CarAuto implements Serializable {
 
     public void setTblAuctionLog(List<TblAuctionLog> tblAuctionLog) {
         this.tblAuctionLog = tblAuctionLog;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 }

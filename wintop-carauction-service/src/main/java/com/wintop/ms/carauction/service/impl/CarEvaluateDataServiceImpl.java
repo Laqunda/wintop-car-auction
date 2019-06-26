@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service("carEvaluateDataService")
 public class CarEvaluateDataServiceImpl implements ICarEvaluateDataService {
@@ -87,17 +88,17 @@ public class CarEvaluateDataServiceImpl implements ICarEvaluateDataService {
         List<CarEvaluateData> list = carEvaluateDataModel.list(map);
         for (CarEvaluateData record : list) {
             if (CHECK_REPORT.equals(record.getType())) {
-                CarAutoDetectionData carAutoDetectionData = carAutoDetectionDataModel.selectByPrimaryKey(record.getObjId());
-                CarAuto carAuto = carAutoModel.selectByCarId(Collections.singletonMap("carId", carAutoDetectionData.getAutoId()));
-                List<CarOrder> carOrderList = carOrderModel.selectByExample(Collections.singletonMap("carId", carAutoDetectionData.getAutoId()));
+
+                CarAuto carAuto = carAutoModel.selectByCarId(Collections.singletonMap("carId", record.getObjId()));
+                List<CarOrder> carOrderList = carOrderModel.selectByExample(Collections.singletonMap("carId", record.getObjId()));
                 WtAppUser wtAppUser = null;
                 if (CollectionUtils.isNotEmpty(carOrderList)) {
                     CarOrder carOrder = carOrderList.stream().findFirst().orElse(new CarOrder());
                     wtAppUser = appUserModel.findById(carOrder.getCustomerId());
                 }
-
                 record.setCarAuto(carAuto);
                 record.setWtAppUser(wtAppUser);
+
             } else if(LOCALE_ACUTION.equals(record.getType())){
                 CarLocaleAuction carLocaleAuction = carLocaleAuctionModel.selectById(record.getObjId());
                 CarManagerUser carManagerUser = carManagerUserModel.selectByPrimaryKey(carLocaleAuction.getCreatePerson());
@@ -120,11 +121,14 @@ public class CarEvaluateDataServiceImpl implements ICarEvaluateDataService {
                 record.setCarLocaleAuction(carLocaleAuction);
                 record.setWtAppUser(wtAppUser);
             } else if (SELLER_EVAL.equals(record.getType())) {
-                CarAuto carAuto = carAutoModel.selectByCarId(Collections.singletonMap("carId", record.getObjId()));
+                CarOrder carOrder = carOrderModel.selectById(record.getObjId());
+                CarAuto carAuto = carAutoModel.selectByCarId(Collections.singletonMap("carId", carOrder.getCarId()));
                 CarAutoAuction carAutoAuction = carAutoAuctionModel.selectAutoAuctionByCarId(record.getObjId());
-
+                WtAppUser wtAppUser = appUserModel.findById(carOrder.getCustomerId());
                 record.setCarAuto(carAuto);
+                record.setCarOrder(carOrder);
                 record.setCarAutoAuction(carAutoAuction);
+                record.setWtAppUser(wtAppUser);
             }
         }
         return list;
