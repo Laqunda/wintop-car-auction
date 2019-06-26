@@ -98,7 +98,7 @@ public class Constants {
     public static final String UPLOADIMAGEFORQUALITY_URL =  FILEUPLOAD_SERVER_URL + "/file/uploadImageForQuality";
     //------------------------------------------------------------------------------------------------------
     /*查博士回调地址*/
-    public static final String CALLBACK_CHABOSHI = ROOT+"/service/carChaboshiLog/cbsCallback" ;
+    public static final String CALLBACK_CHABOSHI = API_DOMAIN+"/boss/carChaboshiLog/cbsCallback" ;
     /*保证金支付宝支付通知接口*/
     public static final String ALIPAY_NOTIFY_URL = API_DOMAIN + "/mobile/aliPay/payNotifyDeposit";
     /*查博士支付宝支付通知接口*/
