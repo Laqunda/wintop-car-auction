@@ -61,8 +61,8 @@ public enum ResultCode {
     DUPLICATE_ADD(504, "不可重复添加"),
     //    ******** 2.0 store
     LOW_BALANCE(1000, "余额不足"),
-    NO_ORDER(1001, "未发现订单");
-
+    NO_ORDER(1001, "未发现订单"),
+    NO_AUDIT_VIEW_AUTH(1002, "无查博士查看审批权限");
 
     private final int value;
     private final String remark;

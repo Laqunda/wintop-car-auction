@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarManagerRoleLogWriteDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="role_data_id" property="roleDataId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="status_cn" property="statusCn" jdbcType="VARCHAR" />
+    <result column="log_msg" property="logMsg" jdbcType="VARCHAR" />
+    <result column="store_id" property="storeId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, role_data_id, status, status_cn, log_msg, create_time, create_person
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_manager_role_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
+    insert into car_manager_role_log (id, role_data_id, status, 
+      status_cn, log_msg, create_time, store_id，create_person)
+    values (#{id,jdbcType=BIGINT}, #{roleDataId,jdbcType=BIGINT}, #{status,jdbcType=VARCHAR}, 
+      #{statusCn,jdbcType=VARCHAR}, #{logMsg,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{storeId,jdbcType=BIGINT}, #{createPerson,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
+    insert into car_manager_role_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleDataId != null" >
+        role_data_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="statusCn != null" >
+        status_cn,
+      </if>
+      <if test="logMsg != null" >
+        log_msg,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+      <if test="createPerson != null" >
+        create_person,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="roleDataId != null" >
+        #{roleDataId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCn != null" >
+        #{statusCn,jdbcType=VARCHAR},
+      </if>
+      <if test="logMsg != null" >
+        #{logMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=BIGINT},
+      </if>
+      <if test="createPerson != null" >
+        #{createPerson,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
+    update car_manager_role_log
+    <set >
+      <if test="roleDataId != null" >
+        role_data_id = #{roleDataId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCn != null" >
+        status_cn = #{statusCn,jdbcType=VARCHAR},
+      </if>
+      <if test="logMsg != null" >
+        log_msg = #{logMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="storeId != null" >
+        store_id = #{storeId,jdbcType=BIGINT},
+      </if>
+      <if test="createPerson != null" >
+        create_person = #{createPerson,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
+    update car_manager_role_log
+    set role_data_id = #{roleDataId,jdbcType=BIGINT},
+      status = #{status,jdbcType=VARCHAR},
+      status_cn = #{statusCn,jdbcType=VARCHAR},
+      log_msg = #{logMsg,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      store_id = #{storeId,jdbcType=BIGINT},
+      create_person = #{createPerson,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
