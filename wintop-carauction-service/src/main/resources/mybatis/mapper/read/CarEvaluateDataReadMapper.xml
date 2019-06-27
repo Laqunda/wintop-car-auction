@@ -24,7 +24,7 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="list" resultMap="BaseResultMap" parameterType="java.util.Map">
-    select
+    select distinct
     <include refid="Base_Column_List"/>
     from car_evaluate_data d
     <if test="type != null and type == 1">

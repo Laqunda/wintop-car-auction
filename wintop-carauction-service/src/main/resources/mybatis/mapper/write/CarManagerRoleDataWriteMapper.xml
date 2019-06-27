@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarManagerRoleDataWriteDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarManagerRoleData" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="manager_id" property="managerId" jdbcType="BIGINT" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="is_role" property="isRole" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, manager_id, code, is_role
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_manager_role_data
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteForCondition" parameterType="java.util.Map" >
+    delete from car_manager_role_data
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="managerId != null">
+        AND manager_id = #{managerId,jdbcType=BIGINT}
+      </if>
+      <if test="code != null">
+        AND code = #{code,jdbcType=VARCHAR}
+      </if>
+      <if test="isRole != null">
+        AND is_role = #{isRole,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleData" >
+    insert into car_manager_role_data (id, manager_id, code, 
+      is_role)
+    values (#{id,jdbcType=BIGINT}, #{managerId,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR}, 
+      #{isRole,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleData" >
+    insert into car_manager_role_data
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="managerId != null" >
+        manager_id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="isRole != null" >
+        is_role,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="managerId != null" >
+        #{managerId,jdbcType=BIGINT},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="isRole != null" >
+        #{isRole,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleData" >
+    update car_manager_role_data
+    <set >
+      <if test="managerId != null" >
+        manager_id = #{managerId,jdbcType=BIGINT},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="isRole != null" >
+        is_role = #{isRole,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleData" >
+    update car_manager_role_data
+    set manager_id = #{managerId,jdbcType=BIGINT},
+      code = #{code,jdbcType=VARCHAR},
+      is_role = #{isRole,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

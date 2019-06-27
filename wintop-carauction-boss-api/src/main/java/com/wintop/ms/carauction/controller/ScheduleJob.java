@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.util.HashMap;
 
-@Controller
+// @Controller
 public class ScheduleJob {
 
     private final RestTemplate restTemplate;
@@ -19,7 +19,7 @@ public class ScheduleJob {
         this.restTemplate = restTemplate;
     }
 
-   @Scheduled(fixedRate = 1000)
+//   @Scheduled(fixedRate = 1000)
     public void redisAutoDataJob() {
         //System.out.println("--------2------");
         this.restTemplate.exchange(
@@ -29,7 +29,7 @@ public class ScheduleJob {
                         .body(new HashMap()),Integer.class);
     }
 
-    @Scheduled(cron = "0 0 5 * * ?")
+//    @Scheduled(cron = "0 0 5 * * ?")
     public void deleteHisDataLog() {
         this.restTemplate.exchange(
                 RequestEntity
@@ -38,7 +38,7 @@ public class ScheduleJob {
                         .body(new HashMap()),Integer.class);
     }
 
-    @Scheduled( fixedRate = 1000 )
+//    @Scheduled( fixedRate = 1000 )
     public void startAuctionViewed(){
         this.restTemplate.exchange(
                 RequestEntity

@@ -835,7 +835,6 @@ public class CarLocaleAuctionApi {
         ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
 
         List<Map<String, Object>> totalList = Lists.newArrayList();
-        Map<String, Object> param = Maps.newHashMap();
         HSSFSheet sheet = workbook.getSheetAt(0);
         if (response.getStatusCode() == HttpStatus.OK) {
             JSONObject obj = response.getBody();
@@ -843,6 +842,7 @@ public class CarLocaleAuctionApi {
             if (result != null && result.size() > 0) {
                 // 获取
                 for (int i = 0; i < result.size(); i++) {
+                    Map<String, Object> param = Maps.newHashMap();
                     JSONObject object = result.getJSONObject(i);
                     param.put("storeName", object.getString("storeName"));
                     if (object.getString("auctionStatus").equals("2")) {
@@ -863,7 +863,9 @@ public class CarLocaleAuctionApi {
                     detail.setAuctionNum(auctionCount);
                     detail.setSucessNum(successCount);
                     if (successCount != 0){
-                        detail.setMaxRate(BigDecimal.valueOf(successCount/auctionCount).multiply(BigDecimal.valueOf(100)).setScale(2).toPlainString()+"%");
+                        detail.setMaxRate(BigDecimal.valueOf(Double.valueOf(successCount+""))
+                                .divide(BigDecimal.valueOf(Double.valueOf(auctionCount + "")),BigDecimal.ROUND_HALF_UP)
+                                .multiply(BigDecimal.valueOf(100)).setScale(2).toPlainString()+"%");
                     } else {
                         detail.setMaxRate(BigDecimal.ZERO+"%");
                     }
