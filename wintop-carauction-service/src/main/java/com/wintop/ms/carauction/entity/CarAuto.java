@@ -127,6 +127,15 @@ public class CarAuto implements Serializable {
     // 销售状态 0拍卖,1零售
     private String saleFlag;
 
+    // 车商号
+    private String userNum;
+
+    // 付款方式
+    private String paymentType;
+
+    // 成交价
+    private BigDecimal retailTransactionFee;
+
     //时间
     private Date time;
     /**
@@ -217,6 +226,18 @@ public class CarAuto implements Serializable {
 
     // 城市名称
     private String cityName;
+
+    // 销售顾问
+    private String salesConsultant;
+
+    // 成交价
+    private BigDecimal transactionFee;
+
+    // 零售订单创建时间
+    private Date retailCreateDate;
+
+    // 零售订单创建人
+    private String retailUserName;
 
     // 车辆明细
     private CarAutoInfoDetail carAutoInfoDetail;
@@ -489,7 +510,6 @@ public class CarAuto implements Serializable {
      * */
     private BigDecimal reservePrice;
 
-    private BigDecimal transactionFee;
     public String getIsEntrust() {
         return isEntrust;
     }
@@ -1324,5 +1344,53 @@ public class CarAuto implements Serializable {
 
     public void setCityName(String cityName) {
         this.cityName = cityName;
+    }
+
+    public String getSalesConsultant() {
+        return salesConsultant;
+    }
+
+    public void setSalesConsultant(String salesConsultant) {
+        this.salesConsultant = salesConsultant;
+    }
+
+    public String getUserNum() {
+        return userNum;
+    }
+
+    public void setUserNum(String userNum) {
+        this.userNum = userNum;
+    }
+
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public BigDecimal getRetailTransactionFee() {
+        return retailTransactionFee;
+    }
+
+    public void setRetailTransactionFee(BigDecimal retailTransactionFee) {
+        this.retailTransactionFee = retailTransactionFee;
+    }
+
+    public Date getRetailCreateDate() {
+        return retailCreateDate;
+    }
+
+    public void setRetailCreateDate(Date retailCreateDate) {
+        this.retailCreateDate = retailCreateDate;
+    }
+
+    public String getRetailUserName() {
+        return retailUserName;
+    }
+
+    public void setRetailUserName(String retailUserName) {
+        this.retailUserName = retailUserName;
     }
 }

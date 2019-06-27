@@ -165,7 +165,7 @@
         <if test="auctionType != null ">
             AND t4.auction_type = #{auctionType}
         </if>
-        <if test="status != null and status = '9'.toString() ">
+        <if test="status != null and status == '9'.toString() ">
             AND t2.status = #{status}
             AND t4.top_pricer_id = #{customerId}
         </if>
@@ -180,15 +180,16 @@
         SELECT
         COUNT(DISTINCT t1.car_id)
         FROM car_auction_bid_record t1
-        INNER JOIN car_auto t2 ON t1.car_id = t2.id
+        INNER JOIN car_auto t2 ON t1.car_id = t2.id AND t2.auto_auction_id = t1.auction_id
         INNER JOIN car_auto_info_detail t3 ON t3.auto_id = t1.car_id
         INNER JOIN car_auto_auction t4 ON t4.id = t2.auto_auction_id
         WHERE t1.customer_id = #{customerId}
         <if test="auctionType != null ">
             AND t4.auction_type = #{auctionType}
         </if>
-        <if test="status != null ">
+        <if test="status != null and status == '9'.toString() ">
             AND t2.status = #{status}
+            AND t4.top_pricer_id = #{customerId}
         </if>
     </select>
 

@@ -454,6 +454,9 @@ public class CarAutoApi {
     @AuthPublic
     @PostMapping( value = "/exportOnlineCarList" )
     public void exportOnlineCarList(HttpServletRequest request, HttpServletResponse rep,
+                                    @RequestParam("saleFlag") String saleFlag,
+                                    @RequestParam("auctionType") String auctionType,
+                                    @RequestParam("sourceType") String sourceType,
                                     @RequestParam("carAutoNo") String carAutoNo,
                                     @RequestParam("autoInfoName") String autoInfoName,
                                     @RequestParam("licenseNumber") String licenseNumber,
@@ -467,18 +470,21 @@ public class CarAutoApi {
         String[] headers = {"车辆编号", "车辆名称", "车牌号", "上拍数", "车辆归属城市", "初次上牌","公里数","VIN","所属店铺","车辆类型","车辆来源","价格信息","竞拍类型","开拍信息","成交价","服务费","是否代办","车辆状态","发车时间","发车人"};
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
         Map<String, Object> map = Maps.newHashMap();
+        map.put("saleFlag", saleFlag);
+        map.put("auctionType", auctionType);
+        map.put("sourceType", sourceType);
         map.put("carAutoNo", carAutoNo);
         map.put("autoInfoName", autoInfoName);
         map.put("licenseNumber", licenseNumber);
         map.put("createUserName", createUserName);
         map.put("vin", vin);
         map.put("storeId", storeId);
-        map.put("carType", carType);
+        map.put("ifNew", carType);
         if (StringUtils.isNotEmpty(startTime)) {
-            map.put("startTime", sdf.format(startTime));
+            map.put("startTime", startTime);
         }
         if (StringUtils.isNotEmpty(endTime)) {
-            map.put("endTime", sdf.format(endTime));
+            map.put("endTime", endTime);
         }
         if (StringUtils.isNotEmpty(authorization)) {
             map.put("managerId", StringUtils.split(authorization,"_")[0]);
@@ -537,7 +543,7 @@ public class CarAutoApi {
                     HSSFCell c9 = itemRow.createCell(9);
                     c9.setCellValue(ifNew);
 
-                    String sourceType = "";
+                    sourceType = "";
                     if (object.getString("sourceType") != null) {
                         switch (object.getString("sourceType")) {
                             case "1":
@@ -563,7 +569,7 @@ public class CarAutoApi {
                     HSSFCell c11 = itemRow.createCell(11);
                     c11.setCellValue(object.getString("startingPrice"));
 
-                    String auctionType = "";
+                    auctionType = "";
                     if (object.getString("auctionType") != null) {
                         auctionType = object.getString("auctionType").equals("1") ? "线上" : "线下";
                     }
@@ -622,8 +628,8 @@ public class CarAutoApi {
      * @param auctionType
      * @param title
      * @param cityId
-     * @param auctionStartTimeBegin
-     * @param auctionStartTimeEnd
+     * @param startTimeBegin
+     * @param startTimeEnd
      */
     @ApiOperation(value = "现场车辆导出")
     @AuthPublic
@@ -633,8 +639,8 @@ public class CarAutoApi {
                                    @RequestParam("auctionType") String auctionType,
                                    @RequestParam("title") String title,
                                    @RequestParam("cityId") String cityId,
-                                   @RequestParam("auctionStartTimeBegin") String auctionStartTimeBegin,
-                                   @RequestParam("auctionStartTimeEnd") String auctionStartTimeEnd,
+                                   @RequestParam("startTimeBegin") String startTimeBegin,
+                                   @RequestParam("startTimeEnd") String startTimeEnd,
                                    @RequestParam("authorization") String authorization) {
         String[] headers = {"辆编号","车辆标题","车牌号","车所属店铺","车辆来源","开拍时间","开拍地点","场次主题","起拍价","保留价","最后出价","车商号","状态","初登日期","竞拍次数","发车人","发车人账号"};
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
@@ -644,11 +650,11 @@ public class CarAutoApi {
         map.put("title",title);
         map.put("cityId",cityId);
 
-        if (StringUtils.isNotEmpty(auctionStartTimeBegin)) {
-            map.put("auctionStartTimeBegin", sdf.format(auctionStartTimeBegin));
+        if (StringUtils.isNotEmpty(startTimeBegin)) {
+            map.put("startTimeBegin", startTimeBegin);
         }
-        if (StringUtils.isNotEmpty(auctionStartTimeEnd)) {
-            map.put("auctionStartTimeEnd", sdf.format(auctionStartTimeEnd));
+        if (StringUtils.isNotEmpty(startTimeEnd)) {
+            map.put("startTimeEnd", startTimeEnd);
         }
         if (StringUtils.isNotEmpty(authorization)) {
             map.put("managerId", StringUtils.split(authorization,"_")[0]);
@@ -679,7 +685,7 @@ public class CarAutoApi {
                     c2.setCellValue(object.getString("licenseNumber"));
 
                     HSSFCell c3 = itemRow.createCell(3);
-                    c3.setCellValue(object.getString("'carStoreNme'"));
+                    c3.setCellValue(object.getString("carStoreNme"));
 
                     String sourceType = "";
                     if (object.getString("sourceType") != null) {
@@ -704,12 +710,12 @@ public class CarAutoApi {
                     HSSFCell c4 = itemRow.createCell(4);
                     c4.setCellValue(sourceType);
 
-                    String auctionStartTime = "";
-                    if (object.getString("auctionStartTime") != null) {
-                        auctionStartTime = sdf.format(new Date(object.getLong("auctionStartTime")));
+                    String startTime = "";
+                    if (object.getString("startTime") != null) {
+                        startTime = sdf.format(new Date(object.getLong("startTime")));
                     }
                     HSSFCell c5 = itemRow.createCell(5);
-                    c5.setCellValue(auctionStartTime);
+                    c5.setCellValue(startTime);
 
                     HSSFCell c6 = itemRow.createCell(6);
                     c6.setCellValue(object.getString("cityName"));
@@ -801,11 +807,11 @@ public class CarAutoApi {
         map.put("vin",vin);
 
         if (StringUtils.isNotEmpty(salesStartDate)) {
-            map.put("auctionStartTimeBegin", sdf.format(salesStartDate));
+            map.put("retailTimeBegin", salesStartDate);
 
         }
         if (StringUtils.isNotEmpty(salesEndDate)) {
-            map.put("auctionStartTimeEnd", sdf.format(salesEndDate));
+            map.put("retailTimeEnd", salesEndDate);
         }
         if (StringUtils.isNotEmpty(authorization)) {
             map.put("managerId", StringUtils.split(authorization,"_")[0]);
@@ -890,7 +896,7 @@ public class CarAutoApi {
                     c10.setCellValue(sourceType);
 
                     HSSFCell c11 = itemRow.createCell(12);
-                    c11.setCellValue(object.getString("transactionFee"));
+                    c11.setCellValue(object.getString("retailTransactionFee"));
 
                     HSSFCell c13 = itemRow.createCell(13);
                     String paymentType = "";
@@ -902,19 +908,19 @@ public class CarAutoApi {
                     HSSFCell c14 = itemRow.createCell(14);
                     String ifAgent = "";
                     if (object.getString("ifAgent") != null) {
-                        ifAgent = object.getString("ifAgent").equals("1") ? "需要" : "不需要";
+                        ifAgent = object.getString("ifAgent").equals("1") ? "代办" : "非代办";
                     }
                     c14.setCellValue(ifAgent);
 
                     String publishTime = "";
-                    if (object.getString("publishTime") != null) {
-                        publishTime = sdf.format(new Date(object.getLong("publishTime")));
+                    if (object.getString("retailCreateDate") != null) {
+                        publishTime = sdf.format(object.getDate("retailCreateDate"));
                     }
                     HSSFCell c15 = itemRow.createCell(15);
                     c15.setCellValue(publishTime);
 
                     HSSFCell c16 = itemRow.createCell(16);
-                    c16.setCellValue(object.getString("publishUserName"));
+                    c16.setCellValue(object.getString("retailUserName"));
                 }
             }
         }

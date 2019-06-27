@@ -379,7 +379,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
             carMap.put("mainPhoto",carLocaleAuctionCar.getCarAutoPhoto());
             entriesList.add(carMap);
         }
-        resultMap.put("shareUri", Constants.STATIC_WEBSITE+"/carauction/share/index.html");
+        resultMap.put("shareUri", Constants.CAR_SHARE_URL);
         resultMap.put("entries",entriesList);
         result.setResult(resultMap);
         return result;

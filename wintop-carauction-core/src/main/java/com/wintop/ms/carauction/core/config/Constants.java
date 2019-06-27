@@ -18,7 +18,7 @@ public class Constants {
     public static final String SENDMESSAGE_SERVER_URL = "http://sendmessageserver" ;/*本地调试时改成http://test-api.yuntongauto.com */
     /**在线签约微服务地址*/
     public static final String ONLINESIGNATURE_SERVER_URL = "http://onlinesignatureserver" ;/*本地调试时改成http://test-api.yuntongauto.com */
-//------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------
     /*静态资源服务器地址*/
     public static final String STATIC_WEBSITE = "http://test-admin.yuntongauto.com";/*生产环境时改成 http://2sc.wintop2sc.com */
     /**api域名*/
@@ -33,7 +33,7 @@ public class Constants {
     public static final String CAR_AUTO_AUCTION = "CAR_AUTO_AUCTION";
 
     public static final String AUCTION_SETTING = "AUCTION_SETTING";
-//------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------
     /*存放当前登陆人的ID 的KEY*/
     public static final String CURRENT_USER_ID = "CURRENT_USER_ID";
     /*用户redis 存放token 键名*/
@@ -91,21 +91,26 @@ public class Constants {
     public static final String VIN_GET_VEHICLELIST_URL = CARMODEL_SERVER_URL + "/carmodel/vehiclelist";
     /*根据具体车型获取车辆详细配置信息*/
     public static final String ID_GET_VEHICLEDETAIL_URL = CARMODEL_SERVER_URL + "/carmodel/vehicledetail";
-//------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------
     /*图片上传*/
     public static final String UPLOADFILE_URL =  FILEUPLOAD_SERVER_URL + "/file/uploadFile";
     /*图片上传*/
     public static final String UPLOADIMAGEFORQUALITY_URL =  FILEUPLOAD_SERVER_URL + "/file/uploadImageForQuality";
-//------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------
     /*查博士回调地址*/
-    public static final String CALLBACK_CHABOSHI = ROOT+"/service/carChaboshiLog/cbsCallback" ;
+    public static final String CALLBACK_CHABOSHI = API_DOMAIN+"/boss/carChaboshiLog/cbsCallback" ;
     /*保证金支付宝支付通知接口*/
     public static final String ALIPAY_NOTIFY_URL = API_DOMAIN + "/mobile/aliPay/payNotifyDeposit";
     /*查博士支付宝支付通知接口*/
     public static final String ALIPAY_NOTIFY_URL_CHABOSHI = API_DOMAIN + "/mobile/aliPay/payChaboshiAmountCallback";
     /*查博士店铺充值支付宝支付通知接口*/
     public static final String ALIPAY_NOTIFY_URL_CHABOSHI_STORE =  API_DOMAIN + "/store/aliPay/payCbsChargeCallback";
-//------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------
+    /*车辆分享页面地址*/
+    public static final String CAR_SHARE_URL = STATIC_WEBSITE + "/carauction/share/index.html" ;
+    /*场次分享页面地址*/
+    public static final String AUCTION_SHARE_URL = STATIC_WEBSITE + "/carauction/share/match.html" ;
+    //------------------------------------------------------------------------------------------------------
     /* 车辆配置，两个选项 */
     public static final List<Map<String, String>> AUTO_CONF_OPTION_TWO = new ArrayList<>(
             Arrays.asList(
