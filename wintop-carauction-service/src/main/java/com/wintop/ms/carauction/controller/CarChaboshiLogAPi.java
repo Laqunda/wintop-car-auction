@@ -269,6 +269,46 @@ public class CarChaboshiLogAPi {
     }
 
     /**
+     * 查询查博士日志列表
+     */
+    @ApiOperation(value = "查询查博士近30天成功数据")
+    @RequestMapping(value = "/recentPayed",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<ListEntity<CarChaboshiLog>> recentPayed(@RequestBody JSONObject obj) {
+        ServiceResult<ListEntity<CarChaboshiLog>> result = null;
+        try {
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
+            //店铺
+            if("2".equals(param.get("userType")+"")){
+                List<Long> storeIds = managerUserService.queryStoreScope(obj.getLong("managerId"));
+                param.put("storeIds", storeIds);
+                param.remove("managerId");
+            }
+            result = new ServiceResult<>();
+            int count = carChaboshiLogService.recentPayedConut(param);
+            PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
+            param.put("startRowNum", pageEntity.getStartRowNum());
+            param.put("endRowNum", pageEntity.getEndRowNum());
+
+            List<CarChaboshiLog> list = carChaboshiLogService.recentPayedList(param);
+            ListEntity<CarChaboshiLog> listEntity = new ListEntity<>();
+            listEntity.setList(list);
+            listEntity.setCount(count);
+            result.setResult(listEntity);
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询查博士日志列表", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+
+        return result;
+    }
+
+    /**
      * 检查vin码是否支持查询
      */
     @ApiOperation(value = "检查vin码是否支持查询")

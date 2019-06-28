@@ -5,6 +5,7 @@ import com.wintop.ms.carauction.core.config.CarStatusEnum;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
+import com.wintop.ms.carauction.mapper.read.IWtProvinceReadDao;
 import com.wintop.ms.carauction.model.*;
 import com.wintop.ms.carauction.service.*;
 import com.wintop.ms.carauction.util.utils.IdWorker;
@@ -71,6 +72,12 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
 
     @Autowired
     private ICarAppInfoService appInfoService;
+
+    @Autowired
+    private WtProvinceModel provinceModel;
+
+    @Autowired
+    private WtCityModel cityModel;
     /**
      * 查询评估采购单信息
      *
@@ -337,8 +344,14 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
         detail.setOriginalPrice(oreder.getNewCarPrice());
         detail.setRemark(a.getRemark());
         detail.setRemarkPhoto(a.getOtherPhoto());
-        detail.setVehicleAttributionCity(a.getRegionId());
-        detail.setVehicleAttributionCityCn(oreder.getCarAddress());
+        if(a.getRegionId() != null && !"".equals(a.getRegionId())){
+            WtCity city = cityModel.findById(Long.parseLong(a.getRegionId()));
+            WtProvince province = provinceModel.findById(city.getProvinceId());
+            detail.setVehicleAttributionCity(a.getRegionId());
+            detail.setVehicleAttributionCityCn(oreder.getCarAddress());
+            detail.setVehicleAttributionProvince(province.getProvinceId()+"");
+            detail.setVehicleAttributionProvinceCn(province.getProvinceName());
+        }
         detail.setCreateTime(new Date());
         detail.setCreateUser(a.getCreateUser() + "");
         autoInfoDetailModel.insert(detail);

@@ -165,6 +165,16 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
     }
 
     @Override
+    public int recentPayedConut(Map<String, Object> map) {
+        return model.recentPayedConut(map);
+    }
+
+    @Override
+    public List<CarChaboshiLog> recentPayedList(Map<String, Object> map) {
+        return model.recentPayedList(map);
+    }
+
+    @Override
     public void updateIsOpen(Map map) {
         model.updateIsOpen(map);
     }

@@ -69,6 +69,21 @@ public interface ICarChaboshiLogService
 	int savePayLog(CarFinancePayLog payLog);
 
 	/**
+	 * 查询查博士近30天成功数据 条数
+	 * @param map
+	 * @return
+	 */
+	int recentPayedConut(Map<String,Object> map);
+
+	/**
+	 * 查询查博士近30天成功数据
+	 * @param map
+	 * @return
+	 */
+	List<CarChaboshiLog> recentPayedList (Map<String,Object> map);
+
+
+	/**
 	 * 店铺查询查博士
 	 */
 	ServiceResult<Map<String, Object>> searchForStore(JSONObject obj);

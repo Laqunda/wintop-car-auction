@@ -29,6 +29,19 @@ public interface CarChaboshiLogReadDao
      */
 	public List<CarChaboshiLog> selectCarChaboshiLogList(Map<String,Object> map);
 
-
 	int selectCount(Map<String,Object> map);
+
+	/**
+	 * 查询查博士近30天成功数据条数
+	 * @param map
+	 * @return
+	 */
+	int recentPayedConut(Map<String,Object> map);
+	/**
+	 * 查询查博士近30天成功数据
+	 * @param map
+	 * @return
+	 */
+	public List<CarChaboshiLog> recentPayedList(Map<String,Object> map);
+
 }

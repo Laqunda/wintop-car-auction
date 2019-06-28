@@ -147,4 +147,40 @@
         where id = #{id}
     </select>
 
+    <!-- 查询查博士近30天成功数据计数 -->
+    <select id="recentPayedConut" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select count(*) from car_chaboshi_log ccl
+        <where>
+            ccl.vin = #{vin}
+            and (ccl.user_id = #{userId} or ccl.is_open = '1')
+            and DATE_ADD(ccl.create_time,INTERVAL 1 MONTH)  &gt;= NOW()
+            <if test="storeIds != null">
+                and ccl.store_id in
+                <foreach collection="storeIds" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询查博士近30天成功数据 -->
+    <select id="recentPayedList" parameterType="java.util.Map"
+            resultMap="CarChaboshiLogResult">
+        select
+        <include refid="selectCarChaboshiLogVo"/>
+        from car_chaboshi_log ccl
+        <where>
+            ccl.vin = #{vin}
+            and (ccl.user_id = #{userId} or ccl.is_open = '1')
+            and DATE_ADD(ccl.create_time,INTERVAL 1 MONTH)  &gt;= NOW()
+            <if test="storeIds != null">
+                and ccl.store_id in
+                <foreach collection="storeIds" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
 </mapper>

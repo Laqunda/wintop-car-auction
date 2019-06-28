@@ -11,6 +11,7 @@ import com.wintop.ms.carauction.core.entity.AppUser;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,12 +77,11 @@ public class CarChaboshiLogApi {
             return new ResultModel(false, ResultCode.NO_PARAM.value(), ResultCode.NO_PARAM.getRemark(), null);
         }
         map.put("userId", userId);
-        map.put("fs", DateUtils.addMonths(new Date(), -1));
         map.put("responseResult", "1");
 //        map.put("userType", "1");
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT + "/service/carChaboshiLog/list"))
+                        .post(URI.create(Constants.ROOT + "/service/carChaboshiLog/recentPayed"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map), JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);

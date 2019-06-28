@@ -49,6 +49,24 @@ public class CarChaboshiLogModel {
     }
 
     /**
+     * 查询查博士近30天成功数据 条数
+     * @param map
+     * @return
+     */
+    public int recentPayedConut(Map<String,Object> map) {
+        return readDao.recentPayedConut(map);
+    }
+
+    /**
+     * 查询查博士近30天成功数据
+     * @param map
+     * @return
+     */
+    public List<CarChaboshiLog> recentPayedList(Map<String,Object> map){
+        return readDao.recentPayedList(map);
+    }
+
+    /**
      * 新增查博士日志
      *
      * @param carChaboshiLog 查博士日志信息
