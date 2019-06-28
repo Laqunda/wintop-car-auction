@@ -69,7 +69,7 @@ public class CarManagerRoleLogApi {
         map.put("managerId", managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
-                        .post(URI.create(Constants.ROOT+"/service/carManagerRoleLog/saveOrUpdate"))
+                        .post(URI.create(Constants.ROOT+"/service/carManagerRoleLog/queryAudit"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
