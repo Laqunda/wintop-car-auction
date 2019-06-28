@@ -169,4 +169,25 @@ public class CarStoreApi {
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
+
+    /**
+     * 查询中心的门店
+     *@Author:admin
+     *@date 2018/3/14
+     *@param:map
+     */
+    @ApiOperation(value = "查询中心的门店")
+    @RequestMapping(value = "/selectForCenterByCondition",
+            consumes = "application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @RequestAuth(false)
+    public ResultModel selectForCenterByCondition(@RequestBody  Map<String,Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carStore/selectForCenterByCondition"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.LIST);
+    }
 }

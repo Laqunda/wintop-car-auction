@@ -23,6 +23,8 @@
     <result column="region_id" property="regionId" jdbcType="BIGINT" />
     <result column="balance" property="balance" jdbcType="DECIMAL" />
     <result column="checked" property="checked" jdbcType="VARCHAR" />
+    <result column="center_id" property="centerId" jdbcType="BIGINT" />
+    <result column="center_store_id" property="centerStoreId" jdbcType="BIGINT" />
   </resultMap>
 
   <resultMap id="StoreResultMap" type="com.wintop.ms.carauction.entity.CommonNameVo">
@@ -102,17 +104,20 @@
     where t1.status='1'
     order by t1.simple_name
   </select>
-  <select id="selectForCenterByCondition" parameterType="java.util.Map" resultMap="StoreResultMap">
-    select
-    <include refid="Base_Column_List" />,
-    if (ccs.store_id is null,'0','1') as checked
-    from car_store cs
-    left join car_center_store ccs on cs.id = ccs.store_id
-    <trim prefix="WHERE" prefixOverrides="AND|OR ">
-      <if test="centerId != null">
-        and center_id = #{centerId}
-      </if>
-    </trim>
+  <select id="selectForCenterByCondition" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select * from (
+      select
+      cs.name,cs.simple_name,cs.id,ccs.center_id,ccs.id as center_store_id,
+      if ((ccs.center_id is not null and center_id = '1'),'1','0') as checked
+      from car_store cs
+      left join car_center_store ccs on cs.id = ccs.store_id
+      <trim prefix="WHERE" prefixOverrides="AND|OR ">
+        <!--<if test="centerId != null">-->
+          <!--and center_id = #{centerId}-->
+        <!--</if>-->
+      </trim>
+    ) a
+    order by checked desc
   </select>
   <select id="selectByCenter" resultMap="StoreResultMap" parameterType="java.lang.Long">
     select

@@ -93,6 +93,14 @@ public class CarStore implements Serializable {
      */
     private BigDecimal balance;
     /**
+     * 中心id
+     */
+    private Long centerId;
+    /**
+     * 关联中心id
+     */
+    private Long centerStoreId;
+    /**
      * @return id
      */
     public Long getId() {
@@ -343,5 +351,21 @@ public class CarStore implements Serializable {
 
     public void setChecked(String checked) {
         this.checked = checked;
+    }
+
+    public Long getCenterId() {
+        return centerId;
+    }
+
+    public void setCenterId(Long centerId) {
+        this.centerId = centerId;
+    }
+
+    public Long getCenterStoreId() {
+        return centerStoreId;
+    }
+
+    public void setCenterStoreId(Long centerStoreId) {
+        this.centerStoreId = centerStoreId;
     }
 }
