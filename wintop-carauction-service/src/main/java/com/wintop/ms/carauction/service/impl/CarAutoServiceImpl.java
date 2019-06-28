@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.wintop.ms.carauction.core.config.CarStatusEnum;
 import com.wintop.ms.carauction.core.config.CarTypeEnum;
 import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
@@ -351,8 +352,12 @@ public class CarAutoServiceImpl implements ICarAutoService {
             }
         }
         String transferFlag = map.get("transferFlag")+"";
-        //更改销售渠道类型
         CarAutoAuction carAutoAuction = new CarAutoAuction();
+        //如果不是草稿车查询车辆竞拍信息
+        if(!carAuto.getStatus().equals(CarStatusEnum.DRAFT.value())){
+            carAutoAuction = autoAuctionModel.selectByPrimaryKey(carAuto.getAutoAuctionId());
+        }
+        //更改销售渠道类型
         if(CarTypeEnum.TRANSFER_FLAG_3.value().equals(transferFlag) || CarTypeEnum.TRANSFER_FLAG_4.value().equals(transferFlag)){
             //转零售
             carAuto.setSaleFlag(CarTypeEnum.SALE_FLAG_RETAIL.value());
@@ -368,20 +373,42 @@ public class CarAutoServiceImpl implements ICarAutoService {
             carAutoAuction.setAuctionType(CarTypeEnum.TRANSFER_FLAG_6.value().equals(transferFlag)? CarTypeEnum.AUCTION_TYPE_SCENE.value() : CarTypeEnum.AUCTION_TYPE_ONLINE.value());
         }
         carAuto.setTransferFlag(transferFlag);
-        //更新车辆信息
-        carAutoModel.updateByPrimaryKeySelective(carAuto);
-        carAutoAuction.setId(carAuto.getAutoAuctionId());
         carAutoAuction.setAuctionStartTime(null);
-        autoAuctionModel.updateByPrimaryKeySelective(carAutoAuction);
+        carAutoAuction.setAuctionEndTime(null);
+        carAutoAuction.setTopBidTime(null);
+        carAutoAuction.setTopPricerId(null);
+        carAutoAuction.setTopBidPrice(null);
+        carAutoAuction.setBidersCount(null);
+        carAutoAuction.setBidsCount(null);
+        carAutoAuction.setStatus("1");
+        //如果不是草稿车新建车辆竞拍信息
+        if(!carAuto.getStatus().equals(CarStatusEnum.DRAFT.value())){
+            carAutoAuction.setId(idWorker.nextId());
+            carAutoAuction.setCreatePerson(userId);
+            carAutoAuction.setCreateTime(new Date());
+            autoAuctionModel.insert(carAutoAuction);
+        }else{
+            carAutoAuction.setId(carAuto.getAutoAuctionId());
+            carAutoAuction.setModifyPerson(userId);
+            carAutoAuction.setModifyTime(new Date());
+            autoAuctionModel.updateByPrimaryKeySelective(carAutoAuction);
+        }
+        //更新车辆信息
+        carAuto.setAutoAuctionId(carAutoAuction.getId());
+        carAuto.setStatus(CarStatusEnum.DRAFT.value());
+        carAutoModel.updateByPrimaryKeySelective(carAuto);
         // 日志信息记录
         CarManagerUser user = userModel.selectByPrimaryKey(userId);
         CarAutoLog carAutoLog = new CarAutoLog();
         IdWorker idWorker=new IdWorker(10);
         carAutoLog.setId(idWorker.nextId());
         carAutoLog.setAutoId(id);
-        carAutoLog.setMsg(CarTypeEnum.auctionType.get(transferFlag));
+        carAutoLog.setMsg(CarTypeEnum.transferRlag.get(transferFlag));
         carAutoLog.setUserMobile(user.getUserPhone());
         carAutoLog.setUserName(user.getUserName());
+        carAutoLog.setTime(new Date());
+        carAutoLog.setUserId(userId);
+        carAutoLog.setUserType("2");
         carAutoLog.setStatus("1");
         logModel.insert(carAutoLog);
         return result;
