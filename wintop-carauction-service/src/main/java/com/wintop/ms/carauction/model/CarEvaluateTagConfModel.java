@@ -72,7 +72,7 @@ public class CarEvaluateTagConfModel {
     }
 
 
-    public Integer deleteByCondtion(Map<String,Object> map){
-        return writeDao.deleteByCondtion(map);
+    public Integer deleteByCondition(Map<String,Object> map){
+        return writeDao.deleteByCondition(map);
     }
 }

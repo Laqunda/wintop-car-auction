@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 查询查博士查询权限表
@@ -50,45 +51,26 @@ public class CarManagerRoleLogApi {
     private ICarManagerRoleDataService carManagerRoleDataService;
 
     /***
-     * 查询查博士查询权限商户
+     * 查询查博士查询权限商户审核列表
      * @return
      */
     @RequestMapping( value = "/list",
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8" )
-    public ServiceResult<Map<String,Object>> list(@RequestBody JSONObject obj) {
-        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+    public ServiceResult<List<CarManagerRoleLog>> list(@RequestBody JSONObject obj) {
+        ServiceResult<List<CarManagerRoleLog>> result = new ServiceResult<>();
         try{
             Map param = JSONObject.toJavaObject(obj, Map.class);
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
-
-            Long managerId = obj.getLong("managerId");
-            CarManagerUser user = carManagerUserService.selectByPrimaryKey(managerId, false);
-            if (!getJudgeRole(ManagerRole.JXD_ESCFZR,user.getRoleId())
-                    || (getJudgeRole(ManagerRole.JXD_PGS,user.getRoleId())
-                && getJudgeRole(ManagerRole.JXD_HYGLY,user.getRoleId())
-                )){
-                result.setSuccess(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
-                return result;
-            }
-            if (getJudgeRole(ManagerRole.JXD_PGS,user.getRoleId())
-                    && getJudgeRole(ManagerRole.JXD_HYGLY,user.getRoleId())) {
-                List<CarManagerRoleData> carManagerRoleDataList = carManagerRoleDataService.selectForCondition(Collections.singletonMap("managerId", managerId));
-                if (CollectionUtils.isNotEmpty(carManagerRoleDataList) && carManagerRoleDataList.get(0).getIsRole().equals(USE)){
-                    result.setSuccess(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
-                    return result;
-                }
-            }
-            param.put("status", CarManagerRoleLogEnum.PASS.getVal());
-            List<CarManagerRoleLog> list = carManagerRoleLogService.selectByCondtion(param);
+            List<CarManagerRoleLog> list = carManagerRoleLogService.selectByCondition(param);
             if (CollectionUtils.isNotEmpty(list)) {
-                result.setResult(Collections.singletonMap("data",list.get(0)));
+                result.setResult(list);
             }
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         }catch (Exception e){
             e.printStackTrace();
-            logger.info("查询有查博士查询权限商户",e);
+            logger.info("查询查博士查询权限商户审核列表",e);
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
         }
         return result;
@@ -98,11 +80,57 @@ public class CarManagerRoleLogApi {
         return Long.valueOf(managerRole.value() + "").equals(roleId);
     }
 
+    /**
+     * 查看是否存在查询权限
+     */
+    @RequestMapping( value = "/queryAudit",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8" )
+    public ServiceResult<Map<String,Object>> queryAudit(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+        Long managerId = obj.getLong("managerId");
+        CarManagerUser user = carManagerUserService.selectByPrimaryKey(managerId, false);
+        if (!getJudgeRole(ManagerRole.JXD_ESCFZR, user.getRoleId())) {
+            result.setSuccess(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
+            return result;
+        } else if (getJudgeRole(ManagerRole.JXD_PGS, user.getRoleId())
+                && getJudgeRole(ManagerRole.JXD_HYGLY, user.getRoleId())) {
+            result.setSuccess(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
+            return result;
+        }
+        if (getJudgeRole(ManagerRole.JXD_ESCFZR, user.getRoleId())
+                && (!getJudgeRole(ManagerRole.JXD_PGS, user.getRoleId())
+                || !getJudgeRole(ManagerRole.JXD_HYGLY, user.getRoleId()))) {
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+            return result;
+        }
+        List<CarManagerRoleData> carManagerRoleDataList = carManagerRoleDataService.selectForCondition(Collections.singletonMap("managerId", managerId));
+        if (CollectionUtils.isNotEmpty(carManagerRoleDataList) && carManagerRoleDataList.get(0).getIsRole().equals(USE)){
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+            return result;
+        } else {
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
+            List<CarManagerRoleLog> managerRoleLogList = carManagerRoleLogService.selectByCondition(param);
+            if (CollectionUtils.isNotEmpty(managerRoleLogList)) {
+                List<CarManagerRoleLog> passList = managerRoleLogList.stream().filter(carManagerRoleLog -> carManagerRoleLog.getStatus().equals(CarManagerRoleLogEnum.PASS)).collect(Collectors.toList());
+                if (CollectionUtils.isEmpty(passList)){
+                    result.setSuccess(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
+                    return result;
+                }
+            }
+        }
+        result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        return result;
+    }
+
+
     /***
      * 保存或修改查博士查询权限商户
      * @return
      */
-    @RequestMapping( value = "/saveAudit",
+    @RequestMapping( value = "/saveOrUpdate",
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8" )

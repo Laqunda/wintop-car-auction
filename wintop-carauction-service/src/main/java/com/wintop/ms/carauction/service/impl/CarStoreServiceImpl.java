@@ -108,4 +108,8 @@ public class CarStoreServiceImpl implements ICarStoreService {
         return storeModel.idByExample(map);
     }
 
+    @Override
+    public List<CarStore> selectForCenterByCondition(Map<String, Object> map) {
+        return storeModel.selectForCenterByCondition(map);
+    }
 }

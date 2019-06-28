@@ -22,6 +22,7 @@
     <result column="del_person" property="delPerson" jdbcType="BIGINT" />
     <result column="region_id" property="regionId" jdbcType="BIGINT" />
     <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="checked" property="checked" jdbcType="VARCHAR" />
   </resultMap>
 
   <resultMap id="StoreResultMap" type="com.wintop.ms.carauction.entity.CommonNameVo">
@@ -100,6 +101,18 @@
     from car_store t1
     where t1.status='1'
     order by t1.simple_name
+  </select>
+  <select id="selectForCenterByCondition" parameterType="java.util.Map" resultMap="StoreResultMap">
+    select
+    <include refid="Base_Column_List" />,
+    if (ccs.store_id is null,'0','1') as checked
+    from car_store cs
+    left join car_center_store ccs on cs.id = ccs.store_id
+    <trim prefix="WHERE" prefixOverrides="AND|OR ">
+      <if test="centerId != null">
+        and center_id = #{centerId}
+      </if>
+    </trim>
   </select>
   <select id="selectByCenter" resultMap="StoreResultMap" parameterType="java.lang.Long">
     select

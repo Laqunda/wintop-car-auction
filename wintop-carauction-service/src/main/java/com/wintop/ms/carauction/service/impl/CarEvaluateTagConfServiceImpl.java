@@ -108,6 +108,6 @@ public class CarEvaluateTagConfServiceImpl implements ICarEvaluateTagConfService
      */
     @Override
     public Integer deleteByCondition(Map<String,Object> map){
-        return carEvaluateTagConfModel.deleteByCondtion(map);
+        return carEvaluateTagConfModel.deleteByCondition(map);
     }
 }

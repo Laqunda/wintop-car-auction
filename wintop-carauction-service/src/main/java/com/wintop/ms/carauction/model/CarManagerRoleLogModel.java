@@ -22,8 +22,8 @@ public class CarManagerRoleLogModel {
         return readDao.selectByPrimaryKey(id);
     }
 
-    public List<CarManagerRoleLog> selectByCondtion(Map<String,Object> map){
-        return readDao.selectByCondtion(map);
+    public List<CarManagerRoleLog> selectByCondition(Map<String,Object> map){
+        return readDao.selectByCondition(map);
     }
 
     public int deleteByPrimaryKey(Long id){

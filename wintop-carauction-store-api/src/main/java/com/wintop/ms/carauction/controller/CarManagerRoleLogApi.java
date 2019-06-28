@@ -39,9 +39,9 @@ public class CarManagerRoleLogApi {
     }
 
     /**
-     * 查询查博士查询权限商户
+     * 查询查博士查询权限商户审核列表
      */
-    @ApiOperation(value = "查询查博士查询权限商户")
+    @ApiOperation(value = "查询查博士查询权限商户审核列表")
     @PostMapping(value = "/list",produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
@@ -53,6 +53,23 @@ public class CarManagerRoleLogApi {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carManagerRoleLog/list"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return  ApiUtil.getResultModel(response, ApiUtil.LIST);
+    }
+
+    /**
+     * 保存查博士查询权限商户
+     */
+    @ApiOperation(value = "保存查博士查询权限商户")
+    @PostMapping(value = "/queryAudit",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResultModel queryAudit(@RequestBody Map<String,Object> map, @CurrentUserId Long managerId) {
+        map.put("managerId", managerId);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carManagerRoleLog/saveOrUpdate"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);

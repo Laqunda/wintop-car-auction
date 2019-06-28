@@ -29,5 +29,5 @@ public interface ICarEvaluateTagConfWriteDao {
      * @param map
      * @return
      */
-    Integer deleteByCondtion(Map<String,Object> map);
+    Integer deleteByCondition(Map<String,Object> map);
 }

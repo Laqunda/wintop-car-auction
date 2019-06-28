@@ -9,7 +9,7 @@ public interface ICarManagerRoleLogService {
 
     public CarManagerRoleLog selectByPrimaryKey(Long id);
 
-    public List<CarManagerRoleLog> selectByCondtion(Map<String, Object> map);
+    public List<CarManagerRoleLog> selectByCondition(Map<String, Object> map);
 
     public int deleteByPrimaryKey(Long id);
 

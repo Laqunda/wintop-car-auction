@@ -79,6 +79,11 @@ public class CarStore implements Serializable {
     private String remark;
 
     private Long regionId;
+
+    /**
+     * 选中状态
+     */
+    private String checked;
     /**
      * 所属地区
      */
@@ -330,5 +335,13 @@ public class CarStore implements Serializable {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public String getChecked() {
+        return checked;
+    }
+
+    public void setChecked(String checked) {
+        this.checked = checked;
     }
 }

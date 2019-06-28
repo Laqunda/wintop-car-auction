@@ -9,10 +9,15 @@
     <result column="log_msg" property="logMsg" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="store_id" property="storeId" jdbcType="BIGINT" />
+    <result column="vin" property="vin" jdbcType="VARCHAR" />
+    <result column="search_type" property="searchType" jdbcType="VARCHAR" />
+    <result column="edition" property="edition" jdbcType="VARCHAR" />
+    <result column="vehicle_type" property="vehicleType" jdbcType="VARCHAR" />
+    <result column="photo" property="photo" jdbcType="VARCHAR" />
     <result column="create_person" property="createPerson" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, role_data_id, status, status_cn, log_msg, create_time, create_person
+    id, role_data_id, status, status_cn, log_msg, create_time, vin, search_type, edition, vehicle_type, photo, create_person
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -20,7 +25,7 @@
     from car_manager_role_log
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <select id="selectByCondtion" resultMap="BaseResultMap">
+  <select id="selectByCondition" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from car_manager_role_log
@@ -42,6 +47,18 @@
       </if>
       <if test="storeId != null" >
         AND store_id = #{storeId,jdbcType=TIMESTAMP}
+      </if>
+      <if test="vin != null" >
+        AND vin = #{vin,jdbcType=TIMESTAMP}
+      </if>
+      <if test="searchType != null" >
+        AND search_type = #{searchType,jdbcType=TIMESTAMP}
+      </if>
+      <if test="edition != null" >
+        AND edition = #{edition,jdbcType=TIMESTAMP}
+      </if>
+      <if test="vehicleType != null" >
+        AND vehicle_type = #{vehicleType,jdbcType=TIMESTAMP}
       </if>
       <if test="createPerson != null" >
         AND create_person = #{createPerson,jdbcType=BIGINT}

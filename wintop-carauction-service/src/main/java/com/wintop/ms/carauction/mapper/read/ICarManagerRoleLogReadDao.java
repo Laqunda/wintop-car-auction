@@ -10,5 +10,5 @@ public interface ICarManagerRoleLogReadDao {
 
     CarManagerRoleLog selectByPrimaryKey(Long id);
 
-    List<CarManagerRoleLog> selectByCondtion(Map<String,Object> map);
+    List<CarManagerRoleLog> selectByCondition(Map<String,Object> map);
 }

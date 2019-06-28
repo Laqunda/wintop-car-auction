@@ -1,6 +1,8 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -215,6 +217,32 @@ public class CarStoreApi {
         try {
             CarStore carStore = storeService.selectByPrimaryKey(obj.getLong("id"));
             result.setResult(carStore);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("查询店铺失败",e);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /***
+     * 查询店铺
+     * @param obj
+     * @return
+     */
+    @RequestMapping(value = "/selectForCenterByCondition",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<List<CarStore>> selectForCenterByCondition(@RequestBody JSONObject obj) {
+        ServiceResult<List<CarStore>> result = new ServiceResult<>();
+
+        try {
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
+
+            result.setResult(carStoreService.selectForCenterByCondition(param));
             result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
         }catch (Exception e){
             e.printStackTrace();

@@ -49,4 +49,11 @@ public interface ICarStoreReadDao {
      * @return
      */
     List<Long> queryStoreListByRole(Map<String,Object> map);
+
+    /**
+     * 查询中心的门店
+     * @param map
+     * @return
+     */
+    List<CarStore> selectForCenterByCondition(Map<String, Object> map);
 }

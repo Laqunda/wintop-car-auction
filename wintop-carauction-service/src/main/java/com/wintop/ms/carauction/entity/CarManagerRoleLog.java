@@ -43,6 +43,31 @@ public class CarManagerRoleLog {
      */
     private Long storeId;
 
+    /**
+     * vin 码
+     */
+    private String vin;
+
+    /**
+     * 1:老订单查询 2：新的查询
+     */
+    private String searchType;
+
+    /**
+     * 查询版本 1维修版 2综合版
+     */
+        private String edition;
+
+    /**
+     * 车型名称
+     */
+    private String vehicleType;
+
+    /**
+     * 车型图片
+     */
+    private String photo;
+
     public Long getId() {
         return id;
     }
@@ -105,5 +130,45 @@ public class CarManagerRoleLog {
 
     public void setStoreId(Long storeId) {
         this.storeId = storeId;
+    }
+
+    public String getVin() {
+        return vin;
+    }
+
+    public void setVin(String vin) {
+        this.vin = vin;
+    }
+
+    public String getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(String searchType) {
+        this.searchType = searchType;
+    }
+
+    public String getEdition() {
+        return edition;
+    }
+
+    public void setEdition(String edition) {
+        this.edition = edition;
+    }
+
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }
