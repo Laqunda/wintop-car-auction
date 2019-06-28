@@ -38,7 +38,7 @@ public class ScheduleJob {
                         .body(new HashMap()),Integer.class);
     }
 
-    @Scheduled( fixedRate = 1000 )
+//    @Scheduled( fixedRate = 1000 )
     public void startAuctionViewed(){
         this.restTemplate.exchange(
                 RequestEntity

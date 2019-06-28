@@ -512,10 +512,10 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
         int maxSort = model.getMaxSortForActionCar(carLocaleAuctionCar.getAuctionId());
         //获取本场最近正在竞拍的车的序号
         int minSort = model.getMinSortForActionCar(carLocaleAuctionCar.getAuctionId());
-        if (maxSort==carLocaleAuctionCar.getSort() || minSort==0) {
-            //如果当前二拍车辆就是最后一辆车 或者 没有正在竞拍中的车辆（即车辆全部拍卖完成并未关闭场次） 则直接新增一条竞拍，序号+1
+        if (maxSort==carLocaleAuctionCar.getSort() || minSort==0 || maxSort == minSort) {
+            //如果当前二拍车辆就是最后一辆车 或者 没有正在竞拍中的车辆（即车辆全部拍卖完成并未关闭场次） 或者有最后一辆车正在参拍 则直接新增一条竞拍，序号+1
             int newSort = carLocaleAuctionCar.getSort();
-            if (minSort==0){
+            if (minSort==0 || maxSort == minSort){
                 newSort = maxSort;
             }
             insertAuctionCar.setSort(newSort + 1);

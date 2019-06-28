@@ -2,6 +2,7 @@ package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.annotation.AuthPublic;
@@ -834,8 +835,7 @@ public class CarLocaleAuctionApi {
                         .body(map),JSONObject.class);
         ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
 
-        List<Map<String, Object>> totalList = Lists.newArrayList();
-        Map<String, Object> param = Maps.newHashMap();
+        List<Map<String, Object>> allTotalList = Lists.newArrayList();
         HSSFSheet sheet = workbook.getSheetAt(0);
         if (response.getStatusCode() == HttpStatus.OK) {
             JSONObject obj = response.getBody();
@@ -843,27 +843,49 @@ public class CarLocaleAuctionApi {
             if (result != null && result.size() > 0) {
                 // 获取
                 for (int i = 0; i < result.size(); i++) {
+                    Map<String, Object> param = Maps.newHashMap();
                     JSONObject object = result.getJSONObject(i);
                     param.put("storeName", object.getString("storeName"));
+                    param.put("carAutoNo", object.getString("carAutoNo"));
                     if (object.getString("auctionStatus").equals("2")) {
                         param.put("successFlag", true);
                     } else{
                         param.put("successFlag", false);
                     }
-                    totalList.add(param);
+                    allTotalList.add(param);
                 }
                 List<ExportLocaleAuctionDetail> resultList = Lists.newArrayList();
                 // 汇总
-                Map<String, List<Map<String, Object>>> storeGroupList = totalList.stream().collect(Collectors.groupingBy(val -> val.get("storeName").toString()));
-                storeGroupList.forEach((key,value)->{
+                List<Map<String, Object>> carTotalList = Lists.newArrayList();
+                Map<String, List<Map<String, Object>>> tempGroupList = allTotalList.stream().collect(Collectors.groupingBy(val -> val.get("storeName").toString().concat("_").concat(val.get("carAutoNo").toString())));
+                tempGroupList.forEach((key,value)->{
+                    Map<String, Object> carMap = Maps.newHashMap();
+                    // TODO 需要进行二次分组获取结果
+                    List<String> tempList = Splitter.on("_").splitToList(key);
+                    String storeName = tempList.get(0);
+
+                    carMap.put("storeName", storeName);
                     int successCount = value.stream().filter(val -> Boolean.valueOf(val.get("successFlag").toString())).collect(Collectors.toList()).size();
-                    int auctionCount = value.size();
+                    if (successCount > 0){
+                        carMap.put("successFlag", true);
+                    } else{
+                        carMap.put("successFlag", false);
+                    }
+                    carTotalList.add(carMap);
+                });
+                Map<String, List<Map<String, Object>>> storeTotalList = carTotalList.stream().collect(Collectors.groupingBy(val -> val.get("storeName").toString()));
+                storeTotalList.forEach((key,value) ->{
                     ExportLocaleAuctionDetail detail = new ExportLocaleAuctionDetail();
+                    int successCount = value.stream().filter(val -> Boolean.valueOf(val.get("successFlag").toString())).collect(Collectors.toList()).size();
+                    int totalCount = value.size();
+
                     detail.setStoreName(key);
-                    detail.setAuctionNum(auctionCount);
+                    detail.setAuctionNum(totalCount);
                     detail.setSucessNum(successCount);
                     if (successCount != 0){
-                        detail.setMaxRate(BigDecimal.valueOf(successCount/auctionCount).multiply(BigDecimal.valueOf(100)).setScale(2).toPlainString()+"%");
+                        detail.setMaxRate(BigDecimal.valueOf(Double.valueOf(successCount+""))
+                                .divide(BigDecimal.valueOf(Double.valueOf(totalCount + "")),BigDecimal.ROUND_HALF_UP)
+                                .multiply(BigDecimal.valueOf(100)).setScale(2).toPlainString()+"%");
                     } else {
                         detail.setMaxRate(BigDecimal.ZERO+"%");
                     }
