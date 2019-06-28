@@ -23,3 +23,8 @@ server:
 logging:
   level:
     org.springframework.cloud: debug
+
+#华为文件上传账号
+huaweiUploadFile:
+  url: http://119.3.246.209/file/uploadFile
+  token: bearer75e519b7-8e3d-49cb-a435-c8e2b7ff1ae6
