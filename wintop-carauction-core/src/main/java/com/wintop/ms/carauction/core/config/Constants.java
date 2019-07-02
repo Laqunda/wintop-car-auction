@@ -40,6 +40,8 @@ public class Constants {
     public static final String TOKEN_KEY = "TOKEN_KEY";
     /*用户redis 存放用户登陆后用户信息 键名*/
     public static final String APP_USER_REDIS_KEY = "APP_USER_REDIS_KEY";
+    /*用户redis 存放用户登陆后用户信息 键名*/
+    public static final String CAR_MANAGER_USER_REDIS_KEY = "CAR_MANAGER_USER_REDIS_KEY";
     /*redis中存放的登陆手机号验证码前缀 实际使用需要将手机号拼接到后面组成key*/
     public static final String LOGIN_VALIDATE_CODE_KEY = "LOGIN_VALIDATE_CODE_";
     /*redis中存放的修改密码用手机号验证码前缀 实际使用需要将手机号拼接到后面组成key*/
