@@ -26,6 +26,10 @@ public class CarManagerRoleLogModel {
         return readDao.selectByCondition(map);
     }
 
+    public int selectByConditionCount(Map<String,Object> map){
+        return readDao.selectByConditionCount(map);
+    }
+
     public int deleteByPrimaryKey(Long id){
         return writeDao.deleteByPrimaryKey(id);
     }

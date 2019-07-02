@@ -5,6 +5,7 @@ import com.wintop.ms.carauction.core.annotation.AppApiVersion;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.config.Constants;
+import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import io.swagger.annotations.ApiOperation;
@@ -47,8 +48,16 @@ public class CarManagerRoleLogApi {
     @AppApiVersion(value = "2.0")
     public ResultModel list(@RequestBody Map<String,Object> map, @CurrentUserId Long managerId) {
         // 状态 1提交申请，2待审核
-        if (Objects.isNull(map.get("status"))) {
-            return new ResultModel(false, 101, "缺少参数", null);
+        if (Objects.isNull(map.get("type"))) {
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        if(map.get("page")==null || map.get("limit")==null){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        if("1".equals(map.get("type"))){
+            map.put("applyId", managerId);
+        }else{
+            map.put("status", "1");
         }
         map.put("managerId", managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
@@ -56,7 +65,7 @@ public class CarManagerRoleLogApi {
                         .post(URI.create(Constants.ROOT+"/service/carManagerRoleLog/list"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
-        return  ApiUtil.getResultModel(response, ApiUtil.LIST);
+        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
     /**

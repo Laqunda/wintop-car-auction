@@ -9,9 +9,14 @@ public class CarManagerRoleLog {
     private Long id;
 
     /**
-     * 用户id
+     * 申请人
      */
-    private Long roleDataId;
+    private Long applyId;
+
+    /**
+     * 申请时间
+     */
+    private Date applyTime;
 
     /**
      * 审核状态 1提交申请，2审核通过，-1审核不通过 3审核撤销
@@ -68,6 +73,11 @@ public class CarManagerRoleLog {
      */
     private String photo;
 
+    /**
+     * 申请人名称
+     */
+    private String applyName;
+
     public Long getId() {
         return id;
     }
@@ -76,12 +86,20 @@ public class CarManagerRoleLog {
         this.id = id;
     }
 
-    public Long getRoleDataId() {
-        return roleDataId;
+    public Long getApplyId() {
+        return applyId;
     }
 
-    public void setRoleDataId(Long roleDataId) {
-        this.roleDataId = roleDataId;
+    public void setApplyId(Long applyId) {
+        this.applyId = applyId;
+    }
+
+    public Date getApplyTime() {
+        return applyTime;
+    }
+
+    public void setApplyTime(Date applyTime) {
+        this.applyTime = applyTime;
     }
 
     public String getStatus() {
@@ -170,5 +188,13 @@ public class CarManagerRoleLog {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getApplyName() {
+        return applyName;
+    }
+
+    public void setApplyName(String applyName) {
+        this.applyName = applyName;
     }
 }
