@@ -20,11 +20,11 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
-    insert into car_manager_role_log (id, apply_id, apply_time, status,
-      status_cn, log_msg, create_time, store_id，create_person)
-    values (#{id,jdbcType=BIGINT}, #{applyId,jdbcType=BIGINT},#{applyTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR},
-      #{statusCn,jdbcType=VARCHAR}, #{logMsg,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{storeId,jdbcType=BIGINT}, #{createPerson,jdbcType=BIGINT})
+      insert into car_manager_role_log (id, apply_id, apply_time, status,
+        status_cn, log_msg, create_time, store_id，create_person)
+      values (#{id,jdbcType=BIGINT}, #{applyId,jdbcType=BIGINT},#{applyTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR},
+        #{statusCn,jdbcType=VARCHAR}, #{logMsg,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{storeId,jdbcType=BIGINT}, #{createPerson,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
     insert into car_manager_role_log

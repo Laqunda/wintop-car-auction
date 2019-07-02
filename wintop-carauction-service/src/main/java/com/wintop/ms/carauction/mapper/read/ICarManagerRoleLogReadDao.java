@@ -13,4 +13,8 @@ public interface ICarManagerRoleLogReadDao {
     List<CarManagerRoleLog> selectByCondition(Map<String,Object> map);
 
     int selectByConditionCount(Map<String,Object> map);
+
+    List<CarManagerRoleLog> selectByConditionForPage(Map<String, Object> map);
+
+    Integer selectByConditionForCount(Map<String, Object> map);
 }

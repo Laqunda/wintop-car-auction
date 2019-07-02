@@ -9,7 +9,7 @@ public class CarManagerRoleLog {
     private Long id;
 
     /**
-     * 申请人
+     * 申请人id
      */
     private Long applyId;
 
@@ -78,28 +78,27 @@ public class CarManagerRoleLog {
      */
     private String applyName;
 
+    /**
+     * 审批人名称
+     */
+    private String auditName;
+
+    /**
+     * 店铺名称
+     */
+    private String storeName;
+
+    /**
+     * 店铺简称
+     */
+    private String storeSimpleName;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getApplyId() {
-        return applyId;
-    }
-
-    public void setApplyId(Long applyId) {
-        this.applyId = applyId;
-    }
-
-    public Date getApplyTime() {
-        return applyTime;
-    }
-
-    public void setApplyTime(Date applyTime) {
-        this.applyTime = applyTime;
     }
 
     public String getStatus() {
@@ -196,5 +195,45 @@ public class CarManagerRoleLog {
 
     public void setApplyName(String applyName) {
         this.applyName = applyName;
+    }
+
+    public String getAuditName() {
+        return auditName;
+    }
+
+    public void setAuditName(String auditName) {
+        this.auditName = auditName;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getStoreSimpleName() {
+        return storeSimpleName;
+    }
+
+    public void setStoreSimpleName(String storeSimpleName) {
+        this.storeSimpleName = storeSimpleName;
+    }
+
+    public Long getApplyId() {
+        return applyId;
+    }
+
+    public void setApplyId(Long applyId) {
+        this.applyId = applyId;
+    }
+
+    public Date getApplyTime() {
+        return applyTime;
+    }
+
+    public void setApplyTime(Date applyTime) {
+        this.applyTime = applyTime;
     }
 }

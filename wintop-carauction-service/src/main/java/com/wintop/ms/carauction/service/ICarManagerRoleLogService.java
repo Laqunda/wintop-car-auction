@@ -11,7 +11,7 @@ public interface ICarManagerRoleLogService {
     CarManagerRoleLog selectByPrimaryKey(Long id);
 
     List<CarManagerRoleLog> selectByCondition(Map<String, Object> map);
-    
+
     int selectByConditionCount(Map<String, Object> map);
 
     int deleteByPrimaryKey(Long id);
@@ -25,5 +25,9 @@ public interface ICarManagerRoleLogService {
     int updateByPrimaryKey(CarManagerRoleLog record);
 
     int saveOrUpdate(CarManagerRoleLog record, CarManagerUser user);
+
+    List<CarManagerRoleLog> selectByConditionForPage(Map<String, Object> map);
+
+    Integer selectByConditionForCount(Map<String, Object> map);
 
 }

@@ -26,6 +26,10 @@ public class CarManagerRoleLogModel {
         return readDao.selectByCondition(map);
     }
 
+    public List<CarManagerRoleLog> selectByConditionForPage(Map<String,Object> map) {
+        return readDao.selectByConditionForPage(map);
+    }
+
     public int selectByConditionCount(Map<String,Object> map){
         return readDao.selectByConditionCount(map);
     }
@@ -48,5 +52,9 @@ public class CarManagerRoleLogModel {
 
     public int updateByPrimaryKey(CarManagerRoleLog record){
         return writeDao.updateByPrimaryKey(record);
+    }
+
+    public Integer selectByConditionForCount(Map<String, Object> map){
+        return readDao.selectByConditionForCount(map);
     }
 }
