@@ -90,7 +90,7 @@ public class CarManagerRoleLogApi {
         Long managerId = obj.getLong("managerId");
         CarManagerUser user = carManagerUserService.selectByPrimaryKey(managerId, false);
         if (!getJudgeRoleList(user.getRoleId(),ManagerRole.JXD_ESCFZR.value(),ManagerRole.JXD_HYGLY.value(),ManagerRole.JXD_PGS.value())) {
-            result.setSuccess(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
+            result.setError(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
             return result;
         }
         if (getJudgeRole(ManagerRole.JXD_ESCFZR, user.getRoleId())) {
@@ -109,10 +109,12 @@ public class CarManagerRoleLogApi {
             if (CollectionUtils.isNotEmpty(managerRoleLogList)) {
                 List<CarManagerRoleLog> passList = managerRoleLogList.stream().filter(carManagerRoleLog -> carManagerRoleLog.getStatus().equals(CarManagerRoleLogEnum.PASS.getVal())).collect(Collectors.toList());
                 if (CollectionUtils.isEmpty(passList)){
-                    result.setSuccess(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
+                    result.setError(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
                     return result;
                 }
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+            } else {
+                result.setError(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
             }
         }
         return result;
