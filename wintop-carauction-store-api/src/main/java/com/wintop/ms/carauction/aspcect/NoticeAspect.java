@@ -41,13 +41,13 @@ public class NoticeAspect {
     private RedisManagerTemplate redisManagerTemplate;
 
     @Around( "@annotation(com.wintop.ms.carauction.core.annotation.InfoNotify)" )
-    public void before(ProceedingJoinPoint joinPoint) throws Exception {
+    public Object getAround(ProceedingJoinPoint joinPoint) throws Exception {
         String clazzName = joinPoint.getTarget().getClass().getSimpleName();
         String clazzFullName = joinPoint.getTarget().getClass().getName();
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
         //获取参数名称和值
-        Map<String,Object > nameAndArgs = this.getFieldsName(this.getClass(), clazzFullName, methodName,args);
+        Map<String,Object> nameAndArgs = this.getFieldsName(this.getClass(), clazzFullName, methodName,args);
         JSONObject object = JSONObject.parseObject(JSONObject.toJSONString(nameAndArgs));
         Long managerId = null;
         if (object.containsKey("managerId")) {
@@ -57,7 +57,6 @@ public class NoticeAspect {
             managerId = object.getLong("userId");
         }
 
-
         logger.info(String.format("print managerId=%s,className=%s,methodName=%s", managerId, clazzName, methodName));
         String key = String.format("%s.%s", clazzName, methodName);
         ResultModel resultModel = null;
@@ -65,12 +64,12 @@ public class NoticeAspect {
             resultModel = (ResultModel) joinPoint.proceed();
             // 返回错误，则不需要通知
             if (resultModel.getResultCode() != 100) {
-                return;
+                return resultModel;
             }
         } catch (Throwable throwable) {
             throwable.printStackTrace();
             // 运行过程中失败
-            return;
+            return resultModel;
         }
         // 新增评估
         if (key.equals("CarAssessApi.addSave")) {
@@ -168,6 +167,7 @@ public class NoticeAspect {
                 }
             }
         }
+        return resultModel;
     }
 
     /**
