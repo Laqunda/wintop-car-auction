@@ -60,7 +60,19 @@ public class CarManagerRoleLogApi {
             CarManagerUser user = carManagerUserService.selectByPrimaryKey(managerId, false);
             Map param = JSONObject.toJavaObject(obj, Map.class);
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
-            param.put("storeId", user.getDepartmentId());
+            //待审批
+            if("2".equals(obj.getString("type"))){
+                if(user.getRoleId() != ManagerRole.JXD_ESCFZR.value()){
+                    ListEntity<CarManagerRoleLog> listEntity = new ListEntity<>();
+                    listEntity.setList(null);
+                    listEntity.setCount(0);
+                    result.setResult(listEntity);
+                    result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+                    return result;
+                }else{
+                    param.put("storeId", user.getDepartmentId());
+                }
+            }
             int count = carManagerRoleLogService.selectByConditionCount(param);
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
             param.put("startRowNum", pageEntity.getStartRowNum());

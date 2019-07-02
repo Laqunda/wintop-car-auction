@@ -33,7 +33,8 @@
     from car_manager_role_log
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <select id="selectByConditionCount" resultMap="BaseResultMap">
+
+  <select id="selectByConditionCount" parameterType="java.util.Map" resultType="java.lang.Integer">
     select
     count(1)
     from car_manager_role_log mrl

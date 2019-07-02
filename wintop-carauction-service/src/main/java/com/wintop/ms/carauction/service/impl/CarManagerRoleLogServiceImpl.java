@@ -75,13 +75,6 @@ public class CarManagerRoleLogServiceImpl implements ICarManagerRoleLogService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public int saveOrUpdate(CarManagerRoleLog record, CarManagerUser user) {
-        List<CarManagerRoleLog> entityList = Lists.newArrayList();
-        if (Objects.nonNull(record.getId())) {
-            entityList =  carManagerRoleLogModel.selectByCondition(Collections.singletonMap("id", record.getId()));
-            if (CollectionUtils.isNotEmpty(entityList)) {
-                record.setId(entityList.get(0).getId());
-            }
-        }
         if (Objects.isNull(record.getId())) {
             record.setId(idWorker.nextId());
             record.setApplyId(user.getId());
@@ -91,18 +84,19 @@ public class CarManagerRoleLogServiceImpl implements ICarManagerRoleLogService {
             record.setStatusCn(CarManagerRoleLogEnum.APPLY.getMsg());
             return this.insertSelective(record);
         }
-
         if(!CarManagerRoleLogEnum.CANCEL.getVal().equals(record.getStatus())){
             record.setCreateTime(new Date());
             record.setCreatePerson(user.getId());
         }
         record.setStatusCn(CarManagerRoleLogEnum.PASS.getEnum(record.getStatus()).getMsg());
+        //审核的数据
+        CarManagerRoleLog roleLog = carManagerRoleLogModel.selectByPrimaryKey(record.getId());
         if (CarManagerRoleLogEnum.PASS.getVal().equals(record.getStatus())){
-            CarManagerUser applyUser = carManagerUserService.selectByPrimaryKey(entityList.get(0).getApplyId(), false);
-            JSONObject obj = JSONObject.parseObject(JSONObject.toJSONString(record));
+            CarManagerUser applyUser = carManagerUserService.selectByPrimaryKey(roleLog.getApplyId(), false);
+            JSONObject obj = JSONObject.parseObject(JSONObject.toJSONString(roleLog));
             obj.put("userId", record.getApplyId());
             obj.put("userName", applyUser.getUserName());
-            obj.put("storeId", entityList.get(0).getStoreId());
+            obj.put("storeId", roleLog.getStoreId());
             Map<String, Object> result = carChaboshiLogService.searchForStore(obj).getResult();
             logger.info(String.format("json=%s",JSONObject.toJSONString(result)));
         }
