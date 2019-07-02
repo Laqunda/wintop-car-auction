@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUser;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
+import com.wintop.ms.carauction.core.annotation.InfoNotify;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultStatus;
 import com.wintop.ms.carauction.core.entity.CarManagerUser;
@@ -74,6 +75,7 @@ public class AutoManagerApi {
 
     @PostMapping(value = "initAuto")
     @AuthUserToken
+    @InfoNotify
     @ApiOperation(value = "初始化一辆新车记录" ,notes = "初始化一辆车辆信息")
     public ResponseEntity<ResultModel> initAuto(@CurrentUser CarManagerUser managerUser,
                                                 @ApiParam(value = "二手车、新车",required = true) @RequestParam String ifNew,

@@ -77,6 +77,7 @@ public class CarManagerPageServiceImpl implements ICarManagerPageService {
     /**
      * 根据父节点查询
      */
+    @Override
     public List<TreeEntity> getPageTreeByPId(Map<String, Object> map){
         List<TreeEntity> treeEntities=pageModel.getPageTreeByPId(map);
         for (TreeEntity entity:treeEntities){

@@ -8,6 +8,7 @@ import com.wintop.ms.carauction.core.config.AppUserStatusEnum;
 import com.wintop.ms.carauction.core.config.CarStatusEnum;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultStatus;
+import com.wintop.ms.carauction.core.entity.Notify;
 import com.wintop.ms.carauction.core.entity.RedisAutoData;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.core.model.ResultModel;
@@ -15,6 +16,7 @@ import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.service.*;
 import com.wintop.ms.carauction.util.utils.JPushUtil;
 import com.wintop.ms.carauction.util.utils.RedisAutoManager;
+import com.wintop.ms.carauction.util.utils.RedisManagerTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +34,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping( "service/carAutoSchedule" )
@@ -59,6 +58,9 @@ public class CarAutoSchedule {
     private ICarCustomerViewedAutoService carCustomerViewedAutoService;
     @Autowired
     private ICarAppInfoService appInfoService;
+
+    @Autowired
+    private RedisManagerTemplate redisManagerTemplate;
 
     @Bean
     RestTemplate restTemplate(){
@@ -144,15 +146,37 @@ public class CarAutoSchedule {
                     autoData.setSuccess("0");
                 }
                 redisAutoManager.updateAuto(autoData);
-                //***推送
-                auctionService.sendPushAutoData(autoData);
-                // 成功拍车后给客户发送短信
-                sendMsgAuction(autoData.getMaxPriceUserId(),autoData.getAutoId());
+                // 如查存在最高出拍人
+                if (autoData.getMaxPriceUserId().compareTo(0L) > 0){
+                    //***推送
+                    auctionService.sendPushAutoData(autoData);
+                    // 成功拍车后给客户发送短信
+                    sendMsgAuction(autoData.getMaxPriceUserId(),autoData.getAutoId());
+
+                    Long managerId = autoData.getMaxPriceUserId();
+                    setStoreOrderNotify(managerId);
+                }
             }
             //System.out.println("1=="+JSONObject.toJSONString(autoData));
         }
         //System.out.println(LocalDateTime.now());
         return 1;
+    }
+
+    /**
+     * @since 增加店铺车源角标
+     * @param managerId
+     */
+    private void setStoreOrderNotify(Long managerId) {
+        Notify notify = new Notify();
+        if (Objects.isNull(redisManagerTemplate.get(managerId.toString()))) {
+            notify.getOrder().setInsertStoreOrder(notify.getOrder().getInsertStoreOrder() + 1);
+            setRedis(managerId, notify);
+        } else {
+            notify = getNotify(managerId);
+            notify.getOrder().setInsertStoreOrder(notify.getOrder().getInsertStoreOrder() + 1);
+            setRedis(managerId, notify);
+        }
     }
 
     private void sendMsgAuction(Long userId,Long autoId){
@@ -219,6 +243,20 @@ public class CarAutoSchedule {
             logger.error("删除无效历史拍牌数据日志失败", e);
         }
         return 1;
+    }
+
+    /**
+     * 个人数据-保存到redis 中
+     */
+    private void setRedis(Long managerId, Notify notify) {
+        redisManagerTemplate.update(managerId.toString(), JSONObject.toJSONString(notify));
+    }
+
+    /**
+     * 获取 redis 中的-个人数据
+     */
+    private Notify getNotify(Long managerId) {
+        return JSONObject.toJavaObject(JSONObject.parseObject(redisManagerTemplate.get(managerId.toString())), Notify.class);
     }
 
 }

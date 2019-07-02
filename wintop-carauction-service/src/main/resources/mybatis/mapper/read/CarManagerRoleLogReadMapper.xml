@@ -17,7 +17,7 @@
     <result column="create_person" property="createPerson" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, role_data_id, status, status_cn, log_msg, create_time, vin, search_type, edition, vehicle_type, photo, create_person
+    id, role_data_id, status, status_cn, log_msg, create_time, store_id, vin, search_type, edition, vehicle_type, photo, create_person
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 

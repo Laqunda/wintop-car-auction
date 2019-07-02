@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.service.impl;
 import com.wintop.ms.carauction.core.config.CarManagerRoleDataEnum;
 import com.wintop.ms.carauction.core.config.CarManagerRoleLogEnum;
 import com.wintop.ms.carauction.entity.CarManagerRoleLog;
+import com.wintop.ms.carauction.entity.CarManagerUser;
 import com.wintop.ms.carauction.model.CarManagerRoleLogModel;
 import com.wintop.ms.carauction.service.ICarManagerRoleLogService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
@@ -15,6 +16,7 @@ import java.util.*;
 
 @Service
 public class CarManagerRoleLogServiceImpl implements ICarManagerRoleLogService {
+    private static final String APPLY = "1";
     private IdWorker idWorker = new IdWorker(10);
     @Autowired
     private CarManagerRoleLogModel carManagerRoleLogModel;
@@ -55,18 +57,25 @@ public class CarManagerRoleLogServiceImpl implements ICarManagerRoleLogService {
     }
 
     @Override
-    public int saveOrUpdate(CarManagerRoleLog record,Long managerId) {
-        List<CarManagerRoleLog> entityList = carManagerRoleLogModel.selectByCondition(Collections.singletonMap("roleDataId", record.getRoleDataId()));
-        if (CollectionUtils.isNotEmpty(entityList)) {
-            record.setId(entityList.get(0).getId());
+    public int saveOrUpdate(CarManagerRoleLog record, CarManagerUser user) {
+        if (Objects.nonNull(record.getId())) {
+            List<CarManagerRoleLog> entityList = carManagerRoleLogModel.selectByCondition(Collections.singletonMap("id", record.getId()));
+            if (CollectionUtils.isNotEmpty(entityList)) {
+                record.setId(entityList.get(0).getId());
+            }
         }
         record.setCreateTime(new Date());
-        record.setCreatePerson(managerId);
-        record.setStatusCn(CarManagerRoleLogEnum.PASS.getEnum(record.getStatus()).getMsg());
+        record.setCreatePerson(user.getId());
+
         if (Objects.isNull(record.getId())) {
             record.setId(idWorker.nextId());
+            record.setRoleDataId(user.getId());
+            record.setStoreId(user.getDepartmentId());
+            record.setStatus(APPLY);
+            record.setStatusCn(CarManagerRoleLogEnum.PASS.getEnum(record.getStatus()).getMsg());
             return this.insertSelective(record);
         }
+        record.setStatusCn(CarManagerRoleLogEnum.PASS.getEnum(record.getStatus()).getMsg());
         return this.updateByPrimaryKeySelective(record);
     }
 }

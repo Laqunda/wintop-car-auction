@@ -49,6 +49,21 @@
       <if test="storeId != null" >
         store_id,
       </if>
+      <if test="vin != null" >
+        vin,
+      </if>
+      <if test="searchType != null" >
+        search_type,
+      </if>
+      <if test="edition != null" >
+        edition,
+      </if>
+      <if test="vehicleType != null" >
+        vehicle_type,
+      </if>
+      <if test="photo != null">
+        photo,
+      </if>
       <if test="createPerson != null" >
         create_person,
       </if>
@@ -73,10 +88,25 @@
         #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="storeId != null" >
-        #{storeId,jdbcType=BIGINT},
+        #{storeId,jdbcType=VARCHAR},
+      </if>
+      <if test="vin != null" >
+        #{vin,jdbcType=VARCHAR},
+      </if>
+      <if test="searchType != null" >
+        #{searchType,jdbcType=VARCHAR},
+      </if>
+      <if test="edition != null" >
+        #{edition,jdbcType=VARCHAR},
+      </if>
+      <if test="vehicleType != null" >
+        #{vehicleType,jdbcType=TIMESTAMP},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=VARCHAR},
       </if>
       <if test="createPerson != null" >
-        #{createPerson,jdbcType=BIGINT},
+         #{createPerson,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -100,6 +130,24 @@
       </if>
       <if test="storeId != null" >
         store_id = #{storeId,jdbcType=BIGINT},
+      </if>
+      <if test="storeId != null" >
+        store_id = #{storeId,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vin != null" >
+        vin = #{vin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="searchType != null" >
+        search_type = #{searchType,jdbcType=TIMESTAMP},
+      </if>
+      <if test="edition != null" >
+        edition = #{edition,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vehicleType != null" >
+        vehicle_type = #{vehicleType,jdbcType=TIMESTAMP},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
       </if>
       <if test="createPerson != null" >
         create_person = #{createPerson,jdbcType=BIGINT},

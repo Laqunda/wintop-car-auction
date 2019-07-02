@@ -46,7 +46,8 @@ public class CarManagerRoleLogApi {
     @AuthUserToken
     @AppApiVersion(value = "2.0")
     public ResultModel list(@RequestBody Map<String,Object> map, @CurrentUserId Long managerId) {
-        if (Objects.isNull(map.get("storeId"))) {
+        // 状态 1提交申请，2待审核
+        if (Objects.isNull(map.get("status"))) {
             return new ResultModel(false, 101, "缺少参数", null);
         }
         map.put("managerId", managerId);
@@ -76,13 +77,36 @@ public class CarManagerRoleLogApi {
     }
 
     /**
-     * 保存查博士查询权限商户
+     * 审核查博士查询权限商户
      */
-    @ApiOperation(value = "保存查博士查询权限商户")
-    @PostMapping(value = "/saveOrUpdate",produces="application/json; charset=UTF-8")
+    @ApiOperation(value = "审核查博士查询权限商户")
+    @PostMapping(value = "/approvalRoleLog",produces="application/json; charset=UTF-8")
     @AuthUserToken
     @AppApiVersion(value = "2.0")
-    public ResultModel saveOrUpdate(@RequestBody Map<String,Object> map, @CurrentUserId Long managerId) {
+    public ResultModel approvalRoleLog(@RequestBody Map<String,Object> map, @CurrentUserId Long managerId) {
+        if (Objects.isNull(map.get("id")) || Objects.isNull(map.get("status"))) {
+            return new ResultModel(false, 101, "缺少参数", null);
+        }
+        map.put("managerId", managerId);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carManagerRoleLog/saveOrUpdate"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return  ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
+    /**
+     * 申请查博士查询权限商户
+     */
+    @ApiOperation(value = "申请查博士查询权限商户")
+    @PostMapping(value = "/saveRoleLog",produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @AppApiVersion(value = "2.0")
+    public ResultModel saveRoleLog(@RequestBody Map<String,Object> map, @CurrentUserId Long managerId) {
+        if (Objects.isNull(map.get("vin")) || Objects.isNull(map.get("edition"))) {
+            return new ResultModel(false, 101, "缺少参数", null);
+        }
         map.put("managerId", managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity

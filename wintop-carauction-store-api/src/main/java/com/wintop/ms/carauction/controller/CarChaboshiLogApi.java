@@ -1,10 +1,7 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wintop.ms.carauction.core.annotation.AppApiVersion;
-import com.wintop.ms.carauction.core.annotation.AuthUserToken;
-import com.wintop.ms.carauction.core.annotation.CurrentUser;
-import com.wintop.ms.carauction.core.annotation.CurrentUserId;
+import com.wintop.ms.carauction.core.annotation.*;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.CarManagerUser;
@@ -173,6 +170,7 @@ public class CarChaboshiLogApi {
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8")
     @AuthUserToken
+    @InfoNotify
     @AppApiVersion(value = "2.0")
     public ResultModel vinSearch(@CurrentUser CarManagerUser managerUser, @RequestBody Map<String, Object> map) {
         map.put("userId", managerUser.getId());

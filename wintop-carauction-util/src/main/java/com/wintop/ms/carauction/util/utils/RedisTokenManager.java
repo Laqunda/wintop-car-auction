@@ -42,7 +42,7 @@ public class RedisTokenManager implements TokenManager {
         }
         //从redis中取出应用授权信息，并判断授权标示
         String ifAuth = redisTemplate.boundValueOps(appId).get();
-//        redisTemplate.opsForValue().set("bdce67a4230d20f2a14e72a2670cbd42", "true");
+//        redisTemplate.opsForValue().set("bdce67a4230d20f2a14e72a2670cbd44", "true");
         if (ifAuth != null && ifAuth.equals("true")) {
             return true;
         }

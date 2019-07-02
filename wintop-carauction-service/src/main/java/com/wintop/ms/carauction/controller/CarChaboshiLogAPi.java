@@ -626,10 +626,10 @@ public class CarChaboshiLogAPi {
             Map param = JSONObject.toJavaObject(obj, Map.class);
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
             /*退款到个人支付宝*/
+
             CarFinancePayLog payLog = financePayLogModel.selectById(Longs.tryParse(param.get("payLogId").toString()));
             Map map = AlipayUtil.refundOrder(payLog);
-//            if (SUCCESS.equals(map.get("code"))) {
-                /*退款成功*/
+            /*退款成功*/
             int c = carChaboshiLogService.savePayLog(payLog);
 
             param.put("responseResult", QUERY_FAIL_REFUND);

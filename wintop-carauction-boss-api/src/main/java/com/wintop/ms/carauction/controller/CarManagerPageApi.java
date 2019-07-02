@@ -70,9 +70,9 @@ public class CarManagerPageApi {
             consumes = "application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel getPageTreeForTwoNode( @CurrentUserId Long manaagerId) {
+    public ResultModel getPageTreeForTwoNode( @CurrentUserId Long managerId) {
         Map<String, Object> map = Maps.newHashMap();
-        map.put("managerId", manaagerId);
+        map.put("managerId", managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carManagerPage/getPageTreeForTwoNode"))

@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.service;
 
 import com.wintop.ms.carauction.entity.CarManagerRoleLog;
+import com.wintop.ms.carauction.entity.CarManagerUser;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,6 @@ public interface ICarManagerRoleLogService {
 
     public int updateByPrimaryKey(CarManagerRoleLog record);
 
-    public int saveOrUpdate(CarManagerRoleLog record, Long managerId);
+    public int saveOrUpdate(CarManagerRoleLog record, CarManagerUser user);
 
 }
