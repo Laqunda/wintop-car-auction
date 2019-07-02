@@ -16,7 +16,6 @@ import java.util.*;
 
 @Service
 public class CarManagerRoleLogServiceImpl implements ICarManagerRoleLogService {
-    private static final String APPLY = "1";
     private IdWorker idWorker = new IdWorker(10);
     @Autowired
     private CarManagerRoleLogModel carManagerRoleLogModel;
@@ -29,6 +28,11 @@ public class CarManagerRoleLogServiceImpl implements ICarManagerRoleLogService {
     @Override
     public List<CarManagerRoleLog> selectByCondition(Map<String, Object> map) {
         return carManagerRoleLogModel.selectByCondition(map);
+    }
+
+    @Override
+    public int selectByConditionCount(Map<String, Object> map) {
+        return carManagerRoleLogModel.selectByConditionCount(map);
     }
 
     @Override
@@ -64,16 +68,18 @@ public class CarManagerRoleLogServiceImpl implements ICarManagerRoleLogService {
                 record.setId(entityList.get(0).getId());
             }
         }
-        record.setCreateTime(new Date());
-        record.setCreatePerson(user.getId());
-
         if (Objects.isNull(record.getId())) {
             record.setId(idWorker.nextId());
-            record.setRoleDataId(user.getId());
+            record.setApplyId(user.getId());
+            record.setApplyTime(new Date());
             record.setStoreId(user.getDepartmentId());
-            record.setStatus(APPLY);
-            record.setStatusCn(CarManagerRoleLogEnum.PASS.getEnum(record.getStatus()).getMsg());
+            record.setStatus(CarManagerRoleLogEnum.APPLY.getVal());
+            record.setStatusCn(CarManagerRoleLogEnum.APPLY.getMsg());
             return this.insertSelective(record);
+        }
+        if(!CarManagerRoleLogEnum.CANCEL.getVal().equals(record.getStatus())){
+            record.setCreateTime(new Date());
+            record.setCreatePerson(user.getId());
         }
         record.setStatusCn(CarManagerRoleLogEnum.PASS.getEnum(record.getStatus()).getMsg());
         return this.updateByPrimaryKeySelective(record);

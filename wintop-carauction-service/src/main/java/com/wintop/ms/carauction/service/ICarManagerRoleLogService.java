@@ -8,20 +8,22 @@ import java.util.Map;
 
 public interface ICarManagerRoleLogService {
 
-    public CarManagerRoleLog selectByPrimaryKey(Long id);
+    CarManagerRoleLog selectByPrimaryKey(Long id);
 
-    public List<CarManagerRoleLog> selectByCondition(Map<String, Object> map);
+    List<CarManagerRoleLog> selectByCondition(Map<String, Object> map);
+    
+    int selectByConditionCount(Map<String, Object> map);
 
-    public int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Long id);
 
-    public int insert(CarManagerRoleLog record);
+    int insert(CarManagerRoleLog record);
 
-    public int insertSelective(CarManagerRoleLog record);
+    int insertSelective(CarManagerRoleLog record);
 
-    public int updateByPrimaryKeySelective(CarManagerRoleLog record);
+    int updateByPrimaryKeySelective(CarManagerRoleLog record);
 
-    public int updateByPrimaryKey(CarManagerRoleLog record);
+    int updateByPrimaryKey(CarManagerRoleLog record);
 
-    public int saveOrUpdate(CarManagerRoleLog record, CarManagerUser user);
+    int saveOrUpdate(CarManagerRoleLog record, CarManagerUser user);
 
 }

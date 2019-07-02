@@ -11,4 +11,6 @@ public interface ICarManagerRoleLogReadDao {
     CarManagerRoleLog selectByPrimaryKey(Long id);
 
     List<CarManagerRoleLog> selectByCondition(Map<String,Object> map);
+
+    int selectByConditionCount(Map<String,Object> map);
 }

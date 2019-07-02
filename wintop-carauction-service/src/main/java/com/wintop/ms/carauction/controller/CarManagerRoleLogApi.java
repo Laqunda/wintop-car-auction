@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.CarManagerRoleLogEnum;
 import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
+import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarManagerRoleData;
 import com.wintop.ms.carauction.entity.CarManagerRoleLog;
@@ -15,6 +16,7 @@ import com.wintop.ms.carauction.entity.CommonNameVo;
 import com.wintop.ms.carauction.service.ICarManagerRoleDataService;
 import com.wintop.ms.carauction.service.ICarManagerRoleLogService;
 import com.wintop.ms.carauction.service.ICarManagerUserService;
+import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import net.sf.json.JsonConfig;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -56,18 +58,23 @@ public class CarManagerRoleLogApi {
             method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces = "application/json; charset=UTF-8" )
-    public ServiceResult<List<CarManagerRoleLog>> list(@RequestBody JSONObject obj) {
-        ServiceResult<List<CarManagerRoleLog>> result = new ServiceResult<>();
+    public ServiceResult<ListEntity<CarManagerRoleLog>> list(@RequestBody JSONObject obj) {
+        ServiceResult<ListEntity<CarManagerRoleLog>> result = new ServiceResult<>();
         try{
             Long managerId = obj.getLong("managerId");
             CarManagerUser user = carManagerUserService.selectByPrimaryKey(managerId, false);
             Map param = JSONObject.toJavaObject(obj, Map.class);
             param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
             param.put("storeId", user.getDepartmentId());
+            int count = carManagerRoleLogService.selectByConditionCount(param);
+            PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
+            param.put("startRowNum", pageEntity.getStartRowNum());
+            param.put("endRowNum", pageEntity.getEndRowNum());
             List<CarManagerRoleLog> list = carManagerRoleLogService.selectByCondition(param);
-            if (CollectionUtils.isNotEmpty(list)) {
-                result.setResult(list);
-            }
+            ListEntity<CarManagerRoleLog> listEntity = new ListEntity<>();
+            listEntity.setList(list);
+            listEntity.setCount(count);
+            result.setResult(listEntity);
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         }catch (Exception e){
             e.printStackTrace();
@@ -88,44 +95,41 @@ public class CarManagerRoleLogApi {
     public ServiceResult<Map<String,Object>> queryAudit(@RequestBody JSONObject obj) {
         ServiceResult<Map<String,Object>> result = new ServiceResult<>();
         Long managerId = obj.getLong("managerId");
+        Map<String,Object> resultMap = new HashMap<>();
         CarManagerUser user = carManagerUserService.selectByPrimaryKey(managerId, false);
-        if (!getJudgeRoleList(user.getRoleId(),ManagerRole.JXD_ESCFZR.value(),ManagerRole.JXD_HYGLY.value(),ManagerRole.JXD_PGS.value())) {
-            result.setError(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
+        //类别 3：经销店
+        if (!getJudgeRoleList(user.getRoleTypeId(),3)) {
+            resultMap.put("isRole","0");
+            result.setResult(resultMap);
+            result.setSuccess(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
             return result;
         }
         if (getJudgeRole(ManagerRole.JXD_ESCFZR, user.getRoleId())) {
+            resultMap.put("isRole","1");
+            result.setResult(resultMap);
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
             return result;
         }
         List<CarManagerRoleData> carManagerRoleDataList = carManagerRoleDataService.selectForCondition(Collections.singletonMap("managerId", managerId));
         if (CollectionUtils.isNotEmpty(carManagerRoleDataList) && carManagerRoleDataList.get(0).getIsRole().equals(USE)){
+            resultMap.put("isRole","1");
+            result.setResult(resultMap);
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
             return result;
         } else {
-            Map param = JSONObject.toJavaObject(obj, Map.class);
-            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
-            param.put("roleDataId", managerId);
-            List<CarManagerRoleLog> managerRoleLogList = carManagerRoleLogService.selectByCondition(param);
-            if (CollectionUtils.isNotEmpty(managerRoleLogList)) {
-                List<CarManagerRoleLog> passList = managerRoleLogList.stream().filter(carManagerRoleLog -> carManagerRoleLog.getStatus().equals(CarManagerRoleLogEnum.PASS.getVal())).collect(Collectors.toList());
-                if (CollectionUtils.isEmpty(passList)){
-                    result.setError(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
-                    return result;
-                }
-                result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
-            } else {
-                result.setError(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
-            }
+            resultMap.put("isRole","0");
+            result.setResult(resultMap);
+            result.setSuccess(ResultCode.NO_AUDIT_VIEW_AUTH.strValue(), ResultCode.NO_AUDIT_VIEW_AUTH.getRemark());
+            return result;
         }
-        return result;
     }
 
     public boolean getJudgeRole(ManagerRole managerRole,Long roleId) {
         return Long.valueOf(managerRole.value() + "").equals(roleId);
     }
 
-    public boolean getJudgeRoleList(Long roleId,Integer ... roleIds) {
-        return Arrays.asList(roleIds).contains(roleId.intValue());
+    public boolean getJudgeRoleList(Long roleTypeId,Integer ... roleTypeIds) {
+        return Arrays.asList(roleTypeIds).contains(roleTypeId.intValue());
     }
 
     /***
