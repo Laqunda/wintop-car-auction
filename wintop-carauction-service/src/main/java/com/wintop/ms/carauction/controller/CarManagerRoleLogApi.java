@@ -154,7 +154,10 @@ public class CarManagerRoleLogApi {
             CarManagerUser user = carManagerUserService.selectByPrimaryKey(managerId, false);
             CarManagerRoleLog log = JSONObject.toJavaObject(obj, CarManagerRoleLog.class);
             if (Objects.nonNull(log)) {
-                carManagerRoleLogService.saveOrUpdate(log, user);
+                ServiceResult<Map<String, Object>> serviceResult = carManagerRoleLogService.saveOrUpdate(log, user);
+                if(!serviceResult.getCode().equals(ResultCode.SUCCESS.strValue())){
+                    return serviceResult;
+                }
                 result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
             } else {
                 result.setSuccess(ResultCode.NO_PARAM.strValue(), ResultCode.NO_PARAM.getRemark());

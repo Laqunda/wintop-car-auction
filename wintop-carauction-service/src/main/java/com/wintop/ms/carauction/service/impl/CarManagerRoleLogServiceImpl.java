@@ -3,6 +3,8 @@ package com.wintop.ms.carauction.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.wintop.ms.carauction.core.config.CarManagerRoleLogEnum;
+import com.wintop.ms.carauction.core.config.ResultCode;
+import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarManagerRoleLog;
 import com.wintop.ms.carauction.entity.CarManagerUser;
 import com.wintop.ms.carauction.model.CarManagerRoleLogModel;
@@ -74,7 +76,8 @@ public class CarManagerRoleLogServiceImpl implements ICarManagerRoleLogService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public int saveOrUpdate(CarManagerRoleLog record, CarManagerUser user) {
+    public ServiceResult<Map<String, Object>> saveOrUpdate(CarManagerRoleLog record, CarManagerUser user) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         if (Objects.isNull(record.getId())) {
             record.setId(idWorker.nextId());
             record.setApplyId(user.getId());
@@ -82,7 +85,9 @@ public class CarManagerRoleLogServiceImpl implements ICarManagerRoleLogService {
             record.setStoreId(user.getDepartmentId());
             record.setStatus(CarManagerRoleLogEnum.APPLY.getVal());
             record.setStatusCn(CarManagerRoleLogEnum.APPLY.getMsg());
-            return this.insertSelective(record);
+            this.insertSelective(record);
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+            return result;
         }
         if(!CarManagerRoleLogEnum.CANCEL.getVal().equals(record.getStatus())){
             record.setCreateTime(new Date());
@@ -94,13 +99,18 @@ public class CarManagerRoleLogServiceImpl implements ICarManagerRoleLogService {
         if (CarManagerRoleLogEnum.PASS.getVal().equals(record.getStatus())){
             CarManagerUser applyUser = carManagerUserService.selectByPrimaryKey(roleLog.getApplyId(), false);
             JSONObject obj = JSONObject.parseObject(JSONObject.toJSONString(roleLog));
-            obj.put("userId", record.getApplyId());
+            obj.put("userId", roleLog.getApplyId());
             obj.put("userName", applyUser.getUserName());
             obj.put("storeId", roleLog.getStoreId());
-            Map<String, Object> result = carChaboshiLogService.searchForStore(obj).getResult();
-            logger.info(String.format("json=%s",JSONObject.toJSONString(result)));
+            ServiceResult<Map<String, Object>> serviceResult = carChaboshiLogService.searchForStore(obj);
+            if(!serviceResult.getCode().equals(ResultCode.SUCCESS.strValue())){
+                return serviceResult;
+            }
+            logger.info(String.format("json=%s",JSONObject.toJSONString(serviceResult.getResult())));
         }
-        return this.updateByPrimaryKeySelective(record);
+        this.updateByPrimaryKeySelective(record);
+        result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        return result;
     }
 
     @Override

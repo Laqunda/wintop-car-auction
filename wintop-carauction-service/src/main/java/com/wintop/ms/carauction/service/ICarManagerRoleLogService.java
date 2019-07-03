@@ -1,5 +1,6 @@
 package com.wintop.ms.carauction.service;
 
+import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarManagerRoleLog;
 import com.wintop.ms.carauction.entity.CarManagerUser;
 
@@ -24,7 +25,7 @@ public interface ICarManagerRoleLogService {
 
     int updateByPrimaryKey(CarManagerRoleLog record);
 
-    int saveOrUpdate(CarManagerRoleLog record, CarManagerUser user);
+    ServiceResult<Map<String, Object>> saveOrUpdate(CarManagerRoleLog record, CarManagerUser user);
 
     List<CarManagerRoleLog> selectByConditionForPage(Map<String, Object> map);
 

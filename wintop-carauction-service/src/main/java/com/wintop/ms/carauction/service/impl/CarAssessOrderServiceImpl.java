@@ -315,7 +315,7 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
         //拍卖信息id
         Long autoAuctionId = idWorker.nextId();
         /*写入car_auto*/
-        saveCarAuto(autoId,a,oreder,autoAuctionId);
+        saveCarAuto(autoId,a,oreder,autoAuctionId,managerUser);
         /*写入car_auto_auction*/
         saveAution(autoAuctionId,autoId,user);
         /*car_auto_info_detail*/
@@ -375,7 +375,7 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
     /**
      * 保存car_auto
      */
-    private int saveCarAuto(Long autoId,CarAssess a ,CarAssessOrder oreder, Long autoAuctionId){
+    private int saveCarAuto(Long autoId,CarAssess a ,CarAssessOrder oreder, Long autoAuctionId, CarManagerUser managerUser){
         CarAuto auto = new CarAuto();
         auto.setId(autoId);
         auto.setAutoInfoName(a.getAutoBrandCn() + " " + a.getAutoSeriesCn() + " " + a.getAutoStyleCn());//车辆名称=品牌+车系+车型
@@ -390,9 +390,7 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
         auto.setUpdateUser(a.getCreateUser());
         auto.setUpdateTime(new Date());
         auto.setAuctionNum(0);
-        if (a.getRegionId() != null) {
-            auto.setRegionId(Long.parseLong(a.getRegionId()));
-        }
+        auto.setRegionId(managerUser.getRegionId());
         auto.setStatus(CarStatusEnum.DRAFT.value());//草稿
         auto.setAutoAuctionId(autoAuctionId);
         auto.setIfNew("1");
