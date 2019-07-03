@@ -144,19 +144,19 @@
         AND l.create_time = #{createTime,jdbcType=TIMESTAMP}
       </if>
       <if test="storeId != null" >
-        AND l.store_id = #{storeId,jdbcType=TIMESTAMP}
+        AND l.store_id = #{storeId,jdbcType=VARCHAR}
       </if>
       <if test="vin != null" >
-        AND l.vin = #{vin,jdbcType=TIMESTAMP}
+        AND l.vin LIKE CONCAT(CONCAT('%', #{vin,jdbcType=VARCHAR}),'%')
       </if>
       <if test="searchType != null" >
-        AND l.search_type = #{searchType,jdbcType=TIMESTAMP}
+        AND l.search_type = #{searchType,jdbcType=VARCHAR}
       </if>
       <if test="edition != null" >
-        AND l.edition = #{edition,jdbcType=TIMESTAMP}
+        AND l.edition = #{edition,jdbcType=VARCHAR}
       </if>
       <if test="vehicleType != null" >
-        AND l.vehicle_type = #{vehicleType,jdbcType=TIMESTAMP}
+        AND l.vehicle_type = #{vehicleType,jdbcType=VARCHAR}
       </if>
       <if test="createPerson != null" >
         AND l.create_person = #{createPerson,jdbcType=BIGINT}
@@ -200,25 +200,25 @@
         AND l.store_id = #{storeId,jdbcType=TIMESTAMP}
       </if>
       <if test="vin != null" >
-        AND l.vin = #{vin,jdbcType=TIMESTAMP}
+        AND l.vin LIKE CONCAT(CONCAT('%', #{vin,jdbcType=VARCHAR}),'%')
       </if>
       <if test="searchType != null" >
-        AND l.search_type = #{searchType,jdbcType=TIMESTAMP}
+        AND l.search_type = #{searchType,jdbcType=VARCHAR}
       </if>
       <if test="edition != null" >
-        AND l.edition = #{edition,jdbcType=TIMESTAMP}
+        AND l.edition = #{edition,jdbcType=VARCHAR}
       </if>
       <if test="vehicleType != null" >
-        AND l.vehicle_type = #{vehicleType,jdbcType=TIMESTAMP}
+        AND l.vehicle_type = #{vehicleType,jdbcType=VARCHAR}
       </if>
       <if test="createPerson != null" >
         AND l.create_person = #{createPerson,jdbcType=BIGINT}
       </if>
       <if test="applyName != null">
-        AND apply.name LIKE CONCAT(CONCAT('%', #{applyName,jdbcType=VARCHAR}),'%')
+        AND apply.user_name LIKE CONCAT(CONCAT('%', #{applyName,jdbcType=VARCHAR}),'%')
       </if>
       <if test="auditName != null">
-        AND audit.name LIKE CONCAT(CONCAT('%', #{auditName,jdbcType=VARCHAR}),'%')
+        AND audit.user_name LIKE CONCAT(CONCAT('%', #{auditName,jdbcType=VARCHAR}),'%')
       </if>
     </trim>
   </select>
