@@ -170,11 +170,11 @@ public class CarAutoSchedule {
     private void setStoreOrderNotify(Long managerId) {
         Notify notify = new Notify();
         if (Objects.isNull(redisManagerTemplate.get(managerId.toString()))) {
-            notify.getOrder().setInsertStoreOrder(notify.getOrder().getInsertStoreOrder() + 1);
+            notify.getOrder().setInsertOnlineOrder(notify.getOrder().getInsertRetailOrder() + 1);
             setRedis(managerId, notify);
         } else {
             notify = getNotify(managerId);
-            notify.getOrder().setInsertStoreOrder(notify.getOrder().getInsertStoreOrder() + 1);
+            notify.getOrder().setInsertOnlineOrder(notify.getOrder().getInsertRetailOrder() + 1);
             setRedis(managerId, notify);
         }
     }

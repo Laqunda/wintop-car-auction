@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AppApiVersion;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
+import com.wintop.ms.carauction.core.annotation.InfoNotify;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
@@ -46,6 +47,7 @@ public class CarOrderRetailApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @InfoNotify
     @AppApiVersion(value = "2.0")
     public ResultModel addSave(@CurrentUserId Long managerId,@RequestBody Map<String,Object> map) {
         map.put("createUser",managerId);

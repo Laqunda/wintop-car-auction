@@ -1,10 +1,7 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wintop.ms.carauction.core.annotation.AppApiVersion;
-import com.wintop.ms.carauction.core.annotation.AuthUserToken;
-import com.wintop.ms.carauction.core.annotation.CurrentUserId;
-import com.wintop.ms.carauction.core.annotation.InfoNotify;
+import com.wintop.ms.carauction.core.annotation.*;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
@@ -47,6 +44,7 @@ public class CarAssessApi {
     @ApiOperation(value = "查询车辆评估列表")
     @PostMapping(value = "/list",produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @InfoCleanNotify
     @AppApiVersion(value = "2.0")
     public ResultModel list(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) {
         map.put("managerId",userId);

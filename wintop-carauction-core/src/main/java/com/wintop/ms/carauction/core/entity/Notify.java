@@ -22,16 +22,6 @@ public class Notify {
      */
     private Integer cbs = -1;
 
-    public Notify() {
-    }
-
-    public Notify(Assess assess, Stock stock, Order order, Integer cbs) {
-        this.assess = assess;
-        this.stock = stock;
-        this.order = order;
-        this.cbs = cbs;
-    }
-
     public static class Assess {
         /**
          * 新增评估
@@ -41,14 +31,6 @@ public class Notify {
          * 申请采购
          */
         private Integer carAssessOrderAdd = -1;
-        /**
-         * 采购驳回
-         */
-        private Integer carAssessReject = -1;
-        /**
-         * 采购通过
-         */
-        private Integer carAssessPass = -1;
 
 
         public Integer getCarAssessAdd() {
@@ -67,21 +49,6 @@ public class Notify {
             this.carAssessOrderAdd = carAssessOrderAdd;
         }
 
-        public Integer getCarAssessReject() {
-            return carAssessReject;
-        }
-
-        public void setCarAssessReject(Integer carAssessReject) {
-            this.carAssessReject = carAssessReject;
-        }
-
-        public Integer getCarAssessPass() {
-            return carAssessPass;
-        }
-
-        public void setCarAssessPass(Integer carAssessPass) {
-            this.carAssessPass = carAssessPass;
-        }
     }
 
     public static  class Stock {
@@ -94,6 +61,11 @@ public class Notify {
          * 创建现场车辆
          */
         private Integer insertOnSiteCar = -1;
+
+        /**
+         * 车辆库存
+         */
+        private Integer carStockCount = -1;
 
         public Integer getInsertOnlineCar() {
             return insertOnlineCar;
@@ -110,32 +82,41 @@ public class Notify {
         public void setInsertOnSiteCar(Integer insertOnSiteCar) {
             this.insertOnSiteCar = insertOnSiteCar;
         }
+
+        public Integer getCarStockCount() {
+            return carStockCount;
+        }
+
+        public void setCarStockCount(Integer carStockCount) {
+            this.carStockCount = carStockCount;
+        }
     }
 
     public static  class Order {
         /**
-         * 个人车源-创建订单
+         * 线上订单
          */
-        private Integer insertPersonOrder = -1;
+        private Integer insertOnlineOrder = -1;
+
         /**
-         * 店铺车源
+         * 零售订单
          */
-        private Integer insertStoreOrder = -1;
+        private Integer insertRetailOrder = -1;
 
-        public Integer getInsertPersonOrder() {
-            return insertPersonOrder;
+        public Integer getInsertOnlineOrder() {
+            return insertOnlineOrder;
         }
 
-        public void setInsertPersonOrder(Integer insertPersonOrder) {
-            this.insertPersonOrder = insertPersonOrder;
+        public void setInsertOnlineOrder(Integer insertOnlineOrder) {
+            this.insertOnlineOrder = insertOnlineOrder;
         }
 
-        public Integer getInsertStoreOrder() {
-            return insertStoreOrder;
+        public Integer getInsertRetailOrder() {
+            return insertRetailOrder;
         }
 
-        public void setInsertStoreOrder(Integer insertStoreOrder) {
-            this.insertStoreOrder = insertStoreOrder;
+        public void setInsertRetailOrder(Integer insertRetailOrder) {
+            this.insertRetailOrder = insertRetailOrder;
         }
     }
 

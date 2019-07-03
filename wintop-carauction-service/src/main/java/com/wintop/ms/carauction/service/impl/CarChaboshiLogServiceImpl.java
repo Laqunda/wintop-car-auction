@@ -2,6 +2,7 @@ package com.wintop.ms.carauction.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.config.ResultCode;
+import com.wintop.ms.carauction.core.entity.Notify;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.model.*;
@@ -11,6 +12,7 @@ import com.wintop.ms.carauction.util.ChaboshiUtils;
 import com.wintop.ms.carauction.util.Class2MapUtil;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import com.wintop.ms.carauction.util.utils.RandCodeUtil;
+import com.wintop.ms.carauction.util.utils.RedisManagerTemplate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.commons.lang3.time.DateUtils;
@@ -50,6 +52,8 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
 
     private IdWorker idWorker = new IdWorker(10);
 
+    @Autowired
+    private RedisManagerTemplate redisManagerTemplate;
 
     /**
      * 查询查博士日志信息
@@ -487,6 +491,8 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                 c.setType("2");//出账
                 /*插入流水记录*/
                 storeAccountModel.insertCarChaboshiStoreAccount(c);
+                // 查博士角标设置
+                setCornerMark(userId);
             } else {
                 /*查博士查找失败*/
                 log.setResponseResult("2");
@@ -553,6 +559,8 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
                     logMap.remove("createTime");
                     logMap.put("finishTime", DateUtil.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"));
                     updateCarChaboshiLog(logMap);
+                    // 查博士设置角标
+                    setCornerMark(userId);
                 }
             } else if ("1102".equals(orderStatus.get("Code"))) {
                 /*查询中*/
@@ -576,6 +584,37 @@ public class CarChaboshiLogServiceImpl implements ICarChaboshiLogService {
         }
         result.setResult(resultMap);
         return result;
+    }
+
+    /**
+     * 查博士设置角标
+     * @param managerId
+     */
+    private void setCornerMark(Long managerId) {
+        Notify notify = new Notify();
+
+        if (Objects.isNull(redisManagerTemplate.get(managerId.toString()))) {
+            notify.setCbs(notify.getCbs() + 1);
+            setRedis(managerId, notify);
+        } else {
+            notify = getNotify(managerId);
+            notify.setCbs(notify.getCbs() + 1);
+            setRedis(managerId, notify);
+        }
+    }
+
+    /**
+     * 个人数据-保存到redis 中
+     */
+    private void setRedis(Long managerId, Notify notify) {
+        redisManagerTemplate.update(managerId.toString(), JSONObject.toJSONString(notify));
+    }
+
+    /**
+     * 获取 redis 中的-个人数据
+     */
+    private Notify getNotify(Long managerId) {
+        return JSONObject.toJavaObject(JSONObject.parseObject(redisManagerTemplate.get(managerId.toString())), Notify.class);
     }
 
     /**

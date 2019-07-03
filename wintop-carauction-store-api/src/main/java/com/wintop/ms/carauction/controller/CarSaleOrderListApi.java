@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AppApiVersion;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
+import com.wintop.ms.carauction.core.annotation.InfoCleanNotify;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
@@ -35,15 +36,16 @@ public class CarSaleOrderListApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @InfoCleanNotify
     @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> getCarSaleOrderRetailList(@RequestBody Map<String,Object> map, @CurrentUserId Long userId){
+    public ResultModel getCarSaleOrderRetailList(@RequestBody Map<String,Object> map, @CurrentUserId Long userId){
         map.put("customerId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carSaleOrder/getCarSaleOrderRetailList"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
-        return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 
     @RequestMapping(value = "/getCarSaleOrderRetail",

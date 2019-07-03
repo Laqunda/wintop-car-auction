@@ -61,10 +61,11 @@ public class CarAutoApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @InfoCleanNotify
     @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> selectCarList(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) {
+    public ResultModel selectCarList(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) {
         if (map.get("type") == null || map.get("status") == null) {
-            return new ResponseEntity<>(new ResultModel(false, 101, "缺少参数", null), HttpStatus.OK);
+            return new ResultModel(false, 101, "缺少参数", null);
         }
         map.put("userId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
@@ -72,7 +73,7 @@ public class CarAutoApi {
                         .post(URI.create(Constants.ROOT+"/service/carAuto/selectCarList"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
-        return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 
     @ApiOperation(value = "审批发拍的车辆")

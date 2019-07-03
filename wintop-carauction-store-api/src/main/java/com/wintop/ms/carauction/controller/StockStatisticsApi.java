@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AppApiVersion;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
+import com.wintop.ms.carauction.core.annotation.InfoCleanNotify;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
@@ -45,10 +46,11 @@ public class StockStatisticsApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @InfoCleanNotify
     @AppApiVersion(value = "2.0")
-    public ResponseEntity<ResultModel> stockInfo(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) throws MalformedURLException {
+    public ResultModel stockInfo(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) throws MalformedURLException {
         if (map.get("type") == null) {
-            return new ResponseEntity<>(new ResultModel(false, 101, "缺少参数", null), HttpStatus.OK);
+            return new ResultModel(false, 101, "缺少参数", null);
         }
         map.put("customerId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
@@ -56,6 +58,6 @@ public class StockStatisticsApi {
                         .post(URI.create(Constants.ROOT+"/service/stockStatisticsApi/stockInfo"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
-        return ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 }

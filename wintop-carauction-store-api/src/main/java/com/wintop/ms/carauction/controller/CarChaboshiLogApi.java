@@ -46,8 +46,9 @@ public class CarChaboshiLogApi {
     @ApiOperation(value = "查询查博士日志列表")
     @PostMapping(value = "/list", produces = "application/json; charset=UTF-8")
     @AuthUserToken
+    @InfoCleanNotify
     @AppApiVersion(value = "2.0")
-    public ResultModel list(@RequestBody Map<String, Object> map) {
+    public ResultModel list(@RequestBody Map<String, Object> map,@CurrentUserId Long managerId) {
         if (map.get("page") == null || map.get("limit") == null) {
             return new ResultModel(false, ResultCode.NO_PARAM.value(), ResultCode.NO_PARAM.getRemark(), null);
         }
