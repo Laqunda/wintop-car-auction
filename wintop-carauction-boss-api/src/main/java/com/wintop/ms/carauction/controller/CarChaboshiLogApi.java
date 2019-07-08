@@ -248,8 +248,12 @@ public class CarChaboshiLogApi {
                     HSSFCell c3 = itemRow.createCell(3);
                     c3.setCellValue(editionMoney);
 
+                    String finishTime = "";
+                    if (isNotEmpty(object.getString("finishTime"))) {
+                        finishTime = sdf.format(object.getDate("finishTime"));
+                    }
                     HSSFCell c4 = itemRow.createCell(4);
-                    c4.setCellValue(sdf.format(object.getDate("finishTime")));
+                    c4.setCellValue(finishTime);
 
                     HSSFCell c5 = itemRow.createCell(5);
                     c5.setCellValue(getResponseResult(object.getString("responseResult")));
