@@ -186,6 +186,7 @@ public class CarAssessOrderApi {
         String[] headers = {"订单编号", "买家信息", "车辆编号", "车辆标题", "采购价", "创建时间"};
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
         Map<String, Object> map = Maps.newHashMap();
+        map.put("status", 1);
         map.put("verifySearchName", verifySearchName);
         map.put("startCreateTime", startCreateTime);
         map.put("endCreateTime", endCreateTime);
