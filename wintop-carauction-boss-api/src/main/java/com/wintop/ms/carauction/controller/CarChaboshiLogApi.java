@@ -32,6 +32,7 @@ import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 查博士日志 信息操作处理
@@ -214,13 +215,19 @@ public class CarChaboshiLogApi {
                     JSONObject object = result.getJSONObject(i);
                     HSSFRow itemRow = sheet.createRow(i + 2);
 
+                    String name = "";
+                    String mobile = "";
+                    if (isNotEmpty(object.getJSONObject("wtAppUser"))) {
 
+                        name = object.getJSONObject("wtAppUser").getString("name");
+                        mobile = object.getJSONObject("wtAppUser").getString("mobile");
+                    }
                     HSSFCell c0 = itemRow.createCell(0);
-                    c0.setCellValue(object.getJSONObject("wtAppUser").getString("name"));
+                    c0.setCellValue(name);
 
 
                     HSSFCell c1 = itemRow.createCell(1);
-                    c1.setCellValue(object.getJSONObject("wtAppUser").getString("mobile"));
+                    c1.setCellValue(mobile);
 
                     String carInfo = "";
                     if (object.getJSONObject("carChaboshiVinData") != null) {
@@ -433,5 +440,9 @@ public class CarChaboshiLogApi {
             resultMap.put("message", object.getString("message"));
         }
         return resultMap;
+    }
+
+    private static <T> boolean isNotEmpty(T t){
+        return Optional.ofNullable(t).isPresent();
     }
 }
