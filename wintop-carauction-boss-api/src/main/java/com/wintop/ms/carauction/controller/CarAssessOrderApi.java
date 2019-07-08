@@ -299,9 +299,14 @@ public class CarAssessOrderApi {
                     String storeName = "";
                     // 采购日期
                     String procurementDate = "";
+                    // 价格
+                    String price = "";
                     status = object.getString("status");
                     if (isNotEmpty(object.getString("customerName"))){
                         customerName = object.getString("customerName");
+                    }
+                    if (isNotEmpty(object.getString("price"))) {
+                        price = BigDecimal.valueOf(object.getDouble("price")).divide(BigDecimal.valueOf(new Double(10000))).setScale(2, BigDecimal.ROUND_HALF_DOWN).toPlainString();
                     }
                     if (isNotEmpty(object.getJSONObject("carAssess"))) {
                         name = object.getJSONObject("carAssess").getString("name");
@@ -344,6 +349,9 @@ public class CarAssessOrderApi {
 
                     HSSFCell c7 = itemRow.createCell(7);
                     c7.setCellValue(procurementDate);
+
+                    HSSFCell c8 = itemRow.createCell(8);
+                    c8.setCellValue(price);
 
                     HSSFCell c9 = itemRow.createCell(9);
                     c9.setCellValue(getStatusMap(status));
