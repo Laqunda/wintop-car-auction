@@ -46,7 +46,7 @@ public class StockStatisticsApi {
             params.put("type",type);
             params.put("userId",userId);
             List<Map<String,Object>> list = carAutoService.selectCarAutoForSaleCount(params);
-            result.setResult(Collections.singletonMap("dataList",list));
+            result.setResult(Collections.singletonMap("list",list));
             result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
         } catch (Exception e) {
             e.printStackTrace();
