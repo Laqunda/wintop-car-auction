@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.config.CarStatusEnum;
 import com.wintop.ms.carauction.core.config.ResultCode;
+import com.wintop.ms.carauction.core.entity.Notify;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.mapper.read.IWtProvinceReadDao;
@@ -10,6 +11,7 @@ import com.wintop.ms.carauction.model.*;
 import com.wintop.ms.carauction.service.*;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import com.wintop.ms.carauction.util.utils.JPushUtil;
+import com.wintop.ms.carauction.util.utils.RedisManagerTemplate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +80,9 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
 
     @Autowired
     private WtCityModel cityModel;
+
+    @Autowired
+    private RedisManagerTemplate redisManagerTemplate;
     /**
      * 查询评估采购单信息
      *
@@ -204,6 +209,9 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
 
                     result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
                     assessPushMsg(managerUser, order_id);
+
+                    // 设置角标
+                    setCornerMark(carAssessOrder);
                 } else {
                     result.setSuccess(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());
                 }
@@ -217,6 +225,51 @@ public class CarAssessOrderServiceImpl implements ICarAssessOrderService {
 
         }
         return result;
+    }
+
+    /**
+     * 设置角标
+     * @param carAssessOrder
+     */
+    private void setCornerMark(CarAssessOrder carAssessOrder) {
+        CarAssess carAssess = getCarAssessById(carAssessOrder);
+        Notify notify = new Notify();
+
+        if (Objects.isNull(redisManagerTemplate.get(carAssess.getCreateUser().toString()))) {
+            notify.setCbs(notify.getCbs() + 1);
+            setRedis(carAssess.getCreateUser(), notify);
+        } else {
+            notify = getNotify(carAssess.getCreateUser());
+            notify.setCbs(notify.getCbs() + 1);
+            setRedis(carAssess.getCreateUser(), notify);
+        }
+    }
+
+    /**
+     * 个人数据-保存到redis 中
+     */
+    private void setRedis(Long managerId, Notify notify) {
+        redisManagerTemplate.update(managerId.toString(), JSONObject.toJSONString(notify));
+    }
+
+    /**
+     * 获取 redis 中的-个人数据
+     */
+    private Notify getNotify(Long managerId) {
+        return JSONObject.toJavaObject(JSONObject.parseObject(redisManagerTemplate.get(managerId.toString())), Notify.class);
+    }
+
+    /**
+     * 查询
+     * @param carAssessOrder
+     * @return
+     */
+    private CarAssess getCarAssessById(CarAssessOrder carAssessOrder) {
+        CarAssessOrder assessOrder = model.selectCarAssessOrderById(carAssessOrder.getId());
+        CarAssess carAssess = new CarAssess();
+        carAssess.setId(assessOrder.getAssessId());
+        carAssess = carAssessModel.selectCarAssessById(carAssess);
+        return carAssess;
     }
 
     private void assessPushMsg(CarManagerUser managerUser, long order_id) {

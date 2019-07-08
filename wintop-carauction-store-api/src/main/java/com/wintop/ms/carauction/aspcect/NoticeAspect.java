@@ -83,8 +83,6 @@ public class NoticeAspect {
             if (map.containsKey("status") && Objects.equals(map.get("status").toString(), REJECT)) {
                 notify = setAlreadyAssess(managerId, notify);
             // 采购通过 -- 车辆库存
-            }else if (map.containsKey("status") && Objects.equals(map.get("status").toString(), PASS)) {
-                notify.getStock().setCarStockCount(notify.getStock().getCarStockCount() + 1);
             }
             // 库存管理
         } else if ("AutoManagerApi.initAuto".equals(key)) {
