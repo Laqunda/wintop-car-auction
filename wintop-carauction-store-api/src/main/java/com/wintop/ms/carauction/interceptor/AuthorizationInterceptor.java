@@ -127,7 +127,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                        boolean result = false;
                        CarManagerUser user = storeUserManager.getStoreUser(model.getUserId()+"");
 
-        /*               if(user==null){
+                       if(user==null){
                            ResultModel resultModel =
                                    new ResultModel(false,HttpResponseStatus.TOKEN_DISABLED,"无效的token授权，不能使用接口！",null);
                            String obj = JSONObject.toJSONString(resultModel);
@@ -135,7 +135,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                            pw.flush();
                            pw.close();
                            return result;
-                       }*/
+                       }
 //                       RequestAuth auth = handlerMethod.getMethodAnnotation(RequestAuth.class);
 //                       System.out.println(auth);
 //                       if(auth!=null && auth.value().length>0){
