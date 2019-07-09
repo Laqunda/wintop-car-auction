@@ -193,7 +193,7 @@ public class CarChaboshiLogApi {
                              @RequestParam("responseResult") String responseResult,
                              @RequestParam("buyerSearchName") Long buyerSearchName) {
         String[] headers = {"客户姓名","客户电话","查询车辆","查询版本","查询时间","查询结果","报告来源"};
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> map = Maps.newHashMap();
         map.put("userType", userType);
         map.put("sourceType", sourceType);
@@ -229,20 +229,12 @@ public class CarChaboshiLogApi {
                     HSSFCell c1 = itemRow.createCell(1);
                     c1.setCellValue(mobile);
 
-                    String carInfo = "";
-                    if (object.getJSONObject("carChaboshiVinData") != null) {
-                        carInfo = String.format("%s %s",object.getJSONObject("carChaboshiVinData").getString("modelName"),
-                                object.getJSONObject("carChaboshiVinData").getString("seriesName"));
-                    }
                     HSSFCell c2 = itemRow.createCell(2);
-                    c2.setCellValue(carInfo);
+                    c2.setCellValue(object.getString("vin"));
 
                     String editionMoney = "";
-                    if (object.getJSONObject("carChaboshiPaymentConf") != null) {
-                        editionMoney = object.getString("edition").equals("1")
-                                ? object.getJSONObject("carChaboshiPaymentConf").getString("payment") :
-                                object.getJSONObject("carChaboshiPaymentConf").getString("paymentComposite");
-                        editionMoney = editionMoney + "元";
+                    if (object.getString("money") != null) {
+                        editionMoney = object.getString("money") + "元";
                         editionMoney = getEdition(object.getString("edition")) + ' ' + editionMoney;
                     }
                     HSSFCell c3 = itemRow.createCell(3);
@@ -285,7 +277,7 @@ public class CarChaboshiLogApi {
                        @RequestParam("responseResult") String responseResult,
                        @RequestParam("sellerSearchName") Long sellerSearchName) {
         String[] headers = {"操作人","电话","所属店铺","查询车辆","查询版本","查询金额（元）","查询时间","查询结果","报告来源"};
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> map = Maps.newHashMap();
         map.put("userType", userType);
         map.put("sourceType", sourceType);
@@ -318,28 +310,14 @@ public class CarChaboshiLogApi {
                     HSSFCell c2 = itemRow.createCell(2);
                     c2.setCellValue(object.getJSONObject("carStore").getString("simpleName"));
 
-                    String carInfo = "";
-                    if (object.getJSONObject("carChaboshiVinData") != null) {
-                        carInfo = String.format("%s %s",object.getJSONObject("carChaboshiVinData").getString("modelName"),
-                                object.getJSONObject("carChaboshiVinData").getString("seriesName"));
-                    }
                     HSSFCell c3 = itemRow.createCell(3);
-                    c3.setCellValue(carInfo);
-
-
+                    c3.setCellValue(object.getString("vin"));
 
                     HSSFCell c4 = itemRow.createCell(4);
                     c4.setCellValue(getEdition(object.getString("edition")));
 
-                    String editionMoney = "";
-                    if (object.getJSONObject("carChaboshiPaymentConf") != null) {
-                        editionMoney = object.getString("edition").equals("1")
-                                ? object.getJSONObject("carChaboshiPaymentConf").getString("payment") :
-                                object.getJSONObject("carChaboshiPaymentConf").getString("paymentComposite");
-
-                    }
                     HSSFCell c5 = itemRow.createCell(5);
-                    c5.setCellValue(editionMoney);
+                    c5.setCellValue(object.getString("money"));
 
 
                     HSSFCell c6 = itemRow.createCell(6);
