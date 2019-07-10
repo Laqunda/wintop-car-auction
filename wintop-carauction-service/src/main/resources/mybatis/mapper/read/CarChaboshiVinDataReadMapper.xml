@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarChaboshiVinDataReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarChaboshiVinData" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="model_name" property="modelName" jdbcType="VARCHAR" />
+    <result column="series_name" property="seriesName" jdbcType="VARCHAR" />
+    <result column="vin" property="vin" jdbcType="VARCHAR" />
+    <result column="make_report_date" property="makeReportDate" jdbcType="VARCHAR" />
+    <result column="report_no" property="reportNo" jdbcType="VARCHAR" />
+    <result column="manufacturer" property="manufacturer" jdbcType="VARCHAR" />
+    <result column="make_date" property="makeDate" jdbcType="VARCHAR" />
+    <result column="production_area" property="productionArea" jdbcType="VARCHAR" />
+    <result column="car_type" property="carType" jdbcType="VARCHAR" />
+    <result column="transmission_type" property="transmissionType" jdbcType="VARCHAR" />
+    <result column="displacement" property="displacement" jdbcType="VARCHAR" />
+    <result column="effluent_standard" property="effluentStandard" jdbcType="VARCHAR" />
+    <result column="car_fire_flag" property="carFireFlag" jdbcType="INTEGER" />
+    <result column="car_water_flag" property="carWaterFlag" jdbcType="INTEGER" />
+    <result column="car_component_records_flag" property="carComponentRecordsFlag" jdbcType="INTEGER" />
+    <result column="car_construct_records_flag" property="carConstructRecordsFlag" jdbcType="INTEGER" />
+    <result column="car_outside_records_flag" property="carOutsideRecordsFlag" jdbcType="INTEGER" />
+    <result column="mileageIs_normal_flag" property="mileageisNormalFlag" jdbcType="INTEGER" />
+    <result column="mileage_estimate" property="mileageEstimate" jdbcType="INTEGER" />
+    <result column="last_main_tain_time" property="lastMainTainTime" jdbcType="VARCHAR" />
+    <result column="main_tain_times" property="mainTainTimes" jdbcType="VARCHAR" />
+    <result column="last_repair_time" property="lastRepairTime" jdbcType="VARCHAR" />
+    <result column="mileage_every_year" property="mileageEveryYear" jdbcType="VARCHAR" />
+    <result column="normal_repair_records" property="normalRepairRecords" jdbcType="VARCHAR" />
+    <result column="construct_analyze_repair_records" property="constructAnalyzeRepairRecords" jdbcType="VARCHAR" />
+    <result column="component_analyze_repair_records" property="componentAnalyzeRepairRecords" jdbcType="VARCHAR" />
+    <result column="outside_analyze_repair_records" property="outsideAnalyzeRepairRecords" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+    <result column="materal" property="materal" jdbcType="VARCHAR" />
+    <result column="mileage" property="mileage" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, model_name, series_name, vin, make_report_date, report_no, manufacturer, make_date, 
+    production_area, car_type, transmission_type, displacement, effluent_standard, car_fire_flag, 
+    car_water_flag, car_component_records_flag, car_construct_records_flag, car_outside_records_flag, 
+    mileageIs_normal_flag, mileage_estimate, last_main_tain_time, main_tain_times, last_repair_time, 
+    mileage_every_year, normal_repair_records, construct_analyze_repair_records, component_analyze_repair_records, 
+    outside_analyze_repair_records, content, date, materal, mileage, pay_type, type, 
+    remark, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_chaboshi_vin_data
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByCondition" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_chaboshi_vin_data
+    <where>
+      <if test="modelName != null" >
+        and model_name = #{modelName,jdbcType=VARCHAR}
+      </if>
+      <if test="seriesName != null" >
+        and series_name = #{seriesName,jdbcType=VARCHAR}
+      </if>
+      <if test="vin != null" >
+        and vin = #{vin,jdbcType=VARCHAR}
+      </if>
+      <if test="makeReportDate != null" >
+        and make_report_date = #{makeReportDate,jdbcType=VARCHAR}
+      </if>
+      <if test="reportNo != null" >
+        and report_no = #{reportNo,jdbcType=VARCHAR}
+      </if>
+      <if test="manufacturer != null" >
+        and manufacturer = #{manufacturer,jdbcType=VARCHAR}
+      </if>
+      <if test="makeDate != null" >
+        and make_date = #{makeDate,jdbcType=VARCHAR}
+      </if>
+      <if test="productionArea != null" >
+        and production_area = #{productionArea,jdbcType=VARCHAR}
+      </if>
+      <if test="carType != null" >
+        and car_type = #{carType,jdbcType=VARCHAR}
+      </if>
+      <if test="transmissionType != null" >
+        and transmission_type = #{transmissionType,jdbcType=VARCHAR}
+      </if>
+      <if test="displacement != null" >
+        and displacement = #{displacement,jdbcType=VARCHAR}
+      </if>
+      <if test="effluentStandard != null" >
+        and effluent_standard = #{effluentStandard,jdbcType=VARCHAR}
+      </if>
+      <if test="carFireFlag != null" >
+        and car_fire_flag = #{carFireFlag,jdbcType=INTEGER}
+      </if>
+      <if test="carWaterFlag != null" >
+        and car_water_flag = #{carWaterFlag,jdbcType=INTEGER}
+      </if>
+      <if test="carComponentRecordsFlag != null" >
+        and car_component_records_flag = #{carComponentRecordsFlag,jdbcType=INTEGER}
+      </if>
+      <if test="carConstructRecordsFlag != null" >
+        and car_construct_records_flag = #{carConstructRecordsFlag,jdbcType=INTEGER}
+      </if>
+      <if test="carOutsideRecordsFlag != null" >
+        and car_outside_records_flag = #{carOutsideRecordsFlag,jdbcType=INTEGER}
+      </if>
+      <if test="mileageisNormalFlag != null" >
+        and mileageIs_normal_flag = #{mileageisNormalFlag,jdbcType=INTEGER}
+      </if>
+      <if test="mileageEstimate != null" >
+        and mileage_estimate = #{mileageEstimate,jdbcType=INTEGER}
+      </if>
+      <if test="lastMainTainTime != null" >
+        and last_main_tain_time = #{lastMainTainTime,jdbcType=VARCHAR}
+      </if>
+      <if test="mainTainTimes != null" >
+        and main_tain_times = #{mainTainTimes,jdbcType=VARCHAR}
+      </if>
+      <if test="lastRepairTime != null" >
+        and last_repair_time = #{lastRepairTime,jdbcType=VARCHAR}
+      </if>
+      <if test="mileageEveryYear != null" >
+        and mileage_every_year = #{mileageEveryYear,jdbcType=VARCHAR}
+      </if>
+      <if test="normalRepairRecords != null" >
+        and normal_repair_records = #{normalRepairRecords,jdbcType=VARCHAR}
+      </if>
+      <if test="constructAnalyzeRepairRecords != null" >
+        and construct_analyze_repair_records = #{constructAnalyzeRepairRecords,jdbcType=VARCHAR}
+      </if>
+      <if test="componentAnalyzeRepairRecords != null" >
+        and component_analyze_repair_records = #{componentAnalyzeRepairRecords,jdbcType=VARCHAR}
+      </if>
+      <if test="outsideAnalyzeRepairRecords != null" >
+        and outside_analyze_repair_records = #{outsideAnalyzeRepairRecords,jdbcType=VARCHAR}
+      </if>
+      <if test="content != null" >
+        and content = #{content,jdbcType=VARCHAR}
+      </if>
+      <if test="date != null" >
+        and date = #{date,jdbcType=VARCHAR}
+      </if>
+      <if test="materal != null" >
+        and materal = #{materal,jdbcType=VARCHAR}
+      </if>
+      <if test="mileage != null" >
+        and mileage = #{mileage,jdbcType=VARCHAR}
+      </if>
+      <if test="payType != null" >
+        and pay_type = #{payType,jdbcType=VARCHAR}
+      </if>
+      <if test="type != null" >
+        and type = #{type,jdbcType=VARCHAR}
+      </if>
+      <if test="remark != null" >
+        and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+  </select>
+</mapper>

@@ -5,8 +5,8 @@ import com.wintop.ms.carauction.model.CustomerBoardModel;
 import com.wintop.ms.carauction.service.CustomerBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +31,7 @@ public class CustomerBoardServiceImpl implements CustomerBoardService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int insert(CustomerBoard customerBoard) {
         //绑定拍牌前先解绑之前的用户
         CustomerBoard board = new CustomerBoard();

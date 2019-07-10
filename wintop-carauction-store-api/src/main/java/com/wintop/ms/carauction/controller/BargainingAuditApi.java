@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
+import com.wintop.ms.carauction.core.annotation.InfoNotify;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
@@ -47,6 +48,7 @@ public class BargainingAuditApi {
             @ApiImplicitParam(name = "msg",value = "备注",required = false,paramType = "query",dataType = "string"),
     })
     @AuthUserToken
+    @InfoNotify
     public ResultModel insertBargainingAuditSure(@RequestBody Map<String,Object> map, @CurrentUserId Long userId) throws MalformedURLException {
         map.put("managerId",userId);
         if (map.get("carId")==null || map.get("status")==null || map.get("bargainFee")==null){

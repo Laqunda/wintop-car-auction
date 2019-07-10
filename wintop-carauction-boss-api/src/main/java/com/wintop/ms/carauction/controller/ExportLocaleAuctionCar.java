@@ -6,6 +6,7 @@ import com.wintop.ms.carauction.core.annotation.AuthPublic;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.ExcelUtil;
+import io.swagger.annotations.ApiOperation;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -28,10 +29,11 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author zhangzijuan
- * @Description:参怕车辆的导出
+ * @Description:参拍车辆的导出
  * @date 2018-06-22
  */
 @Controller
@@ -41,6 +43,8 @@ public class ExportLocaleAuctionCar {
     ExportLocaleAuctionCar(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
+    @ApiOperation(value = "参拍车辆的导出")
     @PostMapping(value = "/exportAuctionCarList",produces="application/json; charset=UTF-8")
     @AuthPublic
     public void exportBidRecordList(HttpServletRequest request, HttpServletResponse rep,
@@ -72,8 +76,12 @@ public class ExportLocaleAuctionCar {
                 for (int i=0;i<result.size();i++){
                     JSONObject object=result.getJSONObject(i);
                     HSSFRow itemRow = sheet.createRow(i+2);
+                    String auctionStartTime = "";
+                    if (!Objects.isNull(object.getString("auctionStartTime"))) {
+                        auctionStartTime = UtilDate.dataFormat(object.getDate("auctionStartTime"));
+                    }
                     HSSFCell c0 = itemRow.createCell(0);
-                    c0.setCellValue(UtilDate.dataFormat(object.getDate("startTime")));
+                    c0.setCellValue(auctionStartTime);
 
                     HSSFCell c12 = itemRow.createCell(1);
                     c12.setCellValue(object.getString("title"));

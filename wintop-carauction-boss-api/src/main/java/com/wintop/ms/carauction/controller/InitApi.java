@@ -52,6 +52,7 @@ public class InitApi {
      *@date 2018/3/14
      *@param:map
      */
+    @ApiOperation(value = "查询店铺列表")
     @RequestMapping(value = "/initappid",
             consumes = "application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")

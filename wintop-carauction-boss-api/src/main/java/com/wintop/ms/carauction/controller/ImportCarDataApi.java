@@ -7,13 +7,14 @@ import com.wintop.ms.carauction.core.annotation.CurrentUserId;
 import com.wintop.ms.carauction.core.annotation.RequestAuth;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
+import com.wintop.ms.carauction.core.config.ResultStatus;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.entity.CarDataExcel;
 import com.wintop.ms.carauction.entity.CarPhotoTemp;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.ExcelUtil;
+import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.ir.TernaryNode;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -25,11 +26,11 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,6 +62,8 @@ public class ImportCarDataApi {
     ImportCarDataApi(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
+    @ApiOperation(value = "车辆信息的批量导入")
     @PostMapping(value = "/importCarDataExcel", produces="application/json; charset=UTF-8")
     @ResponseBody
     @RequestAuth(false)
@@ -161,6 +164,7 @@ public class ImportCarDataApi {
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 //用来生成数据填写模板
+@ApiOperation(value = "车辆信息模板的导出")
     @GetMapping(value = "/exportCarDataModelExcel",
             produces="application/json; charset=UTF-8")
     @AuthPublic
@@ -196,7 +200,7 @@ public class ImportCarDataApi {
 
     }
 
-
+    @ApiOperation(value = "车辆信息图片模板的导入")
     @PostMapping(value = "/importCarPhoto", produces="application/json; charset=UTF-8")
     @ResponseBody
     @RequestAuth(false)
@@ -211,10 +215,10 @@ public class ImportCarDataApi {
         }
         String fileName=null;
         Map<String,Object> map=new HashMap<>();
-        HttpPost httpPost=new HttpPost("http://fileuploadserver:2003/file/uploadFile");
-        httpPost.setHeader("appId","1234567_boss");
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        CloseableHttpResponse response = null;
+//        HttpPost httpPost=new HttpPost("http://test-api.yuntongauto.com/file/uploadImageForQuality");
+//        httpPost.setHeader("appId","1234567_boss");
+//        CloseableHttpClient httpclient = HttpClients.createDefault();
+//        CloseableHttpResponse response = null;
         ResponseEntity<JSONObject> responseEntity=null;
         Integer count =1;
         List<CarPhotoTemp> list=new ArrayList<CarPhotoTemp>();
@@ -247,24 +251,42 @@ public class ImportCarDataApi {
                 File tempFile = File.createTempFile(UUID.randomUUID().toString(),fileName.substring(fileName.lastIndexOf(".")));
                 //5.multipartFile转化为File
                 multipartFile.transferTo(tempFile);
-                MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
-                multipartEntityBuilder.addBinaryBody("file",tempFile);
+//                MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+//                multipartEntityBuilder.addBinaryBody("file",tempFile);
                 Long imgSize=tempFile.length()/1024;
                 //6.判断图片大小
                 if(imgSize>IMG_MAX_SIZE){
                     return new ResultModel(false, ResultCode.REQUEST_DISABLED.value(),"图片"+fileName+"大小超限",null);
                 }
-                HttpEntity httpEntity = multipartEntityBuilder.build();
-                httpPost.setEntity(httpEntity);
-                response = httpclient.execute(httpPost);
-                HttpEntity entity2 = response.getEntity();
-                String result = EntityUtils.toString(entity2,"UTF-8");
-                System.out.println("图片上传response = "+result);
-                JSONObject jsonObject = JSONObject.parseObject(result);
-                CarPhotoTemp carPhotoTemp=new CarPhotoTemp();
-                carPhotoTemp.setId(id);
-                carPhotoTemp.setMainPhoto(jsonObject.getString("result"));
-                list.add(carPhotoTemp);
+                //将生成的临时文件封装为文件api参数
+                FileSystemResource resource = new FileSystemResource(tempFile);
+                MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
+                param.add("file", resource);
+//                HttpEntity httpEntity = multipartEntityBuilder.build();
+//                httpPost.setEntity(httpEntity);
+//                response = httpclient.execute(httpPost);
+//                HttpEntity entity2 = response.getEntity();
+//                String result = EntityUtils.toString(entity2,"UTF-8");
+                //以restTemplate方式将文件post到文件服务器
+                org.springframework.http.HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(param);
+                ResponseEntity<JSONObject> resultResponseEntity = this.restTemplate.exchange(Constants.UPLOADIMAGEFORQUALITY_URL, HttpMethod.POST,httpEntity, JSONObject.class);
+                if (resultResponseEntity.getStatusCode()== HttpStatus.OK){
+                    JSONObject jsonObject = resultResponseEntity.getBody();
+                    //公共文件上传服务-返回参数成功
+                    if (jsonObject.getBoolean("success")){
+                        CarPhotoTemp carPhotoTemp=new CarPhotoTemp();
+                        carPhotoTemp.setId(id);
+                        carPhotoTemp.setMainPhoto(jsonObject.getString("result"));
+                        list.add(carPhotoTemp);
+                    }else {
+                        return new ResultModel(false, 99,"上传失败",null);
+                    }
+                }
+//                JSONObject jsonObject = JSONObject.parseObject(result);
+//                CarPhotoTemp carPhotoTemp=new CarPhotoTemp();
+//                carPhotoTemp.setId(id);
+//                carPhotoTemp.setMainPhoto(jsonObject.getString("result"));
+//                list.add(carPhotoTemp);
             }
             map.put("auctionId",auctionId);
             map.put("carPhotoTemps",list);
@@ -287,6 +309,7 @@ public class ImportCarDataApi {
     @PostMapping(value = "/deleteCarPhoto", produces="application/json; charset=UTF-8")
     @ResponseBody
     @RequestAuth(false)
+    @ApiOperation(value = "车辆信息图片删除")
     public ResultModel deleteCarPhoto(@RequestParam("auctionId") Long auctionId){
         //1.判断传入参数的非空
         if( auctionId==null || auctionId==0){

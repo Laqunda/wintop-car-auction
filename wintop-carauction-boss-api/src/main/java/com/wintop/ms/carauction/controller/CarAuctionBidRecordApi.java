@@ -94,7 +94,45 @@ public class CarAuctionBidRecordApi {
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
+    /**
+     * @Author: lizhaoyang
+     * @Description: 获取车辆出价记录列表
+     * @Date:2018/3/26/18:58
+     **/
+    @ApiOperation(value = "获取车辆出价记录列表")
+    @PostMapping(value = "/queryCarBidRecordAllList",produces="application/json; charset=UTF-8")
+    @ResponseBody
+    @AuthUserToken
+    public ResultModel queryCarBidRecordAllList(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) {
+        map.put("userId",userId);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carBidRecordApi/queryCarBidRecordAllList"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
+    /**
+     * @Author: mazg
+     * @Description: 获取竞拍统计列表
+     * @Date:2018/3/26/18:58
+     **/
+    @ApiOperation(value = "获取竞拍统计列表")
+    @PostMapping(value = "/queryCarBidRecordAllStatistic",produces="application/json; charset=UTF-8")
+    @ResponseBody
+    @AuthUserToken
+    public ResultModel queryCarBidRecordAllStatistic(@RequestBody Map<String,Object> map,@CurrentUserId Long userId) {
+        map.put("userId",userId);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carBidRecordApi/queryCarBidRecordAllStatistic"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
 
+
+    @ApiOperation( value = "获取竞拍统计导出" )
     @PostMapping(value = "/exportBidRecordList",produces="application/json; charset=UTF-8")
     @AuthPublic
     public void exportBidRecordList(HttpServletRequest request, HttpServletResponse rep,
@@ -191,6 +229,7 @@ public class CarAuctionBidRecordApi {
      * @Description:根据车辆id获取车辆出价记录
      * @Date:2018/4/16
      **/
+    @ApiOperation( value = "根据车辆id获取车辆出价记录" )
     @PostMapping(value = "/getCarBidRecordByCarId",produces="application/json; charset=UTF-8")
     @ResponseBody
     public ResultModel getCarBidRecordByCarId(@RequestBody Map<String,Object> map) {

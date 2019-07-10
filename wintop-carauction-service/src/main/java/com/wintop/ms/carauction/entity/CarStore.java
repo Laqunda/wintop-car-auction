@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class CarStore implements Serializable {
@@ -79,6 +80,26 @@ public class CarStore implements Serializable {
 
     private Long regionId;
 
+    /**
+     * 选中状态
+     */
+    private String checked;
+    /**
+     * 所属地区
+     */
+    private String area;
+    /**
+     * 余额
+     */
+    private BigDecimal balance;
+    /**
+     * 中心id
+     */
+    private Long centerId;
+    /**
+     * 关联中心id
+     */
+    private Long centerStoreId;
     /**
      * @return id
      */
@@ -306,5 +327,45 @@ public class CarStore implements Serializable {
 
     public void setRegionId(Long regionId) {
         this.regionId = regionId;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public String getChecked() {
+        return checked;
+    }
+
+    public void setChecked(String checked) {
+        this.checked = checked;
+    }
+
+    public Long getCenterId() {
+        return centerId;
+    }
+
+    public void setCenterId(Long centerId) {
+        this.centerId = centerId;
+    }
+
+    public Long getCenterStoreId() {
+        return centerStoreId;
+    }
+
+    public void setCenterStoreId(Long centerStoreId) {
+        this.centerStoreId = centerStoreId;
     }
 }

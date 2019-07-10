@@ -39,4 +39,21 @@ public interface ICarStoreReadDao {
      * @return
      */
     List<Long> selectAllStoreIds();
+
+    Long idByExample(Map<String, Object> map);
+
+
+    /**
+     * 根据审批车辆权限查询店铺集合
+     * @param map
+     * @return
+     */
+    List<Long> queryStoreListByRole(Map<String,Object> map);
+
+    /**
+     * 查询中心的门店
+     * @param map
+     * @return
+     */
+    List<CarStore> selectForCenterByCondition(Map<String, Object> map);
 }

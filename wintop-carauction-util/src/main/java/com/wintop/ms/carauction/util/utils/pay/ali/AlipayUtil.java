@@ -18,7 +18,6 @@ import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -75,7 +74,7 @@ public class AlipayUtil {
         try {
             System.out.println("支付宝支付结果通知"+requestParams.toString());
             //获取支付宝POST过来反馈信息
-            Map<String,String> params = new HashMap<>();
+            Map<String,String> params = new HashMap<String,String>();
 
             for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
                 String name = (String) iter.next();

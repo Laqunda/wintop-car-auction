@@ -37,6 +37,7 @@ public class CarHandleDisputeApi {
     /**
      *申请撤回车辆接口
      */
+    @ApiOperation(value = "申请撤回车辆接口")
     @RequestMapping(value = "/insertRevocationCar",
             method= RequestMethod.POST,
             produces="application/json; charset=UTF-8")
@@ -54,6 +55,25 @@ public class CarHandleDisputeApi {
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
+    /**
+     * 线上转线下渠道
+     */
+    @ApiOperation(value = "线上转线下渠道")
+    @RequestMapping(value = "/transferChannelCar",
+            method= {RequestMethod.POST,RequestMethod.GET},
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel transferChannelCar(@RequestBody Map<String,Object> map,@CurrentUserId Long userId)  throws MalformedURLException {
+        if(map.get("carId")==null){
+            return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
+        }
+        map.put("userId",userId);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/handleDispute/transferChannelCar"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);    }
 
     /**
      *申请二拍接口
@@ -86,6 +106,7 @@ public class CarHandleDisputeApi {
     /**
      *确定收款
      */
+    @ApiOperation(value = "确定收款")
     @RequestMapping(value = "/saveGathering",
             method= RequestMethod.POST,
             produces="application/json; charset=UTF-8")

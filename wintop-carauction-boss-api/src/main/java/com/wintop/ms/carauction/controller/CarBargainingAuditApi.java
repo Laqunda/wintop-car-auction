@@ -48,7 +48,7 @@ public class CarBargainingAuditApi {
             @ApiImplicitParam(name = "msg",value = "备注",required = false,paramType = "query",dataType = "string"),
     })
     @AuthUserToken
-    public ResultModel CarBargaining(@RequestBody Map<String,Object> map, @CurrentUserId Long userId){
+    public ResultModel carBargaining(@RequestBody Map<String,Object> map, @CurrentUserId Long userId){
         map.put("managerId",userId);
         if (map.get("carId")==null || map.get("status")==null || map.get("bargainFee")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);

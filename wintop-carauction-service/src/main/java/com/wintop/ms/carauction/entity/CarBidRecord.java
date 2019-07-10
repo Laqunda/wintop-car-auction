@@ -65,25 +65,23 @@ public class CarBidRecord implements Serializable{
      * 出价金额
      */
     private BigDecimal bidFee;
+    /**
+     * 竞拍状态
+     */
+    private String auctionStatus;
+    /**
+     * 店铺id
+     */
+    private Long storeId;
+    /**
+     * 显示中心店铺
+     */
+    private String centerName;
+    /**
+     * 二手车中心ID
+     */
+    private Long centerId;
 
-    public CarBidRecord() {
-    }
-
-    public CarBidRecord(Long id, String userCode, String userNum, String username, String mobile, String userStoreName, String carAutoNo, String autoInfoName, String carStoreName, String auctionType, BigDecimal startingPrice, Date bidTime, BigDecimal bidFee) {
-        this.id = id;
-        this.userCode = userCode;
-        this.userNum = userNum;
-        this.username = username;
-        this.mobile = mobile;
-        this.userStoreName = userStoreName;
-        this.carAutoNo = carAutoNo;
-        this.autoInfoName = autoInfoName;
-        this.carStoreName = carStoreName;
-        this.auctionType = auctionType;
-        this.startingPrice = startingPrice;
-        this.bidTime = bidTime;
-        this.bidFee = bidFee;
-    }
 
     public Long getId() {
         return id;
@@ -187,6 +185,38 @@ public class CarBidRecord implements Serializable{
 
     public void setBidFee(BigDecimal bidFee) {
         this.bidFee = bidFee;
+    }
+
+    public String getAuctionStatus() {
+        return auctionStatus;
+    }
+
+    public void setAuctionStatus(String auctionStatus) {
+        this.auctionStatus = auctionStatus;
+    }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getCenterName() {
+        return centerName;
+    }
+
+    public void setCenterName(String centerName) {
+        this.centerName = centerName;
+    }
+
+    public Long getCenterId() {
+        return centerId;
+    }
+
+    public void setCenterId(Long centerId) {
+        this.centerId = centerId;
     }
 
     @Override

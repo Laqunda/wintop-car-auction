@@ -20,4 +20,12 @@ public interface ICarCenterStoreService {
      * 保存记录,不管记录里面的属性是否为空
      */
     public int insert(CarCenterStore carCenterStore);
+
+    /**
+     * 保存或删除
+     * @param storeIds
+     * @param centerId
+     * @return
+     */
+    public int saveOrDelete(String storeIds, Long centerId);
 }

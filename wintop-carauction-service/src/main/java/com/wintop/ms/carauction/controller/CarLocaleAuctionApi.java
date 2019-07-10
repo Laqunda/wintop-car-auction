@@ -1,10 +1,12 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
+import com.wintop.ms.carauction.core.config.CarTypeEnum;
+import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
-import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.service.*;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
@@ -13,14 +15,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: 付陈林.
@@ -33,6 +36,8 @@ import java.util.*;
 @RequestMapping("/service/carLocaleAuction")
 public class CarLocaleAuctionApi {
     private static final Logger logger = LoggerFactory.getLogger(CarLocaleAuctionApi.class);
+    private static final Long CENTER = 2L;
+    private static final Long REGION_BEIJING = 2L;
     private IdWorker idWorker = new IdWorker(10);
     @Autowired
     private ICarLocaleAuctionService carLocaleAuctionService;
@@ -45,6 +50,12 @@ public class CarLocaleAuctionApi {
 
     @Autowired
     private ICarAuctionBidRecordService carAuctionBidRecordService;
+
+    @Autowired
+    private ICarCenterStoreService carCenterStoreService;
+
+    @Autowired
+    private ICarManagerUserService carManagerUserService;
 
     /***
      * 获取场次列表
@@ -228,6 +239,7 @@ public class CarLocaleAuctionApi {
                 map.put("isFollow",carAuto.getIsFollow());
                 map.put("environment",carAuto.getEnvironment());
                 map.put("auctionId",carAuto.getAutoAuctionId());
+                map.put("transferFlag",carAuto.getTransferFlag());
             map.put("beginRegisterDate",carAuto.getBeginRegisterDate());
             map.put("status",carAuto.getStatus());
             list.add(map);
@@ -272,6 +284,18 @@ public class CarLocaleAuctionApi {
         }
         if(obj.getString("endTime")!=null&&!"".equals(obj.getString("endTime"))){
             paramMap.put("endTime",obj.getString("endTime"));
+        }
+        if (Objects.nonNull(obj.getString("managerId"))) {
+            CarManagerUser user = carManagerUserService.selectByPrimaryKey(obj.getLong("managerId"), false);
+            if(Long.valueOf(ManagerRole.PT_GLY.value()).compareTo(user.getRoleId()) != 0){
+                paramMap.put("departmentId", user.getDepartmentId());
+            }
+            // 就否是中心
+            /*if (user.getRoleTypeId().equals(CENTER) && user.getDepartmentId().equals(REGION_BEIJING)) {
+                List<CommonNameVo> cityList = carCenterStoreService.selectAllStore(user.getDepartmentId());
+                List<Long> regionIds = cityList.stream().map(city -> city.getId()).collect(Collectors.toList());
+                paramMap.put("regionIds", regionIds);
+            }*/
         }
         int count = carLocaleAuctionService.selectAuctionCount(paramMap).getResult();
         PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
@@ -366,6 +390,7 @@ public class CarLocaleAuctionApi {
             produces="application/json; charset=UTF-8")
     @ApiOperation(value = "保存竞拍场次",notes = "")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "templateId",value = "模板id",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "title",value = "场次主题",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "regionId",value = "可见范围，客户组id",required = true,paramType = "body",dataType = "long"),
             @ApiImplicitParam(name = "cityId",value = "场次所在城市",required = true,paramType = "body",dataType = "long"),
@@ -438,6 +463,12 @@ public class CarLocaleAuctionApi {
             result.setError("101","创建人不能为空！");
             return result;
         }
+        if (obj.getString("templateId") != null) {
+            carLocaleAuction.setTemplateId(obj.getLong("templateId"));
+        }else{
+            result.setError("101","模板id不能为空！");
+            return result;
+        }
         carLocaleAuction.setDelFlag("0");
         carLocaleAuction.setStatus("1");
         carLocaleAuction.setCreateTime(new Date());
@@ -471,6 +502,7 @@ public class CarLocaleAuctionApi {
     @ApiOperation(value = "更新竞拍场次",notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id",value = "场次主键",required = true,paramType = "body",dataType = "string"),
+            @ApiImplicitParam(name = "templateId",value = "模板id",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "code",value = "场次编号",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "title",value = "场次主题",required = true,paramType = "body",dataType = "string"),
             @ApiImplicitParam(name = "regionId",value = "可见范围，客户组id",required = true,paramType = "body",dataType = "long"),
@@ -534,6 +566,9 @@ public class CarLocaleAuctionApi {
         }
         if(obj.getString("modifyPerson")!=null){
             carLocaleAuction.setModifyPerson(obj.getLong("modifyPerson"));
+        }
+        if (obj.getString("templateId") != null) {
+            carLocaleAuction.setTemplateId(obj.getLong("templateId"));
         }
         carLocaleAuction.setModifyTime(new Date());
         result = carLocaleAuctionService.updateByIdSelective(carLocaleAuction);
@@ -805,9 +840,18 @@ public class CarLocaleAuctionApi {
         if(obj.getLong("customerId")!=null&&obj.getLong("customerId")!=0){
             carAuctionBidRecord.setCustomerId(obj.getLong("customerId"));
         }
-
         if(obj.getLong("lastAmount")==null){
             return new ServiceResult<>(false,"最高出价不能为空！","101");
+        }
+        Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put("auctionCarId", obj.getLong("auctionCarId"));
+        paramMap.put("carId", obj.getLong("carId"));
+        List<CarAuctionBidRecord> recordList = carAuctionBidRecordService.selectPriceList(paramMap);
+        if (CollectionUtils.isNotEmpty(recordList)) {
+            List<BigDecimal> priceList = recordList.stream().map(a -> a.getBidFee()).collect(Collectors.toList());
+            if (priceList.contains(obj.getBigDecimal("lastAmount"))) {
+                return new ServiceResult<>(false,"不可重复出价！","101");
+            }
         }
         CarLocaleAuctionCar carLocaleAuctionCar = carLocaleAuctionCarService.selectById(obj.getLong("auctionCarId"));
         if(carLocaleAuctionCar==null||!"1".equals(carLocaleAuctionCar.getAuctionStatus())){
@@ -1270,6 +1314,7 @@ public class CarLocaleAuctionApi {
             map.put("storeName",carLocaleAuctionCar.getStoreName());
             map.put("sourceType",carLocaleAuctionCar.getSourceType());
             map.put("startTime",carLocaleAuctionCar.getStartTime());
+            map.put("auctionStartTime",carLocaleAuctionCar.getAuctionStartTime());
             map.put("address",carLocaleAuctionCar.getAddress());
             map.put("title",carLocaleAuctionCar.getTitle());
             map.put("startingPrice",carLocaleAuctionCar.getStartingPrice());
@@ -1312,6 +1357,7 @@ public class CarLocaleAuctionApi {
             PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
             paramMap.put("endRowNum",pageEntity.getEndRowNum());
+            paramMap.put("saleFlag", CarTypeEnum.SALE_FLAG_SELL_WHOLESALE.value());
             List<CarAuto> carAutos = carAutoService.selectAuctionCarList(paramMap);
             List<Map<String,Object>> list = new ArrayList<>();
             for(CarAuto carAuto:carAutos){

@@ -122,7 +122,9 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                        boolean result = false;
                        RequestAuth auth = handlerMethod.getMethodAnnotation(RequestAuth.class);
                        //System.out.println(auth);
-                       if(auth==null || auth.value()){
+                       if(Constants.AUTHORITY_PATH.contains(url)){
+                           result=true;
+                       }else if(auth==null || auth.value()){
                            List<String> pageUrls = ManagerRolePages.getInstance().getAllRequestPages(model.getUserId());
                            for(String str:pageUrls){
                                if(url.contains(str)){
@@ -130,7 +132,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
                                    break;
                                }
                            }
-                           if(!result){
+                          if(!result){
                                ResultModel resultModel =
                                        new ResultModel(false,ResultCode.NO_REQUEST_AUTH.value(),ResultCode.NO_REQUEST_AUTH.getRemark(),null);
                                String obj = JSONObject.toJSONString(resultModel);

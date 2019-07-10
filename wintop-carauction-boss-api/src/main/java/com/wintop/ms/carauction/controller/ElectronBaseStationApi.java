@@ -11,6 +11,7 @@ import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import com.wintop.ms.carauction.util.utils.ParamValidUtil;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -39,6 +40,7 @@ public class ElectronBaseStationApi {
      * 查询基站分页列表
      * @return
      */
+    @ApiOperation(value = "查询基站分页列表")
     @RequestMapping(value = "/selectBaseStationList",produces="application/json; charset=UTF-8")
     @AuthUserToken
     public ResultModel selectBaseStationList(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
@@ -54,6 +56,7 @@ public class ElectronBaseStationApi {
      * 查询所有基站列表
      * @return
      */
+    @ApiOperation(value = "查询所有基站列表")
     @RequestMapping(value = "/selectAllStationList",produces="application/json; charset=UTF-8")
     @AuthUserToken
     @RequestAuth(false)
@@ -72,6 +75,7 @@ public class ElectronBaseStationApi {
      * @param map
      * @return
      */
+    @ApiOperation(value = "保存基站")
     @RequestMapping(value = "/saveBaseStation",
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
@@ -95,6 +99,7 @@ public class ElectronBaseStationApi {
      * @param map
      * @return
      */
+    @ApiOperation(value = "更新基站")
     @RequestMapping(value = "/updateBaseStation",
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
@@ -119,6 +124,7 @@ public class ElectronBaseStationApi {
      * @param map
      * @return
      */
+    @ApiOperation(value = "删除基站")
     @RequestMapping(value = "/deleteBaseStation",
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
@@ -143,6 +149,7 @@ public class ElectronBaseStationApi {
      * @param map
      * @return
      */
+    @ApiOperation(value = "查询基站")
     @RequestMapping(value = "/selectBaseStation",
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")

@@ -8,6 +8,7 @@
     <result column="simple_name" property="simpleName" jdbcType="VARCHAR" />
     <result column="store_photo" property="storePhoto" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
     <result column="service_tel" property="serviceTel" jdbcType="VARCHAR" />
     <result column="latitude" property="latitude" jdbcType="DOUBLE" />
     <result column="longitude" property="longitude" jdbcType="DOUBLE" />
@@ -20,33 +21,56 @@
     <result column="del_time" property="delTime" jdbcType="TIMESTAMP" />
     <result column="del_person" property="delPerson" jdbcType="BIGINT" />
     <result column="region_id" property="regionId" jdbcType="BIGINT" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="checked" property="checked" jdbcType="VARCHAR" />
+    <result column="center_id" property="centerId" jdbcType="BIGINT" />
+    <result column="center_store_id" property="centerStoreId" jdbcType="BIGINT" />
   </resultMap>
+
   <resultMap id="StoreResultMap" type="com.wintop.ms.carauction.entity.CommonNameVo">
     <result column="id" property="id" jdbcType="BIGINT" />
     <result column="checked" property="checked" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
   </resultMap>
+
   <resultMap id="IdResultMap" type="java.lang.Long">
     <result column="id" property="id" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     t1.id, t1.code, t1.`name`, t1.simple_name, t1.store_photo, t1.address, t1.service_tel, t1.latitude,
     t1.longitude, t1.status,t1.create_time,t1.create_person, t1.update_time, t1.update_person,t1.del_time, t1.del_person,
-    t1.remark,t1.region_id
+    t1.remark,t1.region_id, t1.area
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List" />,balance
     from car_store t1
+    left join (
+      select t3.create_time,t3.store_id, t3.balance
+        from car_chaboshi_store_account t3
+      inner join
+        (select max(create_time) create_time,store_id  from car_chaboshi_store_account group by store_id) t2
+        on  t3.store_id = t2.store_id and t3.create_time = t2.create_time
+    ) account on account.store_id = t1.id
     where 1=1
     <if test="status != null">
       and t1.status=#{status}
     </if>
+    <if test="regionId != null">
+      and t1.region_id = #{regionId}
+    </if>
     <if test="status == null">
       and t1.status <![CDATA[ <> ]]> '3'
     </if>
-    <if test="storeName!=null">
-      and t1.`name` LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+    <if test="storeName != null">
+      and (t1.`name` LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+      or t1.simple_name like CONCAT(CONCAT('%',#{storeName}),'%'))
+    </if>
+    <if test="storeList != null">
+      and t1.id in
+      <foreach collection="storeList" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
     order by t1.`name`
     <if test="startRowNum != null">
@@ -63,7 +87,14 @@
     select count(t1.id) from car_store t1
     where 1=1
     <if test="storeName!=null">
-      and t1.`name` LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+      and (t1.`name` LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+      or t1.simple_name like CONCAT(CONCAT('%',#{storeName}),'%'))
+    </if>
+    <if test="storeList != null">
+      and t1.id in
+      <foreach collection="storeList" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
   </select>
   <select id="selectAllStore" resultMap="StoreResultMap">
@@ -72,6 +103,21 @@
     from car_store t1
     where t1.status='1'
     order by t1.simple_name
+  </select>
+  <select id="selectForCenterByCondition" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select * from (
+      select
+      cs.name,cs.simple_name,cs.id,ccs.center_id,ccs.id as center_store_id,
+      if ((ccs.center_id is not null and center_id = '1'),'1','0') as checked
+      from car_store cs
+      left join car_center_store ccs on cs.id = ccs.store_id
+      <trim prefix="WHERE" prefixOverrides="AND|OR ">
+        <!--<if test="centerId != null">-->
+          <!--and center_id = #{centerId}-->
+        <!--</if>-->
+      </trim>
+    ) a
+    order by checked desc
   </select>
   <select id="selectByCenter" resultMap="StoreResultMap" parameterType="java.lang.Long">
     select
@@ -84,5 +130,27 @@
   </select>
   <select id="selectAllStoreIds" resultMap="IdResultMap">
     SELECT id FROM car_store;
+  </select>
+  <select id="idByExample" parameterType="java.util.Map" resultType="java.lang.Long" >
+    select id from car_store
+    where 1=1
+    <if test="storeName!=null">
+      and name LIKE CONCAT(CONCAT('%', #{storeName}),'%')
+    </if>
+  </select>
+
+  <!-- 根据用户审批车辆权限查询店铺 -->
+  <select id="queryStoreListByRole" parameterType="java.util.Map" resultMap="IdResultMap" >
+    SELECT cs.id
+    FROM car_store cs
+    <if test="auctionType == '1'.toString()">
+      INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = cs.region_id
+    </if>
+    <if test="auctionType == '2'.toString()">
+      INNER JOIN car_center_store ccs ON ccs.store_id = cs.id
+      INNER JOIN car_manager_role_publish cmrp ON cmrp.obj_id = ccs.center_id
+    </if>
+    WHERE cmrp.type_id = #{auctionType}
+    and cmrp.manager_id = #{managerId}
   </select>
 </mapper>

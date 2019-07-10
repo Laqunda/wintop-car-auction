@@ -9,6 +9,7 @@ import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.IdWorker;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ public class ElectronAuctionDetailApi {
      * 查询现场拍详情
      * @return
      */
+    @ApiOperation(value = "查询现场拍详情")
     @RequestMapping(value = "/selectElectronAuctionDetail",produces="application/json; charset=UTF-8")
     @AuthUserToken
     public ResultModel selectElectronAuctionDetail(@RequestBody Map<String,Object> map) {
@@ -54,6 +56,7 @@ public class ElectronAuctionDetailApi {
      * @param map
      * @return
      */
+    @ApiOperation(value = "出价幅度调整")
     @RequestMapping(value = "/updatePriceRange",
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
@@ -81,6 +84,7 @@ public class ElectronAuctionDetailApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation(value = "打点出价")
     public ResultModel updateBidFeePoint(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("localeAuctionId")==null || map.get("adjustType")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
@@ -98,6 +102,7 @@ public class ElectronAuctionDetailApi {
      * 查询拍卖详情
      * @return
      */
+    @ApiOperation(value = "查询拍卖详情")
     @RequestMapping(value = "/selectAuctionCarDetail",produces="application/json; charset=UTF-8")
     @AuthUserToken
     public ResultModel selectAuctionCarDetail(@RequestBody Map<String,Object> map) {

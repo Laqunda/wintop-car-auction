@@ -81,4 +81,17 @@ public class CarStoreModel {
     public List<CommonNameVo> selectByCenter(Long centerId){
         return storeReadDao.selectByCenter(centerId);
     }
+
+    public Long idByExample(Map<String, Object> map){
+        return storeReadDao.idByExample(map);
+    }
+
+    /**
+     * 查询中心的门店
+     * @param map
+     * @return
+     */
+    public List<CarStore> selectForCenterByCondition(Map<String, Object> map){
+        return storeReadDao.selectForCenterByCondition(map);
+    }
 }

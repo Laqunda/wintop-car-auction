@@ -90,6 +90,14 @@ public class TblAuctionLog implements Serializable {
      * 车辆编号
      */
     private String  licenseNumber;
+    /**
+     * 车商号
+     */
+    private String userNum;
+    /**
+     * 车商号
+     */
+    private String mobile;
 
     public String getCustomerName() {
         return customerName;
@@ -303,5 +311,21 @@ public class TblAuctionLog implements Serializable {
 
     public void setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String getUserNum() {
+        return userNum;
+    }
+
+    public void setUserNum(String userNum) {
+        this.userNum = userNum;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

@@ -121,6 +121,24 @@ public class CarCenterApi {
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
+
+    /**
+     * 保存或删除中心关联数据
+     *@param:map
+     */
+    @ApiOperation(value = "保存或删除中心关联数据")
+    @RequestMapping(value = "/saveOrDeleteRelation",
+            consumes = "application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ResultModel saveOrDeleteRela(@RequestBody Map<String,Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carCenter/saveOrDeleteRelation"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
     /**
      * 查询中心
      *@Author:admin

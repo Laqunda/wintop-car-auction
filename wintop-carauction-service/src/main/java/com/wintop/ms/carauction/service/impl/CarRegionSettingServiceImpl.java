@@ -5,6 +5,7 @@ import com.wintop.ms.carauction.entity.CarRegionSetting;
 import com.wintop.ms.carauction.model.CarRegionServerfeeSettingModel;
 import com.wintop.ms.carauction.model.CarRegionSettingModel;
 import com.wintop.ms.carauction.service.ICarRegionSettingService;
+import com.wintop.ms.carauction.util.StringUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,19 +54,23 @@ public class CarRegionSettingServiceImpl implements ICarRegionSettingService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int insert(CarRegionSetting record) {
         int count = regionSettingModel.insert(record);
-        serverfeeSettingModel.saveBatchServerfee(record.getId(),record.getServerfeeSettings());
+        if (StringUtils.isNotEmpty(record.getServerfeeSettings())) {
+            serverfeeSettingModel.saveBatchServerfee(record.getId(),record.getServerfeeSettings());
+        }
         return count;
     }
 
     @Override
     @Transactional
     public int updateByPrimaryKeySelective(CarRegionSetting record) {
-        serverfeeSettingModel.deleteByRegionSettingId(record.getId());
         int count = regionSettingModel.updateByPrimaryKeySelective(record);
-        serverfeeSettingModel.saveBatchServerfee(record.getId(),record.getServerfeeSettings());
+        if (StringUtils.isNotEmpty(record.getServerfeeSettings())) {
+            serverfeeSettingModel.deleteByRegionSettingId(record.getId());
+            serverfeeSettingModel.saveBatchServerfee(record.getId(),record.getServerfeeSettings());
+        }
         return count;
     }
 
@@ -76,7 +81,29 @@ public class CarRegionSettingServiceImpl implements ICarRegionSettingService {
      * @param type,1支付违约时间，2过户违约时间
      * @return
      */
+    @Override
     public Date getBreachTime(Date date, Long regionId, String type){
         return regionSettingModel.getBreachTime(date, regionId, type);
+    }
+
+    /**
+     * 保存记录
+     * @param record
+     */
+    @Override
+    @Transactional
+    public int insertServerfeeSelective(CarRegionServerfeeSetting record){
+        return serverfeeSettingModel.insertSelective(record);
+    }
+
+    /**
+     * 修改记录
+     * @param record
+     * @return
+     */
+    @Override
+    @Transactional
+    public int updateServerfeeByPrimaryKeySelective(CarRegionServerfeeSetting record){
+        return serverfeeSettingModel.updateByPrimaryKeySelective(record);
     }
 }

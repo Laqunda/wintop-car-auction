@@ -3,6 +3,7 @@ package com.wintop.ms.carauction.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
+import com.wintop.ms.carauction.core.annotation.InfoCleanNotify;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultStatus;
 import com.wintop.ms.carauction.core.model.ResultModel;
@@ -56,14 +57,15 @@ public class CarOrderApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    public ResponseEntity<ResultModel> selectHistoryCarList(@RequestBody Map<String,Object> map, @CurrentUserId Long userId) {
+    @InfoCleanNotify
+    public ResultModel selectHistoryCarList(@RequestBody Map<String,Object> map, @CurrentUserId Long userId) {
         map.put("customerId",userId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carOrder/selectHistoryCarList"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
-        return ApiUtil.getResponseEntity(response,resultModel,ApiUtil.OBJECT);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 
     /**

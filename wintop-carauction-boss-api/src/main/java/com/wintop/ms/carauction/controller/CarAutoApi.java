@@ -1,6 +1,8 @@
 package com.wintop.ms.carauction.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.annotation.AuthPublic;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
@@ -9,18 +11,30 @@ import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
+import com.wintop.ms.carauction.util.utils.ExcelUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -347,10 +361,11 @@ public class CarAutoApi {
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
     /**
-     * 查询车辆信息
+     * 通过车辆id查询车辆信息
      * @param map
      * @return
      */
+    @ApiOperation(value ="通过车辆id查询车辆信息")
     @RequestMapping(value = "/selectByCarId",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
@@ -361,6 +376,26 @@ public class CarAutoApi {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carAuto/selectByCarId"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
+    /**
+     * 查询车辆信息
+     * @param map
+     * @return
+     */
+    @ApiOperation(value ="查询车辆信息")
+    @RequestMapping(value = "/detail",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthPublic
+    @RequestAuth(false)
+    public ResultModel detail(@RequestBody Map<String,Object> map){
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carAuto/detail"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
@@ -377,6 +412,7 @@ public class CarAutoApi {
             produces="application/json; charset=UTF-8")
     @AuthPublic
     @RequestAuth(false)
+    @ApiOperation(value ="查询车辆基本信息")
     public ResultModel selectDetailByCarId(@RequestBody Map<String,Object> map){
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
@@ -386,6 +422,7 @@ public class CarAutoApi {
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
 
+    @ApiOperation(value ="查询车辆手续信息")
     @RequestMapping(value = "/selectProcedureByCarId",
             method= RequestMethod.POST,
             consumes="application/json; charset=UTF-8",
@@ -398,4 +435,506 @@ public class CarAutoApi {
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
     }
+
+    /**
+     * 线上车辆导出
+     * @param request
+     * @param rep
+     * @param carAutoNo
+     * @param autoInfoName
+     * @param licenseNumber
+     * @param createUserName
+     * @param vin
+     * @param storeId
+     * @param carType
+     * @param startTime
+     * @param endTime
+     */
+    @ApiOperation(value = "线上车辆导出")
+    @AuthPublic
+    @PostMapping( value = "/exportOnlineCarList" )
+    public void exportOnlineCarList(HttpServletRequest request, HttpServletResponse rep,
+                                    @RequestParam("saleFlag") String saleFlag,
+                                    @RequestParam("auctionType") String auctionType,
+                                    @RequestParam("sourceType") String sourceType,
+                                    @RequestParam("carAutoNo") String carAutoNo,
+                                    @RequestParam("autoInfoName") String autoInfoName,
+                                    @RequestParam("licenseNumber") String licenseNumber,
+                                    @RequestParam("createUserName") String createUserName,
+                                    @RequestParam("vin") String vin,
+                                    @RequestParam("storeId") String storeId,
+                                    @RequestParam("carType") String carType,
+                                    @RequestParam("startTime") String startTime,
+                                    @RequestParam("endTime") String endTime,
+                                    @RequestParam("authorization") String authorization) {
+        String[] headers = {"车辆编号", "车辆名称", "车牌号", "上拍数", "车辆归属城市", "初次上牌","公里数","VIN","所属店铺","车辆类型","车辆来源","价格信息","竞拍类型","开拍信息","成交价","服务费","是否代办","车辆状态","发车时间","发车人"};
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("saleFlag", saleFlag);
+        map.put("auctionType", auctionType);
+        map.put("sourceType", sourceType);
+        map.put("carAutoNo", carAutoNo);
+        map.put("autoInfoName", autoInfoName);
+        map.put("licenseNumber", licenseNumber);
+        map.put("createUserName", createUserName);
+        map.put("vin", vin);
+        map.put("storeId", storeId);
+        map.put("ifNew", carType);
+        if (StringUtils.isNotEmpty(startTime)) {
+            map.put("startTime", startTime);
+        }
+        if (StringUtils.isNotEmpty(endTime)) {
+            map.put("endTime", endTime);
+        }
+        if (StringUtils.isNotEmpty(authorization)) {
+            map.put("managerId", StringUtils.split(authorization,"_")[0]);
+        }
+        HSSFWorkbook workbook = ExcelUtil.createStartExcel("在线车辆记录", headers);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/carAuto/getCarAutoAllListByParam"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+        HSSFSheet sheet = workbook.getSheetAt(0);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            JSONObject obj = response.getBody();
+            JSONArray result = obj.getJSONObject("result").getJSONArray("list");
+            if (result != null && result.size() > 0) {
+                for (int i = 0; i < result.size(); i++) {
+                    JSONObject object = result.getJSONObject(i);
+                    HSSFRow itemRow = sheet.createRow(i + 2);
+                    HSSFCell c0 = itemRow.createCell(0);
+                    c0.setCellValue(object.getString("carAutoNo"));
+
+                    HSSFCell c12 = itemRow.createCell(1);
+                    c12.setCellValue(object.getString("autoInfoName"));
+
+                    HSSFCell c1 = itemRow.createCell(2);
+                    c1.setCellValue(object.getString("licenseNumber"));
+
+                    HSSFCell c2 = itemRow.createCell(3);
+                    c2.setCellValue(object.getString("auctionNum"));
+
+                    HSSFCell c3 = itemRow.createCell(4);
+                    c3.setCellValue(object.getString("vehicleAttributionCity"));
+
+                    String beginRegisterDate = "";
+                    if (object.getString("beginRegisterDate") != null) {
+                        beginRegisterDate = StringUtils.left(sdf.format(new Date(object.getLong("beginRegisterDate"))),4);
+                    }
+
+                    HSSFCell c4 = itemRow.createCell(5);
+                    c4.setCellValue(beginRegisterDate);
+
+                    HSSFCell c5 = itemRow.createCell(6);
+                    c5.setCellValue(object.getString("mileage"));
+
+                    HSSFCell c6 = itemRow.createCell(7);
+                    c6.setCellValue(object.getString("vin"));
+
+                    HSSFCell c7 = itemRow.createCell(8);
+                    c7.setCellValue(object.getString("carStoreNme"));
+
+                    String ifNew = "";
+                    if (object.getString("ifNew") != null) {
+                        ifNew = object.getString("ifNew").equals("1") ? "二手车" : "新车";
+                    }
+                    HSSFCell c9 = itemRow.createCell(9);
+                    c9.setCellValue(ifNew);
+
+                    sourceType = "";
+                    if (object.getString("sourceType") != null) {
+                        switch (object.getString("sourceType")) {
+                            case "1":
+                                sourceType = "个人车源";
+                                break;
+                            case "2":
+                                sourceType = "公务车";
+                                break;
+                            case "3":
+                                sourceType = "4S店置换";
+                                break;
+                            case "4":
+                                sourceType = "店铺车";
+                                break;
+                            case "5":
+                                sourceType = "试乘试驾车";
+                                break;
+                        }
+                    }
+                    HSSFCell c10 = itemRow.createCell(10);
+                    c10.setCellValue(sourceType);
+
+                    HSSFCell c11 = itemRow.createCell(11);
+                    c11.setCellValue(object.getString("startingPrice"));
+
+                    auctionType = "";
+                    if (object.getString("auctionType") != null) {
+                        auctionType = object.getString("auctionType").equals("1") ? "线上" : "线下";
+                    }
+                    HSSFCell c14 = itemRow.createCell(12);
+                    c14.setCellValue(auctionType);
+
+                    HSSFCell c15 = itemRow.createCell(13);
+                    c15.setCellValue(object.getString("auctionStartTime"));
+
+                    HSSFCell c17 = itemRow.createCell(14);
+                    c17.setCellValue(object.getString("transactionFee"));
+
+                    HSSFCell c18 = itemRow.createCell(15);
+                    c18.setCellValue(object.getString("serviceFee"));
+
+                    String ifAgent = "";
+                    if (object.getString("ifAgent") != null) {
+                        ifAgent = object.getString("ifAgent").equals("1") ? "二手车" : "新车";
+                    }
+                    HSSFCell c19 = itemRow.createCell(16);
+                    c19.setCellValue(ifAgent);
+
+                    HSSFCell c20 = itemRow.createCell(17);
+                    c20.setCellValue(object.getString("statusName"));
+
+                    String createTime = "";
+                    if (object.getString("createTime") != null) {
+                        createTime = sdf.format(new Date(object.getLong("createTime")));
+                    }
+                    HSSFCell c21 = itemRow.createCell(18);
+                    c21.setCellValue(createTime);
+
+                    HSSFCell c22 = itemRow.createCell(19);
+                    c22.setCellValue(object.getString("createUserName"));
+                }
+            }
+        }
+        String filename = String.valueOf(ExcelUtil.processFileName(request, "在线车辆信息列表")).concat(".xls");
+        rep.setContentType("application/vnd.ms-excel;charset=utf-8");
+        rep.setHeader("Content-disposition", "attachment;filename=" + filename);
+        try {
+            ServletOutputStream ouputStream = rep.getOutputStream();
+            workbook.write(ouputStream);
+            ouputStream.flush();
+            ouputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param request
+     * @param rep
+     * @param saleFlag
+     * @param auctionType
+     * @param title
+     * @param cityId
+     * @param startTimeBegin
+     * @param startTimeEnd
+     */
+    @ApiOperation(value = "现场车辆导出")
+    @AuthPublic
+    @PostMapping( value = "/exportUnderCarList" )
+    public void exportUnderCarList(HttpServletRequest request, HttpServletResponse rep,
+                                   @RequestParam("saleFlag") String saleFlag,
+                                   @RequestParam("auctionType") String auctionType,
+                                   @RequestParam("title") String title,
+                                   @RequestParam("cityId") String cityId,
+                                   @RequestParam("startTimeBegin") String startTimeBegin,
+                                   @RequestParam("startTimeEnd") String startTimeEnd,
+                                   @RequestParam("authorization") String authorization) {
+        String[] headers = {"辆编号","车辆标题","车牌号","车所属店铺","车辆来源","开拍时间","开拍地点","场次主题","起拍价","保留价","最后出价","车商号","状态","初登日期","竞拍次数","发车人","发车人账号"};
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("saleFlag",saleFlag);
+        map.put("auctionType",auctionType);
+        map.put("title",title);
+        map.put("cityId",cityId);
+
+        if (StringUtils.isNotEmpty(startTimeBegin)) {
+            map.put("startTimeBegin", startTimeBegin);
+        }
+        if (StringUtils.isNotEmpty(startTimeEnd)) {
+            map.put("startTimeEnd", startTimeEnd);
+        }
+        if (StringUtils.isNotEmpty(authorization)) {
+            map.put("managerId", StringUtils.split(authorization,"_")[0]);
+        }
+        HSSFWorkbook workbook = ExcelUtil.createStartExcel("线下车辆记录", headers);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/carAuto/getCarAutoAllListByParam"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+        HSSFSheet sheet = workbook.getSheetAt(0);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            JSONObject obj = response.getBody();
+            JSONArray result = obj.getJSONObject("result").getJSONArray("list");
+            if (result != null && result.size() > 0) {
+                for (int i = 0; i < result.size(); i++) {
+                    JSONObject object = result.getJSONObject(i);
+                    HSSFRow itemRow = sheet.createRow(i + 2);
+
+                    HSSFCell c0 = itemRow.createCell(0);
+                    c0.setCellValue(object.getString("carAutoNo"));
+
+                    HSSFCell c1 = itemRow.createCell(1);
+                    c1.setCellValue(object.getString("autoInfoName"));
+
+                    HSSFCell c2 = itemRow.createCell(2);
+                    c2.setCellValue(object.getString("licenseNumber"));
+
+                    HSSFCell c3 = itemRow.createCell(3);
+                    c3.setCellValue(object.getString("carStoreNme"));
+
+                    String sourceType = "";
+                    if (object.getString("sourceType") != null) {
+                        switch (object.getString("sourceType")) {
+                            case "1":
+                                sourceType = "个人车源";
+                                break;
+                            case "2":
+                                sourceType = "公务车";
+                                break;
+                            case "3":
+                                sourceType = "4S店置换";
+                                break;
+                            case "4":
+                                sourceType = "店铺车";
+                                break;
+                            case "5":
+                                sourceType = "试乘试驾车";
+                                break;
+                        }
+                    }
+                    HSSFCell c4 = itemRow.createCell(4);
+                    c4.setCellValue(sourceType);
+
+                    String startTime = "";
+                    if (object.getString("startTime") != null) {
+                        startTime = sdf.format(new Date(object.getLong("startTime")));
+                    }
+                    HSSFCell c5 = itemRow.createCell(5);
+                    c5.setCellValue(startTime);
+
+                    HSSFCell c6 = itemRow.createCell(6);
+                    c6.setCellValue(object.getString("cityName"));
+
+                    HSSFCell c7 = itemRow.createCell(7);
+                    c7.setCellValue(object.getString("title"));
+
+                    HSSFCell c8 = itemRow.createCell(8);
+                    c8.setCellValue(object.getString("startingPrice"));
+
+                    HSSFCell c9 = itemRow.createCell(9);
+                    c9.setCellValue(object.getString("reservePrice"));
+
+                    HSSFCell c10 = itemRow.createCell(10);
+                    c10.setCellValue(object.getString("maxBidFee"));
+
+                    HSSFCell c11 = itemRow.createCell(11);
+                    c11.setCellValue(object.getString("userNum"));
+
+                    HSSFCell c12 = itemRow.createCell(12);
+                    c12.setCellValue(object.getString("statusName"));
+
+                    HSSFCell c13 = itemRow.createCell(13);
+                    String beginRegisterDate = "";
+                    if (object.getString("beginRegisterDate") != null) {
+                        beginRegisterDate = sdf.format(new Date(object.getLong("beginRegisterDate")));
+                    }
+                    c13.setCellValue(beginRegisterDate);
+
+                    HSSFCell c14 = itemRow.createCell(14);
+                    c14.setCellValue(object.getString("auctionNum"));
+
+                    HSSFCell c15 = itemRow.createCell(15);
+                    c15.setCellValue(object.getString("publishUserName"));
+
+                    HSSFCell c16 = itemRow.createCell(16);
+                    c16.setCellValue(object.getString("publishUserMobile"));
+                }
+            }
+        }
+        String filename = String.valueOf(ExcelUtil.processFileName(request, "线下车辆信息列表")).concat(".xls");
+        rep.setContentType("application/vnd.ms-excel;charset=utf-8");
+        rep.setHeader("Content-disposition", "attachment;filename=" + filename);
+        try {
+            ServletOutputStream ouputStream = rep.getOutputStream();
+            workbook.write(ouputStream);
+            ouputStream.flush();
+            ouputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param request
+     * @param rep
+     * @param saleFlag
+     * @param salesStartDate
+     * @param salesEndDate
+     * @param carAutoNo
+     * @param autoInfoName
+     * @param licenseNumber
+     * @param createUserName
+     * @param vin
+     */
+    @ApiOperation(value = "零售车辆导出")
+    @AuthPublic
+    @PostMapping( value = "/exportRetailCarList" )
+    public void exportRetailCarList(HttpServletRequest request, HttpServletResponse rep,
+                                    @RequestParam("saleFlag") String saleFlag,
+                                    @RequestParam("salesStartDate") String salesStartDate,
+                                    @RequestParam("salesEndDate") String salesEndDate,
+                                    @RequestParam("carAutoNo") String carAutoNo,
+                                    @RequestParam("autoInfoName") String autoInfoName,
+                                    @RequestParam("licenseNumber") String licenseNumber,
+                                    @RequestParam("createUserName") String createUserName,
+                                    @RequestParam("vin") String vin,
+                                    @RequestParam("authorization") String authorization) {
+        String[] headers = {"车辆编号", "车辆名称", "车牌号", "上拍数", "车辆归属城市", "初次上牌","公里数","VIN","所属店铺","销售人员","车辆类型","车辆来源","成交价","付款方式","是否代办","发车时间","发车人"};
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-mm-dd HH:mm:ss");
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("saleFlag",saleFlag);
+
+        map.put("carAutoNo",carAutoNo);
+        map.put("autoInfoName",autoInfoName);
+        map.put("licenseNumber",licenseNumber);
+        map.put("createUserName",createUserName);
+        map.put("vin",vin);
+
+        if (StringUtils.isNotEmpty(salesStartDate)) {
+            map.put("retailTimeBegin", salesStartDate);
+
+        }
+        if (StringUtils.isNotEmpty(salesEndDate)) {
+            map.put("retailTimeEnd", salesEndDate);
+        }
+        if (StringUtils.isNotEmpty(authorization)) {
+            map.put("managerId", StringUtils.split(authorization,"_")[0]);
+        }
+        HSSFWorkbook workbook = ExcelUtil.createStartExcel("零售车辆记录", headers);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT + "/service/carAuto/getCarAutoAllListByParam"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+        HSSFSheet sheet = workbook.getSheetAt(0);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            JSONObject obj = response.getBody();
+            JSONArray result = obj.getJSONObject("result").getJSONArray("list");
+            if (result != null && result.size() > 0) {
+                for (int i = 0; i < result.size(); i++) {
+                    JSONObject object = result.getJSONObject(i);
+                    HSSFRow itemRow = sheet.createRow(i + 2);
+                    HSSFCell c0 = itemRow.createCell(0);
+                    c0.setCellValue(object.getString("carAutoNo"));
+
+                    HSSFCell c12 = itemRow.createCell(1);
+                    c12.setCellValue(object.getString("autoInfoName"));
+
+                    HSSFCell c1 = itemRow.createCell(2);
+                    c1.setCellValue(object.getString("licenseNumber"));
+
+                    HSSFCell c2 = itemRow.createCell(3);
+                    c2.setCellValue(object.getString("auctionNum"));
+
+                    HSSFCell c3 = itemRow.createCell(4);
+                    c3.setCellValue(object.getString("vehicleAttributionCity"));
+
+                    String beginRegisterDate = "";
+                    if (object.getString("beginRegisterDate") != null) {
+                        beginRegisterDate = StringUtils.left(sdf.format(new Date(object.getLong("beginRegisterDate"))),4);
+                    }
+                    HSSFCell c4 = itemRow.createCell(5);
+                    c4.setCellValue(beginRegisterDate);
+
+                    HSSFCell c5 = itemRow.createCell(6);
+                    c5.setCellValue(object.getString("mileage"));
+
+                    HSSFCell c6 = itemRow.createCell(7);
+                    c6.setCellValue(object.getString("vin"));
+
+                    HSSFCell c7 = itemRow.createCell(8);
+                    c7.setCellValue(object.getString("carStoreNme"));
+
+                    HSSFCell c8 = itemRow.createCell(9);
+                    c8.setCellValue(object.getString("salesConsultant"));
+
+                    HSSFCell c9 = itemRow.createCell(10);
+                    String ifNew = "";
+                    if (object.getString("ifNew") != null) {
+                        ifNew = object.getString("ifNew").equals("1") ? "二手车" : "新车";
+                    }
+                    c9.setCellValue(ifNew);
+
+                    String sourceType = "";
+                    if (object.getString("sourceType") != null) {
+                        switch (object.getString("sourceType")) {
+                            case "1":
+                                sourceType = "个人车源";
+                                break;
+                            case "2":
+                                sourceType = "公务车";
+                                break;
+                            case "3":
+                                sourceType = "4S店置换";
+                                break;
+                            case "4":
+                                sourceType = "店铺车";
+                                break;
+                            case "5":
+                                sourceType = "试乘试驾车";
+                                break;
+                        }
+                    }
+                    HSSFCell c10 = itemRow.createCell(11);
+                    c10.setCellValue(sourceType);
+
+                    HSSFCell c11 = itemRow.createCell(12);
+                    c11.setCellValue(object.getString("retailTransactionFee"));
+
+                    HSSFCell c13 = itemRow.createCell(13);
+                    String paymentType = "";
+                    if (object.getString("paymentType") != null) {
+                        paymentType = object.getString("paymentType").equals("1") ? "全款" : "按揭";
+                    }
+                    c13.setCellValue(paymentType);
+
+                    HSSFCell c14 = itemRow.createCell(14);
+                    String ifAgent = "";
+                    if (object.getString("ifAgent") != null) {
+                        ifAgent = object.getString("ifAgent").equals("1") ? "代办" : "非代办";
+                    }
+                    c14.setCellValue(ifAgent);
+
+                    String publishTime = "";
+                    if (object.getString("retailCreateDate") != null) {
+                        publishTime = sdf.format(object.getDate("retailCreateDate"));
+                    }
+                    HSSFCell c15 = itemRow.createCell(15);
+                    c15.setCellValue(publishTime);
+
+                    HSSFCell c16 = itemRow.createCell(16);
+                    c16.setCellValue(object.getString("retailUserName"));
+                }
+            }
+        }
+        String filename = String.valueOf(ExcelUtil.processFileName(request, "零售车辆信息列表")).concat(".xls");
+        rep.setContentType("application/vnd.ms-excel;charset=utf-8");
+        rep.setHeader("Content-disposition", "attachment;filename=" + filename);
+        try {
+            ServletOutputStream ouputStream = rep.getOutputStream();
+            workbook.write(ouputStream);
+            ouputStream.flush();
+            ouputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

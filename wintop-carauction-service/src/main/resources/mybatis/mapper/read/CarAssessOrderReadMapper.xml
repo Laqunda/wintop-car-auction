@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.read.CarAssessOrderReadDao">
+    
+    <resultMap type="com.wintop.ms.carauction.entity.CarAssessOrder" id="CarAssessOrderResult">
+        <result property="id"    column="id"    />
+        <result property="assessId"    column="assess_id"    />
+        <result property="followId"    column="follow_id"    />
+        <result property="procurementType"    column="procurement_type"    />
+        <result property="price"    column="price"    />
+        <result property="paidPrice"    column="paid_price"    />
+        <result property="procurementDate"    column="procurement_date"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="ifOldNew"    column="if_old_new"    />
+        <result property="entiretyPrice"    column="entirety_price"    />
+        <result property="newCarPrice"    column="new_car_price"    />
+        <result property="carAddress"    column="car_address"    />
+        <result property="purchaseTax"    column="purchase_tax"    />
+        <result property="drivingLicense"    column="driving_license"    />
+        <result property="registrationCertificate"    column="registration_certificate"    />
+        <result property="ifAdd"    column="if_add"    />
+        <result property="carKeys"    column="car_keys"    />
+        <result property="newCarInvoice"    column="new_car_invoice"    />
+        <result property="qualityGuarantee"    column="quality_guarantee"    />
+        <result property="maintenanceManual"    column="maintenance_manual"    />
+        <result property="sali"    column="sali"    />
+        <result property="saliEndDate"    column="sali_end_date"    />
+        <result property="commercialInsurance"    column="commercial_insurance"    />
+        <result property="commercialInsuranceEndDate"    column="commercial_insurance_end_date"    />
+        <result property="commercialInsurancePrice"    column="commercial_insurance_price"    />
+        <result property="transportTax"    column="transport_tax"    />
+        <result property="transportTaxEndDate"    column="transport_tax_end_date"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="customerTel"    column="customer_tel"    />
+        <result property="customerSource"    column="customer_source"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="mainPhoto"   column="mian_photo" />
+        <result property="createUser"  column="create_user" />
+        <result property="createTime"  column="create_time" />
+        <result property="autoInfoName"  column="auto_info_name" />
+        <result property="regionId"  column="region_id" />
+    </resultMap>
+	
+	<sql id="selectCarAssessOrderVo">
+        cas.id, cas.assess_id, cas.follow_id, cas.procurement_type, cas.price, cas.procurement_date, cas.store_id, cas.if_old_new, cas.entirety_price, cas.new_car_price, cas.car_address, cas.purchase_tax, cas.driving_license, cas.registration_certificate, cas.if_add, cas.car_keys, cas.new_car_invoice, cas.quality_guarantee, cas.maintenance_manual, cas.sali, cas.sali_end_date, cas.commercial_insurance, cas.commercial_insurance_end_date, cas.commercial_insurance_price, cas.transport_tax, cas.transport_tax_end_date, cas.customer_name, cas.customer_tel, cas.customer_source, cas.remark, cas.status, cas.create_time
+    </sql>
+	
+    <select id="selectCarAssessOrderList" parameterType="com.wintop.ms.carauction.entity.CarAssessOrder" resultMap="CarAssessOrderResult">
+        select
+          <include refid="selectCarAssessOrderVo"/>
+        from car_assess_order cas
+        left join car_assess ca on cas.assess_id = ca.id
+        <where>  
+            <if test="id != null "> and cas.id = #{id}</if>
+             <if test="assessId != null "> and assess_id = #{assessId}</if>
+             <if test="followId != null "> and follow_id = #{followId}</if>
+             <if test="procurementType != null  and procurementType != '' "> and procurement_type = #{procurementType}</if>
+             <if test="price != null "> and price = #{price}</if>
+             <if test="paidPrice != null "> and paid_price = #{paidPrice}</if>
+             <if test="procurementDate != null "> and procurement_date = #{procurementDate}</if>
+             <if test="storeId != null "> and store_id = #{storeId}</if>
+             <if test="ifOldNew != null  and ifOldNew != '' "> and if_old_new = #{ifOldNew}</if>
+             <if test="entiretyPrice != null "> and entirety_price = #{entiretyPrice}</if>
+             <if test="newCarPrice != null "> and new_car_price = #{newCarPrice}</if>
+             <if test="carAddress != null  and carAddress != '' "> and car_address = #{carAddress}</if>
+             <if test="purchaseTax != null  and purchaseTax != '' "> and purchase_tax = #{purchaseTax}</if>
+             <if test="drivingLicense != null  and drivingLicense != '' "> and driving_license = #{drivingLicense}</if>
+             <if test="registrationCertificate != null  and registrationCertificate != '' "> and registration_certificate = #{registrationCertificate}</if>
+             <if test="ifAdd != null  and ifAdd != '' "> and if_add = #{ifAdd}</if>
+             <if test="carKeys != null "> and car_keys = #{carKeys}</if>
+             <if test="newCarInvoice != null  and newCarInvoice != '' "> and new_car_invoice = #{newCarInvoice}</if>
+             <if test="qualityGuarantee != null  and qualityGuarantee != '' "> and quality_guarantee = #{qualityGuarantee}</if>
+             <if test="maintenanceManual != null  and maintenanceManual != '' "> and maintenance_manual = #{maintenanceManual}</if>
+             <if test="sali != null  and sali != '' "> and sali = #{sali}</if>
+             <if test="saliEndDate != null "> and sali_end_date = #{saliEndDate}</if>
+             <if test="commercialInsurance != null  and commercialInsurance != '' "> and commercial_insurance = #{commercialInsurance}</if>
+             <if test="commercialInsuranceEndDate != null "> and commercial_insurance_end_date = #{commercialInsuranceEndDate}</if>
+             <if test="commercialInsurancePrice != null "> and commercial_insurance_price = #{commercialInsurancePrice}</if>
+             <if test="transportTax != null  and transportTax != '' "> and transport_tax = #{transportTax}</if>
+             <if test="transportTaxEndDate != null "> and transport_tax_end_date = #{transportTaxEndDate}</if>
+             <if test="customerName != null  and customerName != '' "> and customer_name = #{customerName}</if>
+             <if test="customerTel != null  and customerTel != '' "> and customer_tel = #{customerTel}</if>
+             <if test="customerSource != null  and customerSource != '' "> and customer_source = #{customerSource}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="status != null  and status != '' "> and cas.status = #{status}</if>
+             <if test="searchName != null and searchName != ''">
+                 and (ca.name like CONCAT(CONCAT('%',#{searchName}),'%')
+                 or cas.customer_name like CONCAT(CONCAT('%',#{searchName}),'%')
+                 or ca.vin like CONCAT(CONCAT('%',#{searchName}),'%'))
+             </if>
+            <if test="verifySearchName != null and verifySearchName !=''">
+                and ( cas.id like CONCAT(CONCAT('%',#{verifySearchName}),'%')
+                  or ca.plate_num like CONCAT(CONCAT('%',#{verifySearchName}),'%')
+                  or cas.customer_name like CONCAT(CONCAT('%',#{verifySearchName}),'%')
+                  or cas.customer_tel like CONCAT(CONCAT('%',#{verifySearchName}),'%')
+                )
+            </if>
+            <if test="startTime != null">
+                and cas.procurement_date &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and cas.procurement_date &lt;= #{endTime}
+            </if>
+            <if test="startCreateTime != null">
+                and cas.create_time &gt;= #{startCreateTime}
+            </if>
+            <if test="endCreateTime != null">
+                and cas.create_time &lt;= #{endCreateTime}
+            </if>
+            <if test="createUser != null and createUser != ''">
+                and ca.create_user_name like CONCAT(CONCAT('%',#{createUser}),'%')
+            </if>
+         </where>
+        order by cas.id desc
+        <if test="endRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="selectAssessOrderCount" parameterType="com.wintop.ms.carauction.entity.CarAssessOrder" resultType="java.lang.Integer">
+        select count(*)
+        from car_assess_order cas
+        left join car_assess ca on cas.assess_id = ca.id
+        <where>
+            <if test="id != null "> and cas.id = #{id}</if>
+             <if test="assessId != null "> and cas.assess_id = #{assessId}</if>
+             <if test="followId != null "> and cas.follow_id = #{followId}</if>
+             <if test="procurementType != null  and procurementType != '' "> and cas.procurement_type = #{procurementType}</if>
+             <if test="price != null "> and cas.price = #{price}</if>
+             <if test="procurementDate != null "> and cas.procurement_date = #{procurementDate}</if>
+             <if test="storeId != null "> and cas.store_id = #{storeId}</if>
+             <if test="ifOldNew != null  and ifOldNew != '' "> and cas.if_old_new = #{ifOldNew}</if>
+             <if test="entiretyPrice != null "> and cas.entirety_price = #{entiretyPrice}</if>
+             <if test="newCarPrice != null "> and cas.new_car_price = #{newCarPrice}</if>
+             <if test="carAddress != null  and carAddress != '' "> and cas.car_address = #{carAddress}</if>
+             <if test="purchaseTax != null  and purchaseTax != '' "> and cas.purchase_tax = #{purchaseTax}</if>
+             <if test="drivingLicense != null  and drivingLicense != '' "> and cas.driving_license = #{drivingLicense}</if>
+             <if test="registrationCertificate != null  and registrationCertificate != '' "> and cas.registration_certificate = #{registrationCertificate}</if>
+             <if test="ifAdd != null  and ifAdd != '' "> and cas.if_add = #{ifAdd}</if>
+             <if test="carKeys != null "> and cas.car_keys = #{carKeys}</if>
+             <if test="newCarInvoice != null  and newCarInvoice != '' "> and cas.new_car_invoice = #{newCarInvoice}</if>
+             <if test="qualityGuarantee != null  and qualityGuarantee != '' "> and cas.quality_guarantee = #{qualityGuarantee}</if>
+             <if test="maintenanceManual != null  and maintenanceManual != '' "> and cas.maintenance_manual = #{maintenanceManual}</if>
+             <if test="sali != null  and sali != '' "> and cas.sali = #{sali}</if>
+             <if test="saliEndDate != null "> and cas.sali_end_date = #{saliEndDate}</if>
+             <if test="commercialInsurance != null  and commercialInsurance != '' "> and cas.commercial_insurance = #{commercialInsurance}</if>
+             <if test="commercialInsuranceEndDate != null "> and cas.commercial_insurance_end_date = #{commercialInsuranceEndDate}</if>
+             <if test="commercialInsurancePrice != null "> and cas.commercial_insurance_price = #{commercialInsurancePrice}</if>
+             <if test="transportTax != null  and transportTax != '' "> and cas.transport_tax = #{transportTax}</if>
+             <if test="transportTaxEndDate != null "> and cas.transport_tax_end_date = #{transportTaxEndDate}</if>
+             <if test="customerName != null  and customerName != '' "> and cas.customer_name = #{customerName}</if>
+             <if test="customerTel != null  and customerTel != '' "> and cas.customer_tel = #{customerTel}</if>
+             <if test="customerSource != null  and customerSource != '' "> and cas.customer_source = #{customerSource}</if>
+             <if test="remark != null  and remark != '' "> and cas.remark = #{remark}</if>
+             <if test="status != null  and status != '' "> and cas.status = #{status}</if>
+            <if test="searchName != null and searchName != ''">
+                and (ca.name like CONCAT(CONCAT('%',#{searchName}),'%')
+                or cas.customer_name like CONCAT(CONCAT('%',#{searchName}),'%')
+                or ca.vin like CONCAT(CONCAT('%',#{searchName}),'%'))
+            </if>
+            <if test="startTime != null">
+                and cas.procurement_date &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and cas.procurement_date &lt;= #{endTime}
+            </if>
+            <if test="createUser != null and createUser != ''">
+                and ca.create_user_name like CONCAT(CONCAT('%',#{createUser}),'%')
+            </if>
+         </where>
+    </select>
+    
+    <select id="selectCarAssessOrderById" parameterType="Long" resultMap="CarAssessOrderResult">
+        select
+        <include refid="selectCarAssessOrderVo"/>
+        from car_assess_order cas
+        where cas.id = #{id}
+    </select>
+    <select id="selectCountById" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT count(t1.id)
+        FROM car_assess_order t1
+        INNER JOIN car_assess t2 ON t1.assess_id=t2.id
+        WHERE t2.create_user=#{userId}
+    </select>
+
+    <select id="selectUserOrderList" resultMap="CarAssessOrderResult" parameterType="java.util.Map">
+        SELECT
+        t2.create_user_name create_user,
+        t2.`name` auto_info_name,
+        t2.car_photo mian_photo,
+        t1.create_time,
+        t1.`status`,
+        t1.id,
+        t1.assess_id
+        FROM car_assess_order t1
+        INNER JOIN car_assess t2 ON t1.assess_id = t2.id
+        WHERE t2.create_user=#{userId}
+        ORDER BY t1.create_time DESC
+        <if test="startRowNum!=null and endRowNum!=null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+</mapper>

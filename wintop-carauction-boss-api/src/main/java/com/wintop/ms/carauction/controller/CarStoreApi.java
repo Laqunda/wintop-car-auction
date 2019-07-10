@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -71,7 +68,8 @@ public class CarStoreApi {
             consumes = "application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel selectStoreList(@RequestBody Map<String,Object> map) {
+    public ResultModel selectStoreList(@RequestBody Map<String,Object> map,@CurrentUserId String managerId) {
+        map.put("managerId", managerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carStore/selectStoreList"))
@@ -87,11 +85,12 @@ public class CarStoreApi {
      *@param:map
      */
     @ApiOperation(value = "保存店铺")
-    @RequestMapping(value = "/saveCarStore",
+    @RequestMapping(value = "/save",
+            method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
-    public ResultModel saveCarStore(@RequestHeader Map<String,String> headers, @RequestBody Map<String,Object> map, @CurrentUserId Long userId) {
+    public ResultModel saveCarStore(@RequestBody Map<String,Object> map, @CurrentUserId Long userId) {
         if(map.get("regionId")==null){
             return new ResultModel(false, ResultCode.NO_REGION_ID.value(),ResultCode.NO_REGION_ID.getRemark(),null);
         }
@@ -112,6 +111,7 @@ public class CarStoreApi {
      */
     @ApiOperation(value = "修改店铺")
     @RequestMapping(value = "/updateCarStore",
+            method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
@@ -134,6 +134,7 @@ public class CarStoreApi {
      */
     @ApiOperation(value = "删除店铺")
     @RequestMapping(value = "/deleteCarStore",
+            method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
@@ -156,6 +157,7 @@ public class CarStoreApi {
      */
     @ApiOperation(value = "查询店铺")
     @RequestMapping(value = "/selectCarStore",
+            method = RequestMethod.POST,
             consumes = "application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
@@ -166,5 +168,26 @@ public class CarStoreApi {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
+    /**
+     * 查询中心的门店
+     *@Author:admin
+     *@date 2018/3/14
+     *@param:map
+     */
+    @ApiOperation(value = "查询中心的门店")
+    @RequestMapping(value = "/selectForCenterByCondition",
+            consumes = "application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @RequestAuth(false)
+    public ResultModel selectForCenterByCondition(@RequestBody  Map<String,Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carStore/selectForCenterByCondition"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.LIST);
     }
 }

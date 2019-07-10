@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.CarManagerRolePublishReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarManagerRolePublish" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="manager_id" property="managerId" jdbcType="BIGINT" />
+    <result column="type_id" property="typeId" jdbcType="BIGINT" />
+    <result column="obj_id" property="objId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, manager_id, type_id, obj_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_manager_role_publish
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByCondition" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from car_manager_role_publish
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="managerId != null">
+        and manager_id = #{managerId}
+      </if>
+      <if test="typeId != null">
+        and type_id = #{typeId}
+      </if>
+      <if test="objId != nul and objId != ''">
+        and obj_id = #{objId}
+      </if>
+    </trim>
+  </select>
+</mapper>

@@ -68,6 +68,18 @@
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
     </if>
   </select>
+
+  <select id="selectForToday" resultMap="BaseResultMap" parameterType="java.util.Map">
+      select *
+        from car_auto_auction caa ,car_auto ca
+      where ca.auto_auction_id = caa.id
+        and caa.auction_type = #{auctionType}
+        and ca.publish_user_id = #{publishUserId}
+        and date_format(caa.auction_start_time,'%Y-%m-%d') &gt;= date_format(#{date},'%Y-%m-%d')
+  order by caa.auction_start_time DESC
+      limit 1
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -80,7 +92,7 @@
   </select>
 
   <select id="selectAutoAuction"  resultMap="BaseResultMap" parameterType="java.lang.Long">
-    SELECT t1.*,t2.status AS car_status,t2.source_type,t2.store_id,t2.store_name,t2.region_id
+    SELECT t1.*,t2.status AS car_status,t2.source_type,t2.store_id,t2.store_name,t2.region_id,t2.transfer_flag
     FROM car_auto_auction t1
     INNER JOIN car_auto t2 ON t1.id=t2.auto_auction_id
     WHERE t2.id=#{carId}
@@ -97,7 +109,7 @@
   </select>
 
   <!--获取竞拍信息-->
-  <select id="selectAuctionInformation" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectAuctionInformation" parameterType="java.util.Map" resultMap="BaseResultMap">
       SELECT
           t2.source_type,
           t1.starting_price,
@@ -112,9 +124,16 @@
           t1.owner_price,
           t1.move_to_where
       from car_auto_auction t1
-      left  JOIN car_auto t2 on t2.id = t1.auction_end_time
+      left  JOIN car_auto t2 on t2.id = t1.auto_id
       left  join car_store t3 on t2.store_id = t3.id
-      where t1.auto_id = #{carId}
+      <trim prefix="where" prefixOverrides="and">
+        <if test="carId != null">
+            and t1.auto_id = #{carId}
+        </if>
+        <if test="id != null">
+            and t1.id = #{id}
+        </if>
+      </trim>
   </select>
 
   <select id="selectAutoAuctionByCarId"  resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -123,5 +142,18 @@
     FROM car_auto_auction t1
     WHERE t1.auto_id=#{carId}
     ORDER BY t1.create_time DESC limit 1
+  </select>
+
+  <!-- 根据场次获取车辆拍卖信息 -->
+  <select id="selectAutoAuctionBylocale"  resultMap="BaseResultMap" parameterType="java.util.Map">
+    select t1.*
+    from car_auto_auction t1
+        ,car_auto ca
+        ,car_locale_auction_car lac
+    where t1.id = ca.auto_auction_id
+    and ca.id = lac.car_id
+    and lac.auction_id = #{auctionId}
+    and ca.`status` = #{status}
+    and ca.transfer_flag = #{transferFlag}
   </select>
 </mapper>

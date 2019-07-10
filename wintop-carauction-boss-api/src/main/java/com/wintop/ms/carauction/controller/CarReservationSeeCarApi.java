@@ -7,6 +7,7 @@ import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ public class CarReservationSeeCarApi {
 
     @PostMapping(value = "/saveReservationSeeCar",produces="application/json; charset=UTF-8")
     @AuthPublic
+    @ApiOperation(value = "预约看车功能")
     public ResultModel saveReservationSeeCar(@RequestBody Map<String,Object> map) {
         if(map.get("contactPhone")==null || map.get("reservationId")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);

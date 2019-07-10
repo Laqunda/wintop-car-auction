@@ -19,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service("CarAutoAuctionService")
 public class CarAutoAuctionServiceImpl implements ICarAutoAuctionService {
@@ -292,7 +289,7 @@ public class CarAutoAuctionServiceImpl implements ICarAutoAuctionService {
      */
     @Override
     public CarAutoAuction selectAuctionInformation(Long carId) {
-        return autoAuctionModel.selectAuctionInformation(carId);
+        return autoAuctionModel.selectAuctionInformation(Collections.singletonMap("carId",carId));
     }
 
     /**
@@ -319,7 +316,7 @@ public class CarAutoAuctionServiceImpl implements ICarAutoAuctionService {
             CarAuctionBidRecord bidRecord = bidRecordModel.selectMaxBidRecordByCarId(carId,autoAuction.getId());
             JPushAutoData autoData = new JPushAutoData();
             autoData.setMaxPrice(bidRecord==null?zero:bidRecord.getBidFee());
-            autoData.setMaxPriceUserId(bidRecord==null?0l:bidRecord.getCustomerId());
+            autoData.setMaxPriceUserId(bidRecord==null?0L:bidRecord.getCustomerId());
             autoData.setStartingPrice(autoAuction.getStartingPrice());
             autoData.setAuctionStartTime(autoAuction.getAuctionStartTime().getTime()+"");
             autoData.setAuctionEndTime(autoAuction.getAuctionEndTime().getTime()+"");
@@ -512,5 +509,14 @@ public class CarAutoAuctionServiceImpl implements ICarAutoAuctionService {
             orderBargainModel.insert(orderBargain);
         }
         return count;
+    }
+
+    /**
+     * 查询-填充使用,最近的开拍时间
+     * @return
+     */
+    @Override
+    public CarAutoAuction selectForToday(Map<String,Object> map) {
+        return autoAuctionModel.selectForToday(map);
     }
 }

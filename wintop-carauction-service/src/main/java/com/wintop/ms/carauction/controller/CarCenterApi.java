@@ -7,6 +7,7 @@ import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarCenter;
 import com.wintop.ms.carauction.entity.ListEntity;
 import com.wintop.ms.carauction.service.ICarCenterService;
+import com.wintop.ms.carauction.service.ICarCenterStoreService;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,8 @@ public class CarCenterApi {
     @Autowired
     private ICarCenterService centerService;
 
+    @Autowired
+    private ICarCenterStoreService carCenterStoreService;
     /***
      * 查询中心列表
      * @param obj
@@ -148,6 +151,30 @@ public class CarCenterApi {
         }catch (Exception e){
             e.printStackTrace();
             logger.info("删除中心失败",e);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /***
+     * 保存或删除中心关联数据
+     * @param obj
+     * @return
+     */
+    @RequestMapping(value = "/saveOrDeleteRelation",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> saveOrDeleteRelation(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+        try {
+            Map<String,Object> map = new HashMap<>();
+            map.put("count",carCenterStoreService.saveOrDelete(obj.getString("storeIds"),obj.getLong("centerId")));
+            result.setResult(map);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("保存或删除中心关联数据",e);
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
         }
         return result;

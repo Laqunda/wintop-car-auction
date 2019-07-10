@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.write.CarAssessOrderWriteDao">
+    <insert id="insertCarAssessOrder" parameterType="com.wintop.ms.carauction.entity.CarAssessOrder">
+        insert into car_assess_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="assessId != null  ">assess_id,</if>
+			<if test="followId != null  ">follow_id,</if>
+			<if test="procurementType != null  and procurementType != ''  ">procurement_type,</if>
+			<if test="price != null  ">price,</if>
+			<if test="procurementDate != null  ">procurement_date,</if>
+			<if test="storeId != null  ">store_id,</if>
+			<if test="ifOldNew != null  and ifOldNew != ''  ">if_old_new,</if>
+			<if test="entiretyPrice != null  ">entirety_price,</if>
+			<if test="newCarPrice != null  ">new_car_price,</if>
+			<if test="carAddress != null  and carAddress != ''  ">car_address,</if>
+			<if test="purchaseTax != null  and purchaseTax != ''  ">purchase_tax,</if>
+			<if test="drivingLicense != null  and drivingLicense != ''  ">driving_license,</if>
+			<if test="registrationCertificate != null  and registrationCertificate != ''  ">registration_certificate,</if>
+			<if test="ifAdd != null  and ifAdd != ''  ">if_add,</if>
+			<if test="carKeys != null  ">car_keys,</if>
+			<if test="newCarInvoice != null  and newCarInvoice != ''  ">new_car_invoice,</if>
+			<if test="qualityGuarantee != null  and qualityGuarantee != ''  ">quality_guarantee,</if>
+			<if test="maintenanceManual != null  and maintenanceManual != ''  ">maintenance_manual,</if>
+			<if test="sali != null  and sali != ''  ">sali,</if>
+			<if test="saliEndDate != null  ">sali_end_date,</if>
+			<if test="commercialInsurance != null  and commercialInsurance != ''  ">commercial_insurance,</if>
+			<if test="commercialInsuranceEndDate != null  ">commercial_insurance_end_date,</if>
+			<if test="commercialInsurancePrice != null  ">commercial_insurance_price,</if>
+			<if test="transportTax != null  and transportTax != ''  ">transport_tax,</if>
+			<if test="transportTaxEndDate != null  ">transport_tax_end_date,</if>
+			<if test="customerName != null  and customerName != ''  ">customer_name,</if>
+			<if test="customerTel != null  and customerTel != ''  ">customer_tel,</if>
+			<if test="customerSource != null  and customerSource != ''  ">customer_source,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="status != null  and status != ''  ">status,</if>
+			create_time,
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="assessId != null  ">#{assessId},</if>
+			<if test="followId != null  ">#{followId},</if>
+			<if test="procurementType != null  and procurementType != ''  ">#{procurementType},</if>
+			<if test="price != null  ">#{price},</if>
+			<if test="procurementDate != null  ">#{procurementDate},</if>
+			<if test="storeId != null  ">#{storeId},</if>
+			<if test="ifOldNew != null  and ifOldNew != ''  ">#{ifOldNew},</if>
+			<if test="entiretyPrice != null  ">#{entiretyPrice},</if>
+			<if test="newCarPrice != null  ">#{newCarPrice},</if>
+			<if test="carAddress != null  and carAddress != ''  ">#{carAddress},</if>
+			<if test="purchaseTax != null  and purchaseTax != ''  ">#{purchaseTax},</if>
+			<if test="drivingLicense != null  and drivingLicense != ''  ">#{drivingLicense},</if>
+			<if test="registrationCertificate != null  and registrationCertificate != ''  ">#{registrationCertificate},</if>
+			<if test="ifAdd != null  and ifAdd != ''  ">#{ifAdd},</if>
+			<if test="carKeys != null  ">#{carKeys},</if>
+			<if test="newCarInvoice != null  and newCarInvoice != ''  ">#{newCarInvoice},</if>
+			<if test="qualityGuarantee != null  and qualityGuarantee != ''  ">#{qualityGuarantee},</if>
+			<if test="maintenanceManual != null  and maintenanceManual != ''  ">#{maintenanceManual},</if>
+			<if test="sali != null  and sali != ''  ">#{sali},</if>
+			<if test="saliEndDate != null  ">#{saliEndDate},</if>
+			<if test="commercialInsurance != null  and commercialInsurance != ''  ">#{commercialInsurance},</if>
+			<if test="commercialInsuranceEndDate != null  ">#{commercialInsuranceEndDate},</if>
+			<if test="commercialInsurancePrice != null  ">#{commercialInsurancePrice},</if>
+			<if test="transportTax != null  and transportTax != ''  ">#{transportTax},</if>
+			<if test="transportTaxEndDate != null  ">#{transportTaxEndDate},</if>
+			<if test="customerName != null  and customerName != ''  ">#{customerName},</if>
+			<if test="customerTel != null  and customerTel != ''  ">#{customerTel},</if>
+			<if test="customerSource != null  and customerSource != ''  ">#{customerSource},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="status != null  and status != ''  ">#{status},</if>
+			now(),
+         </trim>
+    </insert>
+	 
+    <update id="updateCarAssessOrder" parameterType="com.wintop.ms.carauction.entity.CarAssessOrder">
+        update car_assess_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assessId != null  ">assess_id = #{assessId},</if>
+            <if test="followId != null  ">follow_id = #{followId},</if>
+            <if test="procurementType != null  and procurementType != ''  ">procurement_type = #{procurementType},</if>
+            <if test="price != null  ">price = #{price},</if>
+			<if test="paidPrice != null  ">paid_price = #{paidPrice},</if>
+            <if test="procurementDate != null  ">procurement_date = #{procurementDate},</if>
+            <if test="storeId != null  ">store_id = #{storeId},</if>
+            <if test="ifOldNew != null  and ifOldNew != ''  ">if_old_new = #{ifOldNew},</if>
+            <if test="entiretyPrice != null  ">entirety_price = #{entiretyPrice},</if>
+            <if test="newCarPrice != null  ">new_car_price = #{newCarPrice},</if>
+            <if test="carAddress != null  and carAddress != ''  ">car_address = #{carAddress},</if>
+            <if test="purchaseTax != null  and purchaseTax != ''  ">purchase_tax = #{purchaseTax},</if>
+            <if test="drivingLicense != null  and drivingLicense != ''  ">driving_license = #{drivingLicense},</if>
+            <if test="registrationCertificate != null  and registrationCertificate != ''  ">registration_certificate = #{registrationCertificate},</if>
+            <if test="ifAdd != null  and ifAdd != ''  ">if_add = #{ifAdd},</if>
+            <if test="carKeys != null  ">car_keys = #{carKeys},</if>
+            <if test="newCarInvoice != null  and newCarInvoice != ''  ">new_car_invoice = #{newCarInvoice},</if>
+            <if test="qualityGuarantee != null  and qualityGuarantee != ''  ">quality_guarantee = #{qualityGuarantee},</if>
+            <if test="maintenanceManual != null  and maintenanceManual != ''  ">maintenance_manual = #{maintenanceManual},</if>
+            <if test="sali != null  and sali != ''  ">sali = #{sali},</if>
+            <if test="saliEndDate != null  ">sali_end_date = #{saliEndDate},</if>
+            <if test="commercialInsurance != null  and commercialInsurance != ''  ">commercial_insurance = #{commercialInsurance},</if>
+            <if test="commercialInsuranceEndDate != null  ">commercial_insurance_end_date = #{commercialInsuranceEndDate},</if>
+            <if test="commercialInsurancePrice != null  ">commercial_insurance_price = #{commercialInsurancePrice},</if>
+            <if test="transportTax != null  and transportTax != ''  ">transport_tax = #{transportTax},</if>
+            <if test="transportTaxEndDate != null  ">transport_tax_end_date = #{transportTaxEndDate},</if>
+            <if test="customerName != null  and customerName != ''  ">customer_name = #{customerName},</if>
+            <if test="customerTel != null  and customerTel != ''  ">customer_tel = #{customerTel},</if>
+            <if test="customerSource != null  and customerSource != ''  ">customer_source = #{customerSource},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="status != null  and status != ''  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCarAssessOrderById" parameterType="Long">
+        delete from car_assess_order where id = #{id}
+    </delete>
+	
+    <delete id="deleteCarAssessOrderByIds" parameterType="String">
+        delete from car_assess_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

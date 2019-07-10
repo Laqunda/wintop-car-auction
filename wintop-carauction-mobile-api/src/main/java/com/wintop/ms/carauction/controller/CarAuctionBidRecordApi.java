@@ -50,4 +50,22 @@ public class CarAuctionBidRecordApi {
                         .body(map),JSONObject.class);
         return ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
     }
+
+    /**
+     * 获取现场出价的车辆
+     */
+//    @RequestMapping(value = "/querySceneCarAuctionBidRecordList",
+//            method= RequestMethod.POST,
+//            consumes="application/json; charset=UTF-8",
+//            produces="application/json; charset=UTF-8")
+//    @AuthUserToken
+//    public ResponseEntity<ResultModel> querySceneCarAuctionBidRecordList(@RequestBody Map<String,Object> map, @CurrentUserId Long customerId) throws MalformedURLException {
+//        map.put("customerId",customerId);
+//        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+//                RequestEntity
+//                        .post(URI.create(Constants.ROOT+"/service/carAuctionBidRecord/querySceneCarAuctionBidRecordList"))
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .body(map),JSONObject.class);
+//        return ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
+//    }
 }

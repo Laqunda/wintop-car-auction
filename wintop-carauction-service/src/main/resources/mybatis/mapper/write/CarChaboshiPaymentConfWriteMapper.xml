@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.write.CarChaboshiPaymentConfWriteDao">
+    <insert id="insertCarChaboshiPaymentConf" parameterType="com.wintop.ms.carauction.entity.CarChaboshiPaymentConf">
+        insert into car_chaboshi_payment_conf
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="payment != null  ">payment,</if>
+			<if test="paymentComposite != null  ">payment_composite,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="payment != null  ">#{payment},</if>
+			<if test="paymentComposite != null  ">#{paymentComposite},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCarChaboshiPaymentConf" parameterType="com.wintop.ms.carauction.entity.CarChaboshiPaymentConf">
+        update car_chaboshi_payment_conf
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payment != null  ">payment = #{payment},</if>
+            <if test="paymentComposite != null  ">payment_composite = #{paymentComposite},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCarChaboshiPaymentConfById" parameterType="Long">
+        delete from car_chaboshi_payment_conf where id = #{id}
+    </delete>
+	
+    <delete id="deleteCarChaboshiPaymentConfByIds" parameterType="String">
+        delete from car_chaboshi_payment_conf where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

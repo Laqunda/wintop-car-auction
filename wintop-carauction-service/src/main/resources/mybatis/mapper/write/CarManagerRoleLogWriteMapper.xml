@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.write.ICarManagerRoleLogWriteDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="apply_id" property="applyId" jdbcType="BIGINT" />
+    <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="status_cn" property="statusCn" jdbcType="VARCHAR" />
+    <result column="log_msg" property="logMsg" jdbcType="VARCHAR" />
+    <result column="store_id" property="storeId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, apply_id, apply_time, status, status_cn, log_msg, create_time, create_person
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from car_manager_role_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
+      insert into car_manager_role_log (id, apply_id, apply_time, status,
+        status_cn, log_msg, create_time, store_id，create_person)
+      values (#{id,jdbcType=BIGINT}, #{applyId,jdbcType=BIGINT},#{applyTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR},
+        #{statusCn,jdbcType=VARCHAR}, #{logMsg,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{storeId,jdbcType=BIGINT}, #{createPerson,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
+    insert into car_manager_role_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="applyId != null" >
+        apply_id,
+      </if>
+      <if test="applyTime != null" >
+        apply_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="statusCn != null" >
+        status_cn,
+      </if>
+      <if test="logMsg != null" >
+        log_msg,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+      <if test="vin != null" >
+        vin,
+      </if>
+      <if test="searchType != null" >
+        search_type,
+      </if>
+      <if test="edition != null" >
+        edition,
+      </if>
+      <if test="vehicleType != null" >
+        vehicle_type,
+      </if>
+      <if test="photo != null">
+        photo,
+      </if>
+      <if test="createPerson != null" >
+        create_person,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="applyId != null" >
+        #{applyId,jdbcType=BIGINT},
+      </if>
+      <if test="applyTime != null" >
+        #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCn != null" >
+        #{statusCn,jdbcType=VARCHAR},
+      </if>
+      <if test="logMsg != null" >
+        #{logMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=VARCHAR},
+      </if>
+      <if test="vin != null" >
+        #{vin,jdbcType=VARCHAR},
+      </if>
+      <if test="searchType != null" >
+        #{searchType,jdbcType=VARCHAR},
+      </if>
+      <if test="edition != null" >
+        #{edition,jdbcType=VARCHAR},
+      </if>
+      <if test="vehicleType != null" >
+        #{vehicleType,jdbcType=TIMESTAMP},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="createPerson != null" >
+         #{createPerson,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
+    update car_manager_role_log
+    <set >
+      <if test="applyId != null" >
+        apply_id = #{applyId,jdbcType=BIGINT},
+      </if>
+      <if test="applyTime != null" >
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCn != null" >
+        status_cn = #{statusCn,jdbcType=VARCHAR},
+      </if>
+      <if test="logMsg != null" >
+        log_msg = #{logMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="storeId != null" >
+        store_id = #{storeId,jdbcType=BIGINT},
+      </if>
+      <if test="storeId != null" >
+        store_id = #{storeId,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vin != null" >
+        vin = #{vin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="searchType != null" >
+        search_type = #{searchType,jdbcType=TIMESTAMP},
+      </if>
+      <if test="edition != null" >
+        edition = #{edition,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vehicleType != null" >
+        vehicle_type = #{vehicleType,jdbcType=TIMESTAMP},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="createPerson != null" >
+        create_person = #{createPerson,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
+    update car_manager_role_log
+    set apply_id = #{applyId,jdbcType=BIGINT},
+      apply_time = #{applyTime},
+      status = #{status,jdbcType=VARCHAR},
+      status_cn = #{statusCn,jdbcType=VARCHAR},
+      log_msg = #{logMsg,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      store_id = #{storeId,jdbcType=BIGINT},
+      create_person = #{createPerson,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

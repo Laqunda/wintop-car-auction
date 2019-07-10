@@ -18,13 +18,14 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 通过Redis存储和验证token的实现类
+ *
  * @see TokenManager
  */
 @Component
 public class RedisTokenManager implements TokenManager {
     Logger logger = LoggerFactory.getLogger(RedisTokenManager.class);
 
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     @Qualifier(value = "redisTemplate")
@@ -36,15 +37,16 @@ public class RedisTokenManager implements TokenManager {
 
     @Override
     public boolean appIfAuth(String appId) {
-        if (appId.isEmpty()){
+        if (appId.isEmpty()) {
             return false;
         }
         //从redis中取出应用授权信息，并判断授权标示
-       String ifAuth = redisTemplate.boundValueOps(appId).get();
-       if (ifAuth!=null && ifAuth.equals("true")){
-           return true;
-       }
-       return false;
+        String ifAuth = redisTemplate.boundValueOps(appId).get();
+//        redisTemplate.opsForValue().set("bdce67a4230d20f2a14e72a2670cbd44", "true");
+        if (ifAuth != null && ifAuth.equals("true")) {
+            return true;
+        }
+        return false;
     }
 
     /***
@@ -56,7 +58,7 @@ public class RedisTokenManager implements TokenManager {
      */
     public TokenModel createToken(String appId, Long userId) {
         TokenModel model = null;
-        if (StringUtils.isNotEmpty(appId) && userId!=null) {
+        if (StringUtils.isNotEmpty(appId) && userId != null) {
             //使用uuid作为源token
             String token = UUID.randomUUID().toString().replace("-", "");
             model = new TokenModel(appId, userId, token);
@@ -71,30 +73,30 @@ public class RedisTokenManager implements TokenManager {
      * @param authentication 加密后的字符串
      * @return
      */
-    public TokenModel getToken(String appId,String authentication) {
-        if (appId.isEmpty() || authentication.isEmpty() || authentication.indexOf("null")>-1){
+    public TokenModel getToken(String appId, String authentication) {
+        if (appId.isEmpty() || authentication.isEmpty() || authentication.indexOf("null") > -1) {
             return null;
         }
         TokenModel tokenModel = null;
         String[] param = null;
-        if (authentication!=null && authentication.indexOf("_")>-1){
+        if (authentication != null && authentication.indexOf("_") > -1) {
             param = authentication.split("_");
         }
         try {
             //判断authentication 并提取appid+token+user_id信息
             if (appId.isEmpty() || authentication.isEmpty()) {
                 tokenModel = null;
-            }else if(param.length != 2) {
+            } else if (param.length != 2) {
                 tokenModel = null;
-            }else {
+            } else {
                 //将提取出来的信息封装为token对象返回
                 long userId = Long.parseLong(param[0]);
                 String token = param[1];
                 tokenModel = new TokenModel(appId, userId, token);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getLocalizedMessage());
-        }finally {
+        } finally {
             return tokenModel;
         }
 
@@ -109,7 +111,7 @@ public class RedisTokenManager implements TokenManager {
         if (model == null) {
             return false;
         }
-        if (model!=null && StringUtils.isNotEmpty(model.getAppId()) && model.getUserId()!=null) {
+        if (model != null && StringUtils.isNotEmpty(model.getAppId()) && model.getUserId() != null) {
             String token = redisTemplate.boundValueOps(model.getAppId() + "_" + model.getUserId()).get();
             if (token == null || !token.equals(model.getToken())) {
                 return false;
@@ -117,7 +119,7 @@ public class RedisTokenManager implements TokenManager {
             //如果验证成功，说明此用户进行了一次有效操作，延长token的过期时间
             redisTemplate.boundValueOps(model.getAppId() + "_" + model.getUserId()).expire(Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -127,7 +129,7 @@ public class RedisTokenManager implements TokenManager {
      * @param tokenModel
      */
     public void deleteToken(TokenModel tokenModel) {
-        if (tokenModel!=null && StringUtils.isNotEmpty(tokenModel.getAppId()) && tokenModel.getUserId()!=null) {
+        if (tokenModel != null && StringUtils.isNotEmpty(tokenModel.getAppId()) && tokenModel.getUserId() != null) {
             redisTemplate.delete(tokenModel.getAppId() + "_" + (tokenModel.getUserId()));
         }
     }

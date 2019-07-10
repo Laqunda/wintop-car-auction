@@ -18,4 +18,17 @@ public interface ICarRegionServerfeeSettingWriteDao {
      */
     int insert(CarRegionServerfeeSetting record);
 
+    /**
+     * 保存记录
+     * @param record
+     */
+    int insertSelective(CarRegionServerfeeSetting record);
+
+    /**
+     * 修改记录
+     * @param record
+     * @return
+     */
+    int updateByPrimaryKeySelective(CarRegionServerfeeSetting record);
+
 }

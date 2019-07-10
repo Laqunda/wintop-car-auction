@@ -1,5 +1,6 @@
 package com.wintop.ms.carauction.service;
 
+import com.wintop.ms.carauction.entity.CarRegionServerfeeSetting;
 import com.wintop.ms.carauction.entity.CarRegionSetting;
 
 import java.util.Date;
@@ -45,4 +46,17 @@ public interface ICarRegionSettingService {
      * @return
      */
     public Date getBreachTime(Date date, Long regionId, String type);
+
+    /**
+     * 保存记录
+     * @param record
+     */
+    public int insertServerfeeSelective(CarRegionServerfeeSetting record);
+
+    /**
+     * 修改记录
+     * @param record
+     * @return
+     */
+    public int updateServerfeeByPrimaryKeySelective(CarRegionServerfeeSetting record);
 }

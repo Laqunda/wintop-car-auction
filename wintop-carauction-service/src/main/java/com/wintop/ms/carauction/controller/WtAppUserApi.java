@@ -1,5 +1,6 @@
 package com.wintop.ms.carauction.controller;
 
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.alibaba.fastjson.JSONObject;
@@ -11,6 +12,7 @@ import com.wintop.ms.carauction.service.IWtAppUserService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 客户端用户使用接口类
@@ -28,6 +31,7 @@ import java.util.Map;
 public class WtAppUserApi {
 
     private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(WtAppUserApi.class);
+    private static final String PASS = "2";
 
     @Autowired
     private IWtAppUserService appUserService;
@@ -243,7 +247,89 @@ public class WtAppUserApi {
                         //1=type保证金和签约都未审核
                         if ("1".equals(deposit.getStatus()) && "1".equals(sign.getStatus())){
                             appUser.setType("1");
-                        // 2=保证金已经审核通过，需审核签约
+                            // 2=保证金已经审核通过，需审核签约
+                        }else if ("2".equals(deposit.getStatus()) && "1".equals(sign.getStatus())){
+                            appUser.setType("2");
+                            //3=签约已经通过，需审核保证金
+                        }else if ("1".equals(deposit.getStatus()) && "2".equals(sign.getStatus())){
+                            appUser.setType("3");
+                        }
+
+                    }
+                }
+                for (WtAppUser appUser:appUsers){
+                    Map<String, Object> param = Maps.newHashMap();
+                    param.put("userId", appUser.getId());
+                    param.put("status", PASS);
+                    CarCustomerDeposit deposit=depositService.selectDepositByUserId(param);
+                    if (Objects.nonNull(deposit)) {
+                        appUser.setDepositAmount(deposit.getDepositAmount());
+                    }
+                }
+                listEntity.setList(appUsers);
+                result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+            }else {
+                result.setError(ResultCode.NO_OBJECT.strValue(),ResultCode.NO_OBJECT.getRemark());
+            }
+            listEntity.setCount(appUserService.selectCountByParam(map));
+            result.setResult(listEntity);
+        }catch (Exception e){
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+            e.printStackTrace();
+        }
+        return  result;
+    }
+    /**
+     * 根据参数查询用户信息列表
+     *@Author:zhangzijuan
+     *@date 2018/3/14
+     *@param:map
+     */
+    @ApiOperation(value = "根据参数查询用户信息列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "searchName",value = "姓名、手机号",required = false,paramType = "query",dataType = "string"),
+            @ApiImplicitParam(name = "status",value = "会员状态",required = false,paramType = "query",dataType = "string"),
+            @ApiImplicitParam(name = "groupId",value = "分组Id",required = false,paramType = "query",dataType = "long"),
+            @ApiImplicitParam(name = "storeId",value = "店铺ID",required = false,paramType = "query",dataType = "long"),
+            @ApiImplicitParam(name = "page",value = "当前页数",required = true,paramType = "query",dataType = "int"),
+            @ApiImplicitParam(name = "limit",value = "每页显示的条数",required = true,paramType = "query",dataType = "int")
+    })
+    @PostMapping(value = "/service/appuser/searchByParam", produces="application/json; charset=UTF-8")
+    public ServiceResult<ListEntity<WtAppUser>> searchByParam(@RequestBody Map<String,Object> map){
+        Logger.info("根据参数查询用户信息列表");
+        ServiceResult<ListEntity<WtAppUser>> result = new ServiceResult<>();
+        try {
+            /**
+             * 数据权限过滤
+             */
+            Long userId = null;
+            try {
+                userId = Long.parseLong(map.get("managerId").toString());
+            } catch (Exception e) {
+            }
+            if(!Objects.isNull(userId)){
+                List<Long> storeIds = managerUserService.queryStoreScope(userId);
+                map.put("storeIds",storeIds);
+            }
+            if(map.get("groupId")!=null && "0".equals(map.get("groupId").toString())){
+                map.put("groupId",null);
+            }
+            ListEntity<WtAppUser> listEntity = new ListEntity<>();
+            List<WtAppUser> appUsers=appUserService.selectListByParam(map);
+            if(appUsers!=null && appUsers.size()!=0){
+                //如果查询的签约列表
+                if (map.get("status")!=null && "5".equals(map.get("status"))){
+                    Map<String,Object> paraMap=new HashMap<>();
+                    for (WtAppUser appUser:appUsers){
+                        CarCustomerSign sign=signService.querySignByUserId(appUser.getId());
+                        appUser.setSignatureTime(sign.getSignatureTime());
+                        appUser.setSignId(sign.getId());
+                        paraMap.put("userId",appUser.getId());
+                        CarCustomerDeposit deposit=depositService.selectDepositByUserId(paraMap);
+                        //1=type保证金和签约都未审核
+                        if ("1".equals(deposit.getStatus()) && "1".equals(sign.getStatus())){
+                            appUser.setType("1");
+                            // 2=保证金已经审核通过，需审核签约
                         }else if ("2".equals(deposit.getStatus()) && "1".equals(sign.getStatus())){
                             appUser.setType("2");
                             //3=签约已经通过，需审核保证金
@@ -261,7 +347,7 @@ public class WtAppUserApi {
             result.setResult(listEntity);
         }catch (Exception e){
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
-           e.printStackTrace();
+            e.printStackTrace();
         }
         return  result;
     }
@@ -449,15 +535,20 @@ public class WtAppUserApi {
     public ServiceResult<Map<String,Object>> simpleSaveUser(@RequestBody JSONObject object){
         ServiceResult<Map<String,Object>> result=new ServiceResult<>();
         try {
-            Integer i=appUserService.simpleSaveUser(object);
-            if (i>0){
-                result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
-            }else if(i==-1){
-                result.setError(ResultCode.REPEAT_AUCTION_PLATE.strValue(),ResultCode.REPEAT_AUCTION_PLATE.getRemark());
-            }else if (i==-2){
-                result.setError(ResultCode.KEY_EXIST.strValue(),ResultCode.KEY_EXIST.getRemark());
-            }else {
-                result.setError(ResultCode.FAIL.strValue(),ResultCode.FAIL.getRemark());
+            Integer checkCount = appUserService.selectAuctionPlateNumIsRepeat(object.getString("mobile"), object.getString("auctionPlateNum"));
+            if (checkCount > 0) {
+                result.setError(ResultCode.EXISTS_REPEAT_AUCTION_PLATE_NUM.strValue(),ResultCode.EXISTS_REPEAT_AUCTION_PLATE_NUM.getRemark());
+            } else{
+                Integer i=appUserService.simpleSaveUser(object);
+                if (i>0){
+                    result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+                }else if(i==-1){
+                    result.setError(ResultCode.REPEAT_AUCTION_PLATE.strValue(),ResultCode.REPEAT_AUCTION_PLATE.getRemark());
+                }else if (i==-2){
+                    result.setError(ResultCode.KEY_EXIST.strValue(),ResultCode.KEY_EXIST.getRemark());
+                }else {
+                    result.setError(ResultCode.FAIL.strValue(),ResultCode.FAIL.getRemark());
+                }
             }
         }catch (Exception e){
             e.printStackTrace();

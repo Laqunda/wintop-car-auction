@@ -62,7 +62,19 @@
     </if>
     <if test="endRowNum != null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
-    </if>  </select>
+    </if>
+  </select>
+  <select id="selectByCondition" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+      group_concat(problem_description) problem_description,auto_id,class_id
+    from car_auto_detection_data cadd
+    <trim prefix="where" prefixOverrides="and|or">
+      <if test="autoId != null ">
+        cadd.auto_id = #{autoId}
+      </if>
+    </trim>
+    group by auto_id,class_id
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />

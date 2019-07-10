@@ -1,16 +1,16 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
-import com.wintop.ms.carauction.entity.CarStore;
-import com.wintop.ms.carauction.entity.CommonNameVo;
-import com.wintop.ms.carauction.entity.ListEntity;
-import com.wintop.ms.carauction.service.ICarAgentCompanyService;
-import com.wintop.ms.carauction.service.ICarStoreService;
+import com.wintop.ms.carauction.entity.*;
+import com.wintop.ms.carauction.service.*;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
 import com.wintop.ms.carauction.util.utils.IdWorker;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 店铺信息接口类
@@ -31,10 +29,20 @@ import java.util.Map;
 @RequestMapping("/service/carStore")
 public class CarStoreApi {
     private static final Logger logger = LoggerFactory.getLogger(CarStoreApi.class);
+    // 中心
+    private static final long CENTER = 2L;
+    // 代办公司
+    private static final long AGENCY = 3L;
     @Autowired
     private ICarAgentCompanyService agentCompanyService;
     @Autowired
     private ICarStoreService storeService;
+    @Autowired
+    private ICarCenterStoreService carCenterStoreService;
+    @Autowired
+    private ICarStoreService carStoreService;
+    @Autowired
+    private ICarManagerUserService carManagerUserService;
 
     private IdWorker idWorker = new IdWorker(10);
 
@@ -79,6 +87,19 @@ public class CarStoreApi {
             Map<String,Object> map = new HashMap<>();
             if(obj.get("storeName")!=null){
                 map.put("storeName",obj.getString("storeName"));
+            }
+            if (obj.getString("managerId") != null){
+                CarManagerUser user = carManagerUserService.selectByPrimaryKey(obj.getLong("managerId"), false);
+                if (Objects.equals(CENTER,user.getRoleTypeId() )) {
+                    List<CommonNameVo> centerStoreList = carCenterStoreService.selectAllStore(user.getDepartmentId());
+                    if (CollectionUtils.isNotEmpty(centerStoreList)) {
+                        List<Long> storeList = centerStoreList.stream().map(centerStore -> centerStore.getId()).collect(Collectors.toList());
+                        map.put("storeList", storeList);
+                    }
+                } else if (Objects.equals(AGENCY,user.getRoleTypeId())){
+                    List<Long> storeList = carManagerUserService.queryStoreScope(obj.getLong("managerId"));
+                    map.put("storeList", storeList);
+                }
             }
             int count = storeService.countByExample(map);
             PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
@@ -196,6 +217,32 @@ public class CarStoreApi {
         try {
             CarStore carStore = storeService.selectByPrimaryKey(obj.getLong("id"));
             result.setResult(carStore);
+            result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info("查询店铺失败",e);
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /***
+     * 查询店铺
+     * @param obj
+     * @return
+     */
+    @RequestMapping(value = "/selectForCenterByCondition",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<List<CarStore>> selectForCenterByCondition(@RequestBody JSONObject obj) {
+        ServiceResult<List<CarStore>> result = new ServiceResult<>();
+
+        try {
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
+
+            result.setResult(carStoreService.selectForCenterByCondition(param));
             result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
         }catch (Exception e){
             e.printStackTrace();

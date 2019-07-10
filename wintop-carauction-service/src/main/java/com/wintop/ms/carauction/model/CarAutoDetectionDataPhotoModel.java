@@ -65,4 +65,13 @@ public class CarAutoDetectionDataPhotoModel {
     public int deleteByClassIdAutoId(Map map) {
         return writeDao.deleteByClassIdAutoId(map);
     }
+
+    /**
+     * 根据条件查询所有检测图片
+     * @param param
+     * @return
+     */
+    public List<CarAutoDetectionDataPhoto> selectByAll(Map<String, Object> param){
+        return this.readDao.selectByAll(param);
+    }
 }

@@ -115,4 +115,9 @@ public class CarManagerUserServiceImpl implements ICarManagerUserService{
         List<Long> storeIds = userModel.queryStoreScope(user.getRoleTypeId(), user.getDepartmentId());
         return storeIds;
     }
+
+    @Override
+    public List<Long> queryStoreScope(Map<String,Object> map) {
+        return userModel.queryStoreScope(map);
+    }
 }

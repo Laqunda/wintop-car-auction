@@ -172,6 +172,11 @@ public class CarAutoAuction implements Serializable {
     private Long regionId;
 
     /**
+     * 线上转线下状态: 0:未转渠道 1:已转渠道
+     */
+    private String transferFlag;
+
+    /**
      * @return 前往何处：1本市外迁均可，2只能外迁，3只能本市
      */
     public String getMoveToWhere() {
@@ -513,5 +518,13 @@ public class CarAutoAuction implements Serializable {
 
     public void setRegionId(Long regionId) {
         this.regionId = regionId;
+    }
+
+    public String getTransferFlag() {
+        return transferFlag;
+    }
+
+    public void setTransferFlag(String transferFlag) {
+        this.transferFlag = transferFlag;
     }
 }

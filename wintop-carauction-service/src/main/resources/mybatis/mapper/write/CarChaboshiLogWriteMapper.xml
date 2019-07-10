@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.write.CarChaboshiLogWriteDao">
+    <insert id="insertCarChaboshiLog" parameterType="com.wintop.ms.carauction.entity.CarChaboshiLog">
+        insert into car_chaboshi_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            create_time,
+            <if test="userType != null  and userType != ''  ">user_type,</if>
+            <if test="userId != null  ">user_id,</if>
+            <if test="vin != null  and vin != ''  ">vin,</if>
+            <if test="responseMsg != null  and responseMsg != ''  ">response_msg,</if>
+            <if test="sourceType != null  and sourceType != ''  ">source_type,</if>
+            <if test="responseResult != null  and responseResult != ''  ">response_result,</if>
+            <if test="money != null  ">money,</if>
+            <if test="edition != null  and edition != ''  ">edition,</if>
+            <if test="orderId != null  and orderId != ''  ">order_id,</if>
+            <if test="orderMsg != null  and orderMsg != ''  ">order_msg,</if>
+            <if test="userName != null  and userName != ''  ">user_name,</if>
+            <if test="storeId != null  and storeId != ''  ">store_id,</if>
+            <if test="payLogId != null  and payLogId != ''  ">paylog_id,</if>
+
+            <if test="vehicleId != null  and vehicleId != ''  ">vehicle_id,</if>
+            <if test="vehicleType != null  and vehicleType != ''  ">vehicle_type,</if>
+            <if test="photo != null  and photo != ''  ">photo,</if>
+            <if test="engineNum != null  and engineNum != ''  ">engine_num,</if>
+            <if test="pc_url != null  and pc_url != ''  ">pc_url,</if>
+            <if test="app_url != null  and app_url != ''  ">app_url,</if>
+            <if test="finishTime != null">finish_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            now(),
+            <if test="userType != null  and userType != ''  ">#{userType},</if>
+            <if test="userId != null  ">#{userId},</if>
+            <if test="vin != null  and vin != ''  ">#{vin},</if>
+            <if test="responseMsg != null  and responseMsg != ''  ">#{responseMsg},</if>
+            <if test="sourceType != null  and sourceType != ''  ">#{sourceType},</if>
+            <if test="responseResult != null  and responseResult != ''  ">#{responseResult},</if>
+            <if test="money != null  ">#{money},</if>
+            <if test="edition != null  and edition != ''  ">#{edition},</if>
+            <if test="orderId != null  and orderId != ''  ">#{orderId},</if>
+            <if test="orderMsg != null  and orderMsg != ''  ">#{orderMsg},</if>
+            <if test="userName != null  and userName != ''  ">#{userName},</if>
+            <if test="storeId != null  and storeId != ''  ">#{storeId},</if>
+            <if test="payLogId != null  and payLogId != ''  ">#{payLogId},</if>
+
+            <if test="vehicleId != null  and vehicleId != ''  ">#{vehicleId},</if>
+            <if test="vehicleType != null  and vehicleType != ''  ">#{vehicleType},</if>
+            <if test="photo != null  and photo != ''  ">#{photo},</if>
+            <if test="engineNum != null  and engineNum != ''  ">#{engineNum},</if>
+            <if test="pc_url != null  and pc_url != ''  ">#{pc_url},</if>
+            <if test="app_url != null  and app_url != ''  ">#{app_url},</if>
+            <if test="finishTime != null">now(),</if>
+        </trim>
+    </insert>
+
+    <update id="updateCarChaboshiLog" parameterType="java.util.Map">
+        update car_chaboshi_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="userType != null  and userType != ''  ">user_type = #{userType},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="vin != null  and vin != ''  ">vin = #{vin},</if>
+            <if test="responseMsg != null  and responseMsg != ''  ">response_msg = #{responseMsg},</if>
+            <if test="sourceType != null  and sourceType != ''  ">source_type = #{sourceType},</if>
+            <if test="responseResult != null  and responseResult != ''  ">response_result = #{responseResult},</if>
+            <if test="money != null  ">money = #{money},</if>
+            <if test="edition != null  and edition != ''  ">edition = #{edition},</if>
+            <if test="orderId != null  and orderId != ''  ">order_id = #{orderId},</if>
+            <if test="orderMsg != null  and orderMsg != ''  ">order_msg = #{orderMsg},</if>
+            <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+            <if test="storeId != null  and storeId != ''  ">store_id = #{storeId},</if>
+            <if test="payLogId != null  and payLogId != ''  ">paylog_id = #{payLogId},</if>
+            <if test="vehicleId != null  and vehicleId != ''  ">vehicle_id = #{vehicleId},</if>
+            <if test="vehicleType != null  and vehicleType != ''  ">vehicle_type = #{vehicleType},</if>
+            <if test="photo != null  and photo != ''  ">photo = #{photo},</if>
+            <if test="engineNum != null  and engineNum != ''  ">engine_num = #{engineNum},</if>
+            <if test="pc_url != null  and pc_url != ''  ">pc_url = #{pc_url},</if>
+            <if test="app_url != null  and app_url != ''  ">app_url = #{app_url},</if>
+            <if test="finishTime != null  and finishTime != ''  ">finish_time = #{finishTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCarChaboshiLogById" parameterType="Long">
+        delete from car_chaboshi_log where id = #{id}
+    </delete>
+
+    <delete id="deleteCarChaboshiLogByIds" parameterType="String">
+        delete from car_chaboshi_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateIsOpen" parameterType="java.util.Map">
+        update car_chaboshi_log
+        set is_open = #{is_open}
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -113,6 +113,7 @@ public class CarOrder implements Serializable {
     private Integer unPay;
     private Integer dealing;
     private Integer finish;
+    private Integer unEvaluated;
     /**
      * 违约类型，0未违约，1买家违约，2卖家违约
      */
@@ -150,6 +151,8 @@ public class CarOrder implements Serializable {
     private String logNo;
     private String identityNumber;
     private String storeName;
+    private String simpleName;
+    private String address;
     private String vin;
     private String moveAddress;
     private String statusName;
@@ -186,6 +189,12 @@ public class CarOrder implements Serializable {
     private String userNum;
     //车辆初次上牌日期
     private Date beginRegisterDate;
+
+    /*卖家有无评价1：已评价 0：未评价*/
+    private String managerEvaluate;
+    /*买家有无评价1：已评价 0：未评价*/
+    private String userEvaluate;
+
 
     public String getCustomerName() {
         return customerName;
@@ -329,6 +338,14 @@ public class CarOrder implements Serializable {
 
     public void setAgentFee(BigDecimal agentFee) {
         this.agentFee = agentFee;
+    }
+
+    public Integer getUnEvaluated() {
+        return unEvaluated;
+    }
+
+    public void setUnEvaluated(Integer unEvaluated) {
+        this.unEvaluated = unEvaluated;
     }
 
     /**
@@ -979,5 +996,37 @@ public class CarOrder implements Serializable {
 
     public void setBeginRegisterDate(Date beginRegisterDate) {
         this.beginRegisterDate = beginRegisterDate;
+    }
+
+    public String getManagerEvaluate() {
+        return managerEvaluate;
+    }
+
+    public void setManagerEvaluate(String managerEvaluate) {
+        this.managerEvaluate = managerEvaluate;
+    }
+
+    public String getUserEvaluate() {
+        return userEvaluate;
+    }
+
+    public void setUserEvaluate(String userEvaluate) {
+        this.userEvaluate = userEvaluate;
+    }
+
+    public String getSimpleName() {
+        return simpleName;
+    }
+
+    public void setSimpleName(String simpleName) {
+        this.simpleName = simpleName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

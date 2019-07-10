@@ -7,10 +7,6 @@ import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.service.*;
 import com.wintop.ms.carauction.util.utils.CarAutoUtils;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,6 +144,12 @@ public class CarOrderApi {
             map.put("autoId",carOrder.getCarId());
             map.put("amountFee",carOrder.getAmountFee());
             map.put("auctionId",carOrder.getAutoAuctionId());
+            map.put("managerEvaluate",carOrder.getManagerEvaluate());
+            map.put("userEvaluate",carOrder.getUserEvaluate());
+            map.put("name",carOrder.getStoreName());
+            map.put("simpleName",carOrder.getSimpleName());
+            map.put("address",carOrder.getAddress());
+
             result.setResult(map);
             result.setSuccess("0","成功");
         }catch (Exception e){
@@ -245,6 +247,8 @@ public class CarOrderApi {
                 map.put("auctionType",carOrder.getAuctionType());
                 map.put("topBidPrice",carOrder.getTopBidPrice());
                 map.put("beginRegisterDate",carOrder.getBeginRegisterDate());
+                map.put("managerEvaluate",carOrder.getManagerEvaluate());
+                map.put("userEvaluate",carOrder.getUserEvaluate());
                 if("2".equals(carOrder.getStatus())){
                     map.put("submitTime",carOrder.getAutoUpdateTime());
                     map.put("approveTime","");
@@ -270,11 +274,11 @@ public class CarOrderApi {
                 }else{
                     map.put("dealTime","");
                     map.put("submitTime","");
-                    map.put("approveTime","");
                     map.put("payTime","");
                 }
             }
             result.setResult(map);
+            map.put("approveTime","");
             result.setSuccess("0","成功");
         }catch (Exception e){
             e.printStackTrace();
@@ -302,6 +306,7 @@ public class CarOrderApi {
                 CarManagerUser carManagerUser = iCarManagerUserService.selectByPrimaryKey(userId,true);
                 paramMap.put("departmentId",carManagerUser.getDepartmentId());
             }
+            paramMap.put("auctionType",obj.getString("auctionType"));
             int count = carOrderService.queryHistoryCarCount(paramMap);
             PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
             paramMap.put("startRowNum",pageEntity.getStartRowNum());
@@ -327,6 +332,8 @@ public class CarOrderApi {
                 map.put("reportColligationRanks",carOrder.getReportColligationRanks());
                 map.put("reportServicingRanks",carOrder.getReportServicingRanks());
                 map.put("licenseNumber",carOrder.getLicenseNumber());
+                map.put("storeName",carOrder.getStoreName());
+                map.put("userName",carOrder.getUserName());
                 list.add(map);
             }
             ListEntity<Map<String,Object>> listEntity = new ListEntity<>();

@@ -103,4 +103,13 @@ public class CarStoreServiceImpl implements ICarStoreService {
         return storeModel.updateByPrimaryKey(carStore);
     }
 
+    @Override
+    public Long idByExample(Map<String, Object> map) {
+        return storeModel.idByExample(map);
+    }
+
+    @Override
+    public List<CarStore> selectForCenterByCondition(Map<String, Object> map) {
+        return storeModel.selectForCenterByCondition(map);
+    }
 }

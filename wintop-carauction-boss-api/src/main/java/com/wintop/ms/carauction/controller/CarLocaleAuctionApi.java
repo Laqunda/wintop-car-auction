@@ -1,6 +1,10 @@
 package com.wintop.ms.carauction.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.wintop.ms.carauction.core.annotation.AuthPublic;
 import com.wintop.ms.carauction.core.annotation.AuthUserToken;
 import com.wintop.ms.carauction.core.annotation.CurrentUserId;
@@ -9,11 +13,19 @@ import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.config.ResultStatus;
 import com.wintop.ms.carauction.core.model.ResultModel;
+import com.wintop.ms.carauction.entity.ExportLocaleAuctionDetail;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
+import com.wintop.ms.carauction.util.utils.ExcelUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
@@ -23,10 +35,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: 付陈林.
@@ -59,10 +77,11 @@ public class CarLocaleAuctionApi {
             @ApiImplicitParam(name = "limit",value = "每页显示的条数",required = true,paramType = "query",dataType = "int")
     })
     @AuthUserToken
-    public ResultModel getLocaleAuctionList(@RequestBody Map<String,Object> map){
+    public ResultModel getLocaleAuctionList(@RequestBody Map<String,Object> map,@CurrentUserId Long maanagerId){
         if(map.get("page")==null || map.get("limit")==null){
             return new ResultModel(false,101,"缺少page或者limit参数",null);
         }
+        map.put("managerId", maanagerId);
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(Constants.ROOT+"/service/carLocaleAuction/getLocaleAuctionList"))
@@ -798,5 +817,109 @@ public class CarLocaleAuctionApi {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(map),JSONObject.class);
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
+
+    @PostMapping(value = "/exportLocaleAuctionDetail" )
+    @ApiOperation(value = "导出竞拍统计")
+    @AuthPublic
+    public void exportLocaleAuctionDetail(HttpServletRequest request, HttpServletResponse rep,
+        @RequestParam("id") String id){
+        String[] headers = {"店铺名称","参与竞拍车辆","竞拍成功车辆","总成交率"};
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("id", id);
+        HSSFWorkbook workbook = ExcelUtil.createStartExcel("导出竞拍统计记录", headers);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(Constants.ROOT+"/service/carLocaleAuction/getLocaleAuctionDetail"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map),JSONObject.class);
+        ApiUtil.getResponseEntity(response,resultModel, ApiUtil.OBJECT);
+
+        List<Map<String, Object>> allTotalList = Lists.newArrayList();
+        HSSFSheet sheet = workbook.getSheetAt(0);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            JSONObject obj = response.getBody();
+            JSONArray result = obj.getJSONObject("result").getJSONArray("entries");
+            if (result != null && result.size() > 0) {
+                // 获取
+                for (int i = 0; i < result.size(); i++) {
+                    Map<String, Object> param = Maps.newHashMap();
+                    JSONObject object = result.getJSONObject(i);
+                    param.put("storeName", object.getString("storeName"));
+                    param.put("carAutoNo", object.getString("carAutoNo"));
+                    if (object.getString("auctionStatus").equals("2")) {
+                        param.put("successFlag", true);
+                    } else{
+                        param.put("successFlag", false);
+                    }
+                    allTotalList.add(param);
+                }
+                List<ExportLocaleAuctionDetail> resultList = Lists.newArrayList();
+                // 汇总
+                List<Map<String, Object>> carTotalList = Lists.newArrayList();
+                Map<String, List<Map<String, Object>>> tempGroupList = allTotalList.stream().collect(Collectors.groupingBy(val -> val.get("storeName").toString().concat("_").concat(val.get("carAutoNo").toString())));
+                tempGroupList.forEach((key,value)->{
+                    Map<String, Object> carMap = Maps.newHashMap();
+                    // TODO 需要进行二次分组获取结果
+                    List<String> tempList = Splitter.on("_").splitToList(key);
+                    String storeName = tempList.get(0);
+
+                    carMap.put("storeName", storeName);
+                    int successCount = value.stream().filter(val -> Boolean.valueOf(val.get("successFlag").toString())).collect(Collectors.toList()).size();
+                    if (successCount > 0){
+                        carMap.put("successFlag", true);
+                    } else{
+                        carMap.put("successFlag", false);
+                    }
+                    carTotalList.add(carMap);
+                });
+                Map<String, List<Map<String, Object>>> storeTotalList = carTotalList.stream().collect(Collectors.groupingBy(val -> val.get("storeName").toString()));
+                storeTotalList.forEach((key,value) ->{
+                    ExportLocaleAuctionDetail detail = new ExportLocaleAuctionDetail();
+                    int successCount = value.stream().filter(val -> Boolean.valueOf(val.get("successFlag").toString())).collect(Collectors.toList()).size();
+                    int totalCount = value.size();
+
+                    detail.setStoreName(key);
+                    detail.setAuctionNum(totalCount);
+                    detail.setSucessNum(successCount);
+                    if (successCount != 0){
+                        detail.setMaxRate(BigDecimal.valueOf(Double.valueOf(successCount+""))
+                                .divide(BigDecimal.valueOf(Double.valueOf(totalCount + "")),BigDecimal.ROUND_HALF_UP)
+                                .multiply(BigDecimal.valueOf(100)).setScale(2).toPlainString()+"%");
+                    } else {
+                        detail.setMaxRate(BigDecimal.ZERO+"%");
+                    }
+                    resultList.add(detail);
+                });
+                // 输出结果
+                for (int i = 0; i < resultList.size(); i++) {
+                    ExportLocaleAuctionDetail detail = resultList.get(i);
+                    HSSFRow itemRow = sheet.createRow(i + 2);
+                    HSSFCell c0 = itemRow.createCell(0);
+                    c0.setCellValue(detail.getStoreName());
+
+                    HSSFCell c1 = itemRow.createCell(1);
+                    c1.setCellValue(detail.getAuctionNum());
+
+                    HSSFCell c2 = itemRow.createCell(2);
+                    c2.setCellValue(detail.getSucessNum());
+
+                    HSSFCell c3 = itemRow.createCell(3);
+                    c3.setCellValue(detail.getMaxRate());
+                }
+            }
+
+        }
+        String filename = String.valueOf(ExcelUtil.processFileName(request, "导出竞拍统计信息列表")).concat(".xls");
+        rep.setContentType("application/vnd.ms-excel;charset=utf-8");
+        rep.setHeader("Content-disposition", "attachment;filename=" + filename);
+        try {
+            ServletOutputStream ouputStream = rep.getOutputStream();
+            workbook.write(ouputStream);
+            ouputStream.flush();
+            ouputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

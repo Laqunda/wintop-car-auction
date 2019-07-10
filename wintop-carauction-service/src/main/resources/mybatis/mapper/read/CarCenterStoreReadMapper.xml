@@ -17,9 +17,21 @@
   <select id="selectAllStore" resultMap="StoreResultMap"  parameterType="java.lang.Long">
     SELECT
     t2.id, t2.`name`,'1' AS checked
-    FROM car_center_store t1
+    FROM  car_center_store t1
     INNER JOIN car_store t2 ON t1.store_id=t2.id
     WHERE center_id=#{centerId}
+  </select>
+  <select id="selectByCondition" resultMap="StoreResultMap"  parameterType="java.util.Map">
+    SELECT
+    DISTINCT
+    c.id, c.center_name as `name`
+    FROM  car_center_store cs
+    INNER JOIN car_center c ON cs.center_id=c.id
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="storeId != null and storeId != ''">
+        AND cs.store_id = #{storeId}
+      </if>
+    </trim>
   </select>
   <select id="selectAllStoreIds" resultMap="IdResultMap" parameterType="java.lang.Long">
     SELECT store_id id FROM car_center_store WHERE center_id=#{centerId};

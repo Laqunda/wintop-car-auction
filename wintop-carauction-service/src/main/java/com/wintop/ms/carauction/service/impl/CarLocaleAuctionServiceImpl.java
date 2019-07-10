@@ -1,6 +1,9 @@
 package com.wintop.ms.carauction.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wintop.ms.carauction.core.config.CarStatusEnum;
+import com.wintop.ms.carauction.core.config.Constants;
+import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.model.CarAutoAuctionModel;
@@ -12,6 +15,7 @@ import com.wintop.ms.carauction.service.ICarLocaleAuctionService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -47,7 +51,6 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
     private CarOrderLogModel carOrderLogModel;
     @Autowired
     private CarManagerUserModel carManagerUserModel;
-
 
     private IdWorker idWorker = new IdWorker(10);
 
@@ -177,7 +180,6 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
      */
     @Override
     public ServiceResult<List<CarLocaleAuction>> selectAuctionList(Map<String,Object> map){
-
         ServiceResult<List<CarLocaleAuction>> result=new ServiceResult<>();
         List<CarLocaleAuction> carAuctions = model.selectAuctionList(map);
         for(CarLocaleAuction carAuction:carAuctions){
@@ -373,8 +375,11 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
                 carMap.put("auctionNum",0);
             }
             carMap.put("publishUserName",carLocaleAuctionCar.getPublishUserName());
+            carMap.put("status", carLocaleAuctionCar.getStatus());
+            carMap.put("mainPhoto",carLocaleAuctionCar.getCarAutoPhoto());
             entriesList.add(carMap);
         }
+        resultMap.put("shareUri", Constants.CAR_SHARE_URL);
         resultMap.put("entries",entriesList);
         result.setResult(resultMap);
         return result;
@@ -400,6 +405,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
             resultMap.put("seeCarPhone",carLocaleAuction.getSeeCarPhone());
             resultMap.put("seeCarTime",carLocaleAuction.getSeeCarTime());
             resultMap.put("stationRealId",carLocaleAuction.getStationRealId());
+            resultMap.put("templateId", carLocaleAuction.getTemplateId());
         }
         result.setResult(resultMap);
         return result;
@@ -584,7 +590,9 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
         //最高出价
         CarAuctionBidRecord carAuctionBidRecord = carAuctionBidRecordModel.selectLastBidRecord(auctionCarId);
         if(carAuctionBidRecord==null||carAuctionBidRecord.getBidFee()==null||carAuctionBidRecord.getBidFee().compareTo(new BigDecimal(0))==0){
-            return new ServiceResult<>(false,"获取不到最高出价","101");
+//            return new ServiceResult<>(false,"获取不到最高出价","101");
+            carAuctionBidRecord = new CarAuctionBidRecord();
+            carAuctionBidRecord.setBidFee(BigDecimal.valueOf(new Long(0)));
         }
         //查询车辆的保留价
         CarAutoAuction carAutoAuction = carAutoAuctionModel.selectByPrimaryKey(carLocaleAuctionCar.getAutoAuctionId());
@@ -782,6 +790,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
      * @Date 2018-3-26
      * @About 根据场次Id获取更新最后的场次竞拍结果
      * */
+    @Override
     @Transactional
     public ServiceResult<Map<String,Object>> largeScreenAuctionFinish(Long auctionId){
         CarLocaleAuction carLocaleAuction =model.selectById(auctionId);
@@ -806,6 +815,19 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
         updateAuction.setId(carLocaleAuction.getId());
         updateAuction.setStatus("4");
         Integer count =model.updateByIdSelective(updateAuction);
+        //将转渠道的流拍车辆定义为草稿
+        //查询拍卖场次转渠道并且流拍的车
+        paramMap.clear();
+        paramMap.put("auctionId",auctionId);
+        paramMap.put("status", CarStatusEnum.ABORTIVE_AUCTION.value());
+        paramMap.put("transferFlag","1");
+        List<CarAutoAuction> carAutoAuctionList = carAutoAuctionModel.selectAutoAuctionBylocale(paramMap);
+        if(carAutoAuctionList != null && carAutoAuctionList.size() > 0){
+            //将车辆定义为草稿状态
+            for(CarAutoAuction autoAuction: carAutoAuctionList ){
+                carAutoModel.updateAutoData(autoAuction);
+            }
+        }
         ServiceResult<Map<String,Object>> result=new ServiceResult<>();
         Map resultMap =new HashMap();
         resultMap.put("count",count);
@@ -821,6 +843,7 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
      * @Date 2018-3-26
      * @About 根据场次Id获取更新最后的场次竞拍结果
      * */
+    @Override
     @Transactional
     public ServiceResult<Map<String,Object>> clearLargeScreenAuctionCar(Long auctionId){
         ServiceResult<Map<String,Object>> result=new ServiceResult<>();
@@ -878,4 +901,53 @@ public class CarLocaleAuctionServiceImpl implements ICarLocaleAuctionService {
     public CarLocaleAuction selectByStationRealId(String stationRealId,String auctionDate){
         return model.selectByStationRealId(stationRealId,auctionDate);
     }
+
+    @Override
+    public ServiceResult<List<CarLocaleAuction>> queryAuctionListByParams(Map<String, Object> map) {
+        ServiceResult<List<CarLocaleAuction>> result=new ServiceResult<>();
+        List<CarLocaleAuction> carAuctions = model.queryAuctionListByParams(map);
+        for(CarLocaleAuction carAuction:carAuctions){
+            map = new HashMap<>();
+            map.put("auctionId",carAuction.getId());
+            map.put("auctionStatusArr","'0','1','2'");
+            int carNum = carAuctionCarModel.selectCarNumByAuction(map);
+            carAuction.setCarNum(carNum);
+        }
+        result.setSuccess(true);
+        result.setResult(carAuctions);
+        return result;
+    }
+
+    /**
+     * 获取场次拍卖费用信息
+     */
+    public ServiceResult<Map<String,Object>> selectLocaleAuctionInfo(CarLocaleAuction carLocaleAuction){
+        //获取服务费、代理费
+        BigDecimal agenFee =new BigDecimal(0);
+        BigDecimal serviceFee=new BigDecimal(0);
+        BigDecimal endClosinPrice = new BigDecimal(0);
+        if(carLocaleAuction!=null){
+            CarRegionSetting carRegionSetting = carRegionSettingModel.selectByRegionId(carLocaleAuction.getCityId());
+            if(carRegionSetting!=null){
+                agenFee =carRegionSetting.getAgentFee();
+                List<CarRegionServerfeeSetting> serverfeeSettings = serverfeeSettingModel.selectByRegionSettingId(carRegionSetting.getId());
+                if(serverfeeSettings!=null&&serverfeeSettings.size()>0){
+                    for(CarRegionServerfeeSetting carRegionServerfeeSetting:serverfeeSettings){
+                        serviceFee =carRegionServerfeeSetting.getServiceFee();
+                    }
+                }else{
+                    return new ServiceResult<>(false,"获取不到服务费","101");
+                }
+            }else{
+                return new ServiceResult<>(false,"获取不到该地区的代办费！","101");
+            }
+        }else{
+            return new ServiceResult<>(false,"查询不到场次信息","101");
+        }
+        if(serviceFee==null||agenFee==null||agenFee.compareTo(new BigDecimal(0))==0||serviceFee.compareTo(new BigDecimal(0))==0){
+            return new ServiceResult<>(false,"获取不到代办费或者服务费,请确定该地区已经设置！","101");
+        }
+        return new ServiceResult<>(true, ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
+    }
+
 }

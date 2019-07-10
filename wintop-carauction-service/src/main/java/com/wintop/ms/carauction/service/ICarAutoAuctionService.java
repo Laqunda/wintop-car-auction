@@ -5,6 +5,8 @@ import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.CarAutoAuction;
 import com.wintop.ms.carauction.entity.CommonNameVo;
 import com.wintop.ms.carauction.entity.Criteria;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -114,4 +116,11 @@ public interface ICarAutoAuctionService {
      * @return
      */
     public int updateAuctionFinish(RedisAutoData autoData);
+
+    /**
+     * 查询-填充使用,最近的开拍时间
+     *
+     * @return
+     */
+    public CarAutoAuction selectForToday(Map<String,Object> map);
 }

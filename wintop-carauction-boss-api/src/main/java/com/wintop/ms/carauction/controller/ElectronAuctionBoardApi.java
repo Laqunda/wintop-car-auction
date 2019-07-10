@@ -9,6 +9,7 @@ import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
 import com.wintop.ms.carauction.util.utils.IdWorker;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ public class ElectronAuctionBoardApi {
      * 查询拍牌列表
      * @return
      */
+    @ApiOperation(value = "查询拍牌列表")
     @RequestMapping(value = "/selectAuctionBoardList",produces="application/json; charset=UTF-8")
     @AuthUserToken
     public ResultModel selectAuctionBoardList(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
@@ -51,6 +53,7 @@ public class ElectronAuctionBoardApi {
      * @param map
      * @return
      */
+    @ApiOperation(value = "保存拍牌")
     @RequestMapping(value = "/saveAuctionBoard",
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
@@ -78,6 +81,7 @@ public class ElectronAuctionBoardApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation(value = "更新拍牌")
     public ResultModel updateAuctionBoard(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
@@ -102,6 +106,7 @@ public class ElectronAuctionBoardApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation(value = "删除拍牌")
     public ResultModel deleteAuctionBoard(@CurrentUserId Long managerId, @RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);
@@ -126,6 +131,7 @@ public class ElectronAuctionBoardApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     @AuthUserToken
+    @ApiOperation(value = "查询拍牌")
     public ResultModel selectAuctionBoard(@RequestBody Map<String,Object> map) {
         if(map.get("id")==null){
             return new ResultModel(false, ResultCode.NO_PARAM.value(),ResultCode.NO_PARAM.getRemark(),null);

@@ -77,6 +77,8 @@ public class CarRegionSetting implements Serializable {
 
     private String serverfeeSettings;
 
+
+
     private List<CarRegionServerfeeSetting> serverfeeSettingList;
 
     /**
@@ -297,4 +299,5 @@ public class CarRegionSetting implements Serializable {
     public void setServerfeeSettingList(List<CarRegionServerfeeSetting> serverfeeSettingList) {
         this.serverfeeSettingList = serverfeeSettingList;
     }
+
 }

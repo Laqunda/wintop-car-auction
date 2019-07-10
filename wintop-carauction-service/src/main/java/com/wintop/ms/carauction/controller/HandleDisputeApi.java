@@ -4,14 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
-import com.wintop.ms.carauction.entity.CarAuto;
-import com.wintop.ms.carauction.entity.CarAutoTransfer;
-import com.wintop.ms.carauction.entity.CarManagerRole;
-import com.wintop.ms.carauction.entity.CarOrder;
-import com.wintop.ms.carauction.service.ICarAutoService;
-import com.wintop.ms.carauction.service.ICarAutoTransferService;
-import com.wintop.ms.carauction.service.ICarManagerRoleService;
-import com.wintop.ms.carauction.service.ICarOrderService;
+import com.wintop.ms.carauction.entity.*;
+import com.wintop.ms.carauction.model.CarAutoLogModel;
+import com.wintop.ms.carauction.service.*;
+import com.wintop.ms.carauction.util.utils.IdWorker;
 import com.wintop.ms.carauction.util.utils.RedisAutoManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,16 +30,25 @@ import java.util.Map;
 @RequestMapping("/service/handleDispute")
 public class HandleDisputeApi {
     private static final Logger logger = LoggerFactory.getLogger(HandleDisputeApi.class);
+    private static final String TRANSFER_OFFLINE = "1";
+    private static final String AUDIT = "2";
+    private static final String OFFLINE = "2";
     @Resource
     private ICarAutoService iCarAutoService;
+    @Resource
+    private ICarAutoAuctionService iCarAutoAuctionService;
     @Resource
     private ICarOrderService iCarOrderService;
     @Resource
     private ICarAutoTransferService iCarAutoTransferService;
+    @Resource
+    private ICarAutoLogService carAutoLogService;
     @Autowired
     private RedisAutoManager redisAutoManager;
     @Autowired
     private ICarManagerRoleService roleService;
+    @Autowired
+    private ICarManagerUserService userService;
     /**
      * 申请撤回车辆接口
      */
@@ -85,14 +91,12 @@ public class HandleDisputeApi {
                     }
                     if("2".equals(carAuto1.getStatus())){
                         carAuto.setStatus("1");
-                        count = iCarAutoService.updateByPrimaryKeySelective(carAuto).getResult();
-                        redisAutoManager.delAuto(Constants.CAR_AUTO_AUCTION+"_"+id);
                     }
                     if("5".equals(carAuto1.getStatus()) || "6".equals(carAuto1.getStatus())){
                         carAuto.setStatus("4");
-                        count = iCarAutoService.updateByPrimaryKeySelective(carAuto).getResult();
-                        redisAutoManager.delAuto(Constants.CAR_AUTO_AUCTION+"_"+id);
                     }
+                    count = iCarAutoService.updateByPrimaryKeySelective(carAuto).getResult();
+                    redisAutoManager.delAuto(Constants.CAR_AUTO_AUCTION+"_"+id);
                 }
             }else{
                 result.setError("0","查询不到相关车辆信息");
@@ -113,6 +117,75 @@ public class HandleDisputeApi {
         return result;
     }
 
+    /**
+     * 线上转线下渠道
+     */
+    @RequestMapping(value = "/transferChannelCar",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> transferChannelCar(@RequestBody JSONObject obj){
+        logger.info("线上转线下渠道");
+        ServiceResult<Map<String,Object>> result = new ServiceResult<Map<String,Object>>();
+        Map<String,Object> map = new HashMap<>();
+        try {
+            Long userId = obj.getLong("userId");
+            Long id = obj.getLong("carId");
+            CarAuto carAuto1 = iCarAutoService.selectByPrimaryKey(id).getResult();
+            //**,2只能操作自己的数据
+            CarManagerRole managerRole = roleService.selectByUserId(userId);
+            if("2".equals(managerRole.getWriteType())){
+                if(userId.compareTo(carAuto1.getCreateUser())!=0){
+                    result.setError(ResultCode.NO_ALLOW_UPDATE.strValue(),ResultCode.NO_ALLOW_UPDATE.getRemark());
+                    return result;
+                }
+            }
+            Integer count = 0;
+            Integer autoCount = 0;
+            //更改销售渠道类型
+            CarAutoAuction carAutoAuction = new CarAutoAuction();
+            carAutoAuction.setId(carAuto1.getAutoAuctionId());
+            carAutoAuction.setAuctionType(OFFLINE);
+            carAutoAuction.setAuctionStartTime(null);
+            //更新车辆信息
+            CarAuto carAuto = new CarAuto();
+            carAuto.setId(id);
+            carAuto.setStatus(AUDIT);
+            carAuto.setTransferFlag(TRANSFER_OFFLINE);
+            if(carAuto1 != null ){
+                //
+                autoCount =  iCarAutoService.updateByIdSelective(carAuto);
+                // 修改已转换标识
+                count = iCarAutoAuctionService.updateByPrimaryKeySelective(carAutoAuction).getResult();
+                // 日志信息记录
+                CarManagerUser user = userService.selectByPrimaryKey(userId, false);
+                CarAutoLog carAutoLog = new CarAutoLog();
+                IdWorker idWorker=new IdWorker(10);
+                carAutoLog.setId(idWorker.nextId());
+                carAutoLog.setAutoId(id);
+                carAutoLog.setMsg("线上拍转现场拍申请");
+                carAutoLog.setUserMobile(user.getUserKey());
+                carAutoLog.setUserName(user.getUserName());
+                carAutoLog.setStatus(AUDIT);
+                carAutoLogService.insert(carAutoLog);
+            }else{
+                result.setError("0","查询不到相关车辆信息");
+                return result;
+            }
+            if((count != null && count != 0) && (autoCount != null && autoCount != 0)){
+                map.put("count",count);
+            }else{
+                map.put("count",0);
+            }
+            result.setResult(map);
+            result.setSuccess("0","成功");
+        }catch (Exception e){
+            result.setError("-1","异常");
+            e.printStackTrace();
+            logger.info("线上转线下渠道失败",e);
+        }
+        return result;
+    }
 
     /**
      * 申请二拍接口

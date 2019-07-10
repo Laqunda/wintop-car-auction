@@ -92,4 +92,19 @@ public class CarAutoLogServiceImpl implements ICarAutoLogService {
     public CarAutoLog selectCarLog(Map<String,Object> map){
         return carAutoLogModel.selectCarLog(map);
     }
+
+    @Override
+    public int selectCountEndByUserId(Long userId) {
+        return carAutoLogModel.selectCountEndByUserId(userId);
+    }
+
+    @Override
+    public List<CarAutoLog> selectWaitOrderList(Map<String, Object> map) {
+        return carAutoLogModel.selectWaitOrderList(map);
+    }
+
+    @Override
+    public List<CarAutoLog> selectEndOrderList(Map<String, Object> map) {
+        return carAutoLogModel.selectEndOrderList(map);
+    }
 }

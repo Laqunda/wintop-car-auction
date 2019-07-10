@@ -100,4 +100,12 @@ public class TblAuctionLogModel {
         return tblAuctionLogReadDao.selectBidByAuctionCarId(auctionLog);
     }
 
+    /**
+     * 删除历史无效数据
+     * @return
+     */
+    public int deleteHisDataLog(){
+        return tblAuctionLogWriteDao.deleteHisDataLog();
+    }
+
 }

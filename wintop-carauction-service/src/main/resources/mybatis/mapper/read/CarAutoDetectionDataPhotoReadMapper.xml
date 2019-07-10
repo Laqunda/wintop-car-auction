@@ -35,7 +35,19 @@
     </if>
     <if test="endRowNum != null">
       limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
-    </if>  </select>
+    </if>
+  </select>
+  <select id="selectByAll" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    group_concat(photo_url) photo_url, auto_id,class_id
+    from car_auto_detection_data_photo
+    <trim prefix="where" prefixOverrides="and|or">
+      <if test="autoId != null">
+          auto_id = #{autoId}
+      </if>
+    </trim>
+    group by auto_id,class_id
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />

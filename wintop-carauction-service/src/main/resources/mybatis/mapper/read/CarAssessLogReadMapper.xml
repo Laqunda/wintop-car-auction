@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wintop.ms.carauction.mapper.read.CarAssessLogReadDao">
+
+    <resultMap type="com.wintop.ms.carauction.entity.CarAssessLog" id="CarAssessLogResult">
+        <result property="id" column="id"/>
+        <result property="assessId" column="assess_id"/>
+        <result property="logMsg" column="log_msg"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createPerson" column="create_person"/>
+        <result property="userName" column="user_name"/>
+    </resultMap>
+
+    <sql id="selectCarAssessLogVo">
+        select id, assess_id, log_msg, create_time, create_person, user_name from car_assess_log
+    </sql>
+
+    <select id="selectCarAssessLogList" parameterType="com.wintop.ms.carauction.entity.CarAssessLog"
+            resultMap="CarAssessLogResult">
+        <include refid="selectCarAssessLogVo"/>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="assessId != null ">and assess_id = #{assessId}</if>
+            <if test="logMsg != null  and logMsg != '' ">and log_msg = #{logMsg}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="createPerson != null ">and create_person = #{createPerson}</if>
+            <if test="userName != null  and userName != '' ">and user_name = #{userName}</if>
+        </where>
+        order by create_time
+        <if test="endRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="selectAssessCount" parameterType="com.wintop.ms.carauction.entity.CarAssessLog"
+            resultType="java.lang.Integer">
+        select count(*) from car_assess_log
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="assessId != null ">and assess_id = #{assessId}</if>
+            <if test="logMsg != null  and logMsg != '' ">and log_msg = #{logMsg}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="createPerson != null ">and create_person = #{createPerson}</if>
+            <if test="userName != null  and userName != '' ">and user_name = #{userName}</if>
+        </where>
+        order by create_time
+        <if test="endRowNum != null">
+            limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="selectCarAssessLogById" parameterType="Long" resultMap="CarAssessLogResult">
+        <include refid="selectCarAssessLogVo"/>
+        where id = #{id}
+    </select>
+
+</mapper>

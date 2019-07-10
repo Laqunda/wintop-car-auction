@@ -150,6 +150,7 @@ public class CarManagerUserModel {
         List<Long> storeIds = new ArrayList<>();
         if(roleType.longValue()==1l){
             //storeIds=storeModel.selectAllStoreIds();
+            storeIds = null;
         }else if(roleType.longValue()==2l){
             storeIds=centerStoreReadDao.selectAllStoreIds(departmentId);
         }else if(roleType.longValue()==3l){
@@ -157,6 +158,16 @@ public class CarManagerUserModel {
         }else if(roleType.longValue()==4l){
             storeIds=companyStoreReadDao.selectAllStoreIds(departmentId);
         }
+        return storeIds;
+    }
+
+    /**
+     * 根据用户审批车辆权限查询管理店铺范围
+     * @param map
+     * @return
+     */
+    public List<Long> queryStoreScope(Map<String,Object> map){
+        List<Long> storeIds = storeReadDao.queryStoreListByRole(map);
         return storeIds;
     }
 }

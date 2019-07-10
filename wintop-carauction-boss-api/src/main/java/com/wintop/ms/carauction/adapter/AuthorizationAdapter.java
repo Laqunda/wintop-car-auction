@@ -1,6 +1,7 @@
 package com.wintop.ms.carauction.adapter;
 
 import com.wintop.ms.carauction.interceptor.AuthorizationInterceptor;
+import com.wintop.ms.carauction.resolvers.CurrentManagerUserMethodArgumentResolver;
 import com.wintop.ms.carauction.resolvers.CurrentUserIdMethodArgumentResolver;
 import com.wintop.ms.carauction.resolvers.CurrentUserMethodArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class AuthorizationAdapter extends WebMvcConfigurerAdapter {
     private CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver;
     @Autowired
     private CurrentUserIdMethodArgumentResolver currentUserIdMethodArgumentResolver;
+    @Autowired
+    private CurrentManagerUserMethodArgumentResolver currentManagerUserMethodArgumentResolver;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authorizationInterceptor);
@@ -34,5 +37,6 @@ public class AuthorizationAdapter extends WebMvcConfigurerAdapter {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(currentUserMethodArgumentResolver);
         argumentResolvers.add(currentUserIdMethodArgumentResolver);
+        argumentResolvers.add(currentManagerUserMethodArgumentResolver);
     }
 }

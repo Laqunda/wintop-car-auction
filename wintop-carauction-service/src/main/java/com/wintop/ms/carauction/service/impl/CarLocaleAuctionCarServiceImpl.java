@@ -5,12 +5,12 @@ import com.wintop.ms.carauction.core.entity.ServiceResult;
 import com.wintop.ms.carauction.entity.*;
 import com.wintop.ms.carauction.model.*;
 import com.wintop.ms.carauction.service.ICarLocaleAuctionCarService;
+import com.wintop.ms.carauction.service.ICarLocaleAuctionService;
 import com.wintop.ms.carauction.util.utils.IdWorker;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
@@ -25,8 +25,6 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
     private CarLocaleAuctionCarModel model;
     @Autowired
     private CarLocaleAuctionModel carLocaleAuctionModel;
-    @Autowired
-    private CarLocaleAuctionCarModel carLocaleAuctionCarModel;
     @Autowired
     private CarAuctionBidRecordModel carAuctionBidRecordModel;
     @Autowired
@@ -47,6 +45,8 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
     private CarOrderModel carOrderModel;
     @Autowired
     private AppUserModel appUserModel;
+    @Autowired
+    private ICarLocaleAuctionService carLocaleAuctionService;
 
 
     private IdWorker idWorker = new IdWorker(10);
@@ -203,6 +203,10 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
             }
             List<CarLocaleAuctionCar> updateList=new ArrayList<>();
             CarLocaleAuction carLocaleAuction =carLocaleAuctionModel.selectById(auctionId);
+            ServiceResult<Map<String, Object>> priceResult = carLocaleAuctionService.selectLocaleAuctionInfo(carLocaleAuction);
+            if(!priceResult.getSuccess()){
+                return priceResult;
+            }
             for(String carIdStr:carIdArray){
                 maxSort++;
                 CarLocaleAuctionCar carLocaleAuctionCar =new CarLocaleAuctionCar();
@@ -213,6 +217,12 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
                 carLocaleAuctionCar.setAuctionId(auctionId);
                 if(carAuto==null||carAuto.getAutoAuctionId()==null){
                     return new ServiceResult<>(false,"","101");
+                }
+                if(carAuto.getStartingPrice() == null || carAuto.getReservePrice() == null){
+                    return new ServiceResult<>(false,"起拍价或保留价为空","101");
+                }
+                if(carAuto.getReservePrice().compareTo(carAuto.getStartingPrice()) == -1){
+                    return new ServiceResult<>(false,"保留价小于起拍价","101");
                 }
                 carLocaleAuctionCar.setAutoAuctionId(carAuto.getAutoAuctionId());
                 carLocaleAuctionCar.setSort(maxSort);
@@ -502,16 +512,20 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
         int maxSort = model.getMaxSortForActionCar(carLocaleAuctionCar.getAuctionId());
         //获取本场最近正在竞拍的车的序号
         int minSort = model.getMinSortForActionCar(carLocaleAuctionCar.getAuctionId());
-        if (minSort==0){
-            minSort=maxSort;
-        }
-        if (maxSort==carLocaleAuctionCar.getSort()) {
-            //如果当前二拍车辆就是最后一辆车则直接新增一条竞拍，序号+1
-            insertAuctionCar.setSort(carLocaleAuctionCar.getSort() + 1);
+        if (maxSort==carLocaleAuctionCar.getSort() || minSort==0 || maxSort == minSort) {
+            //如果当前二拍车辆就是最后一辆车 或者 没有正在竞拍中的车辆（即车辆全部拍卖完成并未关闭场次） 或者有最后一辆车正在参拍 则直接新增一条竞拍，序号+1
+            int newSort = carLocaleAuctionCar.getSort();
+            if (minSort==0 || maxSort == minSort){
+                newSort = maxSort;
+            }
+            insertAuctionCar.setSort(newSort + 1);
         }else if (maxSort>carLocaleAuctionCar.getSort()&&(carLocaleAuctionCar.getSort()+1)==maxSort) {
             //当后面仅剩一个车时，直接将当前车辆拍到后面即可
             insertAuctionCar.setSort(carLocaleAuctionCar.getSort()+2);
         }else {
+            if (minSort==0){
+                minSort=maxSort;
+            }
             //将二拍车辆放到后面第三位后，需要将剩余其他车辆循序号顺延
             Map map = new HashMap();
             map.put("auctionId",carLocaleAuctionCar.getAuctionId());
@@ -519,7 +533,6 @@ public class CarLocaleAuctionCarServiceImpl implements ICarLocaleAuctionCarServi
             model.updateSortAuctionCar(map);
             insertAuctionCar.setSort(minSort+2);
         }
-
         insertAuctionCar.setCreateTime(new Date());
         insertAuctionCar.setCreatePerson(userId);
         model.insert(insertAuctionCar);

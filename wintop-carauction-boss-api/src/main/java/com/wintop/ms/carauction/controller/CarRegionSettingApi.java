@@ -14,6 +14,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -139,4 +140,43 @@ public class CarRegionSettingApi {
         return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
     }
 
+    /***
+     * 查询地区拍卖设置
+     * @param managerId
+     * @param map
+     * @return
+     */
+    @ApiOperation(value = "查询地区拍卖设置")
+    @RequestMapping(value = "/getBossRegionSetting",
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel getBossRegionSetting(@RequestBody Map<String,Object> map,@CurrentUserId String managerId) {
+        map.put("managerId", managerId);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(rootUrl + "getBossRegionSetting"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.LIST);
+    }
+
+    /***
+     * 保存修改地区拍卖设置
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/saveOrUpdateSetting",
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    @ApiOperation(value = "保存修改地区拍卖设置")
+    public ResultModel saveOrUpdateSetting(@RequestBody Map<String,Object> map) {
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(rootUrl + "getBossSaveOrUpdate"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(map), JSONObject.class);
+        return ApiUtil.getResultModel(response, ApiUtil.OBJECT);
+    }
 }

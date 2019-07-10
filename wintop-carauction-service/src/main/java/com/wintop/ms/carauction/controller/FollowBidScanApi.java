@@ -34,7 +34,7 @@ public class FollowBidScanApi {
             consumes="application/json; charset=UTF-8",
             produces="application/json; charset=UTF-8")
     public ServiceResult<Map<String,Object>> selectFollowBidScan(@RequestBody JSONObject obj) {
-             Logger.info("获取客户关注/浏览/出价的车辆数量");
+             Logger.info("获取客户关注/浏览/出价/待确认的车辆数量");
              ServiceResult<Map<String,Object>> result = new ServiceResult<Map<String,Object>>();
              Long customerId = obj.getLong("customerId");
         try {
@@ -48,24 +48,28 @@ public class FollowBidScanApi {
            Integer bidNum = iFollowBidScanService.selectBidCount(map);
            //浏览的车辆数量
             Integer browseNum = iFollowBidScanService.selectBrowseCount(map);
+            //待确认的车辆数量 status = 9 待议价的车辆
+            map.put("status","9");
+            Integer waitNum = iFollowBidScanService.selectBidCount(map);
             //订单数据
            List<CarOrder> orders = iFollowBidScanService.selectOrderCount(map);
            List<Map<String,Object>> list = new ArrayList<>();
-            for(CarOrder carOrder : orders){
-                Map<String,Object> map3 = new HashMap<>();
+           for(CarOrder carOrder : orders){
+               Map<String,Object> map3 = new HashMap<>();
                // map3.put("status",carOrder.getStatus());
                // map3.put("orderNum",carOrder.getOrderNum());
                 map3.put("totalDeal",carOrder.getOrderNum());
                 map3.put("unPay",carOrder.getUnPay());
                 map3.put("dealing",carOrder.getDealing());
                 map3.put("finish",carOrder.getFinish());
-                map3.put("unEvaluated",0);
+                map3.put("unEvaluated",carOrder.getUnEvaluated());
                 list.add(map3);
-            }
-            Map<String,Object> map2 = new HashMap<>();
+           }
+           Map<String,Object> map2 = new HashMap<>();
            map2.put("attentionNum",attentionNum);
-            map2.put("bidNum",bidNum);
+           map2.put("bidNum",bidNum);
            map2.put("browseNum",browseNum);
+           map2.put("waitNum",waitNum);
            if(list != null && list.size() > 0){
                map2.put("order",list);
            }else{

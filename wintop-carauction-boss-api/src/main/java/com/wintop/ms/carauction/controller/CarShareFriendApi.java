@@ -7,6 +7,7 @@ import com.wintop.ms.carauction.core.config.Constants;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.model.ResultModel;
 import com.wintop.ms.carauction.util.utils.ApiUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,8 @@ public class CarShareFriendApi {
     CarShareFriendApi(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
+    @ApiOperation(value = "分享好友")
     @PostMapping(value = "/getShareContent",produces="application/json; charset=UTF-8")
     @AuthPublic
     @RequestAuth(false)

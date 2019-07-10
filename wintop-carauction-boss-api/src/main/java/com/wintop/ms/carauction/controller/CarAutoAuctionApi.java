@@ -32,6 +32,8 @@ public class CarAutoAuctionApi {
     private static String getByAutoId_URL = Constants.ROOT+"/service/carAutoAuction/getByAutoId";
     //保存车辆竞拍信息
     private static String saveInfo_URL = Constants.ROOT+"/service/carAutoAuction/saveInfo";
+    //最近的开拍时间
+    private static String selectForToday_URL = Constants.ROOT + "/service/carAutoAuction/selectForToday";
     CarAutoAuctionApi(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
@@ -68,6 +70,26 @@ public class CarAutoAuctionApi {
         ResponseEntity<JSONObject> response = this.restTemplate.exchange(
                 RequestEntity
                         .post(URI.create(saveInfo_URL))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(object),JSONObject.class);
+        return ApiUtil.getResultModel(response,ApiUtil.OBJECT);
+    }
+
+    /**
+     * 查询-填充使用,最近的开拍时间
+     */
+    @ApiOperation(value = "最近的开拍时间")
+    @RequestMapping(value = "/selectForToday",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    @AuthUserToken
+    public ResultModel selectForToday(@RequestBody JSONObject object,@CurrentUserId Long userId) {
+        logger.info("最近的开拍时间");
+        object.put("userId",userId);
+        ResponseEntity<JSONObject> response = this.restTemplate.exchange(
+                RequestEntity
+                        .post(URI.create(selectForToday_URL))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(object),JSONObject.class);
         return ApiUtil.getResultModel(response,ApiUtil.OBJECT);

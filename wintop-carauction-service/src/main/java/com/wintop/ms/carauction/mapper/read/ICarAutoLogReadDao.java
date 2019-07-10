@@ -31,4 +31,14 @@ public interface ICarAutoLogReadDao {
     List<CarAutoLog> selectCarLogByCarId(Map<String,Object> map);
 
     CarAutoLog selectCarLog(Map<String,Object> map);
+
+    int selectCountWaitByUserId(Long userId);
+
+    int selectCountEndByUserId(Long userId);
+
+    List<CarAutoLog> selectWaitOrderList(Map<String,Object> map);
+
+    List<CarAutoLog> selectEndOrderList(Map<String,Object> map);
+
+
 }

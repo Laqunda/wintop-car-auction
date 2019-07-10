@@ -60,7 +60,7 @@ public class CarFieldShareApi {
         map.put("shareTitle","柠檬竞价-让二手车买卖更轻松");
         map.put("sharePhoto",auto.getString("mainPhoto"));
         map.put("subtitle","精选车源、现场竞拍场次、车辆抢鲜看");
-        map.put("shareUrl", Constants.STATIC_WEBSITE+"/ht/share/index.html?carId="+autoId);
+        map.put("shareUrl", Constants.CAR_SHARE_URL+"?carId="+autoId);
         return new ResponseEntity<ResultModel>(ResultModel.ok(map),HttpStatus.OK);
     }
 
@@ -93,7 +93,7 @@ public class CarFieldShareApi {
         }
         map.put("shareTitle","柠檬竞价-让二手车买卖更轻松");
         map.put("subtitle","精选车源、现场竞拍场次、车辆抢鲜看");
-        map.put("shareUrl",Constants.STATIC_WEBSITE+"/ht/share/match.html?auctionId="+auctionId);
+        map.put("shareUrl",Constants.AUCTION_SHARE_URL+"?auctionId="+auctionId);
         return new ResponseEntity<ResultModel>(ResultModel.ok(map),HttpStatus.OK);
     }
 }

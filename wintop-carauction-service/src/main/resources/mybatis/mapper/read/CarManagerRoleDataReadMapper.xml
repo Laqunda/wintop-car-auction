@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarManagerRoleDataReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarManagerRoleData" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="manager_id" property="managerId" jdbcType="BIGINT" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="is_role" property="isRole" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, manager_id, code, is_role
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_manager_role_data
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from car_manager_role_data
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="managerId != null">
+        and manager_id = #{managerId}
+      </if>
+      <if test="code != null">
+        and code = #{code}
+      </if>
+      <if test="isRole != null">
+        and is_role = #{isRole}
+      </if>
+    </trim>
+  </select>
+
+</mapper>

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wintop.ms.carauction.mapper.read.ICarManagerRoleLogReadDao" >
+  <resultMap id="BaseResultMap" type="com.wintop.ms.carauction.entity.CarManagerRoleLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="apply_id" property="applyId" jdbcType="BIGINT" />
+    <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="status_cn" property="statusCn" jdbcType="VARCHAR" />
+    <result column="log_msg" property="logMsg" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="store_id" property="storeId" jdbcType="BIGINT" />
+    <result column="vin" property="vin" jdbcType="VARCHAR" />
+    <result column="search_type" property="searchType" jdbcType="VARCHAR" />
+    <result column="edition" property="edition" jdbcType="VARCHAR" />
+    <result column="vehicle_type" property="vehicleType" jdbcType="VARCHAR" />
+    <result column="photo" property="photo" jdbcType="VARCHAR" />
+    <result column="create_person" property="createPerson" jdbcType="BIGINT" />
+    <result column="apply_name" property="applyName" jdbcType="VARCHAR" />
+    <result column="audit_name" property="auditName" jdbcType="VARCHAR" />
+    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+    <result column="store_simple_name" property="storeSimpleName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, apply_id, apply_time, status, status_cn, log_msg, create_time, store_id, vin, search_type, edition, vehicle_type, photo, create_person
+  </sql>
+  <sql id="Page_Column_List" >
+      l.id, l.apply_id, l.apply_time, l.status, l.status_cn, l.log_msg, l.create_time, l.store_id, l.vin, l.search_type, l.edition, l.vehicle_type, l.photo, l.create_person, apply.user_name as apply_name, audit.user_name as audit_name,cs.name as store_name,cs.simple_name as store_simple_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from car_manager_role_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByConditionCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select
+    count(1)
+    from car_manager_role_log mrl
+    inner join car_manager_user u on u.id = mrl.apply_id
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="applyId != null" >
+        AND mrl.apply_id = #{applyId,jdbcType=BIGINT}
+      </if>
+      <if test="status != null" >
+        AND mrl.status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="logMsg != null" >
+        AND mrl.log_msg = #{logMsg,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        AND mrl.create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="storeId != null" >
+        AND mrl.store_id = #{storeId,jdbcType=TIMESTAMP}
+      </if>
+      <if test="vin != null" >
+        AND mrl.vin = #{vin,jdbcType=TIMESTAMP}
+      </if>
+      <if test="edition != null" >
+        AND mrl.edition = #{edition,jdbcType=TIMESTAMP}
+      </if>
+      <if test="vehicleType != null" >
+        AND mrl.vehicle_type = #{vehicleType,jdbcType=TIMESTAMP}
+      </if>
+      <if test="createPerson != null" >
+        AND mrl.create_person = #{createPerson,jdbcType=BIGINT}
+      </if>
+    </trim>
+  </select>
+
+  <select id="selectByCondition" resultMap="BaseResultMap">
+    select mrl.id,
+    mrl.apply_id,
+    mrl.apply_time,
+    mrl.status,
+    mrl.status_cn,
+    mrl.log_msg,
+    mrl.create_time,
+    mrl.store_id,
+    mrl.vin,
+    mrl.vehicle_type,
+    mrl.photo,
+    mrl.create_person,
+    case when mrl.edition = '1' then '维修版' else '综合版' end edition,
+    u.user_name apply_name
+    from car_manager_role_log mrl
+    inner join car_manager_user u on u.id = mrl.apply_id
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="applyId != null" >
+        AND mrl.apply_id = #{applyId,jdbcType=BIGINT}
+      </if>
+      <if test="status != null" >
+        AND mrl.status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="logMsg != null" >
+        AND mrl.log_msg = #{logMsg,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        AND mrl.create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="storeId != null" >
+        AND mrl.store_id = #{storeId,jdbcType=TIMESTAMP}
+      </if>
+      <if test="vin != null" >
+        AND mrl.vin = #{vin,jdbcType=TIMESTAMP}
+      </if>
+      <if test="edition != null" >
+        AND mrl.edition = #{edition,jdbcType=TIMESTAMP}
+      </if>
+      <if test="vehicleType != null" >
+        AND mrl.vehicle_type = #{vehicleType,jdbcType=TIMESTAMP}
+      </if>
+      <if test="createPerson != null" >
+        AND mrl.create_person = #{createPerson,jdbcType=BIGINT}
+      </if>
+    </trim>
+    <if test="endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="selectByConditionForPage" resultMap="BaseResultMap">
+    select
+    <include refid="Page_Column_List" />
+    from car_manager_role_log l
+    left join car_manager_user apply on l.apply_id = apply.id
+    left join car_manager_user audit on l.create_person = audit.id
+    left join car_store cs on l.store_id = cs.id
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="applyId != null" >
+        AND l.apply_id = #{applyId,jdbcType=BIGINT}
+      </if>
+      <if test="status != null" >
+        AND l.status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="statusCn != null" >
+        AND l.status_cn = #{statusCn,jdbcType=VARCHAR}
+      </if>
+      <if test="logMsg != null" >
+        AND l.log_msg = #{logMsg,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        AND l.create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="storeId != null" >
+        AND l.store_id = #{storeId,jdbcType=VARCHAR}
+      </if>
+      <if test="vin != null" >
+        AND l.vin LIKE CONCAT(CONCAT('%', #{vin,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="searchType != null" >
+        AND l.search_type = #{searchType,jdbcType=VARCHAR}
+      </if>
+      <if test="edition != null" >
+        AND l.edition = #{edition,jdbcType=VARCHAR}
+      </if>
+      <if test="vehicleType != null" >
+        AND l.vehicle_type = #{vehicleType,jdbcType=VARCHAR}
+      </if>
+      <if test="createPerson != null" >
+        AND l.create_person = #{createPerson,jdbcType=BIGINT}
+      </if>
+      <if test="applyName != null">
+        AND apply.user_name LIKE CONCAT(CONCAT('%', #{applyName,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="auditName != null">
+        AND audit.user_name LIKE CONCAT(CONCAT('%', #{auditName,jdbcType=VARCHAR}),'%')
+      </if>
+    </trim>
+    order by l.status ,l.create_time desc
+    <if test="startRowNum != null and endRowNum != null">
+      limit #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+    </if>
+  </select>
+
+  <select id="selectByConditionForCount" resultType="java.lang.Integer">
+    select
+      count(*)
+    from car_manager_role_log l
+    left join car_manager_user apply on l.apply_id = apply.id
+    left join car_manager_user audit on l.create_person = audit.id
+    <trim prefix="WHERE" prefixOverrides="AND|OR">
+      <if test="applyId != null" >
+        AND l.apply_id = #{applyId,jdbcType=BIGINT}
+      </if>
+      <if test="status != null" >
+        AND l.status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="statusCn != null" >
+        AND l.status_cn = #{statusCn,jdbcType=VARCHAR}
+      </if>
+      <if test="logMsg != null" >
+        AND l.log_msg = #{logMsg,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        AND l.create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="storeId != null" >
+        AND l.store_id = #{storeId,jdbcType=TIMESTAMP}
+      </if>
+      <if test="vin != null" >
+        AND l.vin LIKE CONCAT(CONCAT('%', #{vin,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="searchType != null" >
+        AND l.search_type = #{searchType,jdbcType=VARCHAR}
+      </if>
+      <if test="edition != null" >
+        AND l.edition = #{edition,jdbcType=VARCHAR}
+      </if>
+      <if test="vehicleType != null" >
+        AND l.vehicle_type = #{vehicleType,jdbcType=VARCHAR}
+      </if>
+      <if test="createPerson != null" >
+        AND l.create_person = #{createPerson,jdbcType=BIGINT}
+      </if>
+      <if test="applyName != null">
+        AND apply.user_name LIKE CONCAT(CONCAT('%', #{applyName,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="auditName != null">
+        AND audit.user_name LIKE CONCAT(CONCAT('%', #{auditName,jdbcType=VARCHAR}),'%')
+      </if>
+    </trim>
+  </select>
+
+</mapper>

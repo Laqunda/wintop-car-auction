@@ -1,6 +1,14 @@
 package com.wintop.ms.carauction.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Predicates;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.primitives.Longs;
+import com.wintop.ms.carauction.core.config.CarStatusEnum;
+import com.wintop.ms.carauction.core.config.CarTypeEnum;
+import com.wintop.ms.carauction.core.config.ManagerRole;
 import com.wintop.ms.carauction.core.config.ResultCode;
 import com.wintop.ms.carauction.core.entity.PageEntity;
 import com.wintop.ms.carauction.core.entity.ServiceResult;
@@ -12,7 +20,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.models.auth.In;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 车辆信息接口类
@@ -45,47 +54,73 @@ public class CarAutoApi {
     private ICarManagerUserService managerUserService;
     @Autowired
     private ICarManagerRoleService roleService;
+    @Autowired
+    private ICarAutoLogService iCarAutoLogService;
+    @Autowired
+    private TblAuctionLogService tblAuctionLogService;
+    @Autowired
+    private ICarManagerUserService userService;
 
     private IdWorker idWorker = new IdWorker(10);
+
+    private static Map<String, List<String>> statusList = convertStatusMap();
+
+    private static Map<String, List<String>> convertStatusMap() {
+        return new HashMap<String, List<String>>() {{
+            put("1", Arrays.asList("1"));
+            put("2", Arrays.asList("2", "4"));
+            put("3", Arrays.asList("3"));
+            put("4", Arrays.asList("5", "6"));
+            put("5", Arrays.asList("7"));
+            put("6", Arrays.asList("8", "9", "10", "11", "12", "13", "14", "15", "16", "17"));
+            put("7", Arrays.asList("19"));
+        }};
+    }
+
     /***
      * 车辆信息
      * @param obj
      * @return
      */
     @RequestMapping(value = "/selectByCarId",
-            method= RequestMethod.POST,
-            consumes="application/json; charset=UTF-8",
-            produces="application/json; charset=UTF-8")
-    public ServiceResult<Map<String,Object>> selectByCarId(@RequestBody JSONObject obj) {
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String, Object>> selectByCarId(@RequestBody JSONObject obj) {
 
-        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
 
             Long carId = obj.getLong("carId");
             Long customerId = null;
-            if(obj.get("customerId")!=null){
+            if (obj.get("customerId") != null) {
                 customerId = obj.getLong("customerId");
 
             }
-            Map<String,Object> paramMap = new HashMap<>();
-            paramMap.put("carId",carId);
-            paramMap.put("customerId",customerId);
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("carId", carId);
+            paramMap.put("customerId", customerId);
 
-            if (obj.get("auctionId")!=null && StringUtils.isNotEmpty(obj.getString("auctionId"))){
-                paramMap.put("auctionId",obj.get("auctionId"));
+            if (obj.get("auctionId") != null && StringUtils.isNotEmpty(obj.getString("auctionId"))) {
+                paramMap.put("auctionId", obj.get("auctionId"));
             }
-
             CarAuto carAuto = carAutoService.selectByCarId(paramMap);
-            if(carAuto == null){
+            Map<String, Object> carIdMap = new HashMap<>();
+            carIdMap.put("carId", carId);
+            List<CarAutoLog> carAutoLogs = iCarAutoLogService.selectCarLogByCarId(carIdMap);
+            List<TblAuctionLog> tblAuctionLogs = tblAuctionLogService.selectByExample(carIdMap);
+            carAuto.setCarAutoLog(carAutoLogs);
+            carAuto.setTblAuctionLog(tblAuctionLogs);
+            if (carAuto == null) {
                 result.setError(ResultCode.NO_OBJECT.strValue(), ResultCode.NO_OBJECT.getRemark());
                 return result;
             }
-            if(customerId!=null){
+            if (customerId != null) {
                 //***增加浏览记录
-                CarCustomerViewedAuto viewedAuto = viewedAutoService.queryViewRecord(carId,customerId);
-                if(viewedAuto!=null){
-                    viewedAutoService.updateViewTime(carId,customerId);
-                }else{
+                CarCustomerViewedAuto viewedAuto = viewedAutoService.queryViewRecord(carId, customerId);
+                if (viewedAuto != null) {
+                    viewedAutoService.updateViewTime(carId, customerId);
+                } else {
                     viewedAuto = new CarCustomerViewedAuto();
                     viewedAuto.setId(idWorker.nextId());
                     viewedAuto.setAutoId(carId);
@@ -94,42 +129,46 @@ public class CarAutoApi {
                     viewedAutoService.insert(viewedAuto);
                 }
             }
-            Map<String,Object> map = new HashMap<>();
-            map.put("ifAgent",carAuto.getIfAgent());
-            map.put("auctionType",carAuto.getAuctionType());
-            map.put("ifNew",carAuto.getIfNew());
-            map.put("vehicleAttributionCity",carAuto.getVehicleAttributionCity());
-            map.put("autoInfoName",carAuto.getAutoInfoName());
-            map.put("beginRegisterDate",carAuto.getBeginRegisterDate());
-            map.put("mileage",carAuto.getMileage());
-            map.put("reportColligationRanks",carAuto.getReportColligationRanks());
-            map.put("reportServicingRanks",carAuto.getReportServicingRanks());
-            map.put("startingPrice",carAuto.getStartingPrice());
-            map.put("servicePrice",carAuto.getServicePrice());
+            Map<String, Object> map = new HashMap<>();
+            map.put("ifAgent", carAuto.getIfAgent());
+            map.put("auctionType", carAuto.getAuctionType());
+            map.put("ifNew", carAuto.getIfNew());
+            map.put("vehicleAttributionCity", carAuto.getVehicleAttributionCity());
+            map.put("autoInfoName", carAuto.getAutoInfoName());
+            map.put("beginRegisterDate", carAuto.getBeginRegisterDate());
+            map.put("mileage", carAuto.getMileage());
+            map.put("reportColligationRanks", carAuto.getReportColligationRanks());
+            map.put("reportServicingRanks", carAuto.getReportServicingRanks());
+            map.put("startingPrice", carAuto.getStartingPrice());
+            map.put("servicePrice", carAuto.getServicePrice());
             //根据现场线上获取开拍时间
-            map.put("auctionStartTime","1".equals(carAuto.getAuctionType())?carAuto.getAuctionStartTime():carAuto.getStartTime());
-            map.put("auctionEndTime",carAuto.getAuctionEndTime());
-            map.put("carStoreName",carAuto.getCarStoreName());
-            map.put("storeLatitude",carAuto.getStoreLatitude());//纬度
-            map.put("storeLongitude",carAuto.getStoreLongitude());//经度
-            map.put("storeId",carAuto.getStoreId());
-            map.put("linkManName",carAuto.getLinkManName());
-            map.put("linkManMobile",carAuto.getLinkManMobile());
-            map.put("remark",carAuto.getRemark());
-            map.put("moveToWhere",carAuto.getMoveToWhere());
-            map.put("views",carAuto.getViews());
-            map.put("myBidPrice",carAuto.getMyBidPrice());
-            map.put("environment",carAuto.getEnvironment());
-            map.put("carAutoNo",carAuto.getCarAutoNo());
-            map.put("auctionCode",carAuto.getAuctionCode());
-            map.put("isFollow",carAuto.getIsFollow());
-            map.put("tipsMessage",carAuto.getTipsMessage());
-            map.put("sellerBear",carAuto.getSellerBear());
-            map.put("buyerBear",carAuto.getBuyerBear());
-            map.put("carAutoPhotos",carAuto.getCarAutoPhotos());
-            map.put("status",carAuto.getStatus());
-            map.put("maxPriceUserId",carAuto.getMaxPriceUserId());
-            map.put("serviceTel",null);
+            map.put("auctionStartTime", "1".equals(carAuto.getAuctionType()) ? carAuto.getAuctionStartTime() : carAuto.getStartTime());
+            map.put("auctionEndTime", carAuto.getAuctionEndTime());
+            map.put("carStoreName", carAuto.getCarStoreName());
+            map.put("storeLatitude", carAuto.getStoreLatitude());//纬度
+            map.put("storeLongitude", carAuto.getStoreLongitude());//经度
+            map.put("storeId", carAuto.getStoreId());
+            map.put("linkManName", carAuto.getLinkManName());
+            map.put("linkManMobile", carAuto.getLinkManMobile());
+            map.put("remark", carAuto.getRemark());
+            map.put("moveToWhere", carAuto.getMoveToWhere());
+            map.put("views", carAuto.getViews());
+            map.put("myBidPrice", carAuto.getMyBidPrice());
+            map.put("environment", carAuto.getEnvironment());
+            map.put("carAutoNo", carAuto.getCarAutoNo());
+            map.put("auctionCode", carAuto.getAuctionCode());
+            map.put("isFollow", carAuto.getIsFollow());
+            map.put("tipsMessage", carAuto.getTipsMessage());
+            map.put("sellerBear", carAuto.getSellerBear());
+            map.put("buyerBear", carAuto.getBuyerBear());
+            map.put("carAutoPhotos", carAuto.getCarAutoPhotos());
+            map.put("status", carAuto.getStatus());
+            map.put("maxPriceUserId", carAuto.getMaxPriceUserId());
+            map.put("serviceTel", null);
+            map.put("transferFlag", carAuto.getTransferFlag());
+            map.put("agentFee", carAuto.getAgentFee());
+            map.put("agentPrice", carAuto.getAgentPrice());
+            map.put("title", carAuto.getTitle());
             //判断当前车辆 状态和 登录人，获取登陆人应该显示的状态
             //1、未登录 + 待开拍 = 即将开始
             //2、未登录 + 正在竞拍 = 正在竞拍
@@ -145,11 +184,11 @@ public class CarAutoApi {
 
             //12 其他状态各自显示
             result.setResult(map);
-            result.setSuccess("0","成功");
-        }catch (Exception e){
+            result.setSuccess("0", "成功");
+        } catch (Exception e) {
             e.printStackTrace();
-            logger.info("查询车辆信息失败",e);
-            result.setError("-1","异常");
+            logger.info("查询车辆信息失败", e);
+            result.setError("-1", "异常");
         }
         return result;
     }
@@ -161,65 +200,65 @@ public class CarAutoApi {
      * @return
      */
     @RequestMapping(value = "/selectByCarIdForStore",
-            method= RequestMethod.POST,
-            consumes="application/json; charset=UTF-8",
-            produces="application/json; charset=UTF-8")
-    public ServiceResult<Map<String,Object>> selectByCarIdForStore(@RequestBody JSONObject obj) {
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String, Object>> selectByCarIdForStore(@RequestBody JSONObject obj) {
 
-        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
 
-            Map<String,Object> paramMap = new HashMap<>();
-            paramMap.put("carId",obj.getLong("carId"));
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("carId", obj.getLong("carId"));
             CarAuto carAuto = carAutoService.selectByCarId(paramMap);
-            if(carAuto == null){
+            if (carAuto == null) {
                 result.setError(ResultCode.NO_OBJECT.strValue(), ResultCode.NO_OBJECT.getRemark());
                 return result;
             }
-            Map<String,Object> map = new HashMap<>();
-            map.put("ifAgent",carAuto.getIfAgent());
-            map.put("auctionType",carAuto.getAuctionType());
-            map.put("ifNew",carAuto.getIfNew());
-            map.put("vehicleAttributionCity",carAuto.getVehicleAttributionCity());
-            map.put("autoInfoName",carAuto.getAutoInfoName());
-            map.put("beginRegisterDate",carAuto.getBeginRegisterDate());
-            map.put("mileage",carAuto.getMileage());
-            map.put("reportColligationRanks",carAuto.getReportColligationRanks());
-            map.put("reportServicingRanks",carAuto.getReportServicingRanks());
-            map.put("startingPrice",carAuto.getStartingPrice());
-            map.put("servicePrice",carAuto.getServicePrice());
+            Map<String, Object> map = new HashMap<>();
+            map.put("ifAgent", carAuto.getIfAgent());
+            map.put("auctionType", carAuto.getAuctionType());
+            map.put("ifNew", carAuto.getIfNew());
+            map.put("vehicleAttributionCity", carAuto.getVehicleAttributionCity());
+            map.put("autoInfoName", carAuto.getAutoInfoName());
+            map.put("beginRegisterDate", carAuto.getBeginRegisterDate());
+            map.put("mileage", carAuto.getMileage());
+            map.put("reportColligationRanks", carAuto.getReportColligationRanks());
+            map.put("reportServicingRanks", carAuto.getReportServicingRanks());
+            map.put("startingPrice", carAuto.getStartingPrice());
+            map.put("servicePrice", carAuto.getServicePrice());
 //            map.put("auctionStartTime",carAuto.getAuctionStartTime());
 
-            map.put("auctionStartTime","1".equals(carAuto.getAuctionType())?carAuto.getAuctionStartTime():carAuto.getStartTime());
+            map.put("auctionStartTime", "1".equals(carAuto.getAuctionType()) ? carAuto.getAuctionStartTime() : carAuto.getStartTime());
 
 
-            map.put("auctionEndTime",carAuto.getAuctionEndTime());
-            map.put("carStoreName",carAuto.getCarStoreName());
-            map.put("storeId",carAuto.getStoreId());
-            map.put("linkManName",carAuto.getLinkManName());
-            map.put("linkManMobile",carAuto.getLinkManMobile());
-            map.put("remark",carAuto.getRemark());
-            map.put("moveToWhere",carAuto.getMoveToWhere());
-            map.put("views",carAuto.getViews());
-            map.put("myBidPrice",carAuto.getMyBidPrice());
-            map.put("environment",carAuto.getEnvironment());
-            map.put("carAutoNo",carAuto.getCarAutoNo());
+            map.put("auctionEndTime", carAuto.getAuctionEndTime());
+            map.put("carStoreName", carAuto.getCarStoreName());
+            map.put("storeId", carAuto.getStoreId());
+            map.put("linkManName", carAuto.getLinkManName());
+            map.put("linkManMobile", carAuto.getLinkManMobile());
+            map.put("remark", carAuto.getRemark());
+            map.put("moveToWhere", carAuto.getMoveToWhere());
+            map.put("views", carAuto.getViews());
+            map.put("myBidPrice", carAuto.getMyBidPrice());
+            map.put("environment", carAuto.getEnvironment());
+            map.put("carAutoNo", carAuto.getCarAutoNo());
 //            map.put("auctionCode",carAuto.getAuctionCode());
-            map.put("auctionCode",carAuto.getCarAutoNo());
-            map.put("isFollow",carAuto.getIsFollow());
-            map.put("tipsMessage",carAuto.getTipsMessage());
-            map.put("sellerBear",carAuto.getSellerBear());
-            map.put("buyerBear",carAuto.getBuyerBear());
-            map.put("carAutoPhotos",carAuto.getCarAutoPhotos());
-            map.put("status",carAuto.getStatus());
-            map.put("maxPriceUserId",carAuto.getMaxPriceUserId());
-            map.put("serviceTel","");
+            map.put("auctionCode", carAuto.getCarAutoNo());
+            map.put("isFollow", carAuto.getIsFollow());
+            map.put("tipsMessage", carAuto.getTipsMessage());
+            map.put("sellerBear", carAuto.getSellerBear());
+            map.put("buyerBear", carAuto.getBuyerBear());
+            map.put("carAutoPhotos", carAuto.getCarAutoPhotos());
+            map.put("status", carAuto.getStatus());
+            map.put("maxPriceUserId", carAuto.getMaxPriceUserId());
+            map.put("serviceTel", "");
             result.setResult(map);
-            result.setSuccess("0","成功");
-        }catch (Exception e){
+            result.setSuccess("0", "成功");
+        } catch (Exception e) {
             e.printStackTrace();
-            logger.info("查询车辆信息失败",e);
-            result.setError("-1","异常");
+            logger.info("查询车辆信息失败", e);
+            result.setError("-1", "异常");
         }
         return result;
     }
@@ -230,9 +269,9 @@ public class CarAutoApi {
      * @return
      */
     @RequestMapping(value = "/getAutoInfo",
-            method= RequestMethod.POST,
-            consumes="application/json; charset=UTF-8",
-            produces="application/json; charset=UTF-8")
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
     public ServiceResult<CarAuto> getAutoInfo(@RequestBody JSONObject obj) {
 
         ServiceResult<CarAuto> result = new ServiceResult<>();
@@ -242,11 +281,11 @@ public class CarAutoApi {
             CarAuto carAuto = carAutoService.selectByPrimaryKey(carId).getResult();
 
             result.setResult(carAuto);
-            result.setSuccess("0","成功");
-        }catch (Exception e){
+            result.setSuccess("0", "成功");
+        } catch (Exception e) {
             e.printStackTrace();
-            logger.info("查询车辆信息失败",e);
-            result.setError("-1","异常");
+            logger.info("查询车辆信息失败", e);
+            result.setError("-1", "异常");
         }
         return result;
     }
@@ -257,47 +296,47 @@ public class CarAutoApi {
      * @return
      */
     @RequestMapping(value = "/selectDetailByCarId",
-            method= RequestMethod.POST,
-            consumes="application/json; charset=UTF-8",
-            produces="application/json; charset=UTF-8")
-    public ServiceResult<Map<String,Object>> selectDetailByCarId(@RequestBody JSONObject obj) {
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String, Object>> selectDetailByCarId(@RequestBody JSONObject obj) {
         logger.info("查询车辆基本信息");
         Long carId = obj.getLong("carId");
         ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
             CarAutoInfoDetail infoDetail = carAutoInfoDetailService.selectDetailByCarId(carId);
             Map<String, Object> map = new HashMap<>();
-            map.put("autoBrand",infoDetail.getAutoBrandCn());
-            map.put("autoInfoName",infoDetail.getAutoInfoName());
-            map.put("vin",infoDetail.getVin());
-            map.put("autoSeries",infoDetail.getAutoSeriesCn());
-            map.put("autoStyle",infoDetail.getAutoStyleCn());
-            map.put("mileage",infoDetail.getMileage());
-            map.put("engineCapacity",infoDetail.getEngineCapacity());
-            map.put("engineCapacityUnit",infoDetail.getEngineCapacityUnit());
-            map.put("environment",infoDetail.getEnvironmentCn());
-            map.put("oilSupplySystem",infoDetail.getOilSupplySystemCn());
-            map.put("manufactureDate",infoDetail.getManufactureDate());
-            map.put("beginRegisterDate",infoDetail.getBeginRegisterDate());
-            map.put("vehicleAttributionProvince",infoDetail.getVehicleAttributionProvinceCn());
-            map.put("vehicleAttributionCity",infoDetail.getVehicleAttributionCityCn());
-            map.put("licenseNumber",infoDetail.getLicenseNumber());
-            map.put("carNature",infoDetail.getCarNatureCn());
-            map.put("useNature",infoDetail.getUseNatureCn());
-            map.put("originalPrice",infoDetail.getOriginalPrice());
-            map.put("vehicleDriver",infoDetail.getVehicleDriverCn());
-            map.put("intakeMethod",infoDetail.getIntakeMethodCn());
-            map.put("transmission",infoDetail.getTransmissionCn());
-            map.put("color",infoDetail.getColorCn());
-            map.put("colorChanged",infoDetail.getColorChanged());
-            map.put("isModification",infoDetail.getIsModification());
-            map.put("configs",infoDetail.getConfDetails());
+            map.put("autoBrand", infoDetail.getAutoBrandCn());
+            map.put("autoInfoName", infoDetail.getAutoInfoName());
+            map.put("vin", infoDetail.getVin());
+            map.put("autoSeries", infoDetail.getAutoSeriesCn());
+            map.put("autoStyle", infoDetail.getAutoStyleCn());
+            map.put("mileage", infoDetail.getMileage());
+            map.put("engineCapacity", infoDetail.getEngineCapacity());
+            map.put("engineCapacityUnit", infoDetail.getEngineCapacityUnit());
+            map.put("environment", infoDetail.getEnvironmentCn());
+            map.put("oilSupplySystem", infoDetail.getOilSupplySystemCn());
+            map.put("manufactureDate", infoDetail.getManufactureDate());
+            map.put("beginRegisterDate", infoDetail.getBeginRegisterDate());
+            map.put("vehicleAttributionProvince", infoDetail.getVehicleAttributionProvinceCn());
+            map.put("vehicleAttributionCity", infoDetail.getVehicleAttributionCityCn());
+            map.put("licenseNumber", infoDetail.getLicenseNumber());
+            map.put("carNature", infoDetail.getCarNatureCn());
+            map.put("useNature", infoDetail.getUseNatureCn());
+            map.put("originalPrice", infoDetail.getOriginalPrice());
+            map.put("vehicleDriver", infoDetail.getVehicleDriverCn());
+            map.put("intakeMethod", infoDetail.getIntakeMethodCn());
+            map.put("transmission", infoDetail.getTransmissionCn());
+            map.put("color", infoDetail.getColorCn());
+            map.put("colorChanged", infoDetail.getColorChanged());
+            map.put("isModification", infoDetail.getIsModification());
+            map.put("configs", infoDetail.getConfDetails());
             result.setResult(map);
-            result.setSuccess("0","成功");
-        }catch (Exception e){
+            result.setSuccess("0", "成功");
+        } catch (Exception e) {
             e.printStackTrace();
             result.setSuccess(false);
-            result.setError("-1","异常");
+            result.setError("-1", "异常");
         }
         return result;
     }
@@ -308,65 +347,110 @@ public class CarAutoApi {
      * @return
      */
     @PostMapping(value = "/selectOnlineCarList",
-            consumes="application/json; charset=UTF-8",
-            produces="application/json; charset=UTF-8")
-    public ServiceResult<ListEntity<Map<String,Object>>> selectOnlineCarList(@RequestBody JSONObject obj) {
-        ServiceResult<ListEntity<Map<String,Object>>> result = new ServiceResult<>();
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<ListEntity<Map<String, Object>>> selectOnlineCarList(@RequestBody JSONObject obj) {
+        ServiceResult<ListEntity<Map<String, Object>>> result = new ServiceResult<>();
         try {
-            Map<String,Object> paramMap = new HashMap<>();
+            Map<String, Object> paramMap = new HashMap<>();
             String[] carAges = CarAutoUtils.getCarAgeArray(obj.getString("carAge"));
-            paramMap.put("carAge1",carAges[0]);
-            paramMap.put("carAge2",carAges[1]);
+            paramMap.put("carAge1", carAges[0]);
+            paramMap.put("carAge2", carAges[1]);
             String brandId = obj.getString("brandId");
             String grade = obj.getString("grade");
             String status = obj.getString("status");
             String carName = obj.getString("carName");
             String cityId = obj.getString("cityId");
-            paramMap.put("brandId",brandId);
-            paramMap.put("grade",grade);
-            paramMap.put("status",status);
-            paramMap.put("carName",carName);
-            paramMap.put("customerId",obj.getLong("customerId"));
-            paramMap.put("storeId",obj.getLong("storeId"));
-            paramMap.put("regionId",cityId);
-            paramMap.put("clientType","app");
+            if (StringUtils.isNotEmpty(obj.getString("cityIds"))) {
+                String cityIds = obj.getString("cityIds");
+                paramMap.put("regionIds", Splitter.on(",").splitToList(cityIds).stream().map(a -> Longs.tryParse(a)).collect(Collectors.toList()));
+            }
+            paramMap.put("brandId", brandId);
+            paramMap.put("grade", grade);
+            paramMap.put("status", status);
+            paramMap.put("carName", carName);
+            paramMap.put("customerId", obj.getLong("customerId"));
+            paramMap.put("storeId", obj.getLong("storeId"));
+            paramMap.put("regionId", cityId);
+            paramMap.put("clientType", "app");
             int count = carAutoService.selectOnlineCarCount(paramMap);
-            PageEntity pageEntity= CarAutoUtils.getPageParam(obj);
-            paramMap.put("startRowNum",pageEntity.getStartRowNum());
-            paramMap.put("endRowNum",pageEntity.getEndRowNum());
+            PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
+            paramMap.put("startRowNum", pageEntity.getStartRowNum());
+            paramMap.put("endRowNum", pageEntity.getEndRowNum());
             List<CarAuto> carAutos = carAutoService.selectOnlineCarList(paramMap);
-            List<Map<String,Object>> list = new ArrayList<>();
-            for(CarAuto carAuto:carAutos){
-                Map<String,Object> map = new HashMap<>();
-                map.put("id",carAuto.getId());
-                map.put("mainPhoto",carAuto.getMainPhoto());
-                map.put("reportColligationRanks",carAuto.getReportColligationRanks());
-                map.put("reportServicingRanks",carAuto.getReportServicingRanks());
-                map.put("address",carAuto.getAddress());
+            List<Map<String, Object>> list = new ArrayList<>();
+            for (CarAuto carAuto : carAutos) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("id", carAuto.getId());
+                map.put("mainPhoto", carAuto.getMainPhoto());
+                map.put("reportColligationRanks", carAuto.getReportColligationRanks());
+                map.put("reportServicingRanks", carAuto.getReportServicingRanks());
+                map.put("address", carAuto.getAddress());
                 map.put("auctionStartTime", carAuto.getAuctionStartTime());
-                map.put("auctionEndTime",carAuto.getAuctionEndTime());
-                map.put("autoInfoName",carAuto.getAutoInfoName());
-                map.put("vehicleAttributionCity",carAuto.getVehicleAttributionCity());
-                map.put("startingPrice",carAuto.getStartingPrice());
-                map.put("mileage",carAuto.getMileage());
-                map.put("carAutoNo",carAuto.getCarAutoNo());
-                map.put("isFollow",carAuto.getIsFollow());
-                map.put("environment",carAuto.getEnvironment());
-                map.put("isEntrust",carAuto.getIsEntrust());
-                map.put("beginRegisterDate",carAuto.getBeginRegisterDate());
-                map.put("status",carAuto.getStatus());
-                map.put("auctionId",carAuto.getAutoAuctionId());
+                map.put("auctionEndTime", carAuto.getAuctionEndTime());
+                map.put("autoInfoName", carAuto.getAutoInfoName());
+                map.put("vehicleAttributionCity", carAuto.getVehicleAttributionCity());
+                map.put("startingPrice", carAuto.getStartingPrice());
+                map.put("mileage", carAuto.getMileage());
+                map.put("carAutoNo", carAuto.getCarAutoNo());
+                map.put("isFollow", carAuto.getIsFollow());
+                map.put("environment", carAuto.getEnvironment());
+                map.put("isEntrust", carAuto.getIsEntrust());
+                map.put("beginRegisterDate", carAuto.getBeginRegisterDate());
+                map.put("status", carAuto.getStatus());
+                map.put("auctionId", carAuto.getAutoAuctionId());
+                map.put("transferFlag", carAuto.getTransferFlag());
                 list.add(map);
             }
-            ListEntity<Map<String,Object>> listEntity = new ListEntity<>();
+            ListEntity<Map<String, Object>> listEntity = new ListEntity<>();
             listEntity.setList(list);
             listEntity.setCount(count);
             result.setResult(listEntity);
-            result.setSuccess("0","成功");
-        }catch (Exception e){
+            result.setSuccess("0", "成功");
+        } catch (Exception e) {
             e.printStackTrace();
-            logger.info("获取线上拍的车辆列表",e);
-            result.setError("-1","异常");
+            logger.info("获取线上拍的车辆列表", e);
+            result.setError("-1", "异常");
+        }
+        return result;
+    }
+
+
+    @PostMapping(value = "/selectCarList",
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<ListEntity<CarAuto>> selectCarList(@RequestBody JSONObject obj) {
+        ServiceResult<ListEntity<CarAuto>> result = new ServiceResult<ListEntity<CarAuto>>();
+        ListEntity<CarAuto> listEntity = new ListEntity<CarAuto>();
+        List<Map<String, Object>> list = Lists.newArrayList();
+        Map<String, Object> paramMap = Maps.newHashMap();
+        try {
+            if (obj.getString("autoInfoName") != null) {
+                paramMap.put("autoInfoName", obj.getString("autoInfoName"));
+            }
+            if (obj.getString("status") != null) {
+                paramMap.put("statusList", statusList.get(obj.getString("status")));
+            }
+            paramMap.put("userId", obj.getLong("userId"));
+            paramMap.put("saleFlag", CarTypeEnum.SALE_FLAG_SELL_WHOLESALE.value());
+            paramMap.put("auctionType", obj.getString("type"));
+            if(CarTypeEnum.AUCTION_TYPE_RETAIL.value().equals(obj.getString("type"))){
+                paramMap.put("saleFlag", CarTypeEnum.SALE_FLAG_RETAIL.value());
+            }
+            Integer count = carAutoService.selectCarCount(paramMap);
+            PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
+            paramMap.put("startRowNum", pageEntity.getStartRowNum());
+            paramMap.put("endRowNum", pageEntity.getEndRowNum());
+            paramMap.put("statusListType", obj.getString("status"));
+            List<CarAuto> recordList = carAutoService.selectCarList(paramMap);
+            listEntity.setList(recordList);
+            listEntity.setCount(count);
+            result.setResult(listEntity);
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("线上车辆管理列表查询失败", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
         }
         return result;
     }
@@ -378,7 +462,7 @@ public class CarAutoApi {
      * @return
      */
     @PostMapping(value = "initAuto")
-    public ServiceResult<CarAuto> initAuto(@RequestBody JSONObject object){
+    public ServiceResult<CarAuto> initAuto(@RequestBody JSONObject object) {
 
         CarAuto carAuto = new CarAuto();
         carAuto.setId(idWorker.nextId());
@@ -388,7 +472,7 @@ public class CarAutoApi {
         //初始化车辆时 修改时间+人与创建人一样
         carAuto.setUpdateUser(carAuto.getCreateUser());
         carAuto.setUpdateTime(carAuto.getCreateTime());
-        if (object.get("storeId")!=null) {
+        if (object.get("storeId") != null) {
             carAuto.setStoreId(object.getLong("storeId"));
         }
         carAuto.setIfNew(object.getString("ifNew"));
@@ -400,16 +484,64 @@ public class CarAutoApi {
 
     }
 
+    /**
+     * 查询零售订单列表
+     */
+    @ApiOperation(value = "查询零售订单列表")
+    @RequestMapping(value = "/retailOrderList",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<ListEntity<Map<String, Object>>> list(@RequestBody JSONObject obj) {
+        ServiceResult<ListEntity<Map<String, Object>>> result = new ServiceResult<>();
+        Map<String, Object> map = Maps.newHashMap();
+        try {
+            map.put("autoInfoName", obj.getString("query"));
+            //查询用户权限
+            CarManagerUser carManagerUser = userService.selectByPrimaryKey(obj.getLong("managerId"), true);
+            map.put("userId", carManagerUser.getId());
+            //如果用户是中心店管理员
+            if (ManagerRole.ZX_ESCFZR.value() == carManagerUser.getRoleId()) {
+//                map.put("auctionType","2");//现场车辆
+//                map.put("roleTyped","2");//中心店
+                map.put("departmentId", carManagerUser.getDepartmentId());
+                map.put("managerRole", carManagerUser.getRoleId());
+            }
+            //如果用户是店铺管理员
+            if (ManagerRole.JXD_ESCFZR.value() == carManagerUser.getRoleId()) {
+//                map.put("auctionType","1");//线上车辆
+//                map.put("roleTyped","3");//店铺
+                map.put("departmentId", carManagerUser.getDepartmentId());
+                map.put("managerRole", carManagerUser.getRoleId());
+            }
+            Integer count = carAutoService.selectRetailForCount(map);
+            PageEntity pageEntity = CarAutoUtils.getPageParam(obj);
+            map.put("startRowNum", pageEntity.getStartRowNum());
+            map.put("endRowNum", pageEntity.getEndRowNum());
+            List<Map<String, Object>> list = carAutoService.selectRetailForExample(map);
+            ListEntity<Map<String, Object>> listEntity = new ListEntity<>();
+            listEntity.setList(list);
+            listEntity.setCount(count);
+            result.setResult(listEntity);
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询车辆评估列表", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
     /***
      * 保存草稿
      * @param carAuto
      * @return
      */
     @PostMapping(value = "saveDraft")
-    public ServiceResult<CarAuto> saveDraft(@RequestBody CarAuto carAuto){
+    public ServiceResult<CarAuto> saveDraft(@RequestBody CarAuto carAuto) {
 
-       carAuto.setUpdateTime(new Date());
-       return carAutoService.updateByPrimaryKey(carAuto);
+        carAuto.setUpdateTime(new Date());
+        return carAutoService.updateByPrimaryKey(carAuto);
     }
 
     /***
@@ -418,7 +550,7 @@ public class CarAutoApi {
      * @return
      */
     @PostMapping(value = "submitAuth")
-    public ServiceResult submitAuth(@RequestBody JSONObject object){
+    public ServiceResult submitAuth(@RequestBody JSONObject object) {
         ServiceResult result = new ServiceResult();
         try {
             CarAuto auto = new CarAuto();
@@ -427,16 +559,18 @@ public class CarAutoApi {
             auto.setUpdateTime(new Date());
             auto.setStatus("2");
             auto.setLogMsg("提交审核");
+            auto.setLogUserMobile(object.getString("userMobile"));
+            auto.setLogUserName(object.getString("userName"));
             ServiceResult serviceResult = carAutoService.updateByPrimaryKeySelective(auto);
-            if (serviceResult.getSuccess() && serviceResult.getResult()!=null){
-                result.setSuccess("0","提交成功");
-            }else {
-                result.setError("-1","提交失败");
+            if (serviceResult.getSuccess() && serviceResult.getResult() != null) {
+                result.setSuccess("0", "提交成功");
+            } else {
+                result.setError("-1", "提交失败");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            result.setError("-1","提交失败");
-        }finally {
+            result.setError("-1", "提交失败");
+        } finally {
             return result;
         }
     }
@@ -447,7 +581,7 @@ public class CarAutoApi {
      * @return
      */
     @PostMapping(value = "del")
-    public ServiceResult del(@RequestBody JSONObject object){
+    public ServiceResult del(@RequestBody JSONObject object) {
         ServiceResult result = new ServiceResult();
         try {
             CarAuto auto = new CarAuto();
@@ -457,15 +591,15 @@ public class CarAutoApi {
             auto.setStatus("0");
             auto.setLogMsg("删除车辆");
             ServiceResult serviceResult = carAutoService.updateByPrimaryKeySelective(auto);
-            if (serviceResult.getSuccess() && serviceResult.getResult()!=null){
-                result.setSuccess("0","提交成功");
-            }else {
-                result.setError("-1","提交失败");
+            if (serviceResult.getSuccess() && serviceResult.getResult() != null) {
+                result.setSuccess("0", "提交成功");
+            } else {
+                result.setError("-1", "提交失败");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            result.setError("-1","提交失败");
-        }finally {
+            result.setError("-1", "提交失败");
+        } finally {
             return result;
         }
     }
@@ -476,7 +610,7 @@ public class CarAutoApi {
      * @return
      */
     @PostMapping(value = "saveReport")
-    public ServiceResult saveDetectionReport(@RequestBody JSONObject object){
+    public ServiceResult saveDetectionReport(@RequestBody JSONObject object) {
         ServiceResult result = new ServiceResult();
         try {
             CarAuto auto = new CarAuto();
@@ -487,140 +621,195 @@ public class CarAutoApi {
             auto.setUpdateTime(new Date());
             auto.setUpdateUser(object.getLong("updateUser"));
             result = carAutoService.updateByPrimaryKeySelective(auto);
-            if (result!=null && result.getSuccess()){
-                result.setSuccess("0","成功");
-            }else {
-                result.setSuccess("-1","保存失败");
+            if (result != null && result.getSuccess()) {
+                result.setSuccess("0", "成功");
+            } else {
+                result.setSuccess("-1", "保存失败");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            result.setSuccess("-1","保存失败");
-        }finally {
+            result.setSuccess("-1", "保存失败");
+        } finally {
             result.setResult(null);
             return result;
         }
     }
 
-    @ApiOperation(value = "查询某人最新草稿",notes = "查询用户最新草稿车辆")
+    @ApiOperation(value = "查询某人最新草稿", notes = "查询用户最新草稿车辆")
     @PostMapping(value = "getLastAutoDraft")
-    public ServiceResult<CarAuto> getLastAutoDraft(@ApiParam(value = "用户id") @RequestBody Long userId){
+    public ServiceResult<CarAuto> getLastAutoDraft(@ApiParam(value = "用户id") @RequestBody Long userId) {
         ServiceResult<CarAuto> result = new ServiceResult<>();
         try {
             Map map = new HashMap();
-            map.put("createUser",userId);
-            map.put("status","1");
+            map.put("createUser", userId);
+            map.put("status", "1");
             result.setResult(carAutoService.selectMyLastAuto(map));
-            result.setSuccess("0","查询成功");
-        }catch (Exception e){
+            result.setSuccess("0", "查询成功");
+        } catch (Exception e) {
             e.printStackTrace();
-            result.setError("-1","失败");
-        }finally {
+            result.setError("-1", "失败");
+        } finally {
             return result;
         }
     }
-        /**
-        * 根据参数查询车辆列表
-        *@Author:zhangzijuan
-        *@date 2018/3/22
-        *@param:map
-        */
-    @ApiOperation(value = "根据参数查询车辆列表",notes = "根据参数查询车辆列表")
+
+    /**
+     * 根据参数查询车辆列表
+     *
+     * @Author:zhangzijuan
+     * @date 2018/3/22
+     * @param:map
+     */
+    @ApiOperation(value = "根据参数查询车辆列表", notes = "根据参数查询车辆列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "page",value = "当前页数",required = true,paramType = "query",dataType = "int"),
-            @ApiImplicitParam(name = "limit",value = "每页显示的条数",required = true,paramType = "query",dataType = "int"),
-            @ApiImplicitParam(name = "storeId",value = "店铺id",required = false,paramType = "query",dataType = "int"),
-            @ApiImplicitParam(name = "sourceType",value = "车辆来源：1个人车源，2公务车，3 4S店置换，4店铺车，5试乘试驾车",required = true,paramType = "query",dataType = "int"),
-            @ApiImplicitParam(name = "ifNew",value = "车辆类型 1二手车，2新车",required = false,paramType = "query",dataType = "int"),
-            @ApiImplicitParam(name = "status",value = "状态id",required = false,paramType = "query",dataType = "int"),
-            @ApiImplicitParam(name = "auctionType",value = "竞拍类型 拍卖类型（1线上、2线下)",required = false,paramType = "query",dataType = "int"),
-            @ApiImplicitParam(name = "startTime",value = "发车开始时间  2018-03-13",required = false,paramType = "query",dataType = "int"),
-            @ApiImplicitParam(name = "endTime",value = "结束发车时间  2018-03-13",required = false,paramType = "query",dataType = "int")
+            @ApiImplicitParam(name = "page", value = "当前页数", required = true, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "limit", value = "每页显示的条数", required = true, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "storeId", value = "店铺id", required = false, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "sourceType", value = "车辆来源：1个人车源，2公务车，3 4S店置换，4店铺车，5试乘试驾车", required = true, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "ifNew", value = "车辆类型 1二手车，2新车", required = false, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "status", value = "状态id", required = false, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "auctionType", value = "竞拍类型 拍卖类型（1线上、2线下)", required = false, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "startTime", value = "发车开始时间  2018-03-13", required = false, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "endTime", value = "结束发车时间  2018-03-13", required = false, paramType = "query", dataType = "int")
     })
     @PostMapping(value = "getCarAutoListByParam")
-    public ServiceResult<ListEntity<CarAuto>> getCarAutoListByParam (@RequestBody Map<String,Object> map){
-        ServiceResult<ListEntity<CarAuto>> result=new ServiceResult<>();
-        Integer page=(Integer) map.get("page");
-        Integer pageSize=(Integer) map.get("limit");
-        map.put("startRowNum",(page-1)*pageSize);
-        map.put("endRowNum",pageSize);
+    public ServiceResult<ListEntity<CarAuto>> getCarAutoListByParam(@RequestBody Map<String, Object> map) {
+        ServiceResult<ListEntity<CarAuto>> result = new ServiceResult<>();
+        Integer page = (Integer) map.get("page");
+        Integer pageSize = (Integer) map.get("limit");
+        map.put("startRowNum", (page - 1) * pageSize);
+        map.put("endRowNum", pageSize);
+        Long userId = Long.parseLong(map.get("managerId").toString());
         /**
-         * 数据权限过滤
+         * 数据权限过滤 审核车辆根据审核人员负责区域划分
+         * 其余车辆按店铺人员区分店铺车辆
+         * 平台管理员除外
          */
-        Long userId=Long.parseLong(map.get("managerId").toString());
-        if(userId!=null){
-            List<Long> storeIds = managerUserService.queryStoreScope(userId);
-            map.put("storeIds",storeIds);
+        CarManagerUser managerUser = managerUserService.selectByPrimaryKey(Long.parseLong(map.get("managerId") + ""), false);
+        if(ManagerRole.PT_GLY.value() != managerUser.getRoleId()){
+            String status = map.get("status") + "";
+            if(CarStatusEnum.WAITING_AUDITOR.value().equals(status) || CarStatusEnum.RECALL_HANLDING.value().equals(status)){
+                //查询关联的店铺
+                List<Long> storeIds = managerUserService.queryStoreScope(map);
+                if(storeIds == null || storeIds.size() < 1){
+                    return result;
+                }
+                map.put("storeIds", storeIds);
+            }else{
+                List<Long> storeIds = managerUserService.queryStoreScope(managerUser.getRoleTypeId(),managerUser.getDepartmentId());
+                map.put("storeIds", storeIds);
+            }
         }
-        ListEntity<CarAuto> carAutoListEntity=new ListEntity<>();
+        ListEntity<CarAuto> carAutoListEntity = new ListEntity<>();
         carAutoListEntity.setList(carAutoService.getAllCarAutoList(map).getResult());
         carAutoListEntity.setCount(carAutoService.getAllCarAutoCount(map).getResult());
         result.setResult(carAutoListEntity);
         return result;
     }
 
+    /**
+     * 根据参数查询车辆列表
+     *
+     * @Author:zhangzijuan
+     * @date 2018/3/22
+     * @param:map
+     */
+    @ApiOperation(value = "根据参数查询车辆列表", notes = "根据参数查询车辆列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", value = "当前页数", required = true, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "limit", value = "每页显示的条数", required = true, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "storeId", value = "店铺id", required = false, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "sourceType", value = "车辆来源：1个人车源，2公务车，3 4S店置换，4店铺车，5试乘试驾车", required = true, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "ifNew", value = "车辆类型 1二手车，2新车", required = false, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "status", value = "状态id", required = false, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "auctionType", value = "竞拍类型 拍卖类型（1线上、2线下)", required = false, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "startTime", value = "发车开始时间  2018-03-13", required = false, paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "endTime", value = "结束发车时间  2018-03-13", required = false, paramType = "query", dataType = "int")
+    })
+    @PostMapping(value = "getCarAutoAllListByParam")
+    public ServiceResult<Map<String, Object>> getCarAutoAllListByParam(@RequestBody Map<String, Object> map) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
 
+        /**
+         * 数据权限过滤
+         */
+        if (MapUtils.isNotEmpty(map) && map.get("managerId") != null) {
+            Long userId = Long.parseLong(map.get("managerId").toString());
+            if (userId != null) {
+                List<Long> storeIds = managerUserService.queryStoreScope(userId);
+                map.put("storeIds", storeIds);
+            }
+        }
+        Map<String, Object> resultMap = Maps.newHashMap();
+        resultMap.put("list", carAutoService.getAllCarAutoList(map).getResult());
+        result.setResult(resultMap);
+        result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        return result;
+    }
 
     /**
-     *审核撤回审批的车辆
-     * @Author zhangzijiuan
+     * 审核撤回审批的车辆
+     *
      * @return
+     * @Author zhangzijiuan
      */
-    @ApiOperation(value = "审核撤回审批的车辆",notes = "审核撤回审批的车辆")
+    @ApiOperation(value = "审核撤回审批的车辆", notes = "审核撤回审批的车辆")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "carId",value = "车辆Id",required = true,dataType = "long"),
-            @ApiImplicitParam(name = "status",value = "审批状态 1 通过 2 不通过",required = true,dataType = "string"),
-            @ApiImplicitParam(name = "msg",value = "审批留言",required = false,paramType = "query",dataType = "string")
+            @ApiImplicitParam(name = "carId", value = "车辆Id", required = true, dataType = "long"),
+            @ApiImplicitParam(name = "status", value = "审批状态 1 通过 2 不通过", required = true, dataType = "string"),
+            @ApiImplicitParam(name = "msg", value = "审批留言", required = false, paramType = "query", dataType = "string")
     })
     @PostMapping(value = "revokeApprove")
-    public ServiceResult<Map<String,Object>> revokeApprove(@RequestBody JSONObject object){
-        ServiceResult<Map<String,Object>> result=new ServiceResult<>();
+    public ServiceResult<Map<String, Object>> revokeApprove(@RequestBody JSONObject object) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-            Integer i=carAutoService.revokeApprove(object);
-            if(i>0){
-                result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
-            }else {
-                result.setError(ResultCode.FAIL.strValue(),ResultCode.FAIL.getRemark());
+            Integer i = carAutoService.revokeApprove(object);
+            if (i > 0) {
+                result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+            } else {
+                result.setError(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
         }
         return result;
     }
 
     /**
-     *审批发拍的车辆
-     * @Author zhangzijiuan
+     * 审批发拍的车辆
+     *
      * @return
+     * @Author zhangzijiuan
      */
-    @ApiOperation(value = "审批发拍的车辆",notes = "审批发拍的车辆，线上拍需要选择可见范围及")
+    @ApiOperation(value = "审批发拍的车辆", notes = "审批发拍的车辆，线上拍需要选择可见范围及")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "carId",value = "车辆Id",required = true,paramType = "query",dataType = "long"),
-            @ApiImplicitParam(name = "status",value = "审批状态 1 通过 2 不通过",required = true,dataType = "string"),
-            @ApiImplicitParam(name = "msg",value = "审批留言",required = true,paramType = "query",dataType = "string"),
-            @ApiImplicitParam(name = "auctionStartTime",value = "开拍时间",required = false,dataType = "string"),
-            @ApiImplicitParam(name = "openLimit",value = "开放范围id拼接",required = false,dataType = "string"),
-            @ApiImplicitParam(name = "openLimitCn",value = "开放范围，空则全部开放",required = false,dataType = "string")
+            @ApiImplicitParam(name = "carId", value = "车辆Id", required = true, paramType = "query", dataType = "long"),
+            @ApiImplicitParam(name = "status", value = "审批状态 1 通过 2 不通过", required = true, dataType = "string"),
+            @ApiImplicitParam(name = "msg", value = "审批留言", required = true, paramType = "query", dataType = "string"),
+            @ApiImplicitParam(name = "auctionStartTime", value = "开拍时间", required = false, dataType = "string"),
+            @ApiImplicitParam(name = "openLimit", value = "开放范围id拼接", required = false, dataType = "string"),
+            @ApiImplicitParam(name = "openLimitCn", value = "开放范围，空则全部开放", required = false, dataType = "string")
     })
     @PostMapping(value = "approveCarAuto")
-    public ServiceResult<Map<String,Object>> approveCarAuto(@RequestBody JSONObject object){
-        ServiceResult<Map<String,Object>> result=new ServiceResult<>();
+    public ServiceResult<Map<String, Object>> approveCarAuto(@RequestBody JSONObject object) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
-            Integer i=carAutoService.approveCarAuto(object);
-            if(i>0){
-                result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
-            }else if(i==-1) {
-                result.setError(ResultCode.NO_AUCTION_START_TIME.strValue(),ResultCode.NO_AUCTION_START_TIME.getRemark());
-            }else if (i==-2){
-                result.setError(ResultCode.NO_REGION_AUCTION_SETTING.strValue(),ResultCode.NO_REGION_AUCTION_SETTING.getRemark());
-            }else if(i==-3){
-                result.setError(ResultCode.PARAM_ERROR.strValue(),ResultCode.PARAM_ERROR.getRemark());
-            }else {
-                result.setError(ResultCode.FAIL.strValue(),ResultCode.FAIL.getRemark());
+            Integer i = carAutoService.approveCarAuto(object);
+            if (i > 0) {
+                result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+            } else if (i == -1) {
+                result.setError(ResultCode.NO_AUCTION_START_TIME.strValue(), ResultCode.NO_AUCTION_START_TIME.getRemark());
+            } else if (i == -2) {
+                result.setError(ResultCode.NO_REGION_AUCTION_SETTING.strValue(), ResultCode.NO_REGION_AUCTION_SETTING.getRemark());
+            } else if (i == -3) {
+                result.setError(ResultCode.PARAM_ERROR.strValue(), ResultCode.PARAM_ERROR.getRemark());
+            } else {
+                result.setError(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
         }
         return result;
     }
@@ -628,14 +817,14 @@ public class CarAutoApi {
 
     @ApiOperation(value = "查询车辆的发布状态")
     @PostMapping(value = "getAutoPublishStatus")
-    public ServiceResult<Map<String,Object>> getAutoPublishStatus(@RequestBody JSONObject object){
-        ServiceResult<Map<String,Object>> result = new ServiceResult<>();
+    public ServiceResult<Map<String, Object>> getAutoPublishStatus(@RequestBody JSONObject object) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         Map map = new HashMap();
-        map.put("baseInfoStatus","0");
-        map.put("photoStatus","0");
-        map.put("detectionStatus","0");
-        map.put("auctionStatus","0");
-        map.put("status",null);
+        map.put("baseInfoStatus", "0");
+        map.put("photoStatus", "0");
+        map.put("detectionStatus", "0");
+        map.put("auctionStatus", "0");
+        map.put("status", null);
         try {
 
             boolean baseInfo = true;
@@ -645,18 +834,20 @@ public class CarAutoApi {
             Long autoId = object.getLong("autoId");
             //查询车辆竞拍信息
             CarAutoAuction autoAuction = auctionService.selectByAutoId(autoId);
-            if (autoAuction!=null
-                    && autoAuction.getReservePrice()!=null
-                    && autoAuction.getStoreId()!=null
-                    && autoAuction.getStartingPrice()!=null
-                    && StringUtils.isNotEmpty(autoAuction.getIfAgent())){
-                    map.put("auctionStatus","1");
+            if (autoAuction != null
+                    && autoAuction.getReservePrice() != null
+                    && autoAuction.getStoreId() != null
+                    && autoAuction.getStartingPrice() != null
+                    && StringUtils.isNotEmpty(autoAuction.getIfAgent())) {
+                map.put("auctionStatus", "1");
             }
 
             //查询车辆基本信息+手续信息+配置信息
             CarAutoInfoDetail infoDetail = carAutoInfoDetailService.selectDetailByCarId(autoId);
+            map.put("vin", infoDetail.getVin());
+
             CarAutoProcedures procedures = proceduresService.getAutoProceduresByCarId(autoId).getResult();
-            if (infoDetail==null || StringUtils.isEmpty(infoDetail.getVin())
+            if (infoDetail == null || StringUtils.isEmpty(infoDetail.getVin())
                     || StringUtils.isEmpty(infoDetail.getAutoBrand())
                     || StringUtils.isEmpty(infoDetail.getAutoStyle())
                     || StringUtils.isEmpty(infoDetail.getAutoSeries())
@@ -665,165 +856,379 @@ public class CarAutoApi {
                     || StringUtils.isEmpty(infoDetail.getOilSupplySystem())
                     || StringUtils.isEmpty(infoDetail.getTransmission())
                     || StringUtils.isEmpty(infoDetail.getVehicleDriver())
-                    || infoDetail.getMileage()==null
+                    || infoDetail.getMileage() == null
                     || StringUtils.isEmpty(infoDetail.getColor())
                     || StringUtils.isEmpty(infoDetail.getColorChanged())
-                    || infoDetail.getManufactureDate()==null
-                    || infoDetail.getBeginRegisterDate()==null
+                    || infoDetail.getManufactureDate() == null
+                    || infoDetail.getBeginRegisterDate() == null
                     || StringUtils.isEmpty(infoDetail.getVehicleAttributionProvince())
                     || StringUtils.isEmpty(infoDetail.getVehicleAttributionCity())
                     || StringUtils.isEmpty(infoDetail.getLicenseNumber())
                     || StringUtils.isEmpty(infoDetail.getCarNature())
                     || StringUtils.isEmpty(infoDetail.getUseNature())
                     || StringUtils.isEmpty(infoDetail.getIsModification())
-                    || infoDetail.getOriginalPrice()==null
+                    || infoDetail.getOriginalPrice() == null
                     || StringUtils.isEmpty(infoDetail.getIntakeMethod())
-                    || StringUtils.isEmpty(infoDetail.getCarShape())){
+                    || StringUtils.isEmpty(infoDetail.getCarShape())) {
                 baseInfo = false;
-            }else {
+            } else {
                 //二手车--手续信息不完整[中心和经销店需要区分]
                 if ("1".equals(infoDetail.getIfNew())
-                        &&(procedures==null
-                            || procedures.getPurchaseTax()==null
-                            || StringUtils.isEmpty(procedures.getDrivingLicense())
-                            || StringUtils.isEmpty(procedures.getRegistrationCertificate())
-                            || procedures.getYearInsurance()==null
-                            || procedures.getCompulsoryInsurance()==null
-                            || procedures.getCarKeys()==null
-                            || StringUtils.isEmpty(procedures.getUnIllegal())
-                            || procedures.getTransferNumber()==null
-                            || StringUtils.isEmpty(procedures.getTicketOfTransfer()))){
+                        && (procedures == null
+                        || procedures.getPurchaseTax() == null
+                        || StringUtils.isEmpty(procedures.getDrivingLicense())
+                        || StringUtils.isEmpty(procedures.getRegistrationCertificate())
+                        || procedures.getYearInsurance() == null
+                        || procedures.getCompulsoryInsurance() == null
+                        || procedures.getCarKeys() == null
+                        || StringUtils.isEmpty(procedures.getUnIllegal())
+                        || procedures.getTransferNumber() == null
+                        || StringUtils.isEmpty(procedures.getTicketOfTransfer()))) {
                     baseInfo = false;
 
-                }else if ("1".equals(infoDetail.getIfNew())
-                        && roleTypeId==3
+                } else if ("1".equals(infoDetail.getIfNew())
+                        && roleTypeId == 3
                         && (
-                                procedures==null
-                                || (procedures.getTransferNumber()==0 && StringUtils.isEmpty(procedures.getNewCarInvoice()))
+                        procedures == null
+                                || (procedures.getTransferNumber() == 0 && StringUtils.isEmpty(procedures.getNewCarInvoice()))
                                 || StringUtils.isEmpty(procedures.getCostPrice()))
-                        ){
+                ) {
                     //如果是经销店发车，需要比中心多判断两个字段，新车发票、手续补办费用必填
                     baseInfo = false;
                 }
             }
-            if (baseInfo){
-                map.put("baseInfoStatus","1");
+            if (baseInfo) {
+                map.put("baseInfoStatus", "1");
             }
 
             //查询车辆图片是否完成
             List<CarAutoPhoto> photoList = photoService.selectByAutoId(autoId);
-            if (autoAuction!=null
+            if (autoAuction != null
                     && "1".equals(autoAuction.getAuctionType())
-                    && photoList!=null && photoList.size()>=12){
+                    && photoList != null && photoList.size() >= 12) {
                 int photoSize = photoList.size();
-                for (CarAutoPhoto carAutoPhoto:photoList){
-                    if (carAutoPhoto.getSort()>12){
-                        photoSize-=1;
+                for (CarAutoPhoto carAutoPhoto : photoList) {
+                    if (carAutoPhoto.getSort() > 12) {
+                        photoSize -= 1;
                     }
                 }
-                if (photoSize>=12) {
+                if (photoSize >= 12) {
                     map.put("photoStatus", "1");
                 }
-            }else if (autoAuction!=null
+            } else if (autoAuction != null
                     && "2".equals(autoAuction.getAuctionType())
-                    && photoList!=null && photoList.size()>=3){
+                    && photoList != null && photoList.size() >= 1) {
                 int photoSize = photoList.size();
-                for (CarAutoPhoto carAutoPhoto:photoList){
-                    if (carAutoPhoto.getSort()>12){
-                        photoSize-=1;
+                for (CarAutoPhoto carAutoPhoto : photoList) {
+                    if (carAutoPhoto.getSort() > 12) {
+                        photoSize -= 1;
                     }
                 }
-                if (photoSize>=3) {
+                if (photoSize >= 1) {
                     map.put("photoStatus", "1");
                 }
             }
 
             //检测信息
             if ("2".equals(infoDetail.getIfNew())
-                    || (autoAuction!=null && "2".equals(autoAuction.getAuctionType()))
-                    || (infoDetail.getReportServicingRanks()!=null && infoDetail.getReportColligationRanks()!=null)){
-                map.put("detectionStatus","1");
+//                    || (autoAuction != null && "2".equals(autoAuction.getAuctionType()))
+                    || (infoDetail.getReportServicingRanks() != null && infoDetail.getReportColligationRanks() != null)) {
+                map.put("detectionStatus", "1");
             }
             //封装车辆状态
-            map.put("status",infoDetail.getStatus());
+            map.put("status", infoDetail.getStatus());
             result.setResult(map);
-            result.setSuccess("0","查询成功");
-        }catch (Exception e){
+            result.setSuccess("0", "查询成功");
+        } catch (Exception e) {
             e.printStackTrace();
-            result.setError("-1","查询失败");
-        }finally {
+            result.setError("-1", "查询失败");
+        } finally {
             return result;
         }
     }
 
 
-
     /**
-     *申请二拍
-     * @Author zhangzijiuan
+     * 申请二拍
+     *
      * @return
+     * @Author zhangzijiuan
      */
     @ApiOperation(value = "申请二拍")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "carId",value = "车辆Id",required = true,paramType = "query",dataType = "long"),
-            @ApiImplicitParam(name = "userId",value = "用户id",required = true,dataType = "string"),
-            @ApiImplicitParam(name = "startAmount",value = "起拍价",required = true,paramType = "query",dataType = "string"),
-            @ApiImplicitParam(name = "reserveAmount",value = "保留价",required = false,dataType = "string"),
+            @ApiImplicitParam(name = "carId", value = "车辆Id", required = true, paramType = "query", dataType = "long"),
+            @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "string"),
+            @ApiImplicitParam(name = "startAmount", value = "起拍价", required = true, paramType = "query", dataType = "string"),
+            @ApiImplicitParam(name = "reserveAmount", value = "保留价", required = false, dataType = "string"),
     })
     @PostMapping(value = "setAgainAuction")
-    public ServiceResult<Map<String,Object>> setAgainAuction(@RequestBody JSONObject object){
-        ServiceResult<Map<String,Object>> result=new ServiceResult<>();
+    public ServiceResult<Map<String, Object>> setAgainAuction(@RequestBody JSONObject object) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
         try {
             CarAuto auto = carAutoService.selectByPrimaryKey(object.getLong("carId")).getResult();
             //**,2只能操作自己的数据
-            Long userId=object.getLong("userId");
+            Long userId = object.getLong("userId");
             CarManagerRole managerRole = roleService.selectByUserId(userId);
-            if("2".equals(managerRole.getWriteType())){
-                if(userId.compareTo(auto.getCreateUser())!=0){
-                    result.setError(ResultCode.NO_ALLOW_UPDATE.strValue(),ResultCode.NO_ALLOW_UPDATE.getRemark());
+            if ("2".equals(managerRole.getWriteType())) {
+                if (userId.compareTo(auto.getCreateUser()) != 0) {
+                    result.setError(ResultCode.NO_ALLOW_UPDATE.strValue(), ResultCode.NO_ALLOW_UPDATE.getRemark());
                     return result;
                 }
             }
-            Integer i=carAutoService.setAgainAuction(object,auto);
-            if(i>0){
-                result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
-            }else {
-                result.setError(ResultCode.FAIL.strValue(),ResultCode.FAIL.getRemark());
+            Integer i = carAutoService.setAgainAuction(object, auto);
+            if (i > 0) {
+                result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+            } else {
+                result.setError(ResultCode.FAIL.strValue(), ResultCode.FAIL.getRemark());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
         }
         return result;
     }
 
 
     /**
-     *根据车辆id查询起拍价和保留价
-     * @Author zhangzijiuan
+     * 根据车辆id查询起拍价和保留价
+     *
      * @return
+     * @Author zhangzijiuan
      */
     @ApiOperation(value = "根据车辆id查询起拍价和保留价")
-    @ApiImplicitParam(name = "carId",value = "车辆Id",required = true,paramType = "query",dataType = "long")
+    @ApiImplicitParam(name = "carId", value = "车辆Id", required = true, paramType = "query", dataType = "long")
     @PostMapping(value = "selectCarInfoById")
-    public ServiceResult<Map<String,Object>> selectCarInfoById(@RequestBody JSONObject object){
+    public ServiceResult<Map<String, Object>> selectCarInfoById(@RequestBody JSONObject object) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
+        try {
+            CarAutoAuction autoAuction = carAutoService.selectCarInfoById(object);
+            if (autoAuction != null) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("carId", autoAuction.getAutoId());
+                map.put("startAmount", autoAuction.getStartingPrice());
+                map.put("reserveAmount", autoAuction.getReservePrice());
+                map.put("auctionType", autoAuction.getAuctionType());
+                result.setResult(map);
+                result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+            } else {
+                result.setError(ResultCode.NO_OBJECT.strValue(), ResultCode.NO_OBJECT.getRemark());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /**
+     * 根据条件查询采购申请
+     */
+    @ApiOperation(value = "根据条件查询车辆申请")
+    @RequestMapping(value = "/selectListByType",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<ListEntity<Map<String, Object>>> selectListByType(@RequestBody JSONObject object) {
+        ServiceResult<ListEntity<Map<String, Object>>> result = new ServiceResult<>();
+        try {
+            Long userId = object.getLong("userId");
+            String type = object.getString("type");
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("userId", userId);
+            PageEntity pageEntity = CarAutoUtils.getPageParam(object);
+            paramMap.put("startRowNum", pageEntity.getStartRowNum());
+            paramMap.put("endRowNum", pageEntity.getEndRowNum());
+            List<Map<String, Object>> list = new ArrayList<>();
+            ListEntity<Map<String, Object>> listEntity = new ListEntity<>();
+            if (type.equals("1")) {
+                //待我审批 -- 线上车辆分配到城市，现场车辆分配到中心
+                if (null == object.getString("auctionType") || "".equals(object.getString("auctionType"))) {
+                    paramMap.put("auctionType", "1");
+                } else {
+                    paramMap.put("auctionType", object.getString("auctionType"));
+                }
+                Integer count = carAutoService.selectCarAutoApprovalCount(paramMap);
+                paramMap.put("count", count);
+                listEntity.setCount(count);
+                List<CarAuto> carAutoList = carAutoService.selectCarAutoApprovalList(paramMap);
+                for (CarAuto carAuto : carAutoList) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("mainPhoto", carAuto.getMainPhoto());
+                    map.put("autoInfoName", carAuto.getAutoInfoName());
+                    map.put("time", carAuto.getUpdateTime());
+                    map.put("userName", carAuto.getLogUserName());
+                    map.put("id", carAuto.getId());
+                    map.put("status", carAuto.getStatus());
+                    map.put("auctionType", carAuto.getAuctionType());
+                    map.put("transferFlag", carAuto.getTransferFlag());
+                    list.add(map);
+                    listEntity.setList(list);
+                }
+            } else if (type.equals("2")) {
+                int count = iCarAutoLogService.selectCountEndByUserId(userId);
+                paramMap.put("count", count);
+                listEntity.setCount(count);
+                List<CarAutoLog> carAutoLogs = iCarAutoLogService.selectEndOrderList(paramMap);
+                for (CarAutoLog carAtuoLog : carAutoLogs) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("mainPhoto", carAtuoLog.getMainPhoto());
+                    map.put("autoInfoName", carAtuoLog.getAutoInfoName());
+                    map.put("time", carAtuoLog.getTime());
+                    map.put("userName", carAtuoLog.getUserName());
+                    map.put("id", carAtuoLog.getId());
+                    map.put("status", carAtuoLog.getStatus());
+                    map.put("auctionType", carAtuoLog.getAuctionType());
+                    map.put("transferFlag", carAtuoLog.getTransferFlag());
+                    list.add(map);
+                    listEntity.setList(list);
+                }
+            } else if (type.equals("3")) {
+                int count = carAutoService.selectCountById(userId);
+                paramMap.put("count", count);
+                listEntity.setCount(count);
+                List<CarAuto> carAutos = carAutoService.selectUserOrderList(paramMap);
+                for (CarAuto carAuto : carAutos) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("mainPhoto", carAuto.getMainPhoto());
+                    map.put("autoInfoName", carAuto.getAutoInfoName());
+                    map.put("time", carAuto.getTime().getTime());
+                    map.put("userName", carAuto.getLogUserName());
+                    map.put("id", carAuto.getId());
+                    map.put("status", carAuto.getStatus());
+                    map.put("auctionType", carAuto.getAuctionType());
+                    map.put("transferFlag", carAuto.getTransferFlag());
+                    list.add(map);
+                    listEntity.setList(list);
+                }
+            }
+            if (listEntity.getList() == null) {
+                listEntity.setList(new ArrayList<>());
+            }
+            result.setResult(listEntity);
+            result.setSuccess("0", "成功");
+        } catch (Exception e) {
+            logger.info("根据条件查询车辆", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+
+        }
+        return result;
+    }
+
+
+    /**
+     * 查询车辆详情
+     */
+    @ApiOperation(value = "查询车辆详情")
+    @RequestMapping(value = "/detail",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String, Object>> detail(@RequestBody JSONObject obj) {
+        ServiceResult<Map<String, Object>> result = new ServiceResult<>();
+        try {
+
+            Map param = JSONObject.toJavaObject(obj, Map.class);
+            param = Maps.filterValues(param, Predicates.not(Predicates.equalTo("")));
+            CarAuto carAuto = carAutoService.selectCarDetailCondition(param);
+            result.setResult(Collections.singletonMap("data", carAuto));
+            result.setSuccess(ResultCode.SUCCESS.strValue(), ResultCode.SUCCESS.getRemark());
+        } catch (Exception e) {
+            logger.info("查询车辆评估详情", e);
+            e.printStackTrace();
+            result.setError(ResultCode.BUSS_EXCEPTION.strValue(), ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /* *//**
+     *申请撤拍
+     * @Author zhangzijiuan
+     * @return
+     *//*
+    @ApiOperation(value = "申请撤拍")
+    @RequestMapping(value = "/withDrawCarAuction",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> withDrawCarAuction(@RequestBody JSONObject object){
         ServiceResult<Map<String,Object>> result=new ServiceResult<>();
         try {
-            CarAutoAuction autoAuction=carAutoService.selectCarInfoById(object);
-            if(autoAuction!=null){
-                Map<String,Object> map=new HashMap<>();
-                map.put("carId",autoAuction.getAutoId());
-                map.put("startAmount",autoAuction.getStartingPrice());
-                map.put("reserveAmount",autoAuction.getReservePrice());
-                map.put("auctionType",autoAuction.getAuctionType());
-                result.setResult(map);
-                result.setSuccess(ResultCode.SUCCESS.strValue(),ResultCode.SUCCESS.getRemark());
-            }else {
-                result.setError(ResultCode.NO_OBJECT.strValue(),ResultCode.NO_OBJECT.getRemark());
-            }
+            CarAuto auto = new CarAuto();
+            Long carId = object.getLong("carId");
+            auto.setId(carId);
+            Long userId=object.getLong("userId");
+            auto.setStatus("4");
+            CarManagerRole managerRole = roleService.selectByUserId(userId);
+            auto.setUpdateUser(userId);
+            Date date = new Date();
+            auto.setUpdateTime(date);
+            carAutoService.updateByPrimaryKeySelective(auto);
         }catch (Exception e){
             e.printStackTrace();
             result.setError(ResultCode.BUSS_EXCEPTION.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }*/
+
+    /**
+     * 车辆划分渠道
+     * @Author jianglk
+     * @return
+     */
+    @ApiOperation(value = "车辆划分渠道")
+    @RequestMapping(value = "/updateAuctionType",
+            method = RequestMethod.POST,
+            consumes = "application/json; charset=UTF-8",
+            produces = "application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> withDrawCarAuction(@RequestBody JSONObject object){
+        ServiceResult<Map<String,Object>> result=new ServiceResult<>();
+        try {
+            Map map = JSONObject.toJavaObject(object, Map.class);
+            ServiceResult serviceResult = carAutoService.updateAuctionType(map);
+            if(serviceResult.getSuccess()){
+                result.setSuccess((ResultCode.SUCCESS.value())+"",ResultCode.SUCCESS.getRemark());
+            }else{
+                result.setError(serviceResult.getCode(),serviceResult.getMessage());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            result.setError(ResultCode.NO_OBJECT.strValue(),ResultCode.BUSS_EXCEPTION.getRemark());
+        }
+        return result;
+    }
+
+    /**
+     * 车辆转渠道
+     */
+    @RequestMapping(value = "/updateTransferFlag",
+            method= RequestMethod.POST,
+            consumes="application/json; charset=UTF-8",
+            produces="application/json; charset=UTF-8")
+    public ServiceResult<Map<String,Object>> transferChannelCar(@RequestBody JSONObject obj){
+        logger.info("车辆转渠道");
+        ServiceResult<Map<String,Object>> result = new ServiceResult<Map<String,Object>>();
+        Map<String,Object> map = new HashMap<>();
+        try {
+            Long userId = obj.getLong("userId");
+            Long id = obj.getLong("carId");
+            String transferFlag = obj.getString("transferFlag");
+            if(transferFlag == null || "".equals(transferFlag)){
+                transferFlag = "1";
+            }
+            map.put("userId",userId);
+            map.put("carId",id);
+            map.put("transferFlag",transferFlag);
+            ServiceResult serviceResult = carAutoService.updateTransferFlag(map);
+            if(serviceResult.getSuccess()){
+                result.setSuccess((ResultCode.SUCCESS.value())+"",ResultCode.SUCCESS.getRemark());
+            }else{
+                result.setError(serviceResult.getCode(),serviceResult.getMessage());
+            }
+        }catch (Exception e){
+            result.setError("-1","异常");
+            e.printStackTrace();
+            logger.info("转渠道失败",e);
         }
         return result;
     }
