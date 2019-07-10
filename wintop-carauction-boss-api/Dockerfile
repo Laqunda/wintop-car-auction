@@ -3,7 +3,7 @@ MAINTAINER ligongzhaoyang@163.com
 ARG JAR_FILE
 WORKDIR /home
 ADD  ${JAR_FILE} apps/app.jar
-EXPOSE 8080
+EXPOSE 8081
 ENV JAVA_OPTS="\
 -server \
 -Xmx512m \
