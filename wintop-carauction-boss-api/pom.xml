@@ -112,12 +112,12 @@
                         <configuration>
                             <serverId>docker-hub</serverId>
                             <registryUrl>dockerhub.yuntongauto.com:80</registryUrl>
-                            <imageName>dockerhub.yuntongauto.com:80/wintop-car-auction/${project.name}:${project.version}</imageName>
+                            <imageName>dockerhub.yuntongauto.com:80/wintop-car-auction/${project.name}:huaweiyun-1.0.0</imageName>
                             <dockerDirectory>${project.basedir}/</dockerDirectory>
                             <!--覆盖已存在的标签 镜像-->
                             <forceTags>true</forceTags>
                             <imageTags>
-                                <tag>${project.version}</tag>
+                                <tag>huaweiyun-1.0.0</tag>
                             </imageTags>
                             <buildArgs>
                                 <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
